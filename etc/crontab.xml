@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="mageos_shopping_feed">
+        <job name="mageos_shopping_feed_schedule" instance="MageOS\ShoppingFeed\Cron\Schedule" method="execute">
+            <schedule>10 * * * *</schedule>
+        </job>
+        <job name="mageos_shopping_feed_process" instance="MageOS\ShoppingFeed\Cron\Process" method="execute">
+            <schedule>* * * * *</schedule>
+        </job>
+    </group>
+</config>

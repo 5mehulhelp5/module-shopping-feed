@@ -1,0 +1,12 @@
+<?php
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductQuantity */
+?>
+<div>
+    <span><?php echo $block->escapeHtml(__('Count Mode:')) ?></span>
+    <select name="#{htmlName}[#{index}][param]" class="select">
+        <?php foreach ($block->getQuantityHandlingOptions() as $option): ?>
+            <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>
+<p class="note"><?php echo $block->escapeHtml(__('For MSI enabled stores, the output will be specific to, or sum of all inventory sources depending on the feed type.')) ?></p>

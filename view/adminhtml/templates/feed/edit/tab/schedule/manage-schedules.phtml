@@ -1,0 +1,177 @@
+<?php
+
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Schedule\ManageSchedules */
+$element = $block->getElement();
+?>
+<?php $htmlId      = $block->getElement()->getHtmlId() ?>
+<?php $htmlClass   = $block->getElement()->getClass() ?>
+<?php $htmlName    = $block->getElement()->getName() ?>
+<?php $readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled() ?>
+
+<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
+     data-apply-to="<?php echo $block->escapeHtml(
+         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+             $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
+         )
+     )?>">
+    <div class="control">
+        <table class="admin__control-table manage_schedules_table data-grid" id="manage_schedules_table">
+            <thead>
+                <tr>
+                    <th class="data-grid-th col-start-at required"><?php echo $block->escapeHtml(__('Start At')) ?></th>
+                    <th class="data-grid-th col-batch-mode required"><?php echo $block->escapeHtml(__('Batch Mode')) ?></th>
+                    <th class="data-grid-th col-batch-limit"><?php echo $block->escapeHtml(__('Batch Limit')) ?></th>
+                    <th class="data-grid-th col-delete"><?php echo $block->escapeHtml(__('Action')) ?></th>
+                </tr>
+            </thead>
+            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="col-actions-add"><?php echo $block->getAddButtonHtml() ?></td>
+                </tr>
+            </tfoot>
+        </table>
+
+<script>
+require([
+    'mage/template',
+    "prototype",
+    "mage/adminhtml/form"
+], function (mageTemplate) {
+
+//<![CDATA[
+var manageSchedulesRowTemplate = '<tr>'
+    + '<td class="col-start-at">'
+    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?> start-at required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][start_at]" id="manage_schedules_row_<%- data.index %>_start_at">'
+    <?php foreach ($block->getStartAtOptions() as $option): ?>
+    + '<option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeJsQuote($block->escapeHtml($option['label'])) ?></option>'
+    <?php endforeach ?>
+    + '</select>'
+    + '</td>'
+    + '<td class="col-batch-mode">'
+    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?> required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][batch_mode]" id="manage_schedules_row_<%- data.index %>_batch_mode">'
+    <?php foreach ($block->getYesnoOptions() as $option): ?>
+    + '<option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeJsQuote($block->escapeHtml($option['label'])) ?></option>'
+    <?php endforeach ?>
+    + '</select>'
+    + '</td>'
+    + '<td class="col-batch-limit">'
+    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> batch-limit" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][batch_limit]" value="<%- data.batch_limit %>" id="manage_schedules_row_<%- data.index %>_batch_limit" />'
+    + '</td>'
+    + '<td class="col-delete">'
+    + '<input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][id]" value="" id="manage_schedules_row_<%- data.index %>_id" />'
+    + '<input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][delete]" class="delete" value="" id="manage_schedules_row_<%- data.index %>_delete" />'
+    + '<button title="<?php echo $block->escapeHtml(__('Delete')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="manage_schedules_row_<%- data.index %>_delete_button" onclick="return manageSchedulesControl.deleteItem(event);">'
+    + '<span><?php echo $block->escapeHtml(__("Delete")) ?></span></button></td>'
+    + '</tr>';
+
+var manageSchedulesControl = {
+    template: mageTemplate(manageSchedulesRowTemplate),
+    itemsCount: 0,
+    addItem : function () {
+        <?php if ($readonly): ?>
+        if (arguments.length < 5) {
+            return;
+        }
+        <?php endif; ?>
+        var data = {
+            id: '',
+            start_at: '<?php echo $block->escapeHtml($block->getDefaultStartAt()) ?>',
+            batch_mode: '<?php echo $block->escapeHtml($block->getDefaultBatchMode()) ?>',
+            batch_limit: '',
+            readOnly: false,
+            index: this.itemsCount++
+        };
+
+        if(arguments.length == 5) {
+            data.id          = arguments[0];
+            data.start_at    = arguments[1];
+            data.batch_mode  = arguments[2];
+            data.batch_limit = arguments[3];
+            data.readOnly    = arguments[4];
+        }
+
+        Element.insert($('<?php echo $block->escapeHtml($htmlId) ?>_container'), {
+            bottom : this.template({
+                data: data
+            })
+        });
+
+        $('manage_schedules_row_' + data.index + '_start_at').value = data.start_at;
+        $('manage_schedules_row_' + data.index + '_batch_limit').value = data.batch_limit;
+        $('manage_schedules_row_' + data.index + '_batch_mode').value  = data.batch_mode;
+        $('manage_schedules_row_' + data.index + '_id').value = data.id;
+
+        if (data.readOnly == '1') {
+            ['start_at','batch_mode', 'batch_limit', 'delete'].each(function(idx){
+                $('manage_schedules_row_'+data.index+'_'+idx).disabled = true;
+            });
+            $('manage_schedules_row_'+data.index+'_delete_button').hide();
+        }
+
+        <?php if ($readonly): ?>
+        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
+        $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
+        <?php else: ?>
+        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+        <?php endif; ?>
+
+        var el = $('manage_schedules_row_' + data.index + '_batch_mode');
+        Event.observe(el, 'change', this.eventListenerRowChanges.bindAsEventListener(this, data));
+        this.fillBatchLimit(data.batch_mode, data);
+    },
+    disableElement: function(el) {
+        el.disabled = true;
+        el.addClassName('disabled');
+    },
+    deleteItem: function(event) {
+        var tr = Event.findElement(event, 'tr');
+        if (tr) {
+            Element.select(tr, '.delete').each(function(elem){elem.value='1'});
+            Element.select(tr, ['input']).each(function(elem){elem.hide()});
+            Element.hide(tr);
+            Element.addClassName(tr, 'no-display template');
+        }
+        return false;
+    },
+    eventListenerRowChanges : function (event, data) {
+        this.fillBatchLimit(event.element().value, data);
+    },
+    fillBatchLimit : function (value, data) {
+        var field = $('manage_schedules_row_'+data.index+'_batch_limit');
+
+        if (value == 1) {
+            field.show();
+            field.value = data.batch_limit;
+        } else {
+            field.hide();
+        }
+
+    }
+};
+<?php foreach ($block->getValues() as $item): ?>
+    manageSchedulesControl.addItem(
+        '<?php echo (int) $item['id'] ?>',
+        '<?php echo $block->escapeHtml($item['start_at']) ?>',
+        '<?php echo $block->escapeHtml($item['batch_mode']) ?>',
+        '<?php echo (int) $item['batch_limit'] ?>',
+        <?php echo (int) !empty($item['readonly']) ?>
+    );
+<?php endforeach; ?>
+<?php if ($readonly): ?>
+$('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button')
+    .each(manageSchedulesControl.disableElement);
+<?php endif; ?>
+
+window.manageSchedulesControl = manageSchedulesControl;
+//]]>
+
+});
+</script>
+        <?php if ($block->getElement()->getNote() && strlen($block->getElement()->getNote())): ?>
+        <div class="note">
+            <span><?php echo $block->escapeHtml($block->getElement()->getNote()) ?></span>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>

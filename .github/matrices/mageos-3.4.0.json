@@ -1,0 +1,64 @@
+{
+    "magento": [
+        "mage-os/project-community-edition:3.4.0"
+    ],
+    "include": [
+        {
+            "magento": "mage-os/project-community-edition:3.4.0",
+            "upstream": "2.4.9",
+            "php": 8.4,
+            "composer": "2.10.2",
+            "mysql": "mysql:8.4",
+            "opensearch": "opensearchproject/opensearch:3",
+            "rabbitmq": "rabbitmq:4.1-management",
+            "valkey": "valkey/valkey:8",
+            "varnish": "varnish:7.7",
+            "nginx": "nginx:1.28",
+            "os": "ubuntu-latest",
+            "version": "3.4.0",
+            "services": {
+                "mysql": {
+                    "image": "mysql:8.4",
+                    "env": {
+                        "MYSQL_DATABASE": "magento_integration_tests",
+                        "MYSQL_USER": "user",
+                        "MYSQL_PASSWORD": "password",
+                        "MYSQL_ROOT_PASSWORD": "rootpassword"
+                    },
+                    "ports": [
+                        "3306:3306"
+                    ],
+                    "options": "--health-cmd=\"mysqladmin ping\" --health-interval=10s --health-timeout=5s --health-retries=3"
+                },
+                "opensearch": {
+                    "image": "opensearchproject/opensearch:3",
+                    "env": {
+                        "discovery.type": "single-node",
+                        "DISABLE_INSTALL_DEMO_CONFIG": "true",
+                        "DISABLE_SECURITY_PLUGIN": "true"
+                    },
+                    "ports": [
+                        "9200:9200"
+                    ],
+                    "options": "--health-cmd \"curl http://localhost:9200/_cluster/health\" --health-interval 10s --health-timeout 5s --health-retries 10"
+                },
+                "rabbitmq": {
+                    "image": "rabbitmq:4.1-management",
+                    "env": {
+                        "RABBITMQ_DEFAULT_USER": "guest",
+                        "RABBITMQ_DEFAULT_PASS": "guest"
+                    },
+                    "ports": [
+                        "5672:5672"
+                    ]
+                },
+                "valkey": {
+                    "image": "valkey/valkey:8",
+                    "ports": [
+                        "6379:6379"
+                    ]
+                }
+            }
+        }
+    ]
+}

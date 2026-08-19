@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+  <virtualType name="MageOS\ShoppingFeed\Model\ResourceModel\Feed\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+    <arguments>
+      <argument name="mainTable" xsi:type="string">mageos_shopping_feed_feed</argument>
+      <argument name="resourceModel" xsi:type="string">MageOS\ShoppingFeed\Model\ResourceModel\Feed</argument>
+    </arguments>
+  </virtualType>
+  <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+    <arguments>
+      <argument name="collections" xsi:type="array">
+        <item name="mageos_shopping_feed_grid_data_source" xsi:type="string">MageOS\ShoppingFeed\Model\ResourceModel\Feed\Grid\Collection</item>
+      </argument>
+    </arguments>
+  </type>
+  <type name="Magento\Framework\Console\CommandListInterface">
+    <arguments>
+      <argument name="commands" xsi:type="array">
+        <item name="mageos_shopping_feed_generate" xsi:type="object">MageOS\ShoppingFeed\Console\Command\GenerateCommand</item>
+        <item name="mageos_shopping_feed_generate_schedule" xsi:type="object">MageOS\ShoppingFeed\Console\Command\ScheduleCommand</item>
+      </argument>
+    </arguments>
+  </type>
+  <type name="MageOS\ShoppingFeed\Model\FeedTypes\Config">
+    <arguments>
+      <argument name="reader" xsi:type="object">MageOS\ShoppingFeed\Model\FeedTypes\Config\Reader</argument>
+      <argument name="cacheId" xsi:type="string">mageos_shopping_feed_types_config</argument>
+    </arguments>
+  </type>
+  <type name="Magento\Framework\Pricing\Render\Amount">
+    <plugin name="MageOS_ShoppingFeed::microdataRemover" type="MageOS\ShoppingFeed\Plugin\MicrodataRemoverPlugin" sortOrder="100" disabled="false"/>
+  </type>
+  <type name="MageOS\ShoppingFeed\Model\Feed">
+    <plugin name="MageOS_ShoppingFeed::uniqueUseMicrodata" type="MageOS\ShoppingFeed\Plugin\FeedUseMicrodataUniqueByStore" sortOrder="110" disabled="false"/>
+  </type>
+  <type name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Shipping">
+    <plugin name="MageOS_ShoppingFeed::hideShippingTab" type="MageOS\ShoppingFeed\Plugin\HideShippingTab"/>
+  </type>
+  <type name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Options">
+    <plugin name="MageOS_ShoppingFeed::hideOptionsTab" type="MageOS\ShoppingFeed\Plugin\HideOptionsTab"/>
+  </type>
+  <type name="MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract">
+    <plugin name="MageOS_ShoppingFeed::LocalInventoryFeed" type="MageOS\ShoppingFeed\Plugin\RegisterLocalInventoryProcessor"/>
+  </type>
+  <type name="MageOS\ShoppingFeed\Ui\Component\Listing\Column\File">
+    <plugin name="mageos_shopping_feed_google_promotions_list_promotions_file" type="MageOS\ShoppingFeed\Ui\Component\Listing\Column\File\Plugin" sortOrder="100" disabled="false"/>
+  </type>
+</config>

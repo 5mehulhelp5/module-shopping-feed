@@ -1,0 +1,145 @@
+<?php
+
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Filters\PriceBuckets */
+$element = $block->getElement();
+?>
+<?php $htmlId      = $block->getElement()->getHtmlId() ?>
+<?php $htmlClass   = $block->getElement()->getClass() ?>
+<?php $htmlName    = $block->getElement()->getName() ?>
+<?php $readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled() ?>
+
+<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
+     data-apply-to="<?php echo $block->escapeHtml(
+         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+             $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
+         )
+     )?>">
+    <label class="label"><span><?php echo $block->escapeHtml($block->getElement()->getLabel()) ?></span></label>
+    <div class="control">
+        <table class="admin__control-table price_bucket_table data-grid" id="price_bucket_table">
+            <thead>
+                <tr>
+                    <th class="data-grid-th col-pricefrom required"><?php echo $block->escapeHtml(__('Price from')) ?></th>
+                    <th class="data-grid-th col-priceto required"><?php echo $block->escapeHtml(__('Price to')) ?></th>
+                    <th class="data-grid-th col-label"><?php echo $block->escapeHtml(__('Bucket label')) ?></th>
+                    <th class="data-grid-th col-delete"><?php echo $block->escapeHtml(__('Action')) ?></th>
+                </tr>
+            </thead>
+            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="col-actions-add"><?php echo $block->getAddButtonHtml() ?></td>
+                </tr>
+            </tfoot>
+        </table>
+
+<script>
+require([
+    'mage/template',
+    "prototype",
+    "mage/adminhtml/form"
+], function (mageTemplate) {
+
+//<![CDATA[
+var priceBucketsRowTemplate = '<tr>'
+    + '<td class="col-pricefrom">'
+    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> pricefrom required-entry validate-not-negative-number" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][pricefrom]" value="<%- data.pricefrom %>" id="price_bucket_row_<%- data.index %>_pricefrom" />'
+    + '</td>'
+    + '<td class="col-priceto">'
+    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> priceto required-entry validate-greater-than-zero" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][priceto]" value="<%- data.priceto %>" id="price_bucket_row_<%- data.index %>_priceto" />'
+    + '</td>'
+    + '<td class="col-label">'
+    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> bucketlabel" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][label]" value="<%- data.label %>" id="price_bucket_row_<%- data.index %>_label" />'
+    + '</td>'
+    + '<td class="col-delete"><input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][delete]" class="delete" value="" id="price_bucket_row_<%- data.index %>_delete" />'
+    + '<button title="<?php echo $block->escapeHtml(__('Delete')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="price_bucket_row_<%- data.index %>_delete_button" onclick="return priceBucketsControl.deleteItem(event);">'
+    + '<span><?php echo $block->escapeHtml(__("Delete")) ?></span></button></td>'
+    + '</tr>';
+
+var priceBucketsControl = {
+    template: mageTemplate(priceBucketsRowTemplate),
+    itemsCount: 0,
+    addItem : function () {
+        <?php if ($readonly): ?>
+        if (arguments.length < 4) {
+            return;
+        }
+        <?php endif; ?>
+        var data = {
+            pricefrom: '',
+            priceto: '',
+            label: '',
+            readOnly: false,
+            index: this.itemsCount++
+        };
+
+        if(arguments.length == 4) {
+            data.pricefrom = arguments[0];
+            data.priceto   = arguments[1];
+            data.label     = arguments[2];
+            data.readOnly  = arguments[3];
+        }
+
+        Element.insert($('<?php echo $block->escapeHtml($htmlId) ?>_container'), {
+            bottom : this.template({
+                data: data
+            })
+        });
+
+        $('price_bucket_row_' + data.index + '_label').value = data.label;
+        $('price_bucket_row_' + data.index + '_priceto').value    = data.priceto;
+
+        if (data.readOnly == '1') {
+            ['pricefrom','priceto', 'label', 'delete'].each(function(idx){
+                $('price_bucket_row_'+data.index+'_'+idx).disabled = true;
+            });
+            $('price_bucket_row_'+data.index+'_delete_button').hide();
+        }
+
+        <?php if ($readonly): ?>
+        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
+        $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
+        <?php else: ?>
+        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+        <?php endif; ?>
+    },
+    disableElement: function(el) {
+        el.disabled = true;
+        el.addClassName('disabled');
+    },
+    deleteItem: function(event) {
+        var tr = Event.findElement(event, 'tr');
+        if (tr) {
+            Element.select(tr, '.delete').each(function(elem){elem.value='1'});
+            Element.select(tr, ['input']).each(function(elem){elem.hide()});
+            Element.hide(tr);
+            Element.addClassName(tr, 'no-display template');
+        }
+        return false;
+    }
+};
+<?php foreach ($block->getValues() as $item): ?>
+    priceBucketsControl.addItem(
+        '<?php echo $block->escapeJsQuote($block->escapeHtml($item['pricefrom'])) ?>',
+        '<?php echo $block->escapeJsQuote($block->escapeHtml($item['priceto'])) ?>',
+        '<?php echo $block->escapeJsQuote($block->escapeHtml($item['label'])) ?>',
+        <?php echo (int) !empty($item['readonly'])?>
+    );
+<?php endforeach; ?>
+<?php if ($readonly): ?>
+$('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button')
+    .each(priceBucketsControl.disableElement);
+<?php endif; ?>
+
+window.priceBucketsControl = priceBucketsControl;
+//]]>
+
+});
+</script>
+        <?php if (strlen($block->getElement()->getNote())): ?>
+        <div class="note">
+            <span><?php /* @escapeNotVerified */ echo $block->getElement()->getNote() ?></span>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>

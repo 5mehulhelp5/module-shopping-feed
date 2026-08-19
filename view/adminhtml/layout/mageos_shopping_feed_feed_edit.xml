@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+  <head>
+    <css src="MageOS_ShoppingFeed::css/mageos_shopping_feed.css"/>
+    <css src="MageOS_ShoppingFeed::css/promotions.css"/>
+  </head>
+  <body>
+    <referenceContainer name="content">
+      <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit" name="feed_edit"/>
+      <block class="Magento\Catalog\Block\Adminhtml\Product\Edit\NewCategory" name="new-category" template="Magento_Catalog::catalog/product/edit/category/new/form.phtml"/>
+    </referenceContainer>
+    <referenceContainer name="left">
+      <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tabs" name="feed_tabs">
+        <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\General" name="feed_edit_tab_general"/>
+        <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Columns" name="feed_edit_tab_columns"/>
+        <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Categories" name="feed_edit_tab_categories"/>
+        <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Filters" name="feed_edit_tab_filters"/>
+        <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Options" name="feed_edit_tab_options"/>
+        <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Configurable" name="feed_edit_tab_configurable"/>
+        <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Grouped" name="feed_edit_tab_grouped"/>
+        <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Bundle" name="feed_edit_tab_bundle"/>
+        <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Shipping" name="feed_edit_tab_shipping"/>
+        <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Schedule" name="feed_edit_tab_schedule"/>
+        <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Uploads" name="feed_edit_tab_uploads"/>
+        <action method="addTab">
+          <argument name="name" xsi:type="string">general</argument>
+          <argument name="block" xsi:type="string">feed_edit_tab_general</argument>
+        </action>
+        <action method="addTab">
+          <argument name="name" xsi:type="string">columns</argument>
+          <argument name="block" xsi:type="string">feed_edit_tab_columns</argument>
+        </action>
+        <action method="addTab">
+          <argument name="name" xsi:type="string">categories</argument>
+          <argument name="block" xsi:type="string">feed_edit_tab_categories</argument>
+        </action>
+        <action method="addTab">
+          <argument name="name" xsi:type="string">filters</argument>
+          <argument name="block" xsi:type="string">feed_edit_tab_filters</argument>
+        </action>
+        <action method="addTab">
+          <argument name="name" xsi:type="string">options</argument>
+          <argument name="block" xsi:type="string">feed_edit_tab_options</argument>
+        </action>
+        <action method="addTab">
+          <argument name="name" xsi:type="string">configurable</argument>
+          <argument name="block" xsi:type="string">feed_edit_tab_configurable</argument>
+        </action>
+        <action method="addTab">
+          <argument name="name" xsi:type="string">grouped</argument>
+          <argument name="block" xsi:type="string">feed_edit_tab_grouped</argument>
+        </action>
+        <action method="addTab">
+          <argument name="name" xsi:type="string">bundle</argument>
+          <argument name="block" xsi:type="string">feed_edit_tab_bundle</argument>
+        </action>
+        <action method="addTab">
+          <argument name="name" xsi:type="string">shipping</argument>
+          <argument name="block" xsi:type="string">feed_edit_tab_shipping</argument>
+        </action>
+        <action method="addTab">
+          <argument name="name" xsi:type="string">schedule</argument>
+          <argument name="block" xsi:type="string">feed_edit_tab_schedule</argument>
+        </action>
+        <action method="addTab">
+          <argument name="name" xsi:type="string">uploads</argument>
+          <argument name="block" xsi:type="string">feed_edit_tab_uploads</argument>
+        </action>
+      </block>
+    </referenceContainer>
+    <referenceBlock name="feed_tabs">
+      <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Promotions" name="feed_edit_tab_promotions"/>
+      <action method="addTabAfter">
+        <argument name="name" xsi:type="string">promotions</argument>
+        <argument name="block" xsi:type="string">feed_edit_tab_promotions</argument>
+        <argument name="afterName" xsi:type="string">uploads</argument>
+      </action>
+    </referenceBlock>
+  </body>
+</page>

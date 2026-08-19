@@ -1,0 +1,150 @@
+<?php
+
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Filters\FindReplace */
+$element = $block->getElement();
+?>
+<?php $htmlId      = $block->getElement()->getHtmlId() ?>
+<?php $htmlClass   = $block->getElement()->getClass() ?>
+<?php $htmlName    = $block->getElement()->getName() ?>
+<?php $readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled() ?>
+
+<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
+     data-apply-to="<?php echo $block->escapeHtml(
+         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+             $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
+         )
+     )?>">
+    <div class="label-w-space">
+        <label class="label"><span><?php echo $block->escapeHtml($block->getElement()->getLabel()) ?></span></label>
+    </div>
+    <div class="control">
+        <table class="admin__control-table find_replace_table data-grid" id="find_replace_table">
+            <thead>
+                <tr>
+                    <th class="data-grid-th col-find required"><?php echo $block->escapeHtml(__('Find')) ?></th>
+                    <th class="data-grid-th col-replace"><?php echo $block->escapeHtml(__('Replace')) ?></th>
+                    <th class="data-grid-th col-column"><?php echo $block->escapeHtml(__('Map Columns')) ?></th>
+                    <th class="data-grid-th col-delete"><?php echo $block->escapeHtml(__('Action')) ?></th>
+                </tr>
+            </thead>
+            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container"></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="col-actions-add"><?php echo $block->getAddButtonHtml() ?></td>
+                </tr>
+            </tfoot>
+        </table>
+
+<script>
+require([
+    'mage/template',
+    "prototype",
+    "mage/adminhtml/form"
+], function (mageTemplate) {
+
+//<![CDATA[
+var findReplaceRowTemplate = '<tr>'
+    + '<td class="col-find">'
+    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> find required-entry" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][find]" value="<%- data.find %>" id="find_replace_row_<%- data.index %>_find" />'
+    + '</td>'
+    + '<td class="col-replace">'
+    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> replace" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][replace]" value="<%- data.replace %>" id="find_replace_row_<%- data.index %>_replace" />'
+    + '</td>'
+    + '<td class="col-column">'
+    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?> required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][column]" id="find_replace_row_<%- data.index %>_column">'
+    <?php foreach ($block->getColumns() as $column): ?>
+    + '<option value="<?php echo $block->escapeQuote($block->escapeHtml($column['value'])) ?>"><?php echo $block->escapeHtml($column['label']) ?></option>'
+    <?php endforeach ?>
+    + '</select></td>'
+    + '<td class="col-delete"><input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][delete]" class="delete" value="" id="find_replace_row_<%- data.index %>_delete" />'
+    + '<button title="<?php echo $block->escapeHtml(__('Delete')) ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="find_replace_row_<%- data.index %>_delete_button" onclick="return findReplaceControl.deleteItem(event);">'
+    + '<span><?php echo $block->escapeHtml(__("Delete")) ?></span></button></td>'
+    + '</tr>';
+
+var findReplaceControl = {
+    template: mageTemplate(findReplaceRowTemplate),
+    itemsCount: 0,
+    addItem : function () {
+        <?php if ($readonly): ?>
+        if (arguments.length < 4) {
+            return;
+        }
+        <?php endif; ?>
+        var data = {
+            find: '',
+            replace: '',
+            column: '<?php echo $block->escapeHtml($block->getDefaultColumn()) ?>',
+            readOnly: false,
+            index: this.itemsCount++
+        };
+
+        if(arguments.length == 4) {
+            data.find = arguments[0].replace(/\\'/g, "'");
+            data.replace   = arguments[1].replace(/\\'/g, "'");
+            data.column     = arguments[2];
+            data.readOnly  = arguments[3];
+        }
+
+        Element.insert($('<?php echo $block->escapeHtml($htmlId) ?>_container'), {
+            bottom : this.template({
+                data: data
+            })
+        });
+
+        $('find_replace_row_' + data.index + '_column').value = data.column;
+        $('find_replace_row_' + data.index + '_replace').value    = data.replace;
+
+        if (data.readOnly == '1') {
+            ['find','replace', 'column', 'delete'].each(function(idx){
+                $('find_replace_row_'+data.index+'_'+idx).disabled = true;
+            });
+            $('find_replace_row_'+data.index+'_delete_button').hide();
+        }
+
+        <?php if ($readonly): ?>
+        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
+        $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
+        <?php else: ?>
+        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+        <?php endif; ?>
+    },
+    disableElement: function(el) {
+        el.disabled = true;
+        el.addClassName('disabled');
+    },
+    deleteItem: function(event) {
+        var tr = Event.findElement(event, 'tr');
+        if (tr) {
+            Element.select(tr, '.delete').each(function(elem){elem.value='1'});
+            Element.select(tr, ['input']).each(function(elem){elem.hide()});
+            Element.hide(tr);
+            Element.addClassName(tr, 'no-display template');
+        }
+        return false;
+    }
+};
+<?php foreach ($block->getValues() as $item): ?>
+    findReplaceControl.addItem(
+        '<?php echo $block->escapeJsQuote($item['find']) ?>',
+        '<?php echo $block->escapeJsQuote($item['replace']) ?>',
+        '<?php echo $block->escapeJsQuote($block->escapeHtml($item['column'])) ?>',
+        <?php echo (int) !empty($item['readonly'])?>
+    );
+<?php endforeach; ?>
+<?php if ($readonly): ?>
+$('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button')
+    .each(findReplaceControl.disableElement);
+<?php endif; ?>
+
+window.findReplaceControl = findReplaceControl;
+//]]>
+
+});
+</script>
+        <?php if (strlen($block->getElement()->getNote())): ?>
+        <div class="note">
+            <span><?php echo $block->escapeHtml($block->getElement()->getNote()); ?></span>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>

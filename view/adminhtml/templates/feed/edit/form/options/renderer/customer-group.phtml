@@ -1,0 +1,12 @@
+<?php
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImage */
+?>
+<div>
+    <span><?php echo $block->escapeHtml(__('Customer Group:')) ?></span>
+    <select name="#{htmlName}[#{index}][param]" class="select">
+        <?php foreach ($block->getOptions() as $option): ?>
+            <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>
+<p class="note"><?php echo $block->escapeHtml(__('Outputs lowest tier price for selected customer group.')); ?></p>

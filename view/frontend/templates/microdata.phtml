@@ -1,0 +1,20 @@
+<?php
+/** @var $this \MageOS\ShoppingFeed\Block\Product\View\Microdata */
+$microdata = $this->getMicrodata();
+?>
+<?php if ($microdata): ?>
+    <!-- Mage-OS Shopping Feed microdata -->
+    <meta itemprop="name" content="<?php echo $block->escapeHtml($microdata->getName()) ?>" />
+    <meta itemprop="sku" content="<?php echo $block->escapeHtml($microdata->getSku()) ?>" />
+
+    <div itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+        <meta itemprop="priceCurrency" content="<?php echo $block->escapeHtml($microdata->getCurrency()) ?>" />
+        <meta itemprop="price" content="<?php echo $block->escapeHtml($microdata->getPrice()) ?>" />
+        <meta itemprop="availability" content="<?php echo $block->escapeHtml($microdata->getAvailability()) ?>" />
+        <?php $condition = $microdata->getCondition(); ?>
+        <?php if (!empty($condition)): ?>
+            <meta itemprop="itemCondition" itemtype="https://schema.org/OfferItemCondition" content="<?php echo $block->escapeHtml($condition) ?>" />
+        <?php endif; ?>
+    </div>
+    <!-- Mage-OS Shopping Feed microdata -->
+<?php endif; ?>

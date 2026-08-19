@@ -1,0 +1,105 @@
+<?php
+
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Categories\CategoryTaxonomy */
+$element = $block->getElement();
+?>
+<?php $htmlId      = $block->getElement()->getHtmlId() ?>
+<?php $htmlClass   = $block->getElement()->getClass() ?>
+<?php $htmlName    = $block->getElement()->getName() ?>
+<?php $readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled() ?>
+
+<script>
+    taxonomy = {};
+</script>
+
+<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
+     data-apply-to="<?php echo $block->escapeHtml(
+         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+             $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
+         )
+     )?>">
+    <div>
+        <ul>
+            <li><?php echo $block->escapeHtml(__('Products can be included or excluded from feed by checking the right checkbox on a category row. <br />One enabled category is sufficient to include the a product in the feed which is assigned to multipe categories.'), ['br']) ?></li>
+        </ul>
+    </div>
+
+    <div class="control">
+
+        <div class="category_taxonomy_actions">
+            <a href="#" id="taxonomy-collapse"><?php echo $block->escapeHtml(__('Collapse All')) ?></a>
+            <span class="separator">|</span>
+            <a href="#" id="taxonomy-expand"><?php echo $block->escapeHtml(__('Expand All')) ?></a>
+            <span class="separator">|</span>
+            <a href="#" id="taxonomy-enable"><?php echo $block->escapeHtml(__('Enable All')) ?></a>
+            <span class="separator">|</span>
+            <a href="#" id="taxonomy-disable"><?php echo $block->escapeHtml(__('Disable All')) ?></a>
+        </div>
+
+        <div class="category_taxonomy_table" id="category_taxonomy_table">
+            <?php $categories = $block->getCategories(); ?>
+            <?php if (count($categories)): ?>
+                <?php foreach ($categories as $category): ?>
+                <div class="category_row level<?php echo (int) $category['level'] ?> active <?php echo ($category['store_active'] == 0) ? 'disabled' : ''  ?>"
+                     data-category-path="<?php echo $block->escapeHtml($block->formatCategoryPath($category['path'])) ?>"
+                     data-parent-category-path="<?php echo $block->escapeHtml($block->formatParentCategoryPath($category['path'])) ?>"
+                     data-category-id="<?php echo (int) $category['id'] ?>"
+                     style="margin-left: <?php /* @noEscape */ echo $category['level']*20 ?>px; padding-bottom: 7px;">
+                    <?php if ($category['children']): ?>
+                        <p class="toggle-expand">
+                            <img src="<?php echo $block->escapeUrl($block->getViewFileUrl('MageOS_ShoppingFeed::images/tree-icon.png')) ?>" alt="" class="row-expand">
+                        </p>
+                    <?php endif; ?>
+                    <p class="category-name">
+                        <strong><?php echo $block->escapeHtml($category['name']) ?> (#<?php echo (int) $category['id'] ?>)</strong>
+                    </p>
+                    <div class="category-disabled">
+                        <input type="checkbox" <?php echo $category['enabled'] ? 'checked="checked"' : ''; ?>
+                               class="disabled" id="category_taxonomy_row_<?php echo (int) $category['id'] ?>_disabled" data-element="d" />
+                    </div>
+                    <div class="hidden">
+                        <input type="number" <?php echo ($category['store_active'] == 0) ? 'disabled="disabled" title="Category not active for this store."' : ''; ?>
+                                       value="<?php echo (int) $category['priority'] ?>"
+                                       class="priority validate-not-negative-number" min="0" step="1" id="category_taxonomy_row_<?php echo (int) $category['id'] ?>_priority" data-element="p" />
+                        <input type="text" class="taxonomy <?php /* required-entry */ ?> category-taxonomy-suggest" style="width: 100%;" data-element="tx"
+                                    <?php echo ($category['store_active'] == 0) ? 'disabled="disabled" title="Category not active for this store."' : ''; ?>
+                                       value="<?php echo $block->escapeQuote($block->escapeHtml($category['taxonomy'])); ?>" placeholder="Type at least 3 characters"/>
+                        <input type="text" class="prod_type" data-element="ty"
+                                        <?php echo ($category['store_active'] == 0) ? 'disabled="disabled" title="Category not active for this store."' : ''; ?>
+                                           value="<?php echo $block->escapeQuote($block->escapeHtml($category['type'])); ?>">
+                    </div>
+                </div>
+                <script>
+                    taxonomy[<?php echo (int) $category['id']; ?>] = {
+                        id: <?php echo (int) $category['id']; ?>,
+                        tx: '',
+                        ty: '',
+                        d: '<?php echo (int) $category['enabled'] ?>',
+                        p: ''
+                    };
+                </script>
+            <?php endforeach; ?>
+            <?php else: ?>
+                <div class="note">
+                    <span><?php echo $block->escapeHtml(__('Save feed to set up category taxonomy.')) ?></span>
+                </div>
+            <?php endif; ?>
+
+            <input id="taxonomy_aggregated_values" name="config[categories_provider_taxonomy_by_category]" type="hidden" value="" />
+
+            <script>
+                require(['jquery', 'jquery/ui', "mage/mage", "mage/translate","loadingPopup","mageosShoppingFeedCategoryTaxonomy", "mageosShoppingFeedForm"], function($){
+
+                    $(document).ready(function() {
+                        $("#category_taxonomy_table").shoppingFeedCategoryTaxonomy();
+                        $('#edit_form').shoppingFeedForm();
+                    });
+                });
+            </script>
+            <?php if ($block->getElement()->getNote() && strlen($block->getElement()->getNote())): ?>
+                <div class="note">
+                    <span><?php echo $block->escapeHtml($block->getElement()->getNote()) ?></span>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>

@@ -1,0 +1,13 @@
+<?php
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductOption */
+?>
+
+<div>
+    <span class="top-allign"><?php echo $block->escapeHtml(__('Product Options:')) ?></span>
+    <select name="#{htmlName}[#{index}][param][]" multiple class="select">
+        <?php foreach ($block->getProductOptions() as $option): ?>
+        <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']); ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>
+<p class="note"><?php echo $block->escapeHtml(__('Numbers on the right represent the products count by each option.')) ?></p>

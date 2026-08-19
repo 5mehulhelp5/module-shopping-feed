@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mageos_shopping_feed>
+            <general>
+                <cron_enabled>1</cron_enabled>
+            </general>
+            <log>
+                <level>250</level> <!-- notice level -->
+                <rotate>512</rotate>
+                <progress_every>30</progress_every>
+            </log>
+            <google>
+                <dynamic_remarketing_enabled>0</dynamic_remarketing_enabled>
+            </google>
+        </mageos_shopping_feed>
+    </default>
+</config>

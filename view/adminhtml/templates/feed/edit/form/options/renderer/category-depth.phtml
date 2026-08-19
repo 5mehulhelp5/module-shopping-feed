@@ -1,0 +1,8 @@
+<?php
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductUrl */
+?>
+<div>
+    <span><?php echo $block->escapeHtml(__('Paths limit:')) ?></span>
+    <input type="text" name="#{htmlName}[#{index}][param]" value="#{param}" />
+</div>
+<p class="note"><?php echo $block->escapeHtml(__('Uses product categories to create a comma separated list of category paths. Categories are matched using the priority values set under Category Map. Limit paths, defines how many comma separated values to output.')) ?></p>

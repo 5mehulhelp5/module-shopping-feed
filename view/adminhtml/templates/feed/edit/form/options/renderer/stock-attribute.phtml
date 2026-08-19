@@ -1,0 +1,13 @@
+<?php
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StockAttribute */
+?>
+
+<div>
+    <span><?php echo $block->escapeHtml(__('Stock Attribute:')) ?></span>
+    <select name="#{htmlName}[#{index}][param]" class="select">
+        <?php foreach ($block->getAttributeOptions() as $option): ?>
+            <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>
+<!--<p class="note">--><?php //echo $block->escapeHtml(__("")) ?><!--</p>-->

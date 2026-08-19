@@ -1,0 +1,457 @@
+<?php
+$htmlId      = $block->getElement()->getHtmlId();
+$htmlClass   = $block->getElement()->getClass();
+$htmlName    = $block->getElement()->getName();
+$readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled();
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Promotions\Widget */
+$element     = $block->getElement();
+$rules       = $block->getMagentoCartRules();
+$values      = $block->getPromotionData('promotion');
+$counter     = 0;
+?>
+
+<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
+     data-apply-to="<?php echo $block->escapeHtml(
+         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+             $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
+         )
+     )?>">
+</div>
+
+<div class="field google_promotions" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
+     data-apply-to="<?php echo $block->escapeHtml(
+         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+             $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
+         )
+     )?>">
+    <div id="increment-label">
+        <?= $escaper->escapeHtml(__('If you already have an approved Google Promotions feed, and you need to update promotions,
+                       <br /> use <b>Submit new promotion</b> to increment promotions IDs with next feed file.'), ['br', 'b']) ?>
+    </div>
+    <span id="increment-counter"><?php echo $block->escapeHtml(__('Submit as new promotion')); ?></span>
+    <input type="hidden" name="<?= $escaper->escapeHtmlAttr($element->getName()) ?>[counter]" value="<?= $escaper->escapeHtmlAttr($block->getPromotionData('counter', '0')) ?>" />
+    <div style="clear: both; height: 10px;"></div>
+    <div class="entry-edit form-inline">
+        <div id="increment-success" class="messages">
+            <div class="message message-success">
+                <div><?= $escaper->escapeHtml(__('Promotion ID has been incremented. Please <b>Save Config</b> for changes to take effect with next feed generation.'), ['b']) ?></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var clicked = 0,
+            format = "<?= $escaper->escapeJs($block->getDateFormat()) ?>";
+        $('increment-counter').observe('click', function(){
+            var initialValue = $(this).next().value;
+            if(clicked == 0){
+                $(this).addClassName('disabled');
+                $(this).next().value = parseInt(initialValue, 10) + 1;
+                $('increment-success').addClassName('visible');
+                clicked++;
+            }
+        });
+    </script>
+    <br />
+    <p><?php echo $block->escapeHtml(__('Select which promotion cart rules should be included with the feed.')); ?></p>
+    <div class="control">
+        <table class="data-grid admin__control-table <?php echo $block->escapeHtml($block->getControlName()); ?>_table" id="<?php echo $block->escapeHtml($block->getControlName()) ?>_table">
+            <thead>
+                <tr>
+                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Include')); ?></th>
+                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Cart Promotion Rule Name')); ?></th>
+                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Promotion Title')); ?>
+                        <div id="title-helper">? <span>Promotion Title must follow <a href="https://support.google.com/merchants/answer/2877578" target="_blank">strict editorial requirements</a>!</span></div></th>
+                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Effective From / To (yyyy/mm/dd)')); ?></th>
+                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Display From / To (yyyy/mm/dd)')); ?></th>
+                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Coupon Code')); ?></th>
+                </tr>
+            </thead>
+            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container">
+            <?php if (!count($rules)): ?>
+                <tr><td colspan="5"><?= $escaper->escapeHtml(__('Save feed in order to set up pomotions.')) ?></td></tr>
+            <?php endif; ?>
+            <?php foreach ($rules as $rule): ?>
+                <?php
+                $id = $rule->getId();
+                $name = $element->getName() . '[promotion][' . $id . ']';
+                $row = isset($values[$id]) ? $values[$id] : array();
+                $row = $block->getPromotionRow($rule, $row);
+                $isShippingWithoutCupon = $block->isShippingWithoutCoupon($rule);
+                $counter++;
+                ?>
+                <tr<?php echo $row['include'] ? ' class="disabled-check"' : ''; ?>>
+                    <td><input type="checkbox" name="<?= $escaper->escapeHtmlAttr($name) ?>[include]" value="1" <?= $escaper->escapeHtml($row['include'] ? ' checked="checked"' : '') ?> onclick="addRowClass(this)"/></td>
+                    <td>
+                        <p<?php if($isShippingWithoutCupon):?> title="Shipping without cupon is not allowed"<?php endif; ?>>
+                            <?php echo $block->escapeHtml($rule->getName()); ?>
+                        </p>
+                    </td>
+                    <td class="promotion-title">
+                        <input type="text" name="<?= $escaper->escapeHtmlAttr($name) ?>[title]" value="<?= $escaper->escapeHtmlAttr($row['title']) ?>" class="input-text" style="width:400px" maxlength="60" onblur="validateText(this)">
+                    </td>
+                    <td class="date-cell">
+                        <input type="text" class="input-text first" id="start-effective-<?= $escaper->escapeHtmlAttr($counter) ?>"
+                               name="<?= $escaper->escapeHtmlAttr($name) ?>[date][from]" value="<?= $escaper->escapeHtmlAttr($row['date']['from']) ?>" aria-required="true"
+                               onchange="checkDate(this);">
+                        <script>
+                            require([
+                                "jquery",
+                                "mage/calendar"
+                            ], function($){
+                                $("#start-effective-<?=$escaper->escapeJs($counter)?>").calendar({
+                                    buttonText:"<?= $escaper->escapeJs(__('Select Date')) ?>",
+                                    dateFormat: "yy/M/dd",
+                                });
+                            });
+                        </script>
+                        <br>
+                        <input type="text" class="input-text second" id="end-effective-<?= $escaper->escapeHtmlAttr($counter) ?>"
+                               name="<?= $escaper->escapeHtmlAttr($name) ?>[date][to]" value="<?= $escaper->escapeHtmlAttr($row['date']['to']) ?>" aria-required="true"
+                               onchange="checkDate(this);">
+                        <script>
+                            require([
+                                "jquery",
+                                "mage/calendar"
+                            ], function($){
+                                $("#end-effective-<?=$escaper->escapeJs($counter)?>").calendar({
+                                    buttonText:"<?= $escaper->escapeJs(__('Select Date')) ?>",
+                                    dateFormat: "yy/M/dd",
+                                });
+                            });
+                        </script>
+                    </td>
+                    <td class="date-cell">
+                        <input type="text" class="input-text first" id="start-display-<?= $escaper->escapeHtmlAttr($counter) ?>"
+                               name="<?= $escaper->escapeHtmlAttr($name) ?>[display][from]" value="<?= $escaper->escapeHtmlAttr($row['display']['from']) ?>" aria-required="true"
+                               onchange="checkDate(this);">
+                        <script>
+                            require([
+                                "jquery",
+                                "mage/calendar"
+                            ], function($){
+                                $("#start-display-<?=$escaper->escapeJs($counter)?>").calendar({
+                                    buttonText:"<?= $escaper->escapeJs(__('Select Date')) ?>",
+                                    dateFormat: "yy/M/dd",
+                                });
+                            });
+                        </script>
+                        <br>
+                        <input type="text" class="input-text second" id="end-display-<?= $escaper->escapeHtmlAttr($counter) ?>"
+                               name="<?= $escaper->escapeHtmlAttr($name) ?>[display][to]" value="<?= $escaper->escapeHtmlAttr($row['display']['to']) ?>" aria-required="true"
+                               onchange="checkDate(this);">
+                        <script>
+                            require([
+                                "jquery",
+                                "mage/calendar"
+                            ], function($){
+                                $("#end-display-<?=$escaper->escapeJs($counter)?>").calendar({
+                                    buttonText:"<?= $escaper->escapeJs(__('Select Date')) ?>",
+                                    dateFormat: "yy/M/dd",
+                                });
+                            });
+                        </script>
+                    </td>
+                    <?php $code = $block->escapeHtml($rule->getCode()); ?>
+                    <td <?= $escaper->escapeHtml(empty($code) ? 'class="no-cupon"' : '') ?>><?= $escaper->escapeHtml($code) ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    var charCount = 0;
+
+    var validateText = function(element){
+        var parentCell = element.parentNode,
+            parentEl = element.parentNode,
+            numCount = 0;
+        if(!parentCell.parentNode.classList.contains('disabled-check')){
+            if(parentEl.getElementsByClassName("special").length){
+                var el = parentEl.getElementsByClassName("special");
+                el[0].parentNode.removeChild(el[0]);
+            }
+            if(parentEl.getElementsByClassName("text-length").length){
+                var el = parentEl.getElementsByClassName("text-length");
+                el[0].parentNode.removeChild(el[0]);
+            }
+            if(parentEl.getElementsByClassName("exclamation").length){
+                var el = parentEl.getElementsByClassName("exclamation");
+                el[0].parentNode.removeChild(el[0]);
+            }
+            if(parentEl.getElementsByClassName("uppercase").length){
+                var el = parentEl.getElementsByClassName("uppercase");
+                el[0].parentNode.removeChild(el[0]);
+            }
+            if(parentEl.getElementsByClassName("duplicate").length){
+                var el = parentEl.getElementsByClassName("duplicate");
+                el[0].parentNode.removeChild(el[0]);
+            }
+            if(parentEl.getElementsByClassName("camelcase").length){
+                var el = parentEl.getElementsByClassName("camelcase");
+                el[0].parentNode.removeChild(el[0]);
+            }
+            document.getElementById('save').disabled=false;
+            document.getElementById('saveandcontinue').disabled=false;
+
+            var parent = document.getElementById('promotionsControl_table');
+            if(!parent.getElementsByClassName('error').length){
+                document.getElementById('save').disabled=false;
+                document.getElementById('saveandcontinue').disabled=false;
+            }
+        }else{
+            charCount = 0;
+            var currentEl = element.value,
+                separators = ['%', ',', '.'];
+
+            //Check string for duplicate special characters
+            var specialCharPattern = /[\?\,\.\*]{2,}/;
+            if(specialCharPattern.test(currentEl)){
+                if(parentEl.getElementsByClassName("special").length){
+                    var el = parentEl.getElementsByClassName("special");
+                    el[0].parentNode.removeChild(el[0]);
+                }
+                var duplicateCharParagraph = document.createElement("P");
+                var duplicateCharText = document.createTextNode('The following characters can\'t be duplicated: * , . ?');
+                var duplicateStringLink = document.createElement('a');
+                var duplicateStringLinkText = document.createTextNode('See Google Editorial Requirements');
+                duplicateCharParagraph.appendChild(duplicateCharText);
+                duplicateStringLink.appendChild(duplicateStringLinkText);
+                duplicateStringLink.setAttribute('href', 'https://support.google.com/merchants/answer/2877578');
+                duplicateCharParagraph.addClassName('error special');
+                element.parentNode.appendChild(duplicateCharParagraph);
+                duplicateCharParagraph.appendChild(duplicateStringLink);
+            }else{
+                if(parentEl.getElementsByClassName("special").length){
+                    var el = parentEl.getElementsByClassName("special");
+                    el[0].parentNode.removeChild(el[0]);
+                }
+            }
+
+            for (var i = 0; i < separators.length; i++) { //Add space after special chars
+                var rg = new RegExp("\\" + separators[i], "g");
+                currentEl = currentEl.replace(rg,separators[i] + " ");
+            }
+            currentEl = currentEl.replace(/\s\s+/g, ' ').trim();
+
+            //Check for string length and add/remove error message
+            if(currentEl.length > 60){
+                if(parentEl.getElementsByClassName("text-length").length){
+                    var el = parentEl.getElementsByClassName("text-length");
+                    el[0].parentNode.removeChild(el[0]);
+                }
+                var lengthParagraph = document.createElement("P");
+                var lengthText = document.createTextNode("Title should be max 60 characters long");
+                var lengthLink = document.createElement('a');
+                var lengthLinkText = document.createTextNode('See Google Editorial Requirements');
+                lengthParagraph.addClassName('error text-length');
+                lengthParagraph.appendChild(lengthText);
+                lengthLink.appendChild(lengthLinkText);
+                lengthLink.setAttribute('href', 'https://support.google.com/merchants/answer/2877578');
+                element.parentNode.appendChild(lengthParagraph);
+                lengthParagraph.appendChild(lengthLink);
+            }else{
+                if(parentEl.getElementsByClassName("text-length").length){
+                    var el = parentEl.getElementsByClassName("text-length");
+                    el[0].parentNode.removeChild(el[0]);
+                }
+            }
+
+            //Check for Exclamation mark and add/remove error message
+            if(currentEl.indexOf('!') !== -1){
+                if(parentEl.getElementsByClassName("exclamation").length){
+                    var el = parentEl.getElementsByClassName("exclamation");
+                    el[0].parentNode.removeChild(el[0]);
+                }
+                var signParagraph = document.createElement("P");
+                var signText = document.createTextNode("This character '!' is not allowed");
+                var signLink = document.createElement('a');
+                var signLinkText = document.createTextNode('See Google Editorial Requirements');
+                signParagraph.appendChild(signText);
+                signLink.appendChild(signLinkText);
+                signParagraph.addClassName('error exclamation');
+                signLink.setAttribute('href', 'https://support.google.com/merchants/answer/2877578');
+                element.parentNode.appendChild(signParagraph);
+                signParagraph.appendChild(signLink);
+            }else{
+                if(parentEl.getElementsByClassName("exclamation").length){
+                    var el = parentEl.getElementsByClassName("exclamation");
+                    el[0].parentNode.removeChild(el[0]);
+                }
+            }
+
+            //Check for consecutive uppercase letters and add/remove error message
+            var patt = /[A-Z]{2,}/;
+            if(patt.test(currentEl)){
+                if(parentEl.getElementsByClassName("uppercase").length){
+                    var el = parentEl.getElementsByClassName("uppercase");
+                    el[0].parentNode.removeChild(el[0]);
+                }
+                var uppercaseParagraph = document.createElement("P");
+                var uppercaseText = document.createTextNode("You can't have two or more consecutive uppercase letters.");
+                var uppercaseLink = document.createElement('a');
+                var uppercaseLinkText = document.createTextNode('See Google Editorial Requirements');
+                uppercaseParagraph.appendChild(uppercaseText);
+                uppercaseLink.appendChild(uppercaseLinkText);
+                uppercaseParagraph.addClassName('error uppercase');
+                uppercaseLink.setAttribute('href', 'https://support.google.com/merchants/answer/2877578');
+                element.parentNode.appendChild(uppercaseParagraph);
+                uppercaseParagraph.appendChild(uppercaseLink);
+            }else{
+                if(parentEl.getElementsByClassName("uppercase").length){
+                    var el = parentEl.getElementsByClassName("uppercase");
+                    el[0].parentNode.removeChild(el[0]);
+                }
+            }
+            element.value = currentEl;
+
+
+            //Check for duplicate consecutive words
+            var wordArray = currentEl.split(" ");
+            for(var a=0; a < wordArray.length; a++){
+                if((a+1) < wordArray.length){
+                    if(wordArray[a].toLowerCase() == wordArray[a+1].toLowerCase()){
+                        if(parentEl.getElementsByClassName("duplicate").length){
+                            var el = parentEl.getElementsByClassName("duplicate");
+                            el[0].parentNode.removeChild(el[0]);
+                        }
+                        var duplicateParagraph = document.createElement("P");
+                        var duplicateText = document.createTextNode("Duplicate words are not allowed.");
+                        var duplicateLink = document.createElement('a');
+                        var duplicateLinkText = document.createTextNode('See Google Editorial Requirements');
+                        duplicateParagraph.appendChild(duplicateText);
+                        duplicateLink.appendChild(duplicateLinkText);
+                        duplicateParagraph.addClassName('error duplicate');
+                        duplicateLink.setAttribute('href', 'https://support.google.com/merchants/answer/2877578');
+                        element.parentNode.appendChild(duplicateParagraph);
+                        duplicateParagraph.appendChild(duplicateLink);
+                        break;
+                    }else{
+                        if(parentEl.getElementsByClassName("duplicate").length){
+                            var el = parentEl.getElementsByClassName("duplicate");
+                            el[0].parentNode.removeChild(el[0]);
+                        }
+                    }
+                }
+            }
+
+            //Camel case testing
+            var sentencesArray = currentEl.split(".");
+            for (var c = 0; c < sentencesArray.length; c++){
+                var wordsFromSenteces = sentencesArray[c].split(" ");
+
+                for(d=0; d<wordsFromSenteces.length;d++){
+                    if(/^[a-zA-Z]+$/.test(wordsFromSenteces[d].charAt(0))){
+
+                    }else{
+                        numCount++;
+                    }
+                    if(wordsFromSenteces[d].charAt(0) == wordsFromSenteces[d].charAt(0).toUpperCase() && /^[a-zA-Z]+$/.test(wordsFromSenteces[d].charAt(0))){
+                        if(wordsFromSenteces[d].charAt(0) == ''){
+                            charCount = 0;
+                        }else{
+                            charCount++;
+                        }
+                    }
+                    if(d == wordsFromSenteces.length-1 && charCount+numCount > 1+numCount && charCount+numCount < wordsFromSenteces.length){
+                        if(parentEl.getElementsByClassName("camelcase").length){
+                            var el = parentEl.getElementsByClassName("camelcase");
+                            el[0].parentNode.removeChild(el[0]);
+                        }
+                        var wordsParagraph = document.createElement("P");
+                        var wordsText = document.createTextNode("The words in a sentence must be all capitalized or only the first word should be capitalized.");
+                        var wordsLink = document.createElement('a');
+                        var wordsLinkText = document.createTextNode('See Google Editorial Requirements');
+                        wordsParagraph.appendChild(wordsText);
+                        wordsLink.appendChild(wordsLinkText);
+                        wordsParagraph.addClassName('error camelcase');
+                        wordsLink.setAttribute('href', 'https://support.google.com/merchants/answer/2877578');
+                        element.parentNode.appendChild(wordsParagraph);
+                        wordsParagraph.appendChild(wordsLink);
+                    }else{
+                        if(parentEl.getElementsByClassName("camelcase").length){
+                            var el = parentEl.getElementsByClassName("camelcase");
+                            el[0].parentNode.removeChild(el[0]);
+                        }
+                    }
+                }
+
+            }
+            var parent = document.getElementById('promotionsControl_table');
+            if(parent.getElementsByClassName('error').length){
+                document.getElementById('save').disabled=true;
+                document.getElementById('saveandcontinue').disabled=true;
+            }else{
+                document.getElementById('save').disabled=false;
+                document.getElementById('saveandcontinue').disabled=false;
+            }
+        }
+    };
+
+    var checkDate = function(element){
+        var parent = element.parentNode,
+            startDate = new Date(parent.getElementsByClassName('first')[0].value),
+            endDate = new Date(parent.getElementsByClassName('second')[0].value),
+            dateParents = parent.parentNode.getElementsByClassName('date-cell');
+
+        if(!parent.parentNode.classList.contains('disabled-check')){
+            if(parent.getElementsByClassName("date-error").length){
+                var el = parent.getElementsByClassName("date-error");
+                el[0].parentNode.removeChild(el[0]);
+                for(var gh = 0; gh< dateParents.length; gh++){
+                    dateParents[gh].removeClassName('has-error');
+                }
+            }
+        }else{
+            if(startDate > endDate){
+                if(parent.getElementsByClassName("date-error").length){
+                    var el = parent.getElementsByClassName("date-error");
+                    el[0].parentNode.removeChild(el[0]);
+                }
+                var dateParagraph = document.createElement("P");
+                var dateText = document.createTextNode("To date should be later then From date.");
+                dateParagraph.appendChild(dateText);
+                dateParagraph.addClassName('error date-error');
+                element.parentNode.appendChild(dateParagraph);
+                for(var gh = 0; gh< dateParents.length; gh++){
+                    dateParents[gh].addClassName('has-error');
+                }
+            }else{
+                if(parent.getElementsByClassName("date-error").length){
+                    var el = parent.getElementsByClassName("date-error");
+                    el[0].parentNode.removeChild(el[0]);
+                }
+                for(var gh = 0; gh< dateParents.length; gh++){
+                    dateParents[gh].removeClassName('has-error');
+                }
+            }
+            var parent = document.getElementById('promotionsControl_table');
+            if(parent.getElementsByClassName('error').length){
+                document.getElementById('save').disabled=true;
+                document.getElementById('saveandcontinue').disabled=true;
+            }else{
+                document.getElementById('save').disabled=false;
+                document.getElementById('saveandcontinue').disabled=false;
+            }
+        }
+
+    }
+
+    var addRowClass = function(el){
+        var parentEl = el.parentNode,
+            titleInput = parentEl.parentNode.querySelector('.promotion-title input[type="text"]'),
+            dateInput = parentEl.parentNode.getElementsByClassName('date-cell');
+        if(parentEl.parentNode.classList.contains('disabled-check')){
+            parentEl.parentNode.removeClassName('disabled-check');
+        }else{
+            parentEl.parentNode.addClassName('disabled-check');
+        }
+        for (var i = 0; i < dateInput.length; i++){
+            var dateInputsList = dateInput[i].getElementsByTagName('input');
+            for(var j = 0 ;j< dateInputsList.length; j++){
+                checkDate(dateInputsList[j]);
+            }
+        }
+        validateText(titleInput);
+    }
+</script>

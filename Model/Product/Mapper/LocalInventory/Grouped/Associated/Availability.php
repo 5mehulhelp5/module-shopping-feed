@@ -1,0 +1,38 @@
+<?php
+/**
+ * RocketWeb
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category  RocketWeb
+ * @package   MageOS_ShoppingFeed
+ * @copyright Copyright (c) 2023 RocketWeb (http://rocketweb.com)
+ * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @author    Rocket Web Inc.
+ */
+
+namespace MageOS\ShoppingFeed\Model\Product\Mapper\LocalInventory\Grouped\Associated;
+
+use \MageOS\ShoppingFeed\Model\Product\Mapper\LocalInventory\Simple\Availability as SimpleAvailability;
+
+class Availability extends SimpleAvailability
+{
+    public function map(array $params = [])
+    {
+        $cell = self::IN_STOCK;
+        if ($this->getAdapter()->getFeed()->getConfig('grouped_inherit_parent_out_of_stock')) {
+            $cell = $this->getStockStatus($this->getAdapter()->getParentAdapter());
+        }
+
+        if ($cell == self::IN_STOCK) {
+            $cell = $this->getStockStatus($this->getAdapter());
+        }
+
+        return $this->getAdapter()->getFilter()->cleanField($cell, $params);
+    }
+}

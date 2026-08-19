@@ -1,0 +1,11 @@
+<?php
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductQuantity */
+?>
+<div>
+    <span><?php echo $block->escapeHtml(__('Inventory Source:')) ?></span>
+    <select name="#{htmlName}[#{index}][param]" class="select">
+        <?php foreach ($block->getSourceOptions() as $option): ?>
+            <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>

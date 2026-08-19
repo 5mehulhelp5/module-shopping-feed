@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+  <event name="admin_system_config_changed_section_carriers">
+    <observer name="mageos_shopping_feed_carriers_update" instance="MageOS\ShoppingFeed\Observer\CarriersUpdate"/>
+  </event>
+  <event name="controller_action_postdispatch_adminhtml_system_currency_saveRates">
+    <observer name="mageos_shopping_feed_rates_update" instance="MageOS\ShoppingFeed\Observer\RatesUpdate"/>
+  </event>
+  <event name="layout_generate_blocks_after">
+    <observer name="mageos_shopping_feed_remove_block" instance="MageOS\ShoppingFeed\Observer\PopupLayout"/>
+  </event>
+  <event name="mageos_shopping_feed_feed_edit_tab_filters_prepare_form_google_shopping">
+    <observer name="mageos_shopping_feed_google_observer_filters" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\AddGoogleFiltersFieldsObserver"/>
+  </event>
+  <event name="mageos_shopping_feed_feed_edit_tab_general_prepare_form_google_shopping">
+    <observer name="mageos_shopping_feed_google_observer_general" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\AddGoogleGeneralMicrodataFieldsObserver"/>
+  </event>
+  <event name="mageos_shopping_feed_feed_edit_tab_categories_prepare_form_google_local_inventory">
+    <observer name="mageos_shopping_feed_google_inventory_observer_categories_local_inventory" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Categories\LocalInventoryFilterFields"/>
+  </event>
+  <event name="mageos_shopping_feed_feed_edit_tab_configurable_prepare_form_google_local_inventory">
+    <observer name="mageos_shopping_feed_google_inventory_observer_configurable_local_inventory" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Configurable\LocalInventoryFilterFields"/>
+  </event>
+  <event name="mageos_shopping_feed_feed_edit_tab_grouped_prepare_form_google_local_inventory">
+    <observer name="mageos_shopping_feed_google_inventory_observer_grouped_local_inventory" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Grouped\LocalInventoryFilterFields"/>
+  </event>
+  <event name="mageos_shopping_feed_feed_edit_tab_bundle_prepare_form_google_local_inventory">
+    <observer name="mageos_shopping_feed_google_inventory_observer_bundle_local_inventory" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Bundle\LocalInventoryFilterFields"/>
+  </event>
+  <event name="mageos_shopping_feed_before_generate_google_shopping">
+    <observer name="mageos_shopping_feed_google_promotions_observer_generator" instance="MageOS\ShoppingFeed\Observer\Promotions\Generator"/>
+  </event>
+  <event name="mageos_shopping_feed_upload_after">
+    <observer name="mageos_shopping_feed_google_promotions_observer_uploader" instance="MageOS\ShoppingFeed\Observer\Promotions\Uploader"/>
+  </event>
+</config>

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+  <system>
+    <tab id="mageos" translate="label" sortOrder="1001000">
+      <label>Mage-OS</label>
+    </tab>
+    <section id="mageos_shopping_feed" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+      <label>Mage-OS Shopping Feed</label>
+      <tab>mageos</tab>
+      <resource>MageOS_ShoppingFeed::configuration</resource>
+      <group id="general" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>General Info</label>
+        <field id="version" translate="label" type="note" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Versions installed:</label>
+          <frontend_model>MageOS\ShoppingFeed\Block\Adminhtml\Info</frontend_model>
+        </field>
+        <field id="cron_enabled" translate="label" type="select" sortOrder="20" showInDefault="1">
+          <label>Cron Enabled</label>
+          <comment>Feed generation is launched through magento's cron. If you disable it here, make sure to add stand alone crontab commands for feed:
+                    php bin/magento mage-os:shopping-feed:schedule,
+                    php bin/magento mage-os:shopping-feed:generate</comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+      </group>
+      <group id="log" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Log Settings</label>
+        <field id="level" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Logging Level</label>
+          <source_model>MageOS\ShoppingFeed\Model\Logger\Source\LogLevel</source_model>
+          <comment>Sets the minimum level of messages to log. Messages with lower priority will be ignored.</comment>
+        </field>
+        <field id="rotate" translate="label" type="text" sortOrder="40" showInDefault="1">
+          <label>Log rotate (Kb)</label>
+          <comment>Archive log file when it's size exceeds kilobytes set here.</comment>
+        </field>
+      </group>
+      <group id="google" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Google</label>
+        <field id="microdata_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enable Automatic Updates (Microdata)</label>
+          <comment>Adds hidden schema.org microdata information to your product pages. For Google Shopping, you also need to enable Automatic Item Updates in your merchant account.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="dynamic_remarketing_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Enable Google Ads Dynamic Remarketing Events</label>
+          <comment>Sends a Google tag view_item event when a configurable product option is selected. The Google tag must already be installed and consent-managed on the storefront.</comment>
+          <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+        </field>
+        <field id="google_ads_destination_id" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+          <label>Google Ads Destination ID</label>
+          <comment>Optional send_to destination, such as AW-123456789. Leave empty when Google Tag Manager handles event routing.</comment>
+        </field>
+      </group>
+    </section>
+  </system>
+</config>

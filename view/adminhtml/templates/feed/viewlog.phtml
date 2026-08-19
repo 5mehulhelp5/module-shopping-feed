@@ -1,0 +1,10 @@
+<?php /** @var $block MageOS\ShoppingFeed\Block\Adminhtml\Feed\Viewlog */?>
+<?php if ($block->getError()): ?>
+    <span><?php echo $block->escapeHtml($block->getError()) ?></span>
+<?php else: ?>
+    <ul>
+        <?php foreach ($block->getFileLines() as $line) :?>
+            <li><?php echo $block->escapeHtml($line) ?></li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

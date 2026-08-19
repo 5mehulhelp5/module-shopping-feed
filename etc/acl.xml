@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Catalog::catalog">
+                    <resource id="MageOS_ShoppingFeed::mageos_shopping_feed" title="Mage-OS Shopping Feed"
+                              sortOrder="1000">
+                        <resource id="MageOS_ShoppingFeed::grid" title="Shopping Feeds" sortOrder="5">
+                            <resource id="MageOS_ShoppingFeed::save" title="Save Feed" sortOrder="10" />
+                            <resource id="MageOS_ShoppingFeed::generate" title="Generate Feed" sortOrder="15" />
+                            <resource id="MageOS_ShoppingFeed::delete" title="Delete Feed" sortOrder="20" />
+                        </resource>
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="MageOS_ShoppingFeed::configuration" title="Shopping Feeds Section"
+                                      sortOrder="1200" />
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

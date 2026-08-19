@@ -1,0 +1,14 @@
+<?php
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Concatenate */
+?>
+<div><?php echo $block->escapeHtml(__('Value:')) ?></div>
+
+<div>
+    <textarea name="#{htmlName}[#{index}][param]" class="textarea" rows="2" cols="10">#{param}</textarea>
+</div>
+<p><span><?php echo $block->escapeHtml(__('Concatenate text and product data using placeholder in this format:
+        {{attribute_code}} or {{column_name}}. The {{variants}} placeholder is designed to pull values of all configurable
+        attributes for an associated product in the format: "Option 1, Option 2, Option 3 ...".
+        The separator can be changed under \'Configurable Products > Associated Product Attribute Value Separator\'.
+        Any columns selected in \'Value inheritance by column\' from Configurable and Grouped section will inherit values
+        from parent. Placeholder which don;t pull values can be removed using \'Product Filters > Find and replace\'')) ?></span></p>

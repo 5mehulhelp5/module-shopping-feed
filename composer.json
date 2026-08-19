@@ -1,0 +1,76 @@
+{
+    "name": "mage-os/module-shopping-feed",
+    "description": "Product feed generation for Mage-OS and Magento Open Source, including Google Shopping, Local Inventory, and Promotions.",
+    "type": "magento2-module",
+    "license": "OSL-3.0",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Rocket Web Inc.",
+            "email": "info@rocketweb.com"
+        },
+        {
+            "name": "Mage-OS"
+        }
+    ],
+    "require": {
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+        "magento/framework": "^103.0.6-p15",
+        "magento/module-backend": ">=100.0 <200.0",
+        "magento/module-bundle": ">=100.0 <200.0",
+        "magento/module-catalog": ">=100.0 <200.0",
+        "magento/module-catalog-inventory": ">=100.0 <200.0",
+        "magento/module-catalog-rule": ">=100.0 <200.0",
+        "magento/module-config": ">=100.0 <200.0",
+        "magento/module-configurable-product": ">=100.0 <200.0",
+        "magento/module-customer": ">=100.0 <200.0",
+        "magento/module-directory": ">=100.0 <200.0",
+        "magento/module-downloadable": ">=100.0 <200.0",
+        "magento/module-eav": ">=100.0 <200.0",
+        "magento/module-grouped-product": ">=100.0 <200.0",
+        "magento/module-msrp": ">=100.0 <200.0",
+        "magento/module-quote": ">=100.0 <200.0",
+        "magento/module-review": ">=100.0 <200.0",
+        "magento/module-sales-rule": ">=100.0 <200.0",
+        "magento/module-shipping": ">=100.0 <200.0",
+        "magento/module-store": ">=100.0 <200.0",
+        "magento/module-tax": ">=100.0 <200.0",
+        "magento/module-ui": ">=100.0 <200.0",
+        "magento/module-url-rewrite": ">=100.0 <200.0",
+        "magento/module-weee": ">=100.0 <200.0",
+        "monolog/monolog": "^2.0 || ^3.0",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
+        "symfony/console": "^5.4 || ^6.0 || ^7.0"
+    },
+    "suggest": {
+        "magento/module-inventory-api": "Enables Multi-Source Inventory support and Google Local Inventory feeds.",
+        "magento/module-inventory-sales-api": "Enables stock resolution and reservation-aware quantities."
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "MageOS\\ShoppingFeed\\": ""
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "magento/composer-dependency-version-audit-plugin": true,
+            "magento/magento-composer-installer": false
+        }
+    },
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://mirror.mage-os.org/"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/mage-os-lab/module-shopping-feed/issues",
+        "source": "https://github.com/mage-os-lab/module-shopping-feed"
+    }
+}

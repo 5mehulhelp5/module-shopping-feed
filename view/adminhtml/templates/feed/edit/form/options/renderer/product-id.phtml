@@ -1,0 +1,12 @@
+<?php
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductId */
+?>
+<div>
+    <span><?php echo $block->escapeHtml(__('Add Store Code:')) ?></span>
+    <select name="#{htmlName}[#{index}][param]" class="select">
+        <?php foreach ($block->getYesNoOptions() as $option): ?>
+            <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>
+<p class="note"><?php echo $block->escapeHtml(__('For multi-store ids must be unique across all feeds. Set to \'Yes\' will concatenate the product id and the store code.')) ?></p>

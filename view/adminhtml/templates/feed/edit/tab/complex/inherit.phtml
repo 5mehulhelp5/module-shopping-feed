@@ -1,0 +1,172 @@
+<?php
+
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Complex\Inherit */
+$element = $block->getElement();
+?>
+<?php $htmlId      = $block->getElement()->getHtmlId() ?>
+<?php $htmlClass   = $block->getElement()->getClass() ?>
+<?php $htmlName    = $block->getElement()->getName() ?>
+<?php $readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled() ?>
+
+<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
+     data-apply-to="<?php echo $block->escapeHtml(
+         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+             $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
+         )
+     )?>">
+    <div class="label-w-space">
+        <label class="label"><span><?php echo $block->escapeHtml($block->getElement()->getLabel()) ?></span></label>
+    </div>
+    <div class="control">
+        <table class="admin__control-table inherit_table data-grid" id="inherit_table">
+            <thead>
+            <tr>
+                <th class="data-grid-th col-column required"><?php echo $block->escapeHtml(__('Column')) ?></th>
+                <th class="data-grid-th col-from required"><?php echo $block->escapeHtml(__('Map value from')) ?></th>
+                <th class="data-grid-th col-extra"><?php echo $block->escapeHtml(__('Only for')) ?></th>
+                <th class="data-grid-th col-delete"><?php echo $block->escapeHtml(__('Action')) ?></th>
+            </tr>
+            </thead>
+            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container"></tbody>
+            <tfoot>
+            <tr>
+                <td colspan="5" class="col-actions-add"><?php echo $block->getAddButtonHtml() ?></td>
+            </tr>
+            </tfoot>
+        </table>
+
+        <script>
+            require([
+                'mage/template',
+                "prototype",
+                "mage/adminhtml/form"
+            ], function (mageTemplate) {
+
+//<![CDATA[
+                var inheritRowTemplate = '<tr>'
+                    + '<td class="col-column">'
+                    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?> required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][column]" id="<?php echo $block->escapeHtml($htmlName) ?>_row_<%- data.index %>_column">'
+                    <?php foreach ($block->getColumns() as $column): ?>
+                    + '<option value="<?php echo $block->escapeQuote($block->escapeHtml($column['value'])) ?>" has_extra="<?= $block->escapeHtml($column['has_extra'])?>"><?php echo $block->escapeHtml($column['label']) ?></option>'
+                    <?php endforeach ?>
+                    + '</select></td>'
+                    + '<td class="col-from">'
+                    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?> from required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][from]" value="<%- data.from %>" id="<?php echo $block->escapeHtml($htmlName) ?>_row_<%- data.index %>_from">'
+                    <?php foreach ($block->getOptions() as $option): ?>
+                    + '<option value="<?php echo $block->escapeQuote($block->escapeHtml($option['value'])) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>'
+                    <?php endforeach ?>
+                    + '</select></td>'
+                    + '<td class="col-extra">'
+                    + '<div>attributes: <input type="text" class="<?php echo $block->escapeHtml($htmlClass) ?> extra" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][extra]" value="<%- data.extra %>" id="<?php echo $block->escapeHtml($htmlName) ?>_row_<%- data.index %>_extra"></div>'
+                    + '</td>'
+                    + '<td class="col-delete"><input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][delete]" class="delete" value="" id="<?php echo $block->escapeHtml($htmlName) ?>_row_<%- data.index %>_delete" />'
+                    + '<button title="<?php echo $block->escapeHtml(__('Delete')) ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="<?php echo $block->escapeHtml($htmlName) ?>_row_<%- data.index %>_delete_button" onclick="return inheritControl_<?php echo $block->escapeHtml($htmlId) ?>.deleteItem(event);">'
+                    + '<span><?php echo $block->escapeHtml(__("Delete")) ?></span></button></td>'
+                    + '</tr>';
+
+                var inheritControl_<?php echo $block->escapeHtml($htmlId) ?> = {
+                    template: mageTemplate(inheritRowTemplate),
+                    itemsCount: 0,
+                    addItem : function () {
+                        <?php if ($readonly): ?>
+                        if (arguments.length < 3) {
+                            return;
+                        }
+                        <?php endif; ?>
+                        var data = {
+                            column: '<?php echo $block->escapeHtml($block->getDefaultColumn()) ?>',
+                            from: '',
+                            extra: '',
+                            readOnly: false,
+                            index: this.itemsCount++
+                        };
+
+                        if(arguments.length == 4) {
+                            data.column = arguments[0];
+                            data.from = arguments[1];
+                            data.extra = arguments[2];
+                            data.readOnly = arguments[3];
+                        }
+
+                        Element.insert($('<?php echo $block->escapeHtml($htmlId) ?>_container'), {
+                            bottom : this.template({
+                                data: data
+                            })
+                        });
+
+                        $('<?php echo $block->escapeHtml($htmlName) ?>_row_' + data.index + '_column').value = data.column;
+                        $('<?php echo $block->escapeHtml($htmlName) ?>_row_' + data.index + '_from').value   = data.from;
+                        $('<?php echo $block->escapeHtml($htmlName) ?>_row_' + data.index + '_extra').value   = data.extra;
+
+                        var columnElement = $('<?php echo $block->escapeHtml($htmlName) ?>_row_' + data.index + '_column');
+                        Event.observe(columnElement, 'change', this.toggleExtra);
+                        columnElement.dispatchEvent(new Event('change'));
+
+                        if (data.readOnly == '1') {
+                            ['column', 'from', 'extra', 'delete'].each(function(idx){
+                                $('<?php echo $block->escapeHtml($htmlName) ?>_row_'+data.index+'_'+idx).disabled = true;
+                            });
+                            $('<?php echo $block->escapeHtml($htmlName) ?>_row_'+data.index+'_delete_button').hide();
+                        }
+
+                        <?php if ($readonly): ?>
+                        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
+                        $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
+                        <?php else: ?>
+                        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+                        <?php endif; ?>
+                    },
+                    disableElement: function(el) {
+                        el.disabled = true;
+                        el.addClassName('disabled');
+                    },
+                    deleteItem: function(event) {
+                        var tr = Event.findElement(event, 'tr');
+                        if (tr) {
+                            Element.select(tr, '.delete').each(function(elem){elem.value='1'});
+                            Element.select(tr, ['input']).each(function(elem){elem.hide()});
+                            Element.hide(tr);
+                            Element.addClassName(tr, 'no-display template');
+                        }
+                        return false;
+                    },
+                    toggleExtra: function(event) {
+                        var elm = Event.findElement(event, 'select');
+                        var has_extra = elm.options[elm.selectedIndex].getAttribute('has_extra');
+
+                        elm.parentElement.parentElement.select('td.col-extra div').each(
+                            function (obj) {
+                                if (has_extra == '1') {
+                                    obj.show();
+                                } else {
+                                    obj.hide();
+                                }
+                            }
+                        );
+                    }
+                };
+                <?php foreach ($block->getValues() as $item): ?>
+                inheritControl_<?php echo $block->escapeHtml($htmlId) ?>.addItem(
+                    '<?php echo $block->escapeJsQuote($block->escapeHtml($item['column'])) ?>',
+                    '<?php echo $block->escapeJsQuote($block->escapeHtml($item['from'])) ?>',
+                    '<?php echo array_key_exists('extra', $item) ? $block->escapeJsQuote($block->escapeHtml($item['extra'])): ''; ?>',
+                    <?php echo (int) !empty($item['readonly'])?>,
+                );
+                <?php endforeach; ?>
+                <?php if ($readonly): ?>
+                $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button')
+                    .each(inheritControl_<?php echo $block->escapeHtml($htmlId) ?>.disableElement);
+                <?php endif; ?>
+
+                window.inheritControl_<?php echo $block->escapeHtml($htmlId) ?> = inheritControl_<?php echo $block->escapeHtml($htmlId) ?>;
+//]]>
+
+            });
+        </script>
+        <?php if (strlen($block->getElement()->getNote())): ?>
+            <div class="note">
+                <span><?php echo $block->escapeHtml($block->getElement()->getNote()); ?></span>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

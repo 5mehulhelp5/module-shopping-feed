@@ -1,0 +1,23 @@
+<?php
+
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Filters\FindReplace */
+$element = $block->getElement();
+?>
+<?php $htmlId      = $block->getElement()->getHtmlId() ?>
+<?php $htmlClass   = $block->getElement()->getClass() ?>
+<?php $htmlName    = $block->getElement()->getName() ?>
+<?php $options     = $block->getElement()->getValues(); ?>
+<?php $value       = $block->getElement()->getValue(); ?>
+<?php $filename    = $block->getData('filename'); ?>
+
+<div class="admin__field field field-config_<?= $escaper->escapeHtmlAttr($htmlName)?> _required required">
+    <?php echo $block->getElement()->getLabelHtml(); ?>
+    <div class="admin__field-control control">
+        <input id="<?= $escaper->escapeHtmlAttr($htmlId)?>" name="<?= $escaper->escapeHtmlAttr($htmlName)?>" style="width:200px;margin-right:10px;float:left;"
+               value="<?= $escaper->escapeHtmlAttr($value)?>" class="input-text required-entry _required select admin__control-text" />
+        &nbsp;/&nbsp;
+        <input id="file_feed" style="width:120px;margin-left:10px;clear:right;" name="config[file_feed]" value="<?= $escaper->escapeHtmlAttr($filename)?>"
+               type="text" class="input-text admin__control-text _required" />
+        <div class="note admin__field-note"><?= $escaper->escapeHtml(__('Feed output is restricted to pub/media/mageos-shopping-feed and safe subdirectories. Directories are created automatically. Use a unique .txt, .csv, .tsv, or .xml filename.'))?></div>
+    </div>
+</div>

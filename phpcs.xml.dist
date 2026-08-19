@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ruleset name="MageOS_ShoppingFeed">
+    <description>Mage-OS Shopping Feed coding-standard release gate.</description>
+
+    <config name="ignore_warnings_on_exit" value="1"/>
+    <arg name="basepath" value="."/>
+    <arg name="extensions" value="php,phtml"/>
+    <arg name="parallel" value="8"/>
+
+    <rule ref="Magento2"/>
+
+    <file>Block</file>
+    <file>Console</file>
+    <file>Controller</file>
+    <file>Cron</file>
+    <file>Model</file>
+    <file>Observer</file>
+    <file>Plugin</file>
+    <file>Test</file>
+    <file>Ui</file>
+    <file>view</file>
+    <file>registration.php</file>
+</ruleset>

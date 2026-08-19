@@ -1,0 +1,144 @@
+#increment-label{
+    float: left;
+    width: 600px;
+    margin-right: 50px;
+}
+
+#increment-counter{
+    padding: 7px 10px 7px 10px;
+    background: #eb5202;
+    border: 1px solid #eb5202;
+    border-radius: 3px;
+    color: #FFF;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+#increment-counter.disabled{
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+#increment-success{
+    display: none;
+}
+#increment-success.visible{
+    display: block;
+}
+#increment-counter:hover{
+    background: #b84002;
+    cursor: pointer;
+}
+
+
+
+#title-helper{
+    background: #FFF;
+    color: #000;
+    margin-left: 10px;
+    border-radius: 100px;
+    padding: 0 5px;
+    position: relative;
+    top: -1px;
+    display: inline-block;
+}
+
+#title-helper:hover{
+    cursor: pointer;
+}
+
+#title-helper:hover span,
+#title-helper:hover span:hover,
+#title-helper span:hover{
+    opacity: 1;
+    transform: scale(1);
+}
+
+#title-helper span{
+    position: absolute;
+    width: 210px;
+    top: 21px;
+    left: -5px;
+    padding: 5px;
+    background: #FFF;
+    color: #000;
+    border-radius: 5px;
+    border: 1px solid #CCC;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.2s ease-in;
+}
+
+#title-helper span a{
+    display: inline-block;
+    color: #007bdb;
+    text-decoration: underline;
+}
+
+#title-helper span a:hover{
+    text-decoration: none;
+}
+
+
+
+#feed_config_promotions_provider_widget_container td{
+    vertical-align: middle;
+}
+
+#feed_config_promotions_provider_widget_container td.date-cell{
+    min-width: 170px;
+}
+
+#feed_config_promotions_provider_widget_container td.date-cell input[type=text]{
+    width: 125px;
+}
+
+#attribute-feed_config_promotions_provider_widget-container{
+    margin: 0;
+}
+
+
+
+#promotionsControl_table tr td input[type="text"]{
+    width: 95%;
+}
+
+.no-cupon:before{
+    content:"";
+
+}
+#promotionsControl_table tr td.date-cell.has-error{
+    vertical-align: top;
+}
+#promotionsControl_table tr td.date-cell img {
+    position: relative;
+    top: 4px;
+}
+#promotionsControl_table tr td.promotion-title .error,
+#promotionsControl_table tr td.date-cell .error{
+    background: #eb5202;
+    color: #FFF !important;
+    padding: 2px 5px;
+    margin-top: 5px;
+    width: 400px;
+    box-sizing: border-box;
+}
+#promotionsControl_table tr td.date-cell .error p{
+    margin: 0;
+}
+#promotionsControl_table tr td.promotion-title .error a,
+#promotionsControl_table tr td.date-cell .error a{
+    color: #FFF;
+    margin-left: 5px;
+}
+
+#promotionsControl_table tr td.promotion-title .error a:hover,
+#promotionsControl_table tr td.date-cell .error a:hover{
+    text-decoration: none;
+}
+
+#promotionsControl_table tr td.date-cell .error{
+    width: 130px;
+}

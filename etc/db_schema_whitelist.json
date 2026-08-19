@@ -1,0 +1,134 @@
+{
+    "mageos_shopping_feed_feed": {
+        "column": {
+            "id": true,
+            "store_id": true,
+            "name": true,
+            "type": true,
+            "status": true,
+            "use_microdata": true,
+            "messages": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "MAGEOS_SF_FEED_NAME_TYPE": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "mageos_shopping_feed_feed_config": {
+        "column": {
+            "id": true,
+            "feed_id": true,
+            "path": true,
+            "value": true
+        },
+        "index": {
+            "MAGEOS_SF_FEED_CONFIG_PATH": true,
+            "MAGEOS_SF_FEED_CONFIG_FEED_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGEOS_SF_FEED_CONFIG_FEED_ID_PATH": true,
+            "MAGEOS_SF_FEED_CONFIG_FEED_ID_MAGEOS_SF_FEED_ID": true
+        }
+    },
+    "mageos_shopping_feed_feed_queue": {
+        "column": {
+            "id": true,
+            "feed_id": true,
+            "schedule_id": true,
+            "message": true,
+            "is_read": true,
+            "created_at": true
+        },
+        "index": {
+            "MAGEOS_SF_FEED_QUEUE_FEED_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGEOS_SF_FEED_QUEUE_FEED_ID_MAGEOS_SF_FEED_ID": true
+        }
+    },
+    "mageos_shopping_feed_feed_schedule": {
+        "column": {
+            "id": true,
+            "feed_id": true,
+            "start_at": true,
+            "processed_at": true,
+            "batch_mode": true,
+            "batch_limit": true
+        },
+        "index": {
+            "MAGEOS_SF_FEED_SCHEDULE_FEED_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGEOS_SF_FEED_SCHEDULE_FEED_ID_START_AT": true,
+            "MAGEOS_SF_FEED_SCHEDULE_FEED_ID_MAGEOS_SF_FEED_ID": true
+        }
+    },
+    "mageos_shopping_feed_feed_upload": {
+        "column": {
+            "id": true,
+            "feed_id": true,
+            "username": true,
+            "password": true,
+            "host": true,
+            "port": true,
+            "path": true,
+            "mode": true,
+            "gzip": true
+        },
+        "index": {
+            "MAGEOS_SF_FEED_UPLOAD_FEED_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGEOS_SF_FEED_UPLOAD_FEED_ID_MAGEOS_SF_FEED_ID": true
+        }
+    },
+    "mageos_shopping_feed_process": {
+        "column": {
+            "id": true,
+            "item_id": true,
+            "parent_item_id": true,
+            "feed_id": true,
+            "status": true,
+            "updated_at": true
+        },
+        "index": {
+            "MAGEOS_SF_PROCESS_ITEM_ID_FEED_ID": true,
+            "MAGEOS_SF_PROCESS_PARENT_ITEM_ID": true,
+            "MAGEOS_SF_PROCESS_STATUS": true,
+            "MAGEOS_SF_PROCESS_UPDATED_AT": true,
+            "MAGEOS_SF_PROCESS_FEED_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGEOS_SF_FEED_PROCESS_FEED_ID_MAGEOS_SF_FEED_ID": true
+        }
+    },
+    "mageos_shopping_feed_shipping": {
+        "column": {
+            "id": true,
+            "product_id": true,
+            "store_id": true,
+            "feed_id": true,
+            "currency_code": true,
+            "updated_at": true,
+            "value": true
+        },
+        "index": {
+            "MAGEOS_SF_SHPP_PRD_ID_STORE_ID_FEED_ID_CURRENCY_CODE": true,
+            "MAGEOS_SF_SHIPPING_UPDATED_AT": true,
+            "MAGEOS_SF_SHIPPING_FEED_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGEOS_SF_FEED_SHIPPING_FEED_ID_MAGEOS_SF_FEED_ID": true
+        }
+    }
+}

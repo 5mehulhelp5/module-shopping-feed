@@ -1,0 +1,12 @@
+<?php
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImage */
+?>
+<div>
+    <span><?php echo $block->escapeHtml(__('Type:')) ?></span>
+    <select name="#{htmlName}[#{index}][param]" class="select">
+        <?php foreach ($block->getImageAttributes() as $option): ?>
+            <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>
+<p class="note"><?php echo $block->escapeHtml(__('Choose which product image should be considered.')); ?></p>

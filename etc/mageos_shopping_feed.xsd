@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ */
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="config">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+                <xs:element type="feedType" name="feed" maxOccurs="unbounded" minOccurs="0">
+                    <xs:unique name="uniqueFeedName">
+                        <xs:selector xpath="feed"/>
+                        <xs:field xpath="@name"/>
+                    </xs:unique>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="feedType">
+        <xs:annotation>
+            <xs:documentation>Feed type declaration</xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="label" type="xs:string" />
+                <xs:element name="description" type="xs:string" />
+            </xs:choice>
+
+            <xs:element name="directives">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="directive" type="feedDirective" minOccurs="1" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:unique name="uniqueDirectiveName">
+                    <xs:selector xpath="directive"/>
+                    <xs:field xpath="@name"/>
+                </xs:unique>
+            </xs:element>
+
+            <xs:element name="default_product_columns" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="column" type="feedDefaultMapProductColumns" minOccurs="1" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="default_feed_config" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="general" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="name" type="xs:string" />
+                                    <xs:element name="store_id" />
+                                    <xs:element name="currency" />
+                                    <xs:element name="feed_dir" />
+                                    <xs:element name="apply_catalog_price_rules" type="xs:int" />
+                                    <xs:element name="use_default_stock" type="xs:int" />
+                                    <xs:element name="stock_attribute_code" />
+                                    <xs:element name="use_qty_increments" type="xs:int" />
+                                    <xs:element name="use_stock_reservations" type="xs:int" />
+                                    <xs:element name="complex_duplicates_check" type="xs:int" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="columns" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="product_columns" />
+                                    <xs:element name="exclude_attributes" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="categories" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="locale" />
+                                    <xs:element name="include_all_products" type="xs:int" />
+                                    <xs:element name="provider_taxonomy_by_category" />
+                                    <xs:element name="inventory_source_map" minOccurs="0" />
+                                    <xs:element name="category_depth" type="xs:int" />
+                                    <xs:element name="taxonomy_autocomplete_enabled" type="xs:int" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="filters" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="add_out_of_stock" />
+                                    <xs:element name="product_types" />
+                                    <xs:element name="attribute_sets" />
+                                    <xs:element name="map_replace_empty_columns" />
+                                    <xs:element name="find_and_replace" />
+                                    <xs:element name="filters_output_limit" />
+                                    <xs:element name="skip_column_empty" />
+                                    <xs:element name="skip_price_above" minOccurs="0" />
+                                    <xs:element name="skip_price_below" minOccurs="0" />
+                                    <xs:element name="adwords_price_buckets" minOccurs="0" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="options" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="mode" type="xs:int" />
+                                    <xs:element name="vary_categories" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="configurable" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="associated_products_mode" type="xs:int" />
+                                    <xs:element name="add_out_of_stock" type="xs:int" />
+                                    <xs:element name="inherit_parent_out_of_stock" type="xs:int" />
+                                    <xs:element name="associated_products_link_add_unique" />
+                                    <xs:element name="attribute_merge_value_separator" />
+                                    <xs:element name="configurable_map_inherit" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="grouped" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="associated_products_mode" type="xs:int" />
+                                    <xs:element name="add_out_of_stock" type="xs:int" />
+                                    <xs:element name="associated_products_link_add_unique" type="xs:int" />
+                                    <xs:element name="price_display_mode" type="xs:int" />
+                                    <xs:element name="grouped_map_inherit" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="bundle" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="associated_products_mode" type="xs:int" />
+                                    <xs:element name="combined_weight" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="shipping" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="methods" />
+                                    <xs:element name="country" />
+                                    <xs:element name="weight_column" />
+                                    <xs:element name="only_minimum" />
+                                    <xs:element name="only_free_shipping" />
+                                    <xs:element name="add_tax_to_price" />
+                                    <xs:element name="by_region" />
+                                    <xs:element name="country_with_region" />
+                                    <xs:element name="cache_enabled" />
+                                    <xs:element name="ttl" />
+                                    <xs:element name="carrier_realtime" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="schedule" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="batch_mode" />
+                                    <xs:element name="batch_limit" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="ftp" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="mode" />
+                                    <xs:element name="path" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="promotions" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="enabled"/>
+                                    <xs:element name="provider_widget"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="output_params" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="default_value" />
+                                    <xs:element name="delimiter" />
+                                    <xs:element name="enclose_cell" />
+                                    <xs:element name="enclose_escape" />
+                                    <xs:element name="delimiter_other" />
+                                    <xs:element name="encoding" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="file" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="feed" minOccurs="0" maxOccurs="1"/>
+                                    <xs:element name="log" minOccurs="0" maxOccurs="1"/>
+                                    <xs:element name="promotion" minOccurs="0" maxOccurs="1"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+
+        <xs:attribute type="xs:string" name="name" />
+        <xs:attribute type="xs:string" name="translate" />
+        <xs:attribute type="xs:string" name="taxonomyProvider" />
+    </xs:complexType>
+
+    <xs:complexType name="feedDirective">
+        <xs:annotation>
+            <xs:documentation>Feed directive</xs:documentation>
+        </xs:annotation>
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="label" type="xs:string" minOccurs="1" />
+            <xs:element name="renderer">
+                <xs:complexType>
+                    <xs:attribute name="type" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="mappers">
+                <xs:complexType>
+                    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                        <xs:element name="mapper">
+                            <xs:complexType>
+                                <xs:sequence minOccurs="0">
+                                    <xs:element name="configuration">
+                                        <xs:complexType>
+                                            <xs:simpleContent>
+                                                <xs:extension base="xs:string">
+                                                    <xs:attribute name="name" type="xs:string" use="required" />
+                                                </xs:extension>
+                                            </xs:simpleContent>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                                <xs:attribute name="for" type="xs:string" default="default" />
+                                <xs:attribute name="type" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="filter" type="xs:boolean" default="false" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="formatters">
+                <xs:complexType>
+                    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                        <xs:element name="formatter">
+                            <xs:complexType>
+                                <xs:attribute name="for" type="xs:string" default="default" />
+                                <xs:attribute name="type" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="param" type="xs:string" />
+        </xs:choice>
+        <xs:attribute name="name" type="xs:string" />
+        <xs:attribute name="allow_output_limit" type="xs:boolean" default="false" />
+    </xs:complexType>
+
+    <xs:complexType name="feedDefaultMapProductColumns">
+        <xs:annotation>
+            <xs:documentation>Feed default product columns map</xs:documentation>
+        </xs:annotation>
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element name="column" type="xs:string" />
+            <xs:element name="order" type="xs:int" />
+            <xs:element name="param" type="xs:string" />
+        </xs:choice>
+        <xs:attribute type="xs:string" name="attribute" />
+    </xs:complexType>
+</xs:schema>

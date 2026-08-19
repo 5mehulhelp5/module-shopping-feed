@@ -1,0 +1,9 @@
+<?php
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Expiration */
+?>
+<div><?php echo $block->escapeHtml(__('No. of Days:')) ?></div>
+
+<div>
+    <input type="text" name="#{htmlName}[#{index}][param]" value="#{param}" class="" />
+</div>
+<p><span><?php echo $block->escapeHtml(__('If you do not provide this attribute, items will expire and be excluded from results after 30 days. You cannot use this attribute to extend the expiration period to longer than 30 days.')) ?></span></p>

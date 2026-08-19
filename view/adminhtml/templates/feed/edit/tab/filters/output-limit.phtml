@@ -1,0 +1,155 @@
+<?php
+
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Filters\OutputLimit */
+$element = $block->getElement();
+?>
+<?php $htmlId      = $block->getElement()->getHtmlId() ?>
+<?php $htmlClass   = $block->getElement()->getClass() ?>
+<?php $htmlName    = $block->getElement()->getName() ?>
+<?php $readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled() ?>
+
+<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
+     data-apply-to="<?php echo $block->escapeHtml(
+         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+             $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
+         )
+     )?>">
+    <div class="label-w-space">
+        <label class="label"><span><?php echo $block->escapeHtml($block->getElement()->getLabel()) ?></span></label>
+    </div>
+    <div class="control">
+        <table class="admin__control-table output_limit_table data-grid" id="output_limit_table">
+            <thead>
+            <tr>
+                <th class="data-grid-th col-column"><?php echo $block->escapeHtml(__('Column')) ?></th>
+                <th class="data-grid-th col-limit required"><?php echo $block->escapeHtml(__('Max characters')) ?></th>
+                <th class="data-grid-th col-delete"><?php echo $block->escapeHtml(__('Action')) ?></th>
+            </tr>
+            </thead>
+            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container"></tbody>
+            <tfoot>
+            <tr>
+                <td colspan="3" class="col-actions-add"><?php echo $block->getAddButtonHtml() ?></td>
+            </tr>
+            </tfoot>
+        </table>
+
+        <script>
+            require([
+                'mage/template',
+                "prototype",
+                "mage/adminhtml/form"
+            ], function (mageTemplate) {
+
+//<![CDATA[
+                var outputLimitRowTemplate = '<tr>'
+                    + '<td class="col-column">'
+                    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?> required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][column]" id="output_limit_row_<%- data.index %>_column">'
+                    <?php foreach ($block->getColumns() as $column): ?>
+                    + '<option value="<?php echo $block->escapeQuote($block->escapeHtml($column['value'])) ?>"><?php echo $block->escapeHtml($column['label']) ?></option>'
+                    <?php endforeach ?>
+                    + '</select></td>'
+                    + '<td class="col-limit">'
+                    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> limit required-entry" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][limit]" value="<%- data.limit %>" id="output_limit_row_<%- data.index %>_limit" />'
+                    + '</td>'
+                    + '<td class="col-delete"><input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][delete]" class="delete" value="" id="output_limit_row_<%- data.index %>_delete" />'
+                    + '<button title="<?php echo $block->escapeHtml(__('Delete')) ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="output_limit_row_<%- data.index %>_delete_button" onclick="return outputLimitControl.deleteItem(event);">'
+                    + '<span><?php echo $block->escapeHtml(__("Delete")) ?></span></button></td>'
+                    + '</tr>';
+
+                var outputLimitControl = {
+                    template: mageTemplate(outputLimitRowTemplate),
+                    itemsCount: 0,
+                    addItem : function () {
+                        <?php if ($readonly): ?>
+                        if (arguments.length < 3) {
+                            return;
+                        }
+                        <?php endif; ?>
+                        var data = {
+                            column: '<?php echo $block->escapeHtml($block->getDefaultColumn()) ?>',
+                            limit: 1000,
+                            readOnly: false,
+                            index: this.itemsCount++
+                        };
+
+                        if(arguments.length == 3) {
+                            data.column     = arguments[0];
+                            data.limit      = arguments[1];
+                            data.readOnly   = arguments[2];
+                        }
+
+                        Element.insert($('<?php echo $block->escapeHtml($htmlId) ?>_container'), {
+                            bottom : this.template({
+                                data: data
+                            })
+                        });
+
+                        $('output_limit_row_' + data.index + '_column').value = data.column;
+                        $('output_limit_row_' + data.index + '_limit').value  = data.limit;
+
+                        if (data.readOnly == '1') {
+                            ['column', 'limit', 'delete'].each(function(idx){
+                                $('output_limit_row_'+data.index+'_'+idx).disabled = true;
+                            });
+                            $('output_limit_row_'+data.index+'_delete_button').hide();
+                        }
+
+                        <?php if ($readonly): ?>
+                        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
+                        $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
+                        <?php else: ?>
+                        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(function(el){
+                            Event.observe(el, 'change', el.setHasChanges.bind(el));
+                        });
+                        // $('<?php //echo $block->escapeHtml($htmlId) ?>//_container').select('select').each(this.removeColumn, data);
+                        <?php endif; ?>
+                    },
+                    disableElement: function(el) {
+                        el.disabled = true;
+                        el.addClassName('disabled');
+                    },
+                    removeColumn: function(el) {
+                        for (var i=0; i<el.length; i++){
+                            if (el.options[i].value == this.column) {
+                                if (el.selectedIndex != i) {
+                                    el.remove(i);
+                                }
+                            }
+                        }
+                    },
+                    deleteItem: function(event) {
+                        var tr = Event.findElement(event, 'tr');
+                        if (tr) {
+                            Element.select(tr, '.delete').each(function(elem){elem.value='1'});
+                            Element.select(tr, ['input']).each(function(elem){elem.hide()});
+                            Element.hide(tr);
+                            Element.addClassName(tr, 'no-display template');
+                        }
+                        return false;
+                    }
+                };
+                <?php foreach ($block->getValues() as $item): ?>
+                outputLimitControl.addItem(
+                    '<?php echo $block->escapeJsQuote($block->escapeHtml($item['column'])) ?>',
+                    '<?php echo $block->escapeJsQuote($block->escapeHtml($item['limit'])) ?>',
+                    <?php echo (int) !empty($item['readonly'])?>
+                );
+                <?php endforeach; ?>
+                <?php if ($readonly): ?>
+                $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button')
+                    .each(outputLimitControl.disableElement);
+                <?php endif; ?>
+
+                window.outputLimitControl = outputLimitControl;
+//]]>
+
+            });
+        </script>
+        <?php if (strlen($block->getElement()->getNote())): ?>
+            <div class="note">
+                <span><?php echo $block->escapeHtml($block->getElement()->getNote()); ?></span>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

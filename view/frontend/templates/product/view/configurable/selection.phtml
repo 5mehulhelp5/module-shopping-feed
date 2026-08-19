@@ -1,0 +1,24 @@
+<?php
+/** @var $block \MageOS\ShoppingFeed\Block\Product\View\Configurable\Selection */
+$tagConfig = [
+    'enabled' => $block->isDynamicRemarketingEnabled(),
+    'destinationId' => $block->getGoogleAdsDestinationId(),
+];
+?>
+<script type="text/javascript">
+    require(['jquery', 'mageosShoppingFeedConfigurableSelection'], function ($, ShoppingFeedConfigurable) {
+        $(function () {
+            var associatedProducts = {
+                <?php foreach ($block->getProducts() as $product): ?>
+                    '<?= (int) $product->getId() ?>': '<?= $block->escapeJs($block->escapeHtml($product->getSku())) ?>',
+                <?php endforeach; ?>
+            };
+
+            new ShoppingFeedConfigurable(
+                <?= /* @noEscape */ $block->getJsonConfig() ?>,
+                associatedProducts,
+                <?= /* @noEscape */ json_encode($tagConfig, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
+            );
+        });
+    });
+</script>

@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - feat/**
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['8.1', '8.2', '8.3', '8.4', '8.5']
+    steps:
+      - uses: actions/checkout@v6
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+      - name: Validate Composer metadata
+        run: composer validate --strict --no-check-publish
+      - name: Validate PHP syntax
+        run: find . -path './.git' -prune -o -type f \( -name '*.php' -o -name '*.phtml' \) -print0 | xargs -0 -n1 php -l
+      - name: Validate consolidated module
+        run: php dev/tests/validate.php
+
+  compute-platform-matrix:
+    name: Compute supported platform matrix
+    runs-on: ubuntu-latest
+    outputs:
+      magento_matrix: ${{ steps.magento.outputs.matrix }}
+      mageos_matrix: ${{ steps.mageos.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: graycoreio/github-actions-magento2/supported-version@v8.9.0
+        id: magento
+        with:
+          project: magento-open-source
+          kind: currently-supported
+      # The upstream matrix action does not yet list Mage-OS 3.4.0. Keep the
+      # production compatibility target explicit until upstream catches up.
+      - name: Load Mage-OS 3.4.0 matrix
+        id: mageos
+        run: echo "matrix=$(jq -c . .github/matrices/mageos-3.4.0.json)" >> "$GITHUB_OUTPUT"
+
+  check-magento:
+    name: Magento Open Source production checks
+    needs: compute-platform-matrix
+    uses: graycoreio/github-actions-magento2/.github/workflows/check-extension.yaml@v8.9.0
+    with:
+      magento_repository: https://mirror.mage-os.org/
+      matrix: ${{ needs.compute-platform-matrix.outputs.magento_matrix }}
+      fail-fast: false
+    secrets:
+      composer_auth: ${{ secrets.COMPOSER_AUTH }}
+
+  check-mageos:
+    name: Mage-OS 3.4.0 production checks
+    needs: compute-platform-matrix
+    uses: graycoreio/github-actions-magento2/.github/workflows/check-extension.yaml@v8.9.0
+    with:
+      magento_repository: https://repo.mage-os.org/
+      matrix: ${{ needs.compute-platform-matrix.outputs.mageos_matrix }}
+      fail-fast: false
+    secrets:
+      composer_auth: ${{ secrets.COMPOSER_AUTH }}

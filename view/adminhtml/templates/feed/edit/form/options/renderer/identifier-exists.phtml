@@ -1,0 +1,9 @@
+<?php
+/* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\IdentifierExists */
+?>
+
+<div>
+    <span><?php echo $block->escapeHtml(__('Required identification columns:')) ?></span>
+    <input type="text" name="#{htmlName}[#{index}][param]" value="#{param}" />
+</div>
+<p class="note"><?php echo $block->escapeHtml(__('Comma separated list, defaults to "gtin,mpn,brand". Returns FALSE if brand or any of other two (mpn, gtin) is missing, otherwise retunrs nothing. When customized, output is FALSE if any of the spcified columns is empty.')) ?></p>
