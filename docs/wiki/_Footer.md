@@ -1,0 +1,1 @@
+[Source](https://github.com/mage-os-lab/module-shopping-feed) · [Issues](https://github.com/mage-os-lab/module-shopping-feed/issues) · [Security](https://github.com/mage-os-lab/module-shopping-feed/security/policy) · [License](https://github.com/mage-os-lab/module-shopping-feed/blob/main/LICENSE.txt)

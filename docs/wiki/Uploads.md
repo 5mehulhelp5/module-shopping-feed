@@ -1,0 +1,47 @@
+# FTP, SFTP, and gzip uploads
+
+Upload destinations run after a successful feed generation. Establish and validate the feed locally before enabling a transfer.
+
+> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+
+## Security boundary
+
+Prefer SFTP. FTP sends credentials and data without transport encryption and should only be used when the recipient requires it and the network risk is accepted.
+
+Use a dedicated remote account restricted to the intended directory. Start with a non-serving or quarantine destination so a test cannot replace an accepted production feed.
+
+## Add a destination
+
+Open the feed, select **Uploads**, then add a row:
+
+| Field | Purpose |
+| --- | --- |
+| Mode | SFTP or FTP |
+| Host | Hostname only, without a URL scheme |
+| Port | Remote service port |
+| Username | Dedicated remote user |
+| Password | Remote password |
+| Path | Remote directory entered after connection |
+| Gzip | Compress the generated file before this upload |
+
+The uploaded remote filename is the basename of the local file. **Path** selects the remote directory, not a replacement filename.
+
+Passwords are encrypted with Magento's encryption service before database storage. The Admin shows `******` for a saved password. Leave that placeholder unchanged to retain the existing secret; enter a new value only when rotating it.
+
+Saving the feed does not prove that the remote connection works. A connection and directory change occur during generation and upload.
+
+## Gzip behavior
+
+When **Gzip** is enabled, the module streams the feed into a temporary `.gz` file, uploads that file, and removes the temporary compressed artifact afterward. The normal local feed remains available in its configured format.
+
+## Validate a destination
+
+1. Generate the feed without uploads and record its checksum and size.
+2. Add one quarantine destination.
+3. Generate the feed manually.
+4. Confirm the log records a successful upload to the expected host and path.
+5. Download the remote object through an independent client.
+6. If gzip is enabled, decompress it and compare its content with the local feed.
+7. Confirm the recipient can read the file before moving to a serving path.
+
+Upload failures are logged as warnings. Review [Logs and troubleshooting](Logs-and-Troubleshooting) before retrying repeatedly.

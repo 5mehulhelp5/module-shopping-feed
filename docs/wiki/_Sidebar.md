@@ -1,0 +1,49 @@
+**Mage-OS Shopping Feed**
+
+* [Home](Home)
+
+**Start here**
+
+* [Status and compatibility](Status-and-Compatibility)
+* [Installation and upgrade](Installation-and-Upgrade)
+* [Quick start](Quick-Start)
+* [Migration and coexistence](Migration-and-Coexistence)
+* [Feed types and lifecycle](Feed-Types-and-Lifecycle)
+
+**Feed guides**
+
+* [Generic feeds](Generic-Feeds)
+* [Google Shopping](Google-Shopping)
+* [Google Local Inventory and MSI](Google-Local-Inventory-and-MSI)
+* [Google Promotions](Google-Promotions)
+
+**Configuration**
+
+* [General configuration](General-Configuration)
+* [Columns and directives](Columns-and-Directives)
+* [Categories and taxonomy](Categories-and-Taxonomy)
+* [Filters and transformations](Filters-and-Transformations)
+* [Product options](Product-Options)
+* [Complex products](Complex-Products)
+* [Shipping](Shipping)
+
+**Operations**
+
+* [Manual and CLI generation](Manual-and-CLI-Generation)
+* [Scheduling and queues](Scheduling-and-Queues)
+* [FTP, SFTP, and gzip uploads](Uploads)
+* [Testing one product](Testing-One-Product)
+* [Logs and troubleshooting](Logs-and-Troubleshooting)
+* [Performance and large catalogs](Performance-and-Large-Catalogs)
+
+**Storefront integrations**
+
+* [Automatic updates and schema.org](Automatic-Updates-and-Schema-org)
+* [Configurable product deep links](Configurable-Product-Deep-Links)
+* [Google Ads view_item events](Google-Ads-View-Item-Events)
+
+**Maintainers**
+
+* [Development and CI](Development-and-CI)
+* [Release acceptance](Release-Acceptance)
+* [Commands, paths, and settings](Commands-Paths-and-Settings)

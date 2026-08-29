@@ -61,6 +61,10 @@ The dedicated `mageos_shopping_feed` cron group schedules feeds hourly and proce
 
 Feed output is restricted to `pub/media/mageos-shopping-feed` and its safe subdirectories. Per-feed logs are restricted to `var/log` and use `mageos_shopping_feed_*.log` by default.
 
+## Documentation
+
+The reviewable GitHub Wiki source is under [`docs/wiki`](docs/wiki), starting with [`Home.md`](docs/wiki/Home.md). Documentation contributors should update that source and follow [`docs/WIKI-MAINTENANCE.md`](docs/WIKI-MAINTENANCE.md) rather than editing the public wiki independently.
+
 ## Development validation
 
 Run the dependency-free consolidation checks and PHP syntax checks from the repository root:
@@ -68,6 +72,7 @@ Run the dependency-free consolidation checks and PHP syntax checks from the repo
 ```bash
 composer validate --strict --no-check-publish
 php dev/tests/validate.php
+php dev/tests/validate-wiki.php
 find . -path './.git' -prune -o -type f \( -name '*.php' -o -name '*.phtml' \) -print0 | xargs -0 -n1 php -l
 ```
 

@@ -1,0 +1,66 @@
+# Filters and transformations
+
+Product Filters decides which products reach the output and how selected column values are changed. Rule order matters.
+
+> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+
+## Catalog selection
+
+### Allow Out of Stock
+
+Controls whether out-of-stock products remain eligible for the feed. Complex-product tabs have separate out-of-stock controls for associated products.
+
+### Submit only products of these types
+
+Limits the feed to selected Magento product types. Product visibility and complex-product context still apply. A not-visible simple product may be emitted as part of an eligible configurable product.
+
+### Submit only products that have these attribute sets
+
+Limits output to selected product attribute sets.
+
+## Output transformations
+
+### Replace empty values
+
+Fills an empty output column from a configured value or another source. The target columns must already exist in the saved Columns Map.
+
+Replacement rules can be ordered and nested. Test the first successful source and the all-empty case.
+
+### Find And Replace
+
+Applies string replacement at column output. Large rule sets add work to every applicable row, so measure their effect on large catalogs.
+
+### Limit column output
+
+Truncates selected output columns to a character limit. If several limits target the same column, only the first applicable rule is used.
+
+### Skip Products with empty
+
+Rejects rows when selected required columns are empty. Save Columns Map before selecting fields here.
+
+## Google-only filters
+
+Google Shopping adds:
+
+* **Skip Products with Price above**
+* **Skip Products with Price below**
+* **Adwords Price Buckets**
+
+The upper and lower price filters do nothing when left empty. Price buckets build a value for a column mapped to the matching directive. The Admin label retains the older Adwords name, but the output is simply a configurable bucket value.
+
+## Processing order
+
+Think of the feed as a pipeline:
+
+1. Select eligible catalog products.
+2. Build mapped column values.
+3. Replace empty values.
+4. Apply find-and-replace rules.
+5. Apply output limits.
+6. Reject rows missing required output.
+
+Test interacting rules together. A transformation that produces an empty value can affect a later required-field filter.
+
+## Verification
+
+For every filter change, keep one fixture that should be included and one that should be excluded. Use **Test Feed** first, then compare expected product and skipped counts in a complete run.

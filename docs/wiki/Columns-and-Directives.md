@@ -1,0 +1,96 @@
+# Columns and directives
+
+Columns Map controls the output schema. Each row gives the output column a name and maps it to a Magento product attribute or a module directive.
+
+> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+
+## How a column is built
+
+A column has:
+
+* An output name, such as `price`, `availability`, or `brand`
+* A source attribute or directive
+* An order
+* An optional parameter used by that directive
+
+Save the feed after changing Columns Map. Several filters and inheritance controls only list columns already present in the saved map.
+
+## Common directives
+
+| Directive | Purpose |
+| --- | --- |
+| Static Value | Writes the configured parameter into every applicable row. |
+| Product Id | Writes a product identifier using the selected identifier mode. |
+| Product URL | Builds a store-view URL and can add configured parameters. |
+| Price | Maps the regular or calculated product price and formats its currency. |
+| Tier Price | Maps price for the selected customer group. |
+| Sale Price | Maps a lower active sale price. |
+| Sale Price Date Range | Maps the active special-price date range. |
+| Availability | Maps stock state using default inventory or the configured availability attribute. |
+| Inventory Count | Maps quantity, optionally using reservations. |
+| Stock Attribute | Maps a selected stock-item value such as backorders. |
+| Product Image URL | Maps the selected product image role. |
+| Product Additional Images URLs | Maps additional image URLs. |
+| Product Category Image URL | Uses the first applicable category image. |
+| Product Expiration in Feed | Produces an expiration date from the configured number of days. |
+| Variant Attributes | Maps one or more selected variant attributes. |
+| Product Review Average | Maps the product's review average. |
+| Product Review Count | Maps the product's review count. |
+| Concatenate Attributes | Renders a text pattern containing product attributes. |
+| Product Option | Maps custom-option values. |
+| Shipping | Uses the feed's Shipping tab to calculate output. |
+| Shipping Weight | Maps and converts the shipping weight. |
+| Is Bundle | Writes whether the row represents a bundle product. |
+| Type by Magento Category Path | Writes a Magento category path to the configured depth. |
+| Type by Magento Category | Writes the type value saved in Categories Map. |
+
+## Google Shopping directives
+
+Google Shopping adds:
+
+| Directive | Purpose |
+| --- | --- |
+| Adwords Price Buckets | Maps a value from the price-range rules configured under Product Filters. The Admin retains the historical field name. |
+| Identifier Exists | Calculates whether the configured product identifiers are present. |
+| Identifier Attribute | Maps an identifier from a selected attribute. |
+| Item Group ID | Groups related variants under a stable parent-derived value. |
+| Item Group Title | Maps the module's item-group title value. |
+| Variant Option | Maps the module's variant-option value. |
+| Taxonomy by Magento Category | Uses the Google taxonomy value saved in Categories Map. |
+| Promotion ID | Adds IDs from the Google Promotions configuration. |
+
+The correct output column is `promotion_id`, singular. Do not restore the historical `promotions_id` header.
+
+## Google Shopping defaults
+
+The current template includes columns for product identity, item grouping, `color`, `size`, `material`, `pattern`, `gender`, `age_group`, title, description, URL, images, price, sale price, sale dates, availability, weight, brand, MPN, condition, Magento product type, Google product category, identifier state, bundle state, shipping, and promotion IDs.
+
+Template defaults still require review. Map `brand`, MPN, GTIN, apparel attributes, and categories to the real catalog attributes used by the target store. Confirm the current requirements in Google's [product data specification](https://support.google.com/merchants/answer/7052112?hl=en).
+
+## Local Inventory directives
+
+Google Local Inventory adds **Inventory Source**, which writes the Google store code mapped from the active MSI source. An unmapped source keeps its Magento source code.
+
+Its default columns are:
+
+* `store_code`
+* `id`
+* `availability`
+* `price`
+* `sale_price`
+* `sale_price_effective_date`
+* `quantity`
+
+## Sale-price behavior
+
+The module leaves `sale_price` and `sale_price_effective_date` empty when the rendered sale price is not lower than the regular price. The header remains present, and every row must retain the same number of positional columns.
+
+## Verification
+
+After changing the map:
+
+1. Test one simple product and one applicable complex product.
+2. Parse a complete generated file with the configured delimiter.
+3. Confirm every row has the same number of columns as the header.
+4. Confirm empty values do not remove positional columns.
+5. Compare identifiers, URLs, prices, availability, and variant fields with Magento.
