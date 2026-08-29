@@ -34,6 +34,8 @@ jobs:
         run: find . -path './.git' -prune -o -type f \( -name '*.php' -o -name '*.phtml' \) -print0 | xargs -0 -n1 php -l
       - name: Validate consolidated module
         run: php dev/tests/validate.php
+      - name: Validate wiki documentation
+        run: php dev/tests/validate-wiki.php
 
   compute-platform-matrix:
     name: Compute supported platform matrix
