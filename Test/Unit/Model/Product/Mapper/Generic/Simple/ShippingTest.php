@@ -21,6 +21,7 @@ namespace MageOS\ShoppingFeed\Test\Unit\Model\Product\Mapper\Generic\Simple;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 use MageOS\ShoppingFeed\Test\Unit\Model\ModelFramework;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class ShippingTest
@@ -29,9 +30,14 @@ use MageOS\ShoppingFeed\Test\Unit\Model\ModelFramework;
 class ShippingTest extends ModelFramework
 {
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Id
+     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Shipping
      */
     protected $model;
+
+    /**
+     * @var array|string|null
+     */
+    protected $shippingCountryConfig = ['USA'];
 
     /**
      * @inheritdoc
@@ -50,7 +56,7 @@ class ShippingTest extends ModelFramework
             $this->returnCallback(function ($arg) {
                 switch ($arg) {
                     case 'shipping_country':
-                        return ['USA'];
+                        return $this->shippingCountryConfig;
                     default:
                         return '';
                 }
@@ -103,5 +109,30 @@ class ShippingTest extends ModelFramework
         $this->expectReturn($this->cacheMock, 'getCache', 'cache value');
 
         $this->assertEquals('cache value', $this->model->map());
+    }
+
+    /**
+     * Non-array shipping_country values must skip shipping instead of reaching array_filter().
+     *
+     * @dataProvider nonArrayShippingCountryProvider
+     */
+    #[DataProvider('nonArrayShippingCountryProvider')]
+    public function testMapNonArrayShippingCountry($shippingCountry)
+    {
+        $this->shippingCountryConfig = $shippingCountry;
+
+        $this->assertEquals('', $this->model->map());
+    }
+
+    /**
+     * @return array
+     */
+    public static function nonArrayShippingCountryProvider()
+    {
+        return [
+            'null' => [null],
+            'empty string' => [''],
+            'non-empty string' => ['USA'],
+        ];
     }
 }

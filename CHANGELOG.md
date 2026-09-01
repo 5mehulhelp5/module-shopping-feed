@@ -68,6 +68,7 @@ All notable changes to this project will be documented here.
 - Kept Google rows aligned with their headers without trailing tabs
 - Preserved Google sale-price column names while writing feed headers
 - Omitted Google sale prices and effective dates when the rendered sale price is not lower than the regular price
+- Skipped shipping mapping when `shipping_country` is not an array instead of passing invalid configuration to `array_filter()`
 
 ### Migration
 
