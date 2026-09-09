@@ -14,14 +14,16 @@ Read the [release notes](https://github.com/mage-os-lab/module-shopping-feed/rel
 - [Queue lookups](Scheduling-and-Queues) remain independent across due feeds.
 - [Output filtering](Filters-and-Transformations) removes delimiters introduced by HTML entity decoding, and text settings survive JSON-like content.
 - Product links retain nonstandard ports, and [uploads](Uploads) stop if the configured remote directory cannot be entered.
+- Empty column defaults are normalized before sanitization so saving feeds does not emit PHP deprecation notices.
 
 ## Recorded local acceptance
 
-The local profile used Mage-OS 3.5.0, PHP 8.4.24, and Hyva on Magebox. The final runtime code baseline is `a3dd9d0`.
+The local profile used Mage-OS 3.5.0, PHP 8.4.24, and Hyva on Magebox. Storefront acceptance used `a3dd9d0`; the subsequent release preflight corrected nullable column defaults and repeated feed-save and full-generation checks.
 
 | Check | Result |
 | --- | --- |
-| PHP unit suite | 353 tests, 719 assertions passed |
+| PHP unit suite | 354 tests, 721 assertions passed |
+| Default feed persistence | Generic, Google Shopping, and Local Inventory saved and reloaded without deprecation notices |
 | Frontend regression suite | Five tests passed |
 | Complete default-store generation | 148 visible products processed, 160 rows exported |
 | File shape | 29 columns in every row; unique IDs and required values present |

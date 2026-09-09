@@ -32,6 +32,12 @@ The six review fixes were committed as `6448e82b7c2d2c76297733406435ef3054d221c2
 
 This establishes local generation and the listed format/runtime checks. It is not a Google Merchant Center acceptance result. The feed contains localhost URLs and demo catalog data; merchant identity, shipping/account configuration, identifiers, image editorial quality, and destination-specific eligibility were not certified. Format checks were informed by Google's [product data specification](https://support.google.com/merchants/answer/7052112?hl=en) and [tab-delimited data-source instructions](https://support.google.com/merchants/answer/14989239?hl=en).
 
+## Release preflight
+
+GitHub Actions run [34400736738](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/34400736738) exposed the previously noted null-default deprecation as an integration-test error. Explicit string normalization before column sanitization resolved it. The added regression test reproduced the failure before the fix; the full local suite then passed 354 tests with 721 assertions. Transactional probes saved and reloaded Generic, Google Shopping, and Google Local Inventory defaults without deprecation notices.
+
+Regenerating feed 63 after this correction again processed 148 visible products and exported 160 rows with 29 columns, with no validation errors. All 160 prices and availability values still matched the recorded storefront checks. The 663 URLs were unchanged, so their earlier successful HTTP checks were reused; a fresh request for the feed returned HTTP 200 with a matching file checksum. Generated sale-date timestamps advanced with the new run. The resulting 182285-byte file has SHA-256 `4a26d2a38106d67aa7cc9a2fa2d9d1a779b632d38aa699e60c0016c4f9ae48fe`.
+
 ## Evidence and recovery
 
 Local evidence is retained under `<MAGENTO_ROOT>/var/shopping-feed-review-20260909/`: `full-feed-config.json`, generation and validation logs, `full-feed-validation.json`, `full-feed-catalog-check.json`, and `full-feed-browser-variants.json`. `installed-commit.json` records the final installed source hashes. `variant-baseline/` retains the original full output, validation evidence, and affected files before the additional corrections.

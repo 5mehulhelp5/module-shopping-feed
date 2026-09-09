@@ -269,6 +269,39 @@ class FeedTest extends ModelFramework
         $this->assertSame('[]', $this->feed->getData('messages'));
     }
 
+    public function testBeforeSaveNormalizesNullColumnDefaultsWithoutDeprecations(): void
+    {
+        $this->feed->setData('config', new \Magento\Framework\DataObject([
+            'columns_product_columns' => [[
+                'column' => "custom\tcolumn",
+                'default_value' => null,
+                'param' => "first\nsecond\rthird",
+                'order' => 10,
+            ]],
+        ]));
+        $deprecations = [];
+        set_error_handler(static function (int $severity, string $message) use (&$deprecations): bool {
+            if ($severity === E_DEPRECATED) {
+                $deprecations[] = $message;
+                return true;
+            }
+            return false;
+        });
+        try {
+            $this->feed->beforeSave();
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertSame([], $deprecations);
+        $this->assertSame([[
+            'column' => 'custom column',
+            'default_value' => '',
+            'param' => 'first second third',
+            'order' => '10',
+        ]], $this->feed->getConfig('columns_product_columns'));
+    }
+
     /**
      * Test getScheduleCollection method
      */

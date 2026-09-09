@@ -37,7 +37,7 @@ The GitHub Actions workflow runs:
 
 The exact supported PHP constraint remains authoritative in `composer.json`. The current [Status and compatibility](Status-and-Compatibility) page translates that metadata for users.
 
-The 1.0.0 local Mage-OS 3.5.0 profile passed 353 PHP tests with 719 assertions and five frontend tests. Its full-store and browser evidence is recorded in [Release 1.0.0](Release-1-0-0). This does not add Mage-OS 3.5.0 to the CI matrix or replace destination-specific acceptance.
+The 1.0.0 local Mage-OS 3.5.0 profile passed 354 PHP tests with 721 assertions and five frontend tests. Its full-store and browser evidence is recorded in [Release 1.0.0](Release-1-0-0). This does not add Mage-OS 3.5.0 to the CI matrix or replace destination-specific acceptance.
 
 ## Documentation changes
 

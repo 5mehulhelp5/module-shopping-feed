@@ -88,6 +88,8 @@ The review traced admin action authorization and mutation methods, frontend requ
 
 The simple-product fix does not add Hyvä configurable selection or Google Ads integration. The tested local configurable page produced no error because the module's legacy configurable block was not rendered there. Separate compatibility work is still needed for those features. PHP 8.4 also emitted deprecation notices when feed defaults passed null to `strtr()` at `Model/Feed.php:319`; generation completed, but this warrants cleanup.
 
+Release preflight subsequently resolved the null-default deprecation by explicitly normalizing column values before sanitization. The regression test failed with the original implementation and passed with the correction. All three default feed types saved and reloaded without deprecation notices in transactional Magebox probes. The later full-feed record covers configurable selection and the regenerated release output; Google Ads on Hyva remains outside this compatibility work.
+
 ## Local evidence and recovery
 
 Database backup, original configuration files, schema dry run, installation logs, runtime probe results, HTTP reproduction HTML, cart evidence, and a generated feed sample are retained in `<MAGENTO_ROOT>/var/shopping-feed-review-20260909`.

@@ -37,6 +37,7 @@ All notable changes to this project will be documented here.
 - Stopped FTP/SFTP validation and upload when the configured remote directory cannot be entered
 - Preserved nonstandard ports in simple and grouped product URLs
 - Preserved JSON-looking scalar settings and structured arrays as distinct types, including malformed legacy text
+- Normalized empty column defaults before sanitization so saving feeds does not emit PHP 8.1+ deprecation notices
 - Removed the duplicated Google Shopping `shipping_weight` default column
 - Added the required encoding to the Local Inventory feed definition
 - Replaced legacy DoubleClick remarketing pixels and globals with Google tag events

@@ -316,7 +316,8 @@ class Feed extends AbstractModel
         $columns = $this->getConfig('columns_product_columns', []);
         array_walk_recursive(
             $columns, function (&$value, $key) {
-                if (!is_array($value)) { $value = strtr($value, "\n\r\t", '   ');
+                if (!is_array($value)) {
+                    $value = strtr((string)$value, "\n\r\t", '   ');
                 }
             }
         );
