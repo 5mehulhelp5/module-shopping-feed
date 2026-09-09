@@ -1,5 +1,7 @@
 # Release 1.0.0
 
+**All 27 CI checks passed** for release commit `f14a763`, including unit tests, integration tests, coding standards, and dependency-injection compilation across the configured Magento Open Source and Mage-OS platforms. [View the passing release run](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/34402149180).
+
 Version 1.0.0 is the first stable release of Mage-OS Shopping Feed. It combines the Generic, Google Shopping, Google Local Inventory, and Google Promotions functionality under the independent `MageOS_ShoppingFeed` module identity.
 
 > Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
@@ -39,3 +41,5 @@ This is local acceptance, not Merchant Center approval, a live FTP/SFTP transfer
 ## Install or upgrade
 
 Follow [Installation and upgrade](Installation-and-Upgrade), using `composer require 'mage-os/module-shopping-feed:^1.0'` for the stable line. Existing Rocket Web packages are not migrated automatically. Back up a development installation before upgrading, then regenerate and compare its feeds before enabling schedules or uploads.
+
+For setup and troubleshooting, use the [Shopping Feed support bot on Rocket Web](https://rocketweb.com/rocket-shopping-feeds). Select **Open support chat** on the product page.

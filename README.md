@@ -1,5 +1,9 @@
 # Mage-OS Shopping Feed
 
+[![CI on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml?query=branch%3Amain)
+
+Release **1.0.0 passed all 27 CI checks** on commit `f14a763`. [View the passing release run](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/34402149180).
+
 `MageOS_ShoppingFeed` generates product feeds for Mage-OS and Magento Open Source.
 
 This repository consolidates four related Rocket Web modules into one independently named Mage-OS module:
@@ -66,6 +70,8 @@ The dedicated `mageos_shopping_feed` cron group schedules feeds hourly and proce
 Feed output is restricted to `pub/media/mageos-shopping-feed` and its safe subdirectories. Per-feed logs are restricted to `var/log` and use `mageos_shopping_feed_*.log` by default.
 
 ## Documentation
+
+For setup and troubleshooting, use the [Shopping Feed support bot on Rocket Web](https://rocketweb.com/rocket-shopping-feeds). Select **Open support chat** on the product page.
 
 The reviewable GitHub Wiki source is under [`docs/wiki`](docs/wiki), starting with [`Home.md`](docs/wiki/Home.md). Documentation contributors should update that source and follow [`docs/WIKI-MAINTENANCE.md`](docs/WIKI-MAINTENANCE.md) rather than editing the public wiki independently.
 
