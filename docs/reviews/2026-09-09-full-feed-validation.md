@@ -10,7 +10,7 @@ The six review fixes were committed as `6448e82b7c2d2c76297733406435ef3054d221c2
 ## Local generation
 
 - Runtime: Mage-OS 3.5.0, based on Magento 2.4.9, PHP 8.4.24.
-- Module location: `/Users/matt/code/mageos-latest/app/code/MageOS/ShoppingFeed`.
+- Module location: `<MAGENTO_ROOT>/app/code/MageOS/ShoppingFeed`.
 - Store: default storefront, store ID 1, `http://mageos-latest.localhost:8080/`.
 - Feed: `Magebox 3.5 Google Shopping validation`, ID 63. No SKU restriction, schedules, uploads, or shipping-cache generation.
 - Command: `XDEBUG_MODE=off php bin/magento mage-os:shopping-feed:generate 63` from the Magento root.
@@ -34,6 +34,6 @@ This establishes local generation and the listed format/runtime checks. It is no
 
 ## Evidence and recovery
 
-Local evidence is retained under `/Users/matt/code/mageos-latest/var/shopping-feed-review-20260909/`: `full-feed-config.json`, generation and validation logs, `full-feed-validation.json`, `full-feed-catalog-check.json`, and `full-feed-browser-variants.json`. `installed-commit.json` records the final installed source hashes. `variant-baseline/` retains the original full output, validation evidence, and affected files before the additional corrections.
+Local evidence is retained under `<MAGENTO_ROOT>/var/shopping-feed-review-20260909/`: `full-feed-config.json`, generation and validation logs, `full-feed-validation.json`, `full-feed-catalog-check.json`, and `full-feed-browser-variants.json`. `installed-commit.json` records the final installed source hashes. `variant-baseline/` retains the original full output, validation evidence, and affected files before the additional corrections.
 
-The existing database backup and `ROLLBACK.md` remain available. No Composer dependencies, catalog entries, schedules, or upload destinations were changed. No remote push, remote deployment, or Merchant Center submission was performed.
+The existing database backup and `ROLLBACK.md` remain available. No Composer dependencies, catalog entries, schedules, or upload destinations were changed. This record covers local validation before release publication. No remote storefront deployment or Merchant Center submission was performed.

@@ -2,7 +2,7 @@
 
 The repository validates module identity, configuration integrity, PHP behavior, and supported Magento-family platforms. Run focused checks before requesting review.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 ## Local validation
 
@@ -13,12 +13,13 @@ composer validate --strict --no-check-publish
 find . -path './.git' -prune -o -type f \( -name '*.php' -o -name '*.phtml' \) -print0 | xargs -0 -n1 php -l
 php dev/tests/validate.php
 php dev/tests/validate-wiki.php
+node --test dev/tests/frontend/*.test.cjs
 ```
 
-Run the unit suite after installing development dependencies:
+Run the unit suite with the PHPUnit installation from an existing Magento or Mage-OS checkout:
 
 ```bash
-vendor/bin/phpunit -c phpunit.xml.dist
+MAGENTO_ROOT=/path/to/magento /path/to/magento/vendor/bin/phpunit -c phpunit.xml.dist
 ```
 
 The consolidated validation checks package and module identity, feed configuration, Magento XML, schema whitelist alignment, isolated runtime identifiers, storefront integration markers, and selected regression-sensitive behaviors. Wiki validation checks navigation, page baselines, and known legacy instructions.
@@ -30,10 +31,13 @@ The GitHub Actions workflow runs:
 * Composer metadata validation
 * PHP syntax checks across supported PHP versions
 * Consolidated module and wiki validation
+* Hyva and Luma storefront auto-selection checks
 * Magento Open Source compatibility checks
 * Mage-OS 3.4.0 compatibility checks
 
 The exact supported PHP constraint remains authoritative in `composer.json`. The current [Status and compatibility](Status-and-Compatibility) page translates that metadata for users.
+
+The 1.0.0 local Mage-OS 3.5.0 profile passed 353 PHP tests with 719 assertions and five frontend tests. Its full-store and browser evidence is recorded in [Release 1.0.0](Release-1-0-0). This does not add Mage-OS 3.5.0 to the CI matrix or replace destination-specific acceptance.
 
 ## Documentation changes
 

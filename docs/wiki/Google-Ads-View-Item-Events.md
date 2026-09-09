@@ -2,7 +2,9 @@
 
 The configurable-product integration dispatches a `view_item` event when a complete option selection resolves to an associated product. It exposes a custom browser event for consent and tag-manager integrations, and can call `gtag` directly when enabled.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+This event bridge uses Magento's RequireJS integration. Version 1.0.0 supports native Hyva configurable deep-link selection, but does not add a Hyva Google Ads event bridge. Verify or provide a separate theme integration before relying on events there.
+
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 ## Event data
 

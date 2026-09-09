@@ -2,7 +2,7 @@
 
 Product Filters decides which products reach the output and how selected column values are changed. Rule order matters.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 ## Catalog selection
 
@@ -60,6 +60,8 @@ Think of the feed as a pipeline:
 6. Reject rows missing required output.
 
 Test interacting rules together. A transformation that produces an empty value can affect a later required-field filter.
+
+HTML entities are decoded before a final pass removes line breaks and the active field delimiter. Encoded tabs such as `&#09;` therefore cannot add an extra column to a tab-delimited row. Verify the complete generated file, including rows containing encoded punctuation or whitespace.
 
 ## Verification
 

@@ -2,7 +2,7 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 ## Before installation
 
@@ -15,10 +15,10 @@ Install the module on staging first. Feed generation writes files and records qu
 
 ## Composer installation
 
-Use this method only after confirming that `mage-os/module-shopping-feed` is available through a Composer repository configured in the Magento project.
+The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.x line:
 
 ```bash
-composer require mage-os/module-shopping-feed
+composer require 'mage-os/module-shopping-feed:^1.0'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
@@ -33,6 +33,8 @@ Place or symlink the source at:
 ```text
 app/code/MageOS/ShoppingFeed
 ```
+
+Use the `v1.0.0` tag for a reproducible 1.0 installation, and record its resolved commit.
 
 Then run:
 
@@ -68,6 +70,8 @@ Upgrade through the same installation path used for the module:
 5. Clean the required caches and complete the project's deployment steps.
 6. Regenerate a non-production feed and compare it with the previous accepted output.
 7. Re-enable schedules and uploads only after the new output is accepted.
+
+When upgrading an existing `dev-main` installation to 1.0.0, change its Composer constraint to `^1.0` and run the same steps. No schema change is needed for the final review fixes. JSON-looking text settings are now stored with an explicit string marker; downgrading to older development code requires keeping the corrected decoder or restoring compatible configuration data from backup.
 
 ## Do not copy old installation instructions
 

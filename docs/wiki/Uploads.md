@@ -2,7 +2,7 @@
 
 Upload destinations run after a successful feed generation. Establish and validate the feed locally before enabling a transfer.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 ## Security boundary
 
@@ -29,6 +29,8 @@ The uploaded remote filename is the basename of the local file. **Path** selects
 Passwords are encrypted with Magento's encryption service before database storage. The Admin shows `******` for a saved password. Leave that placeholder unchanged to retain the existing secret; enter a new value only when rotating it.
 
 Saving the feed does not prove that the remote connection works. A connection and directory change occur during generation and upload.
+
+When a nonempty **Path** is configured, directory selection must succeed before validation or upload can continue. A missing or inaccessible directory causes an error and no write is attempted in the login directory. Verify the exact path and permissions before retrying.
 
 ## Gzip behavior
 

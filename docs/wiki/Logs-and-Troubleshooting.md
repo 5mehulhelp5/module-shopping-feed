@@ -2,7 +2,7 @@
 
 Start with the feed-specific log and the feed grid status. They distinguish queue problems, product skips, generation failures, and upload failures.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 ## Log settings and location
 
@@ -30,6 +30,9 @@ Use **View Log** from the Feeds Management grid, or inspect the file as the Mage
 | Product is absent | Test the SKU, then check enablement, catalog visibility, stock settings, filters, category rules, and complex-product configuration. |
 | Row columns do not align | Review delimiter choice, mapped directives, source values containing delimiters or line breaks, and row counts across representative products. |
 | Upload fails | Confirm mode, hostname, port, credentials, remote path, permissions, DNS, and firewall access from the Magento host. |
+| `require is not defined` on a Hyva simple-product page | Confirm 1.0.0 or later is installed, the `hyva_` layout override is active, and stale theme overrides or full-page caches do not retain the Luma template. |
+| Configurable link does not select a Hyva variant | Regenerate the feed and confirm its fragment includes numeric attribute IDs. Inspect selected options, price updates, and browser errors. |
+| Available configurable variants appear out of stock | Confirm the parent is salable and 1.0.0 or later is installed. Check child stock, parent inheritance, and the selected website stock independently. |
 | Local Inventory rows are missing | Confirm the website stock, source assignment, source-to-store mapping, salable quantity, and reservation state. |
 | Google rejects data | Compare the exact generated value with the current Google specification and account diagnostics. |
 

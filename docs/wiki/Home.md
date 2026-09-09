@@ -2,7 +2,9 @@
 
 Mage-OS Shopping Feed generates product feeds from Mage-OS and Magento Open Source. It combines generic product feeds, Google Shopping, Google Local Inventory, and Google Promotions in one independently named module.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+Version **1.0.0** is the first stable release. Read the [release summary](Release-1-0-0) for the Hyva compatibility fixes, feed correctness changes, and validation results.
+
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 ## What the module does
 

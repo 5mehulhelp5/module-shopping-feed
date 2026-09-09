@@ -2,9 +2,11 @@
 
 Release acceptance proves the extension on representative Magento runtimes and proves each generated artifact at the boundary where it is consumed.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 The repository's [`ACCEPTANCE-TEST-PLAN.md`](https://github.com/mage-os-lab/module-shopping-feed/blob/main/ACCEPTANCE-TEST-PLAN.md) is the detailed test source. This page describes the evidence expected from a release candidate.
+
+For the first stable release's actual results and remaining limits, see [Release 1.0.0](Release-1-0-0). The general profiles below remain the acceptance guide for each target deployment; the release record does not claim every external integration was exercised.
 
 ## Required profiles
 

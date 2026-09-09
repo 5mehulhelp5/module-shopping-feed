@@ -2,7 +2,7 @@
 
 General Configuration defines the store context, output location, delimiter, price behavior, and stock behavior for one feed.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 ## Feed settings
 
@@ -28,7 +28,7 @@ When enabled, the module uses Magento stock information. Set it to **No** only w
 
 ### Alternate Stock/Availability Attribute
 
-Select the custom attribute used when default stock status is disabled. Supported output values include `in stock`, `available for order`, `out of stock`, and `preorder`. Unrecognized values fall back to `out of stock`.
+Select the custom attribute used when default stock status is disabled. Supported output values are `in_stock`, `out_of_stock`, `backorder`, and `preorder`; spaces in `in stock` and `out of stock` are normalized to underscores. Unrecognized values fall back to `out_of_stock`.
 
 ### Use Qty Increments
 
@@ -72,3 +72,5 @@ After changing general settings:
 2. Test a known product.
 3. Confirm price, currency, availability, quantity, URL, and category context.
 4. Generate a non-production file and compare row counts and values with the previous accepted file.
+
+Text settings beginning with `[` or `{` remain text after saving and reloading. Structured array settings retain their array values. Version 1.0.0 also preserves malformed legacy text instead of failing while loading it as JSON.

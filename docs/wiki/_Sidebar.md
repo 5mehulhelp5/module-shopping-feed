@@ -5,6 +5,7 @@
 **Start here**
 
 * [Status and compatibility](Status-and-Compatibility)
+* [Release 1.0.0](Release-1-0-0)
 * [Installation and upgrade](Installation-and-Upgrade)
 * [Quick start](Quick-Start)
 * [Migration and coexistence](Migration-and-Coexistence)

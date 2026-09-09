@@ -2,7 +2,7 @@
 
 Associated configurable rows can link to the parent product with the child's option selections encoded in the URL fragment. The storefront script reads those values and selects matching swatches or dropdowns.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 ## Enable unique links
 
@@ -15,11 +15,13 @@ In the feed's **Configurable Products** tab:
 
 The generated link uses the parent product URL. Configured query parameters remain in the query string, while super-attribute values are appended as a fragment.
 
+Numeric attribute IDs are always included. Swatch attributes also retain their codes for legacy renderers. For example, if attribute `fabric` has ID `152` and the selected option is `49`, the fragment is `#152=49&fabric=49`. The numeric ID lets Hyva select the variant during its normal initialization.
+
 When microdata is enabled, an `aid` query parameter can identify the associated product used for server-rendered offer data.
 
 ## Storefront behavior
 
-The configurable selection script:
+On Luma, the configurable selection script:
 
 * Reads fragment parameters first, then query parameters
 * Selects matching swatch options
@@ -30,7 +32,9 @@ The deep-link selection works independently of the Google Ads event setting.
 
 ## Theme compatibility
 
-The bundled integration targets Magento's configurable product markup and RequireJS lifecycle. Customized themes can replace the containers, selectors, swatch implementation, or script loading that it expects.
+Luma uses the bundled RequireJS integration. Hyva uses its native configurable-product initialization to read numeric IDs from the generated fragment. Both single-attribute and multiple-attribute selections were verified on the local Hyva acceptance catalog, including sale prices.
+
+The legacy Google Ads event bridge is separate and still uses RequireJS. Successful Hyva preselection does not imply that bridge is active. Customized themes can also replace the containers, selectors, swatch implementation, or script loading.
 
 Test the exact production theme. Backend URL generation alone does not prove the landing page selects the correct child.
 

@@ -2,7 +2,7 @@
 
 Schedules decide when work enters the queue. A separate worker consumes queued work and generates feed files.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 ## Enable module cron processing
 
@@ -33,6 +33,7 @@ Allow enough time between schedules for the earlier generation and any uploads t
 * The oldest unread item is processed first within that priority.
 * A worker handles one queue item per invocation.
 * A schedule does not enqueue the same feed again while unread work for that feed exists.
+* Queue lookups remain independent across feeds. An already queued feed does not suppress another due feed, and a previously empty lookup does not hide newly queued work.
 * Queued batch state is retained so the next worker continues from the prior offset.
 
 ## Standalone command scheduling

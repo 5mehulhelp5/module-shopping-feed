@@ -2,7 +2,7 @@
 
 The module can add schema.org offer data to product pages using the same feed mapping used for Google Shopping. Google can use structured product data to reconcile selected price and availability differences.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
 
 ## What the module renders
 
@@ -38,6 +38,8 @@ If title, price, or availability is missing, the module does not render its offe
 ## Configurable products
 
 Associated configurable URLs can include an `aid` query parameter when microdata is enabled. That identifies the selected child for server-rendered offer data, while the URL fragment selects the visible swatch or dropdown options in the browser.
+
+The selected ID must belong to an enabled child of the current configurable product and be assigned to the current website. Invalid, disabled, unrelated, or other-website selections use the public parent's metadata. Simple-product pages do not load arbitrary products from `aid`.
 
 ## Verify
 

@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Security fixes are provided for the latest tagged release. Before the first stable tag, fixes are made on the `main` branch.
+Security fixes are provided for the latest stable tagged release, starting with 1.0.0. Install the latest available patch release in that line.
 
 ## Reporting a vulnerability
 

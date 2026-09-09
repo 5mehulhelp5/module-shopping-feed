@@ -15,7 +15,9 @@ The package has its own Composer name, PHP namespace, Magento module name, datab
 
 ## Status
 
-This is a new module identity prepared for Mage-OS Lab. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) before evaluating it on a store that already uses a Rocket Web shopping feed module.
+Version [1.0.0](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.0.0) is the first stable release of this independently named module. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) before evaluating it on a store that already uses a Rocket Web shopping feed module.
+
+This release includes Hyva custom-option and configurable-variant selection, safer microdata selection, and corrections to queue scheduling, output encoding, uploads, and stock inheritance. See the [release notes](docs/releases/1.0.0.md) and [full-feed validation record](docs/reviews/2026-09-09-full-feed-validation.md).
 
 Run [ACCEPTANCE-TEST-PLAN.md](ACCEPTANCE-TEST-PLAN.md) against the exact release candidate before enabling production schedules or uploads.
 
@@ -28,12 +30,14 @@ Run [ACCEPTANCE-TEST-PLAN.md](ACCEPTANCE-TEST-PLAN.md) against the exact release
 
 Mage-OS 3.4.0, based on Magento Open Source 2.4.9, is an explicit CI compatibility target. Its production checks install the package into a Mage-OS 3.4.0 project, then run the unit and integration suites, Magento coding standard, and dependency-injection compilation.
 
+Mage-OS 3.5.0 on PHP 8.4.24 was also verified locally on Magebox with Hyva: a complete 160-row storefront feed, all exported prices and stock values, and all 38 available configurable deep links passed the recorded checks. This local evidence is separate from CI and Merchant Center acceptance.
+
 ## Installation
 
-Once the package is available through a configured Composer repository:
+Install the 1.x release from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
 
 ```bash
-composer require mage-os/module-shopping-feed
+composer require 'mage-os/module-shopping-feed:^1.0'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean

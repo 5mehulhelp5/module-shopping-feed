@@ -4,6 +4,8 @@ All notable changes to this project will be documented here.
 
 ## Unreleased
 
+## 1.0.0 - 2026-09-09
+
 ### Added
 
 - New `MageOS_ShoppingFeed` module and `mage-os/module-shopping-feed` package identity
@@ -26,6 +28,15 @@ All notable changes to this project will be documented here.
 
 ### Fixed
 
+- Initialized simple-product custom options on Hyva without RequireJS, including option price updates
+- Included numeric attribute IDs in configurable swatch URLs so Hyva selects the advertised variant while retaining legacy attribute codes
+- Used parent salability instead of parent quantity when inheriting configurable stock status
+- Restricted request-selected microdata to enabled children of the current configurable product on the current website
+- Isolated queue queries so an already queued feed does not prevent other due feeds from being scheduled
+- Sanitized encoded tabs and line breaks after HTML entity decoding to preserve feed column alignment
+- Stopped FTP/SFTP validation and upload when the configured remote directory cannot be entered
+- Preserved nonstandard ports in simple and grouped product URLs
+- Preserved JSON-looking scalar settings and structured arrays as distinct types, including malformed legacy text
 - Removed the duplicated Google Shopping `shipping_weight` default column
 - Added the required encoding to the Local Inventory feed definition
 - Replaced legacy DoubleClick remarketing pixels and globals with Google tag events
