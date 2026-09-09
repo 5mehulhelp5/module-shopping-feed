@@ -103,14 +103,60 @@ class ConfigTest extends ModelFramework
 
     public function testAfterLoad()
     {
-        $this->model->setData('value', '[encodedStuff]');
+        $this->model->setData('value', '["ups","usps"]');
 
         $this->jsonDecoderMock->expects($this->any())
             ->method('decode')
-            ->will($this->returnValue('new_value'));
+            ->will($this->returnValue(['ups', 'usps']));
 
-        $expected = 'new_value';
+        $expected = ['ups', 'usps'];
         $this->model->afterLoad();
         $this->assertEquals($expected, $this->model->getData('value'));
     }
+    public function testScalarAndStructuredSettingsRoundTripWithoutChangingType(): void
+    {
+        $this->jsonEncoderMock->method('encode')->willReturnCallback(static fn($value) => json_encode($value));
+        $this->jsonDecoderMock->method('decode')->willReturnCallback(static fn($value) => json_decode($value, true, 512, JSON_THROW_ON_ERROR));
+        foreach (['[plain text default]', '[1,2]', '{"key":"value"}', '"quoted"', '0', '', '__mageos_shopping_feed_string__:literal', ['a' => 'b'], []] as $value) {
+            $this->model->setData('value', $value);
+            $this->model->beforeSave();
+            $stored = $this->model->getData('value');
+            $this->model->setData('value', $stored);
+            $this->model->afterLoad();
+            $this->assertSame($value, $this->model->getData('value'));
+        }
+    }
+
+    public function testLegacyMalformedJsonRemainsPlainText(): void
+    {
+        $this->jsonDecoderMock->method('decode')->willReturnCallback(static function ($value) {
+            $decoded = json_decode($value, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new \InvalidArgumentException('Invalid JSON');
+            }
+            return $decoded;
+        });
+        foreach (['[plain text default]', '{template}', '"quoted"', 'ordinary text', '["ups","usps"]'] as $value) {
+            $this->model->setData('value', $value)->afterLoad();
+            $expected = $value === '["ups","usps"]' ? ['ups', 'usps'] : $value;
+            $this->assertSame($expected, $this->model->getData('value'));
+        }
+    }
+
+    public function testDecoderReturningNullDoesNotEraseLegacyText(): void
+    {
+        $this->jsonDecoderMock->method('decode')->willReturn(null);
+        $this->model->setData('value', '[plain text default]')->afterLoad();
+        $this->assertSame('[plain text default]', $this->model->getData('value'));
+    }
+
+    public function testOrdinaryTextKeepsItsLegacyStorageFormat(): void
+    {
+        $this->jsonEncoderMock->method('encode')->willReturnCallback(static fn($value) => json_encode($value));
+        foreach (['normal text', '0', '', '"quoted"'] as $value) {
+            $this->model->setData('value', $value)->beforeSave();
+            $this->assertSame($value, $this->model->getData('value'));
+        }
+    }
+
 }

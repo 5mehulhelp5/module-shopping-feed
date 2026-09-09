@@ -80,4 +80,18 @@ class UrlTest extends ModelFramework
         $cell = $this->model->map($params);
         $this->assertEquals('http://base.url/some/product/url/', $cell);
     }
+    public function testStorePortSurvivesUrlMapping(): void
+    {
+        $store = $this->createMock(\Magento\Store\Model\Store::class);
+        $store->method('getBaseUrl')->willReturn('https://store.example:8443/');
+        $product = $this->createMock(\Magento\Catalog\Model\Product::class);
+        $product->method('getStore')->willReturn($store);
+        $product->method('getProductUrl')->willReturn('https://store.example:8443/product.html');
+        $adapter = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class);
+        $adapter->method('getProduct')->willReturn($product);
+        $adapter->method('getFilter')->willReturn($this->createMock(\MageOS\ShoppingFeed\Model\Product\Filter::class));
+        $this->model->addAdapter($adapter);
+        $this->assertSame('https://store.example:8443/product.html?source=feed', $this->model->map(['column' => 'link', 'param' => 'source=feed']));
+    }
+
 }

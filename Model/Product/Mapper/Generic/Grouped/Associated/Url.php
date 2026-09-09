@@ -51,10 +51,12 @@ class Url extends MapperAbstract
         $urlQuery .= (empty($urlQuery) ? '' : '&') . http_build_query($uniqueParams);
 
         if (strpos($url, $pieces['host']) === false) {
-            $url = $pieces['scheme'] . '://' . $pieces['host'] . $url;
+            $url = $pieces['scheme'] . '://' . $pieces['host']
+                . (isset($pieces['port']) ? ':' . $pieces['port'] : '') . $url;
         } else {
             $pieces = parse_url($url);
-            $url = $pieces['scheme'] . '://' . $pieces['host'] . $pieces['path'];
+            $url = $pieces['scheme'] . '://' . $pieces['host']
+                . (isset($pieces['port']) ? ':' . $pieces['port'] : '') . $pieces['path'];
         }
 
         if (!empty($urlQuery) && substr($urlQuery, 0, 1) != '?') {

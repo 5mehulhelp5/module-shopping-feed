@@ -76,4 +76,22 @@ class UrlTest extends ModelFramework
         $cell = $this->model->map($params);
         $this->assertEquals('https://base.url/some/product/url/?prod_id=2', $cell);
     }
+    public function testAssociatedProductUrlPreservesPort(): void
+    {
+        $store = $this->createMock(\Magento\Store\Model\Store::class);
+        $store->method('getBaseUrl')->willReturn('http://store.example:8080/');
+        $product = $this->createMock(\Magento\Catalog\Model\Product::class);
+        $product->method('getStore')->willReturn($store);
+        $product->method('getProductUrl')->willReturn('http://store.example:8080/group.html');
+        $product->method('getId')->willReturn(2);
+        $parent = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Grouped::class);
+        $parent->method('getProduct')->willReturn($product);
+        $parent->method('getFilter')->willReturn($this->createMock(\MageOS\ShoppingFeed\Model\Product\Filter::class));
+        $child = $this->createCompatibleMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class, ['getParentAdapter', 'getProduct']);
+        $child->method('getParentAdapter')->willReturn($parent);
+        $child->method('getProduct')->willReturn($product);
+        $this->model->addAdapter($child);
+        $this->assertSame('http://store.example:8080/group.html?prod_id=2', $this->model->map(['column' => 'link']));
+    }
+
 }

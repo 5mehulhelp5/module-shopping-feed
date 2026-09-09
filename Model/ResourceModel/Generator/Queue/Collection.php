@@ -58,6 +58,8 @@ class Collection extends AbstractCollection
     }
 
     /**
+     * Use an independent query so repeated lookups retain neither items nor criteria.
+     *
      * @param  $feedId int
      * @return \MageOS\ShoppingFeed\Model\Generator\Queue
      */
@@ -65,20 +67,23 @@ class Collection extends AbstractCollection
     {
         $this->clean();
 
-        $this->setOrder('is_read', \Magento\Framework\Data\Collection::SORT_ORDER_ASC)
+        $lookup = clone $this;
+        $lookup->clear();
+
+        $lookup->setOrder('is_read', \Magento\Framework\Data\Collection::SORT_ORDER_ASC)
             ->setOrder('created_at', \Magento\Framework\Data\Collection::SORT_ORDER_ASC)
             ->setOrder('schedule_id', \Magento\Framework\Data\Collection::SORT_ORDER_ASC); // We proccess manual requests first!
 
         if ($feedId > 0) {
-            $this->getSelect()
+            $lookup->getSelect()
                 ->where('feed_id = ?', $feedId);
         }
-        $this->getSelect()
+        $lookup->getSelect()
             ->where('is_read = 0 OR (is_read = 1 && TO_DAYS(`created_at`) < TO_DAYS(?))', $this->date->date())
             ->limit(1);
-        $this->setPageSize(1);
+        $lookup->setPageSize(1);
 
-        return $this->getFirstItem();
+        return $lookup->getFirstItem();
     }
 
     /**

@@ -114,8 +114,11 @@ abstract class UploaderAbstract extends \Magento\Framework\DataObject
 
         $this->connection->open($this->getConnectionConfiguration($config));
 
-        if (strlen($config['path'])) {
-            $this->connection->cd($config['path']);
+        if (strlen($config['path']) && !$this->connection->cd($config['path'])) {
+            $this->connection->close();
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Cannot change to upload directory "%1".', $config['path'])
+            );
         }
 
         return $this->connection;

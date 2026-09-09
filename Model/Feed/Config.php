@@ -23,6 +23,8 @@ use Magento\Framework\Model\AbstractModel;
 
 class Config extends AbstractModel
 {
+    private const STRING_PREFIX = '__mageos_shopping_feed_string__:';
+
     /**
      * @var null|\Magento\Framework\Json\Encoder
      */
@@ -70,14 +72,18 @@ class Config extends AbstractModel
     }
 
     /**
-     * Json encode array before save if needed
+     * Escape JSON-looking strings while retaining ordinary text's storage format.
      *
      * @return $this
      */
     public function beforeSave()
     {
         $value = $this->getData('value');
-        if (is_array($value)) {
+        if (is_string($value) && $value !== ''
+            && (in_array($value[0], ['[', '{'], true) || str_starts_with($value, self::STRING_PREFIX))
+        ) {
+            $this->setData('value', self::STRING_PREFIX . $this->jsonEncoder->encode($value));
+        } elseif (is_array($value)) {
             $value = $this->jsonEncoder->encode($value);
             $this->setData('value', $value);
         }
@@ -85,16 +91,21 @@ class Config extends AbstractModel
     }
 
     /**
-     * Json decode array after load if needed
+     * Decode typed values while retaining legacy plain-text settings.
      *
      * @return $this
      */
     protected function _afterLoad()
     {
         $value = $this->getData('value');
-        if ($value) {
-            $startsWith = strlen($value) ? $value[0] : '';
-            if (in_array($startsWith, ['[', '{']) && ($newValue = $this->jsonDecoder->decode($value)) !== false) {
+        $encodedString = is_string($value) && str_starts_with($value, self::STRING_PREFIX);
+        if (is_string($value) && $value !== '' && ($encodedString || in_array($value[0], ['[', '{'], true))) {
+            try {
+                $newValue = $this->jsonDecoder->decode($encodedString ? substr($value, strlen(self::STRING_PREFIX)) : $value);
+            } catch (\Exception $exception) {
+                return parent::_afterLoad();
+            }
+            if (($encodedString && is_string($newValue)) || (!$encodedString && is_array($newValue))) {
                 $this->setData('value', $newValue);
             }
         }

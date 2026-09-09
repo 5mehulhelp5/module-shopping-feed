@@ -46,7 +46,8 @@ class Url extends MapperAbstract
 
         $url = parse_url($product->getProductUrl());
         $pieces = parse_url($product->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK, false));
-        $cell = $pieces['scheme'] . '://' . $pieces['host'] . $url['path'];
+        $cell = $pieces['scheme'] . '://' . $pieces['host']
+            . (isset($pieces['port']) ? ':' . $pieces['port'] : '') . $url['path'];
 
         if (!empty($urlQuery) && substr($urlQuery, 0, 1) != '?') {
             $urlQuery = '?' . $urlQuery;

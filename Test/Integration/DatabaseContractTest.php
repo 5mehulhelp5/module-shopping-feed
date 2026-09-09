@@ -57,4 +57,42 @@ class DatabaseContractTest extends TestCase
         $this->assertSame(0, (int) $row['is_read']);
         $this->assertSame('[]', $row['message']);
     }
+    public function testQueueLookupDoesNotRetainAnotherFeedsItemsOrFilters(): void
+    {
+        $om = Bootstrap::getObjectManager();
+        $feeds = [];
+        foreach (['A', 'B'] as $name) {
+            $feed = $om->create(Feed::class)->setName('Queue regression ' . $name)->setType('generic')->setStoreId(1);
+            $feed->getConfig()->setData('shipping_cache_enabled', 0);
+            $feed->save();
+            $feeds[] = $feed;
+        }
+        $lookup = $om->create(\MageOS\ShoppingFeed\Model\ResourceModel\Generator\Queue\Collection::class);
+        $this->assertNull($lookup->getQueue((int)$feeds[0]->getId())->getId());
+        foreach ($feeds as $feed) {
+            $om->create(Queue::class)->add($feed);
+        }
+        foreach ([$feeds[0], $feeds[1], $feeds[0]] as $feed) {
+            $this->assertSame((int)$feed->getId(), (int)$lookup->getQueue((int)$feed->getId())->getFeedId());
+        }
+        $this->assertNotNull($lookup->getQueue()->getId());
+    }
+
+    public function testTextAndStructuredConfigSurviveRepeatedDatabaseSaves(): void
+    {
+        $om = Bootstrap::getObjectManager();
+        $feed = $om->create(Feed::class)->setName('Config regression')->setType('generic')->setStoreId(1);
+        $feed->getConfig()->setData('shipping_cache_enabled', 0);
+        $feed->save();
+        foreach (['[plain text default]', '[1,2]', '{"key":"value"}', '"quoted"'] as $value) {
+            $feed->getConfig()->setData('output_params_default_value', $value);
+            $feed->getConfig()->setData('shipping_carrier_realtime', ['ups', 'usps']);
+            $feed->setHasDataChanges(true);
+            $feed->save();
+            $feed = $om->create(Feed::class)->load($feed->getId());
+            $this->assertSame($value, $feed->getConfig('output_params_default_value'));
+            $this->assertSame(['ups', 'usps'], $feed->getConfig('shipping_carrier_realtime'));
+        }
+    }
+
 }

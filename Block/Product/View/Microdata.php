@@ -94,8 +94,30 @@ class Microdata extends \Magento\Catalog\Block\Product\AbstractProduct
     {
         $store = $this->_storeManager->getStore();
 
-        $assocId = $this->getRequest()->getParam('aid', false);
-        $product = $assocId === false ? $this->getProduct() : $this->productFactory->create()->load($assocId);
+        $product = $this->getProduct();
+        $assocId = false;
+        $requestedId = $this->getRequest()->getParam('aid', false);
+
+        if ((is_string($requestedId) || is_int($requestedId))
+            && ctype_digit((string)$requestedId)
+            && (int)$requestedId > 0
+            && $product->getTypeId() === \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE
+        ) {
+            foreach ($product->getTypeInstance()->getChildrenIds($product->getId()) as $children) {
+                if (!in_array((int)$requestedId, array_map('intval', $children), true)) {
+                    continue;
+                }
+                $child = $this->productFactory->create()->setStoreId($store->getId())->load((int)$requestedId);
+                if ($child->getId()
+                    && (int)$child->getStatus() === \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED
+                    && in_array((int)$store->getWebsiteId(), array_map('intval', $child->getWebsiteIds()), true)
+                ) {
+                    $product = $child;
+                    $assocId = (int)$child->getId();
+                }
+                break;
+            }
+        }
 
         return $this->microdataFactory->create([
             'product'                => $product,

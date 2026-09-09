@@ -96,6 +96,12 @@ class Filter
         if (extension_loaded('mbstring')) {
             $field = preg_replace_callback("/(&#?[a-z0-9]{2,8};)/i", [$this, 'htmlEntitiesToUtf8Callback'], $field);
         }
+        /** Decoding can reintroduce separators that were absent from the source text. */
+        $separators = ["\n" => ' ', "\r" => ' '];
+        if ($activeDelimiter !== '') {
+            $separators[$activeDelimiter] = ' ';
+        }
+        $field = strtr($field, $separators);
         $field = preg_replace('/\s\s+/', ' ', $field);
         $field = str_replace(PHP_EOL, "", $field);
         $field = trim($field);

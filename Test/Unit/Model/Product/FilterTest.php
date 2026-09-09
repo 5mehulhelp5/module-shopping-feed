@@ -129,4 +129,26 @@ class FilterTest extends CompatibilityTestCase
 
         $this->assertEquals('A"\'B C content > path SPACE', $this->model->cleanField($field, $params));
     }
+    public function testDecodedEntitiesCannotIntroduceFeedDelimiters(): void
+    {
+        $this->feedMock->method('getConfig')->willReturnCallback(
+            fn($key, $default = null) => $key === 'output_params_delimiter' ? '\\t' : $default
+        );
+        $this->model->setFeed($this->feedMock);
+        foreach (['&#09;', '&#x9;', '&#13;', '&#x0D;'] as $entity) {
+            $cell = $this->model->cleanField('before' . $entity . 'after');
+            $this->assertSame('before after', $cell, $entity);
+            $this->assertCount(2, explode("\t", $cell . "\t" . 'next column'));
+        }
+    }
+
+    public function testDecodedCustomDelimiterIsRemoved(): void
+    {
+        $this->feedMock->method('getConfig')->willReturnCallback(
+            fn($key, $default = null) => ['output_params_delimiter' => 'other', 'output_params_delimiter_other' => '|'][$key] ?? $default
+        );
+        $this->model->setFeed($this->feedMock);
+        $this->assertSame('before after', $this->model->cleanField('before&#124;after'));
+    }
+
 }
