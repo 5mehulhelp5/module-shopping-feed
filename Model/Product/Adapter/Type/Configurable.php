@@ -74,7 +74,7 @@ class Configurable extends Composite implements AdapterInterface
     }
 
     /**
-     * Creates an array of current configurable attributes/values
+     * Includes native attribute IDs for Hyva and codes for legacy swatch renderers.
      *
      * @param  \Magento\Catalog\Model\Product $product
      * @return array
@@ -101,10 +101,9 @@ class Configurable extends Composite implements AdapterInterface
                 $id = $attribute->getAttributeId();
                 $value = $product->getData($code);
 
+                $params[$id] = $value;
                 if ($this->useAttributeCodeForUrl($attribute)) {
                     $params[$code] = $value;
-                } else {
-                    $params[$id] = $value;
                 }
             }
         }

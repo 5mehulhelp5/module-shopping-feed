@@ -49,8 +49,10 @@ class AvailabilityTest extends ModelFramework
 
     public function testMapDefaultStock()
     {
+        $this->productMock = $this->createMock(\Magento\Catalog\Model\Product::class);
         $this->expectReturn($this->feedMock, 'getConfig', true);
         $this->expectReturn($this->statusMock, 'getStockStatus', 1);
+        $this->expectReturn($this->productMock, 'isSalable', true);
 
         $this->expectReturn($this->parentAdapterMock, 'getProduct', $this->productMock);
         $this->expectReturn($this->parentAdapterMock, 'getFeed', $this->feedMock);
@@ -62,5 +64,50 @@ class AvailabilityTest extends ModelFramework
         $params = [];
         $cell = $this->model->map($params);
         $this->assertEquals('in_stock', $cell);
+    }
+
+    /** @dataProvider parentStockProvider */
+    #[\PHPUnit\Framework\Attributes\DataProvider('parentStockProvider')]
+    public function testParentStockUsesSalabilityWithoutRequiringParentQuantity(
+        bool $inherit,
+        bool $defaultStock,
+        bool $parentSalable,
+        string $parentStock,
+        string $childStock,
+        string $expected
+    ): void {
+        $this->productMock = $this->createMock(\Magento\Catalog\Model\Product::class);
+        $this->adapterMock = $this->getModelMock(
+            \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class,
+            ['getParentAdapter', 'getFeed', 'getFilter']
+        );
+        $this->expectReturn($this->adapterMock, 'getFilter', $this->filterMock);
+        $model = $this->getMockBuilder(
+            \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\Associated\Availability::class
+        )->disableOriginalConstructor()->onlyMethods(['getStockStatus', 'usesDefaultStock'])->getMock();
+        $model->method('usesDefaultStock')->willReturn($defaultStock);
+        $this->expectReturn($this->feedMock, 'getConfig', $inherit);
+        $this->expectReturn($this->productMock, 'isSalable', $parentSalable);
+        $this->expectReturn($this->parentAdapterMock, 'getProduct', $this->productMock);
+        $this->expectReturn($this->adapterMock, 'getParentAdapter', $this->parentAdapterMock);
+        $this->expectReturn($this->adapterMock, 'getFeed', $this->feedMock);
+        $model->method('getStockStatus')->willReturnCallback(
+            fn($adapter) => $adapter === $this->parentAdapterMock ? $parentStock : $childStock
+        );
+        $model->addAdapter($this->adapterMock);
+
+        $this->assertSame($expected, $model->map());
+    }
+
+    public static function parentStockProvider(): array
+    {
+        return [
+            'salable parent with zero quantity' => [true, true, true, 'out_of_stock', 'in_stock', 'in_stock'],
+            'unavailable parent' => [true, true, false, 'in_stock', 'in_stock', 'out_of_stock'],
+            'unavailable child' => [true, true, true, 'out_of_stock', 'out_of_stock', 'out_of_stock'],
+            'backordered child' => [true, true, true, 'out_of_stock', 'backorder', 'backorder'],
+            'parent inheritance disabled' => [false, true, false, 'out_of_stock', 'in_stock', 'in_stock'],
+            'custom parent stock attribute' => [true, false, true, 'out_of_stock', 'in_stock', 'out_of_stock'],
+        ];
     }
 }

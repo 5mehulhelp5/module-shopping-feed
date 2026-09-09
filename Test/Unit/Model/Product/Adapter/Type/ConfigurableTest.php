@@ -186,6 +186,39 @@ class ConfigurableTest extends ModelFramework
         $this->assertEquals($expected, $this->model->getUrlOptions($this->productMock));
     }
 
+    public function testSwatchUrlOptionsIncludeNativeAttributeIdsAndLegacyCodes(): void
+    {
+        $metadata = $this->createMock(\Magento\Framework\App\ProductMetadataInterface::class);
+        $metadata->method('getVersion')->willReturn('2.4.9');
+        $this->modelArguments['productMetadata'] = $metadata;
+        $this->model = $this->objectManagerHelper->getObject(
+            \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable::class,
+            $this->modelArguments
+        );
+        $this->expectSelf($this->productMock, 'getTypeInstance');
+        $attributes = [];
+        foreach (['fabric' => 152, 'color' => 93] as $code => $id) {
+            $attribute = $this->getModelMock(
+                'Magento\ConfigurableProduct\Model\Product\Type\Configurable\Attribute',
+                ['getProductAttribute', 'getAttributeCode', 'getAttributeId', 'hasData']
+            );
+            $this->expectSelf($attribute, 'getProductAttribute');
+            $this->expectReturn($attribute, 'getAttributeCode', $code);
+            $this->expectReturn($attribute, 'getAttributeId', $id);
+            $this->expectReturn($attribute, 'hasData', true);
+            $attributes[] = $attribute;
+        }
+        $this->expectReturn($this->productMock, 'getConfigurableAttributes', $attributes);
+        $this->expectReturn($this->productMock, 'hasData', true);
+        $this->productMock->method('getData')->willReturnMap([['fabric', null, '49'], ['color', null, '19']]);
+        $this->expectReturn($this->feedMock, 'getConfig', true);
+
+        $this->assertSame(
+            [152 => '49', 'fabric' => '49', 93 => '19', 'color' => '19'],
+            $this->model->getUrlOptions($this->productMock)
+        );
+    }
+
     public function testHasSpecialPrice()
     {
         $this->expectAdvencedReturn($this->adapterMock, 'hasSpecialPrice', $this->onConsecutiveCalls(false, true));
