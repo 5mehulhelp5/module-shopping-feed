@@ -1,0 +1,42 @@
+<?php
+/** @var \Hyva\Theme\ViewModel\HyvaCsp $hyvaCsp */
+?>
+<script>
+    // Wait for the option change listeners and price components to be initialized.
+    hyva.alpineInitialized(function () {
+        const parameters = new URLSearchParams(window.location.hash.substring(1));
+
+        document.querySelectorAll('#product_addtocart_form .product-custom-option').forEach(function (element) {
+            const match = element.name.match(/^options\[(\d+)\](?:\[\])?$/);
+            const value = match && parameters.get(match[1]);
+
+            if (!value || element.disabled) {
+                return;
+            }
+
+            if (element.type === 'select-one' || element.type === 'select-multiple') {
+                const option = Array.from(element.options).find(function (option) {
+                    return option.value === value && !option.disabled;
+                });
+
+                if (!option) {
+                    return;
+                }
+                option.selected = true;
+            } else if (element.type === 'radio' || element.type === 'checkbox') {
+                if (element.value !== value) {
+                    return;
+                }
+                element.checked = true;
+            } else {
+                return;
+            }
+
+            // Native bubbling events update Alpine's selected options, price, and validation state.
+            element.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+    });
+</script>
+<?php if (isset($hyvaCsp)) {
+    $hyvaCsp->registerInlineScript();
+} ?>

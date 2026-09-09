@@ -17,6 +17,21 @@ permissions:
   contents: read
 
 jobs:
+  frontend:
+    name: Storefront auto-selection checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Test Hyva and Luma auto-selection
+        run: node --test dev/tests/frontend/*.test.cjs
+
   validate:
     runs-on: ubuntu-latest
     strategy:

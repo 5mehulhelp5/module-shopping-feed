@@ -52,4 +52,8 @@ Do not infer release availability from the presence of source code alone. Check 
 
 ## Storefront assumptions
 
-The module's frontend integrations use Magento layout XML and RequireJS modules. Validate them against the storefront theme in use. A passing backend feed generation test does not prove that microdata, configurable deep links, or Google Ads events work in a customized theme.
+Simple-product custom-option deep links use RequireJS on Luma. On Hyvä, a [`hyva_` layout handle](https://docs.hyva.io/hyva-themes/writing-code/layout-and-templates/the-hyva_-layout-handles.html) selects a native JavaScript template that waits for Alpine initialization and dispatches option change events. Dropdown, multiselect, radio, and checkbox options use the existing `#optionId=valueId` URL format. This integration requires [`hyva.alpineInitialized`](https://docs.hyva.io/hyva-themes/writing-code/the-window-hyva-object.html#hyvaalpineinitializedcallback), available since Hyvä 1.2.8 and 1.3.4, and registers the inline script with Hyvä CSP when that helper is available.
+
+This addresses a Hyvä compatibility issue; it is not evidence of a Mage-OS 3.5 regression. Configurable-product selection and Google Ads events still use the existing RequireJS integration and need separate theme compatibility verification.
+
+Run the focused frontend checks with `node --test dev/tests/frontend/*.test.cjs` (Node.js 22+ and PHP with SimpleXML). Validate the exact product page against the storefront theme in use. A passing backend feed generation test does not prove that microdata, configurable deep links, or Google Ads events work in a customized theme.
