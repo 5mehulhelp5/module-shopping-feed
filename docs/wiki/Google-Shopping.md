@@ -71,6 +71,8 @@ For other availability values, a valid mapped date is normalized the same way. A
 
 The feed uses the selected store context and currency. Catalog price rules can participate when enabled. Sale dates use the configured store timezone.
 
+Guest and all-group tier discounts available at quantity one are included. Bulk-only tiers and discounts restricted to other customer groups are excluded. A tier-only discount does not inherit dates from an expired special price. Compare the result with the product page as a signed-out visitor.
+
 If the rendered sale price is equal to or greater than regular price, the module leaves sale price and its effective date empty. The header and row shape remain intact.
 
 ## Product links and variants

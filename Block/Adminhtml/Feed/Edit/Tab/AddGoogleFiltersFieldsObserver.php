@@ -88,7 +88,7 @@ class AddGoogleFiltersFieldsObserver implements ObserverInterface
                     'title' => __('Adwords Price Buckets'),
                     'required' => false,
                     'disabled' => $isElementDisabled,
-                    'note' => __('This grid is used to build a value in the column assigned to the "Adwords Price Buckets" directive, under <a href="#" data-tab-id="#feed_tabs_columns">Columns Map</a>. Values with empty order are matched last.'),
+                    'note' => __('This grid is used to build a value in the column assigned to the "Adwords Price Buckets" directive, under <a href="#feed_tabs_columns">Columns Map</a>. Values with empty order are matched last.'),
                 ]
             );
 

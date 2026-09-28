@@ -513,7 +513,6 @@ class Generator extends DataObject
          * @var $encloseEscape
          */
         extract($params);
-        $isCustomCsv = $this->feed->getData('type') === 'generic' && $delimiter === ',';
         $row = [];
 
         foreach ($this->getOutputColumns($isGoogleFeed) as $arr) {
@@ -528,9 +527,7 @@ class Generator extends DataObject
                     $value = $defaultValue;
                 }
                 if (!$this->isTestMode()) {
-                    if ($isCustomCsv) {
-                        $value = '"' . str_replace('"', '""', (string)$value) . '"';
-                    } elseif ($encloseCell !== false) {
+                    if ($encloseCell !== '') {
                         $value = str_replace($encloseCell, $encloseEscape . $encloseCell, $value);
                         $value = sprintf('%s%s%s', $encloseCell, $value, $encloseCell);
                     }
@@ -754,15 +751,19 @@ class Generator extends DataObject
      */
     protected function getWriteFeedParams()
     {
-        $encloseCell = $this->feed->getConfig('output_parameters_enclose_cell', '');
-        $cellEncloseEscape = $this->feed->getConfig('output_parameters_enclose_escape', '');
+        $encloseCell = (string)$this->feed->getConfig('output_params_enclose_cell', '');
+        $cellEncloseEscape = (string)$this->feed->getConfig('output_params_enclose_escape', '');
         $delimiter = $this->feed->getConfig('output_params_delimiter', "\t");
         $delimiter_other = $this->feed->getConfig('output_params_delimiter_other', "\t");
+        $delimiter = $delimiter == 'other' ? "$delimiter_other" : ($delimiter == '\t' ? "\t" : "$delimiter");
+        if ($this->feed->getData('type') === 'generic' && $delimiter === ',' && $encloseCell === '') {
+            $encloseCell = '"';
+        }
         $params = [
-            'defaultValue' => $this->feed->getConfig('output_parameters_default_value', ''),
-            'delimiter' => $delimiter == 'other' ? "$delimiter_other" : ($delimiter == '\t' ? "\t" : "$delimiter"),
+            'defaultValue' => $this->feed->getConfig('output_params_default_value', ''),
+            'delimiter' => $delimiter,
             'encloseCell' => $encloseCell,
-            'encloseEscape' => $encloseCell !== '' ? $cellEncloseEscape : ''
+            'encloseEscape' => $encloseCell !== '' ? ($cellEncloseEscape !== '' ? $cellEncloseEscape : $encloseCell) : ''
         ];
         return $params;
     }

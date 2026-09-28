@@ -20,11 +20,13 @@ pub/media/mageos-shopping-feed/mageos_shopping_feed_<feed_id>.txt
 
 The Admin permits a supported delimiter and a safe filename under `pub/media/mageos-shopping-feed`. The path cannot escape that directory, and filenames are restricted to approved characters and `.txt`, `.csv`, `.tsv`, or `.xml` extensions.
 
-Choose **Comma** for CSV output. The writer encloses every header and value in double quotes and doubles embedded quotes. Commas in source text, including decoded HTML entities, are preserved. For example, the value `"Quoted" title, café` becomes `"""Quoted"" title, café"` in the file. A trailing empty field is written as `""`.
+Choose **Comma** for CSV output. With the enclosure controls left blank, the writer encloses every header and value in double quotes and doubles embedded quotes. Commas in source text, including decoded HTML entities, are preserved. For example, the value `"Quoted" title, café` becomes `"""Quoted"" title, café"` in the file. A trailing empty field is written as `""`.
 
 This applies to both new and existing Generic feeds using a comma delimiter, including **Other** set to a comma. The filename extension does not select the serializer. Recipients must parse CSV rather than split each line on commas. Existing integrations that relied on stripped commas or unquoted values must be checked before resuming uploads.
 
-Tab and other custom delimiters keep their existing field-cleaning behavior: embedded delimiters become spaces. HTML tags and line breaks are cleaned in all formats. This is a product-text export, not a lossless copy of HTML or multiline content.
+The General tab also provides **Cell Enclosure**, **Enclosure Escape**, and **Empty Cell Value**. An explicit enclosure overrides the comma default and also works with other delimiters. Leave Escape blank to double embedded enclosure characters, or enter the escape prefix required by the recipient. Empty Cell Value replaces empty cells; zero remains zero. Headers and values use the same enclosure rules.
+
+For example, pipe-delimited output with `"` as its enclosure writes `A|B` as `"A|B"`, preserving the pipe inside the value. Without an enclosure, embedded tab/custom delimiters become spaces as before. HTML tags and line breaks are cleaned in all formats. This is a product-text export, not a lossless copy of HTML or multiline content.
 
 Google-only column additions, identifier rules, backorder-date checks, and sale-price suppression do not apply to Generic output. Custom column names and order remain under your control.
 

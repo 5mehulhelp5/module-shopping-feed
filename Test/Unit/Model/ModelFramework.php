@@ -583,7 +583,7 @@ class ModelFramework extends CompatibilityTestCase
                 'getPriceModel', 'setData', 'setSpecialPrice', 'setFinalPrice', 'getTotalPrices',
                 'getAssociatedProductCollection', 'addFilterByRequiredOptions', 'setPositionOrder',
                 'addStoreFilter', 'getOptions', 'hasSpecialPrice', 'calculatePrice', 'setStoreId', 'getStoreId',
-                'getPriceInfo', 'load']
+                'getPriceInfo', 'getTierPrice', 'load']
         );
         $this->expectSelf($this->productMock, ['setData', 'setSpecialPrice', 'setFinalPrice', 'getPriceModel', 'setStoreId', 'load']);
 

@@ -88,7 +88,8 @@ class Filter
         ];
         $activeDelimiter = $delimiter == 'other' ? $delimiter_other : ($delimiter == '\t' ? "\t" : $delimiter);
         $isCustomCsv = $this->feed->getData('type') === 'generic' && $activeDelimiter === ',';
-        if ($activeDelimiter !== '' && !$isCustomCsv) {
+        $hasEnclosure = $isCustomCsv || (string)$this->feed->getConfig('output_params_enclose_cell', '') !== '';
+        if ($activeDelimiter !== '' && !$hasEnclosure) {
             $replacements[$activeDelimiter] = ' ';
         }
         $field = strtr($field, $replacements);
@@ -99,7 +100,7 @@ class Filter
         }
         /** Decoding can reintroduce separators that were absent from the source text. */
         $separators = ["\n" => ' ', "\r" => ' '];
-        if ($activeDelimiter !== '' && !$isCustomCsv) {
+        if ($activeDelimiter !== '' && !$hasEnclosure) {
             $separators[$activeDelimiter] = ' ';
         }
         $field = strtr($field, $separators);

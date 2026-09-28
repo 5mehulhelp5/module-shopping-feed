@@ -61,7 +61,7 @@ Think of the feed as a pipeline:
 
 Test interacting rules together. A transformation that produces an empty value can affect a later required-field filter.
 
-HTML entities are decoded before a final pass removes line breaks and, for tab/custom-delimited output, the active field delimiter. Generic comma-delimited feeds preserve commas and quote each CSV field, including embedded quotes. Encoded tabs such as `&#09;` therefore cannot add an extra column to a tab-delimited row. Verify the complete generated file, including rows containing encoded punctuation or whitespace.
+HTML entities are decoded before a final pass removes line breaks and, for output without an enclosure, the active field delimiter. An explicitly configured enclosure preserves embedded delimiters. Generic comma-delimited feeds preserve commas and quote each CSV field, including embedded quotes. Encoded tabs such as `&#09;` therefore cannot add an extra column to a tab-delimited row. Verify the complete generated file, including rows containing encoded punctuation or whitespace.
 
 ## Verification
 

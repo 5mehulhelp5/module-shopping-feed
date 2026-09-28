@@ -85,6 +85,16 @@ class FilterTest extends CompatibilityTestCase
         $this->assertSame('"Quoted", café, 東京', $this->model->cleanField('&quot;Quoted&quot;, café&#44; 東京'));
     }
 
+    public function testEnclosedCustomDelimiterSurvivesCleaning(): void
+    {
+        $settings = ['output_params_delimiter' => '|', 'output_params_enclose_cell' => '"'];
+        $this->feedMock->method('getConfig')->willReturnCallback(
+            static fn($key, $default = null) => $settings[$key] ?? $default
+        );
+        $this->model->setFeed($this->feedMock);
+        $this->assertSame('A|B|C', $this->model->cleanField('A|B&#124;C'));
+    }
+
     public function testFindAndReplace()
     {
         $params = 'columnName';

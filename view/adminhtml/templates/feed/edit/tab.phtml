@@ -23,7 +23,7 @@
     <?php if ($block->getTabNotice() && strlen($block->getTabNotice())): ?>
     <div class="messages">
         <div class="message message-notice">
-            <?=$block->escapeHtml($block->getTabNotice())?>
+            <?=$block->escapeHtml($block->getTabNotice(), ['a', 'strong', 'br'])?>
         </div>
     </div>
     <?php endif; ?>

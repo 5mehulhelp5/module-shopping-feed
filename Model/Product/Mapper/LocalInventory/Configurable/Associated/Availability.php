@@ -26,7 +26,10 @@ class Availability extends SimpleAvailability
     {
         $cell = self::IN_STOCK;
         if ($this->getAdapter()->getFeed()->getConfig('configurable_inherit_parent_out_of_stock')) {
-            $cell = $this->getStockStatus($this->getAdapter()->getParentAdapter());
+            $parent = $this->getAdapter()->getParentAdapter();
+            $cell = $this->usesDefaultStock()
+                ? ($parent->getProduct()->isSalable() ? self::IN_STOCK : self::OUT_OF_STOCK)
+                : $this->getStockStatus($parent);
         }
 
         if ($cell == self::IN_STOCK) {

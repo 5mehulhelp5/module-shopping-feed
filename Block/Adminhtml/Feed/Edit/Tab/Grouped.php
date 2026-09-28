@@ -217,6 +217,6 @@ class Grouped extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
      */
     public function getTabNotice()
     {
-        return __('This section applyes to all grouped and their associated produts in your catalog. Grouped type should be enabled under <a href="#" data-tab-id="#feed_tabs_filters">Filters</a> section.');
+        return __('This section applies to all grouped and their associated products in your catalog. Grouped type should be enabled under <a href="#feed_tabs_filters">Filters</a> section.');
     }
 }

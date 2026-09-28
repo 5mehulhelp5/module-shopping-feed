@@ -17,7 +17,12 @@ All notable changes to this project will be documented here.
 - Replaced new Google feeds' default SKU-to-MPN mapping with empty MPN and GTIN attribute mappings. Existing saved mappings are preserved.
 - Added an `availability_date` placeholder to new Google feeds and skip backorder/preorder rows with missing, invalid, expired, or more-than-one-year-ahead dates, with a log warning and skipped count.
 - Prevented online backorders from overriding Local Inventory quantities and respected disabled source items.
-- Serialized Generic comma-delimited feeds as quoted CSV, preserving embedded commas and escaping double quotes. Google TSV and other custom delimiters retain their existing behavior.
+- Serialized Generic comma-delimited feeds as quoted CSV, preserving embedded commas and escaping double quotes.
+- Fixed Local Inventory configurable-child availability when the parent has zero legacy quantity. Parent inheritance uses salability under default stock (#3).
+- Included guest and all-group single-unit tier discounts in sale detection and price calculation, without applying bulk-only tiers. The Tier Price directive respects quantity one and preserves the product's customer-group context (#4).
+- Included Search-only simple products in Complex Product Context Prioritization so their grouping does not depend on product ID order (#5).
+- Read the declared enclosure, escape, and empty-value configuration keys. Added Generic Admin controls and preserved embedded delimiters when enclosure is configured (#6).
+- Rendered safe tab-notice links and formatting, restored tab navigation after sanitization, and corrected notice typos (#7).
 
 - Preserved encrypted upload credentials through masked and repeated saves, rejected unreadable credentials, and expanded ciphertext storage from `varchar(255)` to `text`.
 - Scoped saved upload and schedule IDs to the current feed.
@@ -35,7 +40,7 @@ All notable changes to this project will be documented here.
 
 - Run `bin/magento setup:upgrade` for the password column and feed-name index.
 - Review existing identifier mappings and add real availability dates for Google backorders/preorders. Saved column maps are preserved.
-- Check custom CSV recipients before resuming uploads; comma output now preserves commas and uses CSV quoting.
+- Check custom recipients before resuming uploads. Comma output uses CSV quoting by default; saved enclosure, escape, and empty-value settings now take effect. Review feeds using Tier Price for previous bulk-only values.
 
 ### Documentation
 

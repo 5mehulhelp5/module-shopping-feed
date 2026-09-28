@@ -15,8 +15,11 @@ Read the [release notes](https://github.com/mage-os-lab/module-shopping-feed/rel
 | Queue recovery | Interrupted rows can restart on the next worker invocation without appending duplicate partial output |
 | Google identifiers | Explicit absence confirmation; no default SKU-to-MPN assumption; empty MPN/GTIN mappings for new feeds |
 | Google availability | Backorders and preorders need a real future date; missing or invalid dates produce logged skips |
-| Local Inventory | Online backorders do not override local quantity and source availability |
-| Generic CSV | Quoted fields preserve commas and escape quotes; custom names, order, and values remain configurable |
+| Local Inventory | Online backorders do not override local stock; configurable parent inheritance uses salability instead of zero parent quantity |
+| Pricing | Guest quantity-one tiers participate in sale prices; the Tier Price directive excludes bulk-only tiers |
+| Variant grouping | Context prioritization includes Search-only children, regardless of product ID order |
+| Generic output | Configurable enclosure, escape, and empty-value controls; comma output uses CSV quoting by default |
+| Tab notices | Safe links and formatting render correctly, and links switch tabs |
 | Other corrections | Multiple promotion rules, UTF-8 limits, explicit microdata selection, literal URL option handling, and safe previews |
 
 ## Required upgrade steps
@@ -27,7 +30,7 @@ Existing column maps are preserved. Review identifier mappings, add `availabilit
 
 ## Recorded verification
 
-The final Google/custom-feed acceptance on Mage-OS 3.5.0 without Nebula passed:
+The earlier Google/custom-feed acceptance on Mage-OS 3.5.0 without Nebula passed:
 
 * 413 unit tests with 955 assertions
 * 10 application integration tests with 26 assertions
@@ -35,6 +38,8 @@ The final Google/custom-feed acceptance on Mage-OS 3.5.0 without Nebula passed:
 * Browser creation, save/reload, product preview, and HTTP CSV download with strict parsing
 
 The [Google/custom-feed report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.1.0/docs/reviews/2026-09-28-google-custom-feed-fixes.md) includes methods and limits. Separate earlier reports cover [Nebula compatibility](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.1.0/docs/reviews/2026-09-25-admin-compatibility.md), [installation without Nebula](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.1.0/docs/reviews/2026-09-28-without-nebula-acceptance.md), and [storefront acceptance](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.1.0/docs/reviews/2026-09-25-mageos-3.5-acceptance.md).
+
+The follow-up [issue acceptance report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.1.0/docs/reviews/2026-09-28-github-issues.md) records 433 unit tests, 19 JavaScript tests, 42 feed/stock checks, and browser verification for issues #3 through #7, including quantity-one pricing, both child ID orders, legacy stock, custom output settings, and tab notices.
 
 Check the [CI history](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml) for the exact release commit. Mage-OS 3.4.0 and supported Magento Open Source versions are CI targets; Mage-OS 3.5.0 is a local acceptance profile. Local checks are not Merchant Center approval or proof of a live FTP/SFTP transfer.
 

@@ -12,7 +12,10 @@ General Configuration defines the store context, output location, delimiter, pri
 | Store View | The store context used for product attributes, URLs, prices, categories, and inventory. |
 | Feed Currency | The currency used when formatting price directives. Only currencies allowed for the selected store are offered. |
 | Feed Path | The directory and generated filename. Output is restricted to `pub/media/mageos-shopping-feed` and safe subdirectories. |
-| Delimiter | The field separator for generated rows. Google templates default to tabs. Generic comma output quotes CSV fields and preserves embedded commas. |
+| Delimiter | The field separator for generated rows. Google templates default to tabs. Generic comma output quotes CSV fields by default. |
+| Cell Enclosure (Generic) | Optional enclosure for each header and value. Blank uses double quotes for comma output and no enclosure for other delimiters. |
+| Enclosure Escape (Generic) | Prefix for an enclosure inside a cell. Blank doubles the enclosure character. |
+| Empty Cell Value (Generic) | Optional replacement for empty values. Numeric zero is retained. |
 
 Changing the store view can change the category tree and attribute values. Save the feed, then review Categories Map, currency, URLs, and representative product output again.
 
@@ -26,7 +29,7 @@ Review every mapped attribute before generation and include only data intended f
 
 ### Apply Catalog Price Rules
 
-When enabled, catalog price rules participate in sale-price calculation. Confirm the resulting regular price, sale price, and sale dates against the selected store view and timezone.
+When enabled, catalog price rules participate in sale-price calculation. Guest and all-group tier discounts available for one unit also participate; bulk-only and other customer-group discounts do not. Tier-only discounts have no invented sale date range. Confirm the resulting regular price, sale price, and sale dates against the selected store view and timezone.
 
 ### Use default Stock Statuses
 
@@ -48,7 +51,7 @@ When enabled, reservations participate in quantity and availability calculations
 
 ### Complex Product Context Prioritization
 
-When enabled, simple products attached to configurable, grouped, or bundle products are prioritized for processing in their complex-product context. This can reduce duplicate or contextually wrong rows, but it adds work to generation. Measure it on large catalogs.
+When enabled, simple products attached to configurable, grouped, or bundle products are prioritized for processing in their complex-product context. This includes Catalog, Search, and Catalog/Search visibility, so a Search-only child created before its parent can retain variant grouping. It adds work to generation. Measure it on large catalogs.
 
 ## Global settings
 

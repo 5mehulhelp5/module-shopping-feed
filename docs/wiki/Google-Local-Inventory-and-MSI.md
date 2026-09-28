@@ -68,6 +68,8 @@ Record the physical source quantity, reservation total, expected feed quantity, 
 
 ## Complex products
 
+When **Inherit parent out-of-stock** is enabled for configurable children using default stock, the parent is checked for salability rather than positive parent quantity. Configurable parents normally have zero legacy quantity; that alone no longer marks in-stock children out of stock. Each child still needs available local stock. Custom availability attributes retain their configured behavior.
+
 The configurable, grouped, and bundle modes still control whether parent rows, associated rows, or both are emitted. Local Inventory preserves the source context while mapping associated items.
 
 Test all three configurable modes when they are relevant:

@@ -54,7 +54,7 @@ Test fixed and dynamic price or weight bundles separately. Optional and required
 
 ## Complex Product Context Prioritization
 
-The General Configuration setting can prioritize visible simple products in their complex-product context. Enable it when standalone processing produces duplicate or contextually wrong rows, then measure the generation cost.
+The General Configuration setting can prioritize individually visible simple products in their complex-product context, including Search-only children. With it enabled, a child created before its parent retains the same parent grouping as a child created later. Enable it when standalone processing produces duplicate or contextually wrong rows, then measure the generation cost.
 
 ## Verification matrix
 

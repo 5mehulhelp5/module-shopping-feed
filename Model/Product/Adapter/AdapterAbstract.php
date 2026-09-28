@@ -462,7 +462,16 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             }
         }
 
-        return $has;
+        return $has || $this->getSingleUnitTierPrice($product) !== null;
+    }
+
+    /** Return a discounted tier available to a guest buying one unit, in the store's base currency. */
+    protected function getSingleUnitTierPrice(\Magento\Catalog\Model\Product $product): ?float
+    {
+        $guestProduct = clone $product;
+        $guestProduct->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);
+        $price = $guestProduct->getTierPrice(1);
+        return is_numeric($price) && $price > 0 && $price < $product->getPrice() ? (float)$price : null;
     }
 
     /**
@@ -506,6 +515,12 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     {
         $product = $this->product;
 
+        $tierPrice = $this->getSingleUnitTierPrice($product);
+        if ($tierPrice !== null && $tierPrice <= $product->getFinalPrice()) {
+            // A tier price has no date range, even when an expired special-price attribute is still present.
+            return false;
+        }
+
         if ($this->hasPriceByCatalogRules($product)) {
             return $this->getCatalogRuleEffectiveDates($product);
         } elseif ($this->hasSpecialPrice(false)) {
@@ -538,6 +553,10 @@ class AdapterAbstract extends \Magento\Framework\DataObject
 
         $catalogRulesPrice = $this->getPriceByCatalogRules();
         $finalPrice = $catalogRulesPrice ? min($catalogRulesPrice, $product->getFinalPrice()) : $product->getFinalPrice();
+        $tierPrice = $this->getSingleUnitTierPrice($product);
+        if ($tierPrice !== null) {
+            $finalPrice = min($finalPrice, $tierPrice);
+        }
         $convertedFinalPrice = $this->convertPrice($finalPrice);
 
         $prices['sp_excl_tax'] = $catalogHelper->getTaxPrice($product, $convertedFinalPrice, null, null, null, null, $product->getStore());
@@ -1311,7 +1330,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
 
     /**
      * Check if the current product is a simple product that's part of an enabled complex product
-     * (configurable, bundle, or grouped) and is visible in catalog
+     * (configurable, bundle, or grouped) and is individually visible
      * Optimized version using raw SQL queries for better performance
      *
      * @return array
@@ -1326,10 +1345,9 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             return [];
         }
 
-        // Only products visible in catalog should be considered
+        // Search-only products can be processed before their parent too.
         $visibility = $product->getVisibility();
-        if ($visibility != \Magento\Catalog\Model\Product\Visibility::VISIBILITY_IN_CATALOG &&
-            $visibility != \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH) {
+        if ($visibility == \Magento\Catalog\Model\Product\Visibility::VISIBILITY_NOT_VISIBLE) {
             return [];
         }
 

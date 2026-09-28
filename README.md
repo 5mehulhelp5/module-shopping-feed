@@ -2,7 +2,7 @@
 
 [![CI on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml?query=branch%3Amain)
 
-Version **1.1.0** adds optional Nebula Admin support, safer upload and queue handling, corrected Google feed output, and properly quoted custom CSV. Read the [1.1.0 release notes](docs/releases/1.1.0.md) and [upgrade checklist](docs/wiki/Installation-and-Upgrade.md#upgrading-from-10-to-11).
+Version **1.1.0** adds optional Nebula Admin support, safer upload and queue handling, corrected Google feed output, guest tier pricing, consistent variant grouping, and configurable custom output. Read the [1.1.0 release notes](docs/releases/1.1.0.md) and [upgrade checklist](docs/wiki/Installation-and-Upgrade.md#upgrading-from-10-to-11).
 
 `MageOS_ShoppingFeed` generates product feeds for Mage-OS and Magento Open Source.
 
@@ -21,7 +21,7 @@ The package has its own Composer name, PHP namespace, Magento module name, datab
 
 Version [1.1.0](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.1.0) is the current stable release. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) before evaluating it on a store that already uses a Rocket Web shopping feed module.
 
-The release retains custom feed mapping and Hyva/Luma deep links while correcting identifier defaults, backorder dates, Local Inventory statuses, and CSV serialization. Existing Google mappings need review, comma-feed recipients must accept quoted CSV, and `setup:upgrade` is required for the upload-password column and feed-search index. See the [changelog](CHANGELOG.md) and [Google/custom-feed acceptance report](docs/reviews/2026-09-28-google-custom-feed-fixes.md). Historical [1.0.0 notes](docs/releases/1.0.0.md) remain available.
+The release retains custom feed mapping and Hyva/Luma deep links while correcting identifier defaults, backorder dates, Local Inventory statuses, and CSV serialization. Existing Google mappings need review, comma-feed recipients must accept quoted CSV, and `setup:upgrade` is required for the upload-password column and feed-search index. See the [changelog](CHANGELOG.md), [Google/custom-feed acceptance report](docs/reviews/2026-09-28-google-custom-feed-fixes.md), and [issue acceptance report](docs/reviews/2026-09-28-github-issues.md). Historical [1.0.0 notes](docs/releases/1.0.0.md) remain available.
 
 Run [ACCEPTANCE-TEST-PLAN.md](ACCEPTANCE-TEST-PLAN.md) against the exact release candidate before enabling production schedules or uploads.
 

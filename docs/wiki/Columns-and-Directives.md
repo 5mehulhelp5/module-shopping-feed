@@ -23,7 +23,7 @@ Save the feed after changing Columns Map. Several filters and inheritance contro
 | Product Id | Writes a product identifier using the selected identifier mode. |
 | Product URL | Builds a store-view URL and can add configured parameters. |
 | Price | Maps the regular or calculated product price and formats its currency. |
-| Tier Price | Maps price for the selected customer group. |
+| Tier Price | Maps a tier available for one unit for the selected customer group or all groups. Bulk-only tiers are excluded; no applicable tier leaves the field empty. |
 | Sale Price | Maps a lower active sale price. |
 | Sale Price Date Range | Maps the active special-price date range. |
 | Availability | Maps stock state using default inventory or the configured availability attribute. |

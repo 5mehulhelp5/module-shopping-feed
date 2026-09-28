@@ -97,7 +97,10 @@ Review saved feeds before resuming uploads:
 1. **Google identifiers:** existing mappings are preserved. Replace SKU-to-MPN mappings unless SKU is the actual manufacturer MPN. Map real GTIN/MPN attributes. The Identifier Exists directive no longer writes FALSE merely because required fields are empty; confirmed identifier absence is now an explicit choice.
 2. **Google backorders/preorders:** add `availability_date` to existing feeds and map a real expected shipping date. Rows requiring a date are skipped with a log warning until the date is valid. New feeds contain an empty placeholder, not an invented date.
 3. **Local Inventory:** zero-stock backorders export as `out_of_stock`. Disabled source items also export as out of stock. Compare local quantities and statuses with the stores they represent.
-4. **Generic CSV:** comma-delimited feeds now preserve commas and use CSV quotation rules for headers and values. Test the recipient's CSV parser; line splitting is not sufficient. Tab and other custom delimiters retain their existing behavior.
+4. **Generic CSV:** comma-delimited feeds now preserve commas and use CSV quotation rules for headers and values. Test the recipient's CSV parser; line splitting is not sufficient. Tab and other custom delimiters retain their existing behavior when no enclosure is set.
+
+5. **Saved output settings:** the declared `output_params_enclose_cell`, `output_params_enclose_escape`, and `output_params_default_value` settings now take effect. Inspect any values set by scripts or imports. Generic feeds expose these controls in the General tab.
+6. **Pricing and variants:** compare guest quantity-one tier prices with the storefront, check custom Tier Price columns for previous bulk-only prices, and enable Complex Product Context Prioritization when visible children must retain their parent's grouping. Search-only children are now included in that setting.
 
 The Google and CSV changes do not overwrite saved column maps or need their own data migration. The 1.1 release still requires the schema upgrade described above. See [Google Shopping](Google-Shopping), [Local Inventory](Google-Local-Inventory-and-MSI), and [Generic feeds](Generic-Feeds) for setup and examples.
 
