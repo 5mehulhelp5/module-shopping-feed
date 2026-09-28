@@ -4,6 +4,18 @@ All notable changes to this project will be documented here.
 
 ## Unreleased
 
+### Fixed
+
+- Stopped inferring `identifier_exists=FALSE` from incomplete catalog identifiers; absence now requires explicit confirmation and no supplied brand, GTIN, or MPN.
+- Replaced new Google feeds' default SKU-to-MPN mapping with empty MPN and GTIN attribute mappings. Existing saved mappings are preserved.
+- Added an `availability_date` placeholder to new Google feeds and skip backorder/preorder rows with missing, invalid, expired, or more-than-one-year-ahead dates, with a log warning and skipped count.
+- Prevented online backorders from overriding Local Inventory quantities and respected disabled source items.
+- Serialized Generic comma-delimited feeds as quoted CSV, preserving embedded commas and escaping double quotes. Google TSV and other custom delimiters retain their existing behavior.
+
+### Documentation
+
+- Documented identifier confirmation, real availability dates, local inventory status, CSV parsing, and the settings to review when upgrading existing feeds.
+
 ## 1.0.0 - 2026-09-09
 
 ### Added

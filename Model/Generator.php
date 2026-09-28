@@ -474,6 +474,20 @@ class Generator extends DataObject
      */
     protected function writeFeed($fields, $addNewLine = true)
     {
+        if ($addNewLine && $this->feed->getData('type') === 'google_shopping') {
+            $requiresDate = in_array($fields['availability'] ?? '', ['backorder', 'preorder'], true);
+            $date = $this->normalizeAvailabilityDate($fields['availability_date'] ?? '');
+            if ($requiresDate && $date === null) {
+                $this->updateCountSkip();
+                $this->getLogger()->warning(sprintf(
+                    'Skipped Google Shopping row %s: %s requires a valid future availability_date within one year. Map the expected shipping date in Columns Map.',
+                    $fields['id'] ?? '(no id)',
+                    $fields['availability']
+                ));
+                return $this;
+            }
+            $fields['availability_date'] = $date ?? '';
+        }
         $isGoogleFeed = in_array(
             $this->feed->getData('type'),
             ['google_shopping', 'google_local_inventory'],
@@ -499,6 +513,7 @@ class Generator extends DataObject
          * @var $encloseEscape
          */
         extract($params);
+        $isCustomCsv = $this->feed->getData('type') === 'generic' && $delimiter === ',';
         $row = [];
 
         foreach ($this->getOutputColumns($isGoogleFeed) as $arr) {
@@ -513,7 +528,9 @@ class Generator extends DataObject
                     $value = $defaultValue;
                 }
                 if (!$this->isTestMode()) {
-                    if ($encloseCell !== false) {
+                    if ($isCustomCsv) {
+                        $value = '"' . str_replace('"', '""', (string)$value) . '"';
+                    } elseif ($encloseCell !== false) {
                         $value = str_replace($encloseCell, $encloseEscape . $encloseCell, $value);
                         $value = sprintf('%s%s%s', $encloseCell, $value, $encloseCell);
                     }
@@ -534,6 +551,29 @@ class Generator extends DataObject
         }
 
         return $this;
+    }
+
+    /** Normalize mapped ISO dates or Magento datetime attributes (UTC), without guessing dates. */
+    private function normalizeAvailabilityDate($value): ?string
+    {
+        if (!is_string($value)
+            || !preg_match('/^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:?\d{2})?)?$/D', $value)
+        ) {
+            return null;
+        }
+        try {
+            $date = new \DateTimeImmutable($value, new \DateTimeZone('UTC'));
+            $errors = \DateTimeImmutable::getLastErrors();
+            $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+            if (($errors !== false && ($errors['warning_count'] || $errors['error_count']))
+                || $date <= $now || $date > $now->modify('+1 year')
+            ) {
+                return null;
+            }
+            return $date->format('c');
+        } catch (\Exception $exception) {
+            return null;
+        }
     }
 
     private function getOutputColumns(bool $isGoogleFeed): array

@@ -76,7 +76,7 @@ $assert($feedSchemaValid, 'The consolidated feed configuration does not match it
 $feedXpath = new DOMXPath($feedConfig);
 $expectedFeeds = [
     'generic' => ['directives' => 24, 'columns' => 17],
-    'google_shopping' => ['directives' => 32, 'columns' => 29],
+    'google_shopping' => ['directives' => 32, 'columns' => 31],
     'google_local_inventory' => ['directives' => 11, 'columns' => 7],
 ];
 foreach ($expectedFeeds as $feedName => $expected) {
@@ -107,6 +107,14 @@ foreach ($expectedFeeds as $feedName => $expected) {
 $assert(
     $feedXpath->query('/config/feed[@name="google_shopping"]/directives/directive[@name="directive_promotions_id"]')->length === 1,
     'Google Promotions was not merged into Google Shopping'
+);
+$assert(
+    $feedXpath->query('/config/feed[@name="google_shopping"]/default_product_columns/column[@attribute="directive_identifier_attribute"]/column[text()="mpn" or text()="gtin"]')->length === 2,
+    'Google identifiers must require a real attribute mapping instead of defaulting to SKU'
+);
+$assert(
+    $feedXpath->query('/config/feed[@name="google_shopping"]/default_product_columns/column/column[text()="availability_date"]')->length === 1,
+    'Google Shopping needs an availability_date mapping for backorders and preorders'
 );
 $assert(
     $feedXpath->query('/config/feed[@name="google_shopping"]/default_product_columns/column/column[text()="promotion_id"]')->length === 1,

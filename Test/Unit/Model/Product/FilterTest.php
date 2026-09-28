@@ -75,6 +75,16 @@ class FilterTest extends CompatibilityTestCase
         );
     }
 
+    public function testCustomCsvPreservesLiteralAndEncodedCommas(): void
+    {
+        $this->feedMock->setData('type', 'generic');
+        $this->feedMock->method('getConfig')->willReturnCallback(
+            fn($key, $default = null) => $key === 'output_params_delimiter' ? ',' : $default
+        );
+        $this->model->setFeed($this->feedMock);
+        $this->assertSame('"Quoted", café, 東京', $this->model->cleanField('&quot;Quoted&quot;, café&#44; 東京'));
+    }
+
     public function testFindAndReplace()
     {
         $params = 'columnName';

@@ -2,7 +2,7 @@
 
 Use a Generic feed when the recipient accepts a delimited product file but does not match one of the bundled Google templates.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: unreleased changes following commit `4242649`. Last reviewed: 2026-09-28.
 
 ## Starting schema
 
@@ -19,6 +19,14 @@ pub/media/mageos-shopping-feed/mageos_shopping_feed_<feed_id>.txt
 ```
 
 The Admin permits a supported delimiter and a safe filename under `pub/media/mageos-shopping-feed`. The path cannot escape that directory, and filenames are restricted to approved characters and `.txt`, `.csv`, `.tsv`, or `.xml` extensions.
+
+Choose **Comma** for CSV output. The writer encloses every header and value in double quotes and doubles embedded quotes. Commas in source text, including decoded HTML entities, are preserved. For example, the value `"Quoted" title, café` becomes `"""Quoted"" title, café"` in the file. A trailing empty field is written as `""`.
+
+This applies to both new and existing Generic feeds using a comma delimiter, including **Other** set to a comma. The filename extension does not select the serializer. Recipients must parse CSV rather than split each line on commas. Existing integrations that relied on stripped commas or unquoted values must be checked before resuming uploads.
+
+Tab and other custom delimiters keep their existing field-cleaning behavior: embedded delimiters become spaces. HTML tags and line breaks are cleaned in all formats. This is a product-text export, not a lossless copy of HTML or multiline content.
+
+Google-only column additions, identifier rules, backorder-date checks, and sale-price suppression do not apply to Generic output. Custom column names and order remain under your control.
 
 Changing the extension does not create a recipient-specific XML schema. The generator remains driven by Columns Map and output parameters. Confirm the actual file structure expected by the recipient.
 

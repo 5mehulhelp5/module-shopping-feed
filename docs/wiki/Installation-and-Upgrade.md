@@ -2,7 +2,7 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: unreleased changes following commit `4242649`. Last reviewed: 2026-09-28.
 
 ## Before installation
 
@@ -72,6 +72,17 @@ Upgrade through the same installation path used for the module:
 7. Re-enable schedules and uploads only after the new output is accepted.
 
 When upgrading an existing `dev-main` installation to 1.0.0, change its Composer constraint to `^1.0` and run the same steps. No schema change is needed for the final review fixes. JSON-looking text settings are now stored with an explicit string marker; downgrading to older development code requires keeping the corrected decoder or restoring compatible configuration data from backup.
+
+## Unreleased Google and custom-CSV changes
+
+When installing a version containing the 2026-09-28 specification fixes, review saved feeds before resuming uploads:
+
+1. **Google identifiers:** existing mappings are preserved. Replace SKU-to-MPN mappings unless SKU is the actual manufacturer MPN. Map real GTIN/MPN attributes. The Identifier Exists directive no longer writes FALSE merely because required fields are empty; confirmed identifier absence is now an explicit choice.
+2. **Google backorders/preorders:** add `availability_date` to existing feeds and map a real expected shipping date. Rows requiring a date are skipped with a log warning until the date is valid. New feeds contain an empty placeholder, not an invented date.
+3. **Local Inventory:** zero-stock backorders export as `out_of_stock`. Disabled source items also export as out of stock. Compare local quantities and statuses with the stores they represent.
+4. **Generic CSV:** comma-delimited feeds now preserve commas and use CSV quotation rules for headers and values. Test the recipient's CSV parser; line splitting is not sufficient. Tab and other custom delimiters retain their existing behavior.
+
+These changes require no data migration and do not overwrite saved column maps. See [Google Shopping](Google-Shopping), [Local Inventory](Google-Local-Inventory-and-MSI), and [Generic feeds](Generic-Feeds) for setup and examples.
 
 ## Do not copy old installation instructions
 

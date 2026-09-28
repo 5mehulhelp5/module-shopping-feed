@@ -599,7 +599,7 @@
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Google\Simple\IdentifierExists"/>
         </mappers>
-        <param><![CDATA[brand,gtin]]></param>
+        <param><![CDATA[]]></param>
       </directive>
       <directive name="directive_identifier_attribute">
         <label><![CDATA[Identifier Attribute]]></label>
@@ -756,6 +756,10 @@
         <column>availability</column>
         <order>70</order>
       </column>
+      <column attribute="directive_static_value">
+        <column>availability_date</column>
+        <order>71</order>
+      </column>
       <column attribute="directive_shipping_weight">
         <column>shipping_weight</column>
         <order>120</order>
@@ -765,9 +769,13 @@
         <column>brand</column>
         <order>130</order>
       </column>
-      <column attribute="sku">
+      <column attribute="directive_identifier_attribute">
         <column>mpn</column>
         <order>140</order>
+      </column>
+      <column attribute="directive_identifier_attribute">
+        <column>gtin</column>
+        <order>141</order>
       </column>
       <column attribute="directive_static_value">
         <column>condition</column>
