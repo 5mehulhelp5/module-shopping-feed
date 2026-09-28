@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## Unreleased
 
+## 1.1.0 - 2026-09-28
+
+### Added
+
+- Optional native Nebula Admin feed grid, with the existing standard Admin editor, preview, and logs retained. Standard installations require no Nebula package.
+- Fresh Mage-OS 3.5.0 installation and browser acceptance without Nebula, plus Google and custom-feed regression coverage.
+
 ### Fixed
 
 - Stopped inferring `identifier_exists=FALSE` from incomplete catalog identifiers; absence now requires explicit confirmation and no supplied brand, GTIN, or MPN.
@@ -12,8 +19,27 @@ All notable changes to this project will be documented here.
 - Prevented online backorders from overriding Local Inventory quantities and respected disabled source items.
 - Serialized Generic comma-delimited feeds as quoted CSV, preserving embedded commas and escaping double quotes. Google TSV and other custom delimiters retain their existing behavior.
 
+- Preserved encrypted upload credentials through masked and repeated saves, rejected unreadable credentials, and expanded ciphertext storage from `varchar(255)` to `text`.
+- Scoped saved upload and schedule IDs to the current feed.
+- Recovered interrupted queue rows on the next worker run, with lock rechecks and restart from the beginning to avoid duplicated partial output.
+- Included multiple selected promotion rules correctly and fixed the Admin promotion counter's initialization.
+- Counted UTF-8 characters without splitting multibyte text when applying column limits.
+- Required an explicitly selected microdata feed and preserved native price metadata when no eligible feed is available.
+- Treated storefront option values as literal values, with safe handling of malformed URL fragments.
+- Escaped preview values without translating product data and kept generation traces out of the Admin response.
+- Added the full-text feed-name index for standard-grid keyword search and corrected category-map form initialization.
+- Corrected optional Nebula grid filtering, pagination, exports, ACL-controlled actions, and standard-editor routing.
+- Made regression data providers and mock responses compatible with PHPUnit 9, 10, and 12.
+
+### Upgrade
+
+- Run `bin/magento setup:upgrade` for the password column and feed-name index.
+- Review existing identifier mappings and add real availability dates for Google backorders/preorders. Saved column maps are preserved.
+- Check custom CSV recipients before resuming uploads; comma output now preserves commas and uses CSV quoting.
+
 ### Documentation
 
+- Added 1.1.0 release notes, wiki navigation, and a complete upgrade checklist.
 - Documented identifier confirmation, real availability dates, local inventory status, CSV parsing, and the settings to review when upgrading existing feeds.
 
 ## 1.0.0 - 2026-09-09

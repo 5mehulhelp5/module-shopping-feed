@@ -2,7 +2,7 @@
 
 Start with the feed-specific log and the feed grid status. They distinguish queue problems, product skips, generation failures, and upload failures.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Log settings and location
 
@@ -34,6 +34,11 @@ Use **View Log** from the Feeds Management grid, or inspect the file as the Mage
 | Configurable link does not select a Hyva variant | Regenerate the feed and confirm its fragment includes numeric attribute IDs. Inspect selected options, price updates, and browser errors. |
 | Available configurable variants appear out of stock | Confirm the parent is salable and 1.0.0 or later is installed. Check child stock, parent inheritance, and the selected website stock independently. |
 | Local Inventory rows are missing | Confirm the website stock, source assignment, source-to-store mapping, salable quantity, and reservation state. |
+| Google backorder/preorder is skipped | Map a valid future `availability_date` within one year. The log names the skipped row and required setting. |
+| Google identifiers are blank | Map actual manufacturer identifiers. The Identifier Exists directive no longer infers absence from missing data. |
+| Custom comma feed looks quoted or has unexpected splits | Use a CSV parser. Version 1.1 preserves embedded commas and doubles quotes; splitting on commas is not sufficient. |
+| Standard-grid keyword search returns every feed | Run `setup:upgrade` and confirm the feed-name full-text index exists, then clear caches and retry. |
+| Saved upload credentials fail to load | Replace unreadable credentials after checking schema upgrade status; previously truncated ciphertext cannot be recovered. |
 | Google rejects data | Compare the exact generated value with the current Google specification and account diagnostics. |
 
 ## Locks and interrupted runs

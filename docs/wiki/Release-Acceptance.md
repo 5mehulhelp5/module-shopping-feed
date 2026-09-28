@@ -2,11 +2,11 @@
 
 Release acceptance proves the extension on representative Magento runtimes and proves each generated artifact at the boundary where it is consumed.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 The repository's [`ACCEPTANCE-TEST-PLAN.md`](https://github.com/mage-os-lab/module-shopping-feed/blob/main/ACCEPTANCE-TEST-PLAN.md) is the detailed test source. This page describes the evidence expected from a release candidate.
 
-For the first stable release's actual results and remaining limits, see [Release 1.0.0](Release-1-0-0). The general profiles below remain the acceptance guide for each target deployment; the release record does not claim every external integration was exercised.
+For current results and limits, see [Release 1.1.0](Release-1-1-0). The earlier [1.0.0 record](Release-1-0-0) remains historical evidence. The general profiles below remain the acceptance guide for each target deployment; the release record does not claim every external integration was exercised.
 
 ## Required profiles
 
@@ -14,6 +14,9 @@ Test the release candidate against the supported Mage-OS and Magento Open Source
 
 Features that need additional fixtures should be tested with them:
 
+* Standard Admin with Nebula absent, plus Nebula Admin when supported
+* Upgrade from 1.0 with existing uploads, schedules, and column maps
+* Google identifier/date edge cases and CSV parser round trips
 * MSI sources, website stocks, and reservations for Local Inventory
 * Active cart price rules for Promotions
 * Configurable products with swatch and select attributes for deep links

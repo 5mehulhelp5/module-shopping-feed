@@ -2,7 +2,7 @@
 
 General Configuration defines the store context, output location, delimiter, price behavior, and stock behavior for one feed.
 
-> Documentation baseline: release `v1.0.0` plus unreleased review fixes. Last reviewed: 2026-09-24.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Feed settings
 
@@ -12,7 +12,7 @@ General Configuration defines the store context, output location, delimiter, pri
 | Store View | The store context used for product attributes, URLs, prices, categories, and inventory. |
 | Feed Currency | The currency used when formatting price directives. Only currencies allowed for the selected store are offered. |
 | Feed Path | The directory and generated filename. Output is restricted to `pub/media/mageos-shopping-feed` and safe subdirectories. |
-| Delimiter | The field separator for generated rows. Google templates default to tab-delimited output. |
+| Delimiter | The field separator for generated rows. Google templates default to tabs. Generic comma output quotes CSV fields and preserves embedded commas. |
 
 Changing the store view can change the category tree and attribute values. Save the feed, then review Categories Map, currency, URLs, and representative product output again.
 
@@ -35,6 +35,8 @@ When enabled, the module uses Magento stock information. Set it to **No** only w
 ### Alternate Stock/Availability Attribute
 
 Select the custom attribute used when default stock status is disabled. Supported output values are `in_stock`, `out_of_stock`, `backorder`, and `preorder`; spaces in `in stock` and `out of stock` are normalized to underscores. Unrecognized values fall back to `out_of_stock`.
+
+Google Shopping backorders and preorders also require a valid `availability_date` in 1.1. Google Local Inventory uses local availability rules and does not accept online backorder or preorder states. See [Google Shopping](Google-Shopping) and [Local Inventory](Google-Local-Inventory-and-MSI).
 
 ### Use Qty Increments
 

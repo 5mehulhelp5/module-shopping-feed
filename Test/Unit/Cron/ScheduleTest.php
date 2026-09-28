@@ -23,6 +23,7 @@ use MageOS\ShoppingFeed\Test\Unit\CompatibilityTestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ScheduleTest extends CompatibilityTestCase
 {
+    /** @dataProvider feedStatuses */
     #[\PHPUnit\Framework\Attributes\DataProvider('feedStatuses')]
     public function testScheduledGenerationUsesQueueInvariantEntryPoint(int $status, int $queued): void
     {

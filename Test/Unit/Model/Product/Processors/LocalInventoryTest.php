@@ -22,6 +22,7 @@ use MageOS\ShoppingFeed\Test\Unit\CompatibilityTestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class LocalInventoryTest extends CompatibilityTestCase
 {
+    /** @dataProvider sourceStates */
     #[\PHPUnit\Framework\Attributes\DataProvider('sourceStates')]
     public function testRemapsSourcesWithoutTestModeOrLosingAssociatedAdapters(bool $enabled): void
     {

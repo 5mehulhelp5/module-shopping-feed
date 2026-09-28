@@ -1,6 +1,6 @@
 # Wiki maintenance
 
-The Markdown under `docs/wiki` is the reviewable source for the public GitHub Wiki. Do not edit the public wiki and this directory independently.
+The Markdown under `docs/wiki` is the reviewable source for the public GitHub Wiki. GitHub stores the wiki in a separate `module-shopping-feed.wiki.git` repository. There is no automatic synchronization workflow in this project: a module commit, merge, tag, or release does not update the wiki. Do not edit the public wiki and this directory independently.
 
 ## Source order
 
@@ -38,7 +38,7 @@ Prefer text for third-party interfaces such as Google Merchant Center because th
 2. Run `php dev/tests/validate-wiki.php`.
 3. Review the rendered Markdown and any new screenshots.
 4. Confirm the baseline commit named on every page resolves in the public repository and matches the reviewed source tree.
-5. Merge the reviewed source change into the module repository.
+5. Merge the reviewed source change into the module repository. Release-state copy can be prepared in the release PR, but publish it to the wiki only after the corresponding release is available.
 6. If the Wiki feature is unavailable, obtain approval to enable it in repository settings.
 7. Initialize the GitHub Wiki with `Home.md` if it does not exist.
 8. Clone `https://github.com/mage-os-lab/module-shopping-feed.wiki.git`.

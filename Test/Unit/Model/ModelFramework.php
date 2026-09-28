@@ -737,6 +737,7 @@ class ModelFramework extends CompatibilityTestCase
         $datetimeMock->expects($this->any())
             ->method('format')
             ->will($this->returnValue(date('Y-m-d H:i:s')));
+        $datetimeMock->method('modify')->willReturnSelf();
 
         $this->localeDateMock = $this->getModelMock(
             '\Magento\Framework\Stdlib\DateTime\TimezoneInterface'

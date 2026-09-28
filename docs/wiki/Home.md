@@ -2,13 +2,13 @@
 
 [![CI on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml?query=branch%3Amain)
 
-Release **1.0.0 passed all 27 CI checks** on commit `f14a763`. [View the passing release run](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/34402149180).
+Version **1.1.0** adds optional Nebula Admin support, upload and queue fixes, corrected Google identifiers and availability dates, and quoted custom CSV. Read the [release summary](Release-1-1-0) before upgrading.
 
 Mage-OS Shopping Feed generates product feeds from Mage-OS and Magento Open Source. It combines generic product feeds, Google Shopping, Google Local Inventory, and Google Promotions in one independently named module.
 
-Version **1.0.0** is the first stable release. Read the [release summary](Release-1-0-0) for the Hyva compatibility fixes, feed correctness changes, and validation results.
+The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) covers the required schema update and changes to saved Google and comma-delimited feeds. [Release 1.0.0](Release-1-0-0) remains available as a historical record.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## What the module does
 
@@ -53,6 +53,10 @@ Global settings are at **Stores > Configuration > Mage-OS > Mage-OS Shopping Fee
 ## A necessary boundary
 
 This module has its own Composer package, Magento module, PHP namespace, database tables, configuration paths, Admin route, cron group, events, logs, and output directory. It does not replace or migrate an installed Rocket Web package.
+
+## Documentation publication
+
+These pages are maintained in the module repository under `docs/wiki` and copied into this separate GitHub Wiki repository after review. A module commit, merge, or release does not automatically synchronize the wiki.
 
 ## Getting help
 

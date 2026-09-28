@@ -2,7 +2,7 @@
 
 Schedules decide when work enters the queue. A separate worker consumes queued work and generates feed files.
 
-> Documentation baseline: release `v1.0.0` plus unreleased review fixes. Last reviewed: 2026-09-24.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Enable module cron processing
 
@@ -36,7 +36,7 @@ Allow enough time between schedules for the earlier generation and any uploads t
 * Queue lookups remain independent across feeds. An already queued feed does not suppress another due feed, and a previously empty lookup does not hide newly queued work.
 * Completed batch state is retained so the next worker continues from the prior offset.
 
-**Unreleased recovery fixes:** a queue row left marked running is eligible on the next worker invocation, including the same day. The worker acquires the feed lock and reloads the row before starting. If another worker completed it, no duplicate generation starts. An interrupted run restarts from the beginning so partially appended output cannot duplicate rows. Completed batches still resume normally. Repeated failures remain visible as errors and will be retried; correct the underlying error in the logs.
+**Recovery in 1.1:** a queue row left marked running is eligible on the next worker invocation, including the same day. The worker acquires the feed lock and reloads the row before starting. If another worker completed it, no duplicate generation starts. An interrupted run restarts from the beginning so partially appended output cannot duplicate rows. Completed batches still resume normally. Repeated failures remain visible as errors and will be retried; correct the underlying error in the logs.
 
 File locks require workers to share the same lock filesystem. This is not a distributed lease across independent hosts.
 

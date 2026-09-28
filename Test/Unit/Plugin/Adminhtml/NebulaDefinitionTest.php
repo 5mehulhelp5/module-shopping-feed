@@ -10,9 +10,9 @@ class NebulaDefinitionTest extends TestCase
     public function testMassActionsRespectPermissionsAndHaveResolvedUrls(): void
     {
         $auth=$this->createMock(\Magento\Framework\AuthorizationInterface::class);
-        $auth->expects(self::exactly(2))->method('isAllowed')->willReturnMap([
-            ['MageOS_ShoppingFeed::save',true],['MageOS_ShoppingFeed::delete',false]
-        ]);
+        $auth->expects(self::exactly(2))->method('isAllowed')->willReturnCallback(
+            static fn($resource): bool => $resource === 'MageOS_ShoppingFeed::save'
+        );
         $subject=$this->createMock(\Magento\Framework\View\Element\Template::class);
         $subject->expects(self::once())->method('getUrl')->with('mageos_shopping_feed/feed/massClone')
             ->willReturn('https://local.test/admin/mageos_shopping_feed/feed/massClone/key/example/');

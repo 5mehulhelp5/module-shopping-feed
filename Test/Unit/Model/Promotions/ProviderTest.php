@@ -72,13 +72,14 @@ class ProviderTest extends TestCase
     public function testMultipleIncludedRulesAreFilteredAsSeparateIds(): void
     {
         $feed = $this->createMock(\MageOS\ShoppingFeed\Model\Feed::class);
-        $feed->method('getConfig')->willReturnMap([
-            ['promotions_enabled', null, true],
-            ['promotions_provider_widget', null, [
+        $config = [
+            'promotions_enabled' => true,
+            'promotions_provider_widget' => [
                 'hash' => 'test', 'counter' => 1,
                 'promotion' => [12 => ['include' => 1], 34 => ['include' => 1]],
-            ]],
-        ]);
+            ],
+        ];
+        $feed->method('getConfig')->willReturnCallback(static fn($key) => $config[$key] ?? null);
         $rules = $this->createMock(\Magento\SalesRule\Model\ResourceModel\Rule\Quote\Collection::class);
         $rules->expects($this->once())->method('addFieldToFilter')->with('rule_id', ['in' => [12, 34]])->willReturnSelf();
         $rules->method('getIterator')->willReturn(new \ArrayIterator([]));

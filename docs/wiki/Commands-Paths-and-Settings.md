@@ -2,7 +2,7 @@
 
 This is the compact operational reference for the current Mage-OS module identity.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Identity
 

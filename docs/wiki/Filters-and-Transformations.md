@@ -2,7 +2,7 @@
 
 Product Filters decides which products reach the output and how selected column values are changed. Rule order matters.
 
-> Documentation baseline: unreleased changes following commit `4242649`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Catalog selection
 
@@ -32,7 +32,7 @@ Applies string replacement at column output. Large rule sets add work to every a
 
 ### Limit column output
 
-Truncates selected output columns to a character limit. In the unreleased fix, limits count UTF-8 characters without splitting a multibyte character. Limits run before output encoding and HTML cleanup. If several limits target the same column, they run in order.
+Truncates selected output columns to a character limit. In 1.1, limits count UTF-8 characters without splitting a multibyte character. Limits run before output encoding and HTML cleanup. If several limits target the same column, they run in order.
 
 ### Skip Products with empty
 

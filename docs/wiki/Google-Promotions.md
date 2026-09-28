@@ -2,7 +2,7 @@
 
 Google Promotions is a companion file generated from an enabled Google Shopping feed. It maps selected Magento cart price rules into promotion rows and can add matching promotion IDs to product rows.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Prerequisites
 
@@ -33,6 +33,8 @@ Open the **Google Promotions** tab:
 4. Review effective and display date ranges.
 5. Confirm coupon-code requirements.
 6. Save the feed before generating it.
+
+Version 1.1 preserves all selected included rule IDs rather than treating a list as one ID. Test a product eligible for more than one selected rule.
 
 The Admin validates several title rules and warns when a shipping promotion has no coupon. Google remains the authority for final policy and editorial acceptance.
 

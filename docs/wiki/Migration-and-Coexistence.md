@@ -2,7 +2,7 @@
 
 `MageOS_ShoppingFeed` is a new module. It is not a renamed release of an installed Rocket Web package, and it does not copy Rocket Web data.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Isolated identities
 

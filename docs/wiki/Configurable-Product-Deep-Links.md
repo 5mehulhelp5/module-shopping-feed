@@ -2,7 +2,7 @@
 
 Associated configurable rows can link to the parent product with the child's option selections encoded in the URL fragment. The storefront script reads those values and selects matching swatches or dropdowns.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Enable unique links
 
@@ -27,6 +27,8 @@ On Luma, the configurable selection script:
 * Selects matching swatch options
 * Selects matching configurable dropdown options
 * Resolves the selected associated product after every complete option selection
+
+The Luma integration compares option IDs and values literally. Malformed URL encoding is ignored, and fragment values cannot become jQuery selectors.
 
 The deep-link selection works independently of the Google Ads event setting.
 

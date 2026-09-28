@@ -2,7 +2,7 @@
 
 Columns Map controls the output schema. Each row gives the output column a name and maps it to a Magento product attribute or a module directive.
 
-> Documentation baseline: unreleased changes following commit `4242649`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## How a column is built
 

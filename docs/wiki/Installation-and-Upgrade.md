@@ -2,7 +2,7 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: unreleased changes following commit `4242649`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Before installation
 
@@ -15,10 +15,10 @@ Install the module on staging first. Feed generation writes files and records qu
 
 ## Composer installation
 
-The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.x line:
+The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.1 line:
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.0'
+composer require 'mage-os/module-shopping-feed:^1.1'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
@@ -34,7 +34,7 @@ Place or symlink the source at:
 app/code/MageOS/ShoppingFeed
 ```
 
-Use the `v1.0.0` tag for a reproducible 1.0 installation, and record its resolved commit.
+Use the `v1.1.0` tag for a reproducible 1.1 installation, and record its resolved commit. The `v1.0.0` tag remains available for historical installations.
 
 Then run:
 
@@ -71,18 +71,35 @@ Upgrade through the same installation path used for the module:
 6. Regenerate a non-production feed and compare it with the previous accepted output.
 7. Re-enable schedules and uploads only after the new output is accepted.
 
-When upgrading an existing `dev-main` installation to 1.0.0, change its Composer constraint to `^1.0` and run the same steps. No schema change is needed for the final review fixes. JSON-looking text settings are now stored with an explicit string marker; downgrading to older development code requires keeping the corrected decoder or restoring compatible configuration data from backup.
+## Upgrading from 1.0 to 1.1
 
-## Unreleased Google and custom-CSV changes
+Version 1.1.0 requires `setup:upgrade`: encrypted upload passwords now use a `text` column, and standard-grid keyword search uses a full-text index on feed names. Complete DI compilation and static-content deployment where your deployment process requires them, then clear caches so the corrected Admin JavaScript loads.
 
-When installing a version containing the 2026-09-28 specification fixes, review saved feeds before resuming uploads:
+For a Composer installation:
+
+```bash
+composer require 'mage-os/module-shopping-feed:^1.1' --no-update
+composer update mage-os/module-shopping-feed --with-dependencies
+bin/magento setup:upgrade
+bin/magento cache:clean
+```
+
+An existing development-branch installation can move to the same stable constraint. Record the old lock file, module code, database, and configuration before upgrading. A rollback should restore that matching set; reverting PHP alone does not reverse schema and saved-configuration changes.
+
+Review upload destinations by saving and reopening them with the password mask unchanged. If an old credential cannot be decrypted, replace it. The module does not recover secrets from truncated ciphertext. Verify schema status with `bin/magento setup:db:status` and test standard-grid keyword search.
+
+Test scheduled recovery, selected promotion rules, UTF-8 limits, and storefront microdata/deep links where enabled. Nebula remains optional: test the grid and editor under the Admin theme actually used by the store. Historical JSON-looking text configuration keeps its explicit string marker; older development decoders require a compatible backup when rolling back.
+
+## Google and custom-CSV changes in 1.1
+
+Review saved feeds before resuming uploads:
 
 1. **Google identifiers:** existing mappings are preserved. Replace SKU-to-MPN mappings unless SKU is the actual manufacturer MPN. Map real GTIN/MPN attributes. The Identifier Exists directive no longer writes FALSE merely because required fields are empty; confirmed identifier absence is now an explicit choice.
 2. **Google backorders/preorders:** add `availability_date` to existing feeds and map a real expected shipping date. Rows requiring a date are skipped with a log warning until the date is valid. New feeds contain an empty placeholder, not an invented date.
 3. **Local Inventory:** zero-stock backorders export as `out_of_stock`. Disabled source items also export as out of stock. Compare local quantities and statuses with the stores they represent.
 4. **Generic CSV:** comma-delimited feeds now preserve commas and use CSV quotation rules for headers and values. Test the recipient's CSV parser; line splitting is not sufficient. Tab and other custom delimiters retain their existing behavior.
 
-These changes require no data migration and do not overwrite saved column maps. See [Google Shopping](Google-Shopping), [Local Inventory](Google-Local-Inventory-and-MSI), and [Generic feeds](Generic-Feeds) for setup and examples.
+The Google and CSV changes do not overwrite saved column maps or need their own data migration. The 1.1 release still requires the schema upgrade described above. See [Google Shopping](Google-Shopping), [Local Inventory](Google-Local-Inventory-and-MSI), and [Generic feeds](Generic-Feeds) for setup and examples.
 
 ## Do not copy old installation instructions
 

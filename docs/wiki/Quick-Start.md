@@ -2,7 +2,7 @@
 
 The safest first feed has one store view, no upload destination, no schedule, and a small set of known products. Generate it, inspect it, correct it, then add automation.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## 1. Open feed management
 
@@ -32,6 +32,8 @@ On **General Configuration**:
 ## 4. Review the default columns
 
 Open **Columns Map**. A template supplies defaults, but they are only a starting point. Confirm the source for identifiers, URLs, prices, availability, images, taxonomy, and variant data against the target store.
+
+For Google Shopping, map real MPN/GTIN attributes and an expected shipping date when backorders or preorders are possible. Confirmed identifier absence is an explicit choice, not a substitute for missing catalog data. For Generic comma feeds, check that the recipient parses quoted CSV. See [Google Shopping](Google-Shopping) and [Generic feeds](Generic-Feeds).
 
 ## 5. Limit the first test
 
