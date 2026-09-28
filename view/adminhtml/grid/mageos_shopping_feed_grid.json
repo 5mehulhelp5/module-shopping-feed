@@ -1,0 +1,154 @@
+{
+  "id": "mageos_shopping_feed_grid",
+  "acl": "MageOS_ShoppingFeed::grid",
+  "dataSource": {
+    "provider": "grid.collection",
+    "config": {
+      "collection": "shopping_feed.collection"
+    }
+  },
+  "settings": {
+    "pageSize": 20,
+    "pageSizes": [
+      10,
+      20,
+      50,
+      100
+    ],
+    "defaultSort": {
+      "field": "id",
+      "direction": "desc"
+    },
+    "massActions": [
+      {
+        "label": "Enable",
+        "url": "mageos_shopping_feed/feed/massEnable",
+        "acl": "MageOS_ShoppingFeed::save"
+      },
+      {
+        "label": "Disable",
+        "url": "mageos_shopping_feed/feed/massDisable",
+        "acl": "MageOS_ShoppingFeed::save"
+      },
+      {
+        "label": "Clone",
+        "url": "mageos_shopping_feed/feed/massClone",
+        "acl": "MageOS_ShoppingFeed::save"
+      },
+      {
+        "label": "Delete",
+        "url": "mageos_shopping_feed/feed/massDelete",
+        "acl": "MageOS_ShoppingFeed::delete"
+      }
+    ]
+  },
+  "columns": {
+    "id": {
+      "label": "ID",
+      "type": "text",
+      "sortable": true,
+      "filter": "range",
+      "position": 10
+    },
+    "name": {
+      "label": "Name",
+      "type": "text",
+      "sortable": true,
+      "filter": "text",
+      "searchable": true,
+      "position": 20
+    },
+    "store_id": {
+      "label": "Store View",
+      "type": "text",
+      "sortable": true,
+      "filter": "select",
+      "position": 30,
+      "filterOptionsSource": "shopping_feed.stores",
+      "template": "MageOS_ShoppingFeed::nebula/option.phtml"
+    },
+    "type": {
+      "label": "Type",
+      "type": "text",
+      "sortable": true,
+      "filter": "select",
+      "position": 40,
+      "filterOptionsSource": "shopping_feed.types",
+      "template": "MageOS_ShoppingFeed::nebula/option.phtml"
+    },
+    "status": {
+      "label": "Status",
+      "type": "badge",
+      "sortable": true,
+      "filter": "select",
+      "options": {
+        "0": {
+          "label": "Disabled",
+          "class": "warning"
+        },
+        "1": {
+          "label": "Scheduled",
+          "class": "info"
+        },
+        "2": {
+          "label": "Pending",
+          "class": "warning"
+        },
+        "3": {
+          "label": "Processing",
+          "class": "info"
+        },
+        "4": {
+          "label": "Completed",
+          "class": "success"
+        },
+        "5": {
+          "label": "Error",
+          "class": "error"
+        }
+      },
+      "position": 50,
+      "filterOptions": {
+        "0": "Disabled",
+        "1": "Scheduled",
+        "2": "Pending",
+        "3": "Processing",
+        "4": "Completed",
+        "5": "Error"
+      }
+    },
+    "schedules": {
+      "label": "Schedule",
+      "type": "text",
+      "sortable": false,
+      "position": 60
+    },
+    "file": {
+      "label": "File",
+      "type": "html",
+      "sortable": false,
+      "position": 70
+    },
+    "created_at": {
+      "label": "Created",
+      "type": "date",
+      "sortable": true,
+      "filter": "date",
+      "position": 80
+    },
+    "updated_at": {
+      "label": "Updated",
+      "type": "date",
+      "sortable": true,
+      "filter": "date",
+      "position": 90
+    },
+    "actions": {
+      "label": "Actions",
+      "type": "actions",
+      "sortable": false,
+      "position": 100,
+      "template": "MageOS_ShoppingFeed::nebula/actions.phtml"
+    }
+  }
+}

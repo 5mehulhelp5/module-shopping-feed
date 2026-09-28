@@ -78,8 +78,14 @@ class LocalInventory extends \MageOS\ShoppingFeed\Model\Product\Processors\Proce
             $sourceCodes = [];
             $searchCriteria = $this->searchCriteriaBuilder->addFilter('stock_id', $stockId)->create();
             $stockLinks = $this->objectManager->create('Magento\InventoryApi\Api\GetStockSourceLinksInterface');
+            $sourceRepository = $this->objectManager->create('Magento\InventoryApi\Api\SourceRepositoryInterface');
             foreach ($stockLinks->execute($searchCriteria)->getItems() as $link) {
-                $sourceCodes[] = $link->getSourceCode();
+                if ($sourceRepository->get($link->getSourceCode())->isEnabled()) {
+                    $sourceCodes[] = $link->getSourceCode();
+                }
+            }
+            if (!$sourceCodes) {
+                return [];
             }
 
             $associatedProductAdapters = $this->getAdapter()->getData('associated_product_adapters');
@@ -119,9 +125,10 @@ class LocalInventory extends \MageOS\ShoppingFeed\Model\Product\Processors\Proce
             } finally {
                 $this->getAdapter()->setData('associated_product_adapters', $associatedProductAdapters);
             }
+            return $items;
         }
 
-        return !empty($items) ? $items : $rows;
+        return $rows;
     }
 
     /**

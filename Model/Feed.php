@@ -457,8 +457,15 @@ class Feed extends AbstractModel
                 $scheduleObject = $this->scheduleFactory->create();
 
                 // test if this should be a new schedule entry (for example when cloning a feed)
-                if (isset($schedule['id'])) {
+                if (!empty($schedule['id'])) {
                     $scheduleObject->load($schedule['id']);
+                    if (!$scheduleObject->getId()
+                        || (int)$scheduleObject->getData('feed_id') !== (int)$this->getId()
+                    ) {
+                        throw new \Magento\Framework\Exception\LocalizedException(
+                            __('The schedule does not belong to this feed.')
+                        );
+                    }
                 }
 
                 if (isset($schedule['delete']) && $schedule['delete']) {
@@ -474,7 +481,7 @@ class Feed extends AbstractModel
                 ) {
                     $scheduleObject->setData(
                         'processed_at',
-                        $this->localeDate->date('-1 day')
+                        $this->localeDate->date()->modify('-1 day')
                             ->format(\Magento\Framework\DB\Adapter\Pdo\Mysql::DATETIME_FORMAT)
                     );
                 }
@@ -537,8 +544,15 @@ class Feed extends AbstractModel
             foreach ($uploads as $upload) {
                 $uploadObject = $this->uploadFactory->create();
 
-                if (isset($upload['id'])) {
+                if (!empty($upload['id'])) {
                     $uploadObject->load($upload['id']);
+                    if (!$uploadObject->getId()
+                        || (int)$uploadObject->getData('feed_id') !== (int)$this->getId()
+                    ) {
+                        throw new \Magento\Framework\Exception\LocalizedException(
+                            __('The upload destination does not belong to this feed.')
+                        );
+                    }
                 }
 
                 if ($uploadObject->getId() && $upload['delete']) {

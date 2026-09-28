@@ -50,11 +50,13 @@ define(
                  * @private
                  */
                 _parseQueryParams: function (queryString) {
-                    var queryParams = $.parseQuery(
-                        {
-                            query: queryString
-                        }
-                    );
+                    var queryParams;
+                    try {
+                        queryParams = $.parseQuery({ query: queryString });
+                    } catch (error) {
+                        // The platform parser throws on malformed URL encoding.
+                        return;
+                    }
 
                     $.each(
                         queryParams, $.proxy(
@@ -74,22 +76,30 @@ define(
                     $.each(
                         this.values, $.proxy(
                             function (attributeId, optionId) {
-                                if (!optionId) {
+                                if (!/^\d+$/.test(attributeId) || typeof optionId !== 'string' || !/^\d+$/.test(optionId)) {
                                     return;
                                 }
 
-                                var element = $("#select_"+attributeId);
+                                var element = $(document.getElementById('select_' + attributeId));
+                                var option;
 
                                 if (element.length) {
-                                    element.find("option[value="+optionId+"]").prop('selected', true);
-                                    this.changed = true;
+                                    option = element.find('option').filter(function () {
+                                        return this.value === optionId;
+                                    });
+                                    if (option.length) {
+                                        option.prop('selected', true);
+                                        this.changed = true;
+                                    }
                                     return;
                                 }
 
-                                var element = $("#options-"+attributeId+"-list");
+                                element = $(document.getElementById('options-' + attributeId + '-list'));
 
                                 if (element.length) {
-                                    var option = element.find("[value="+optionId+"]");
+                                    option = element.find('input').filter(function () {
+                                        return this.value === optionId;
+                                    });
                                     if (option.length) {
                                         if (option.prop("type") == 'radio' || option.prop("type") == 'checkbox') {
                                             option.prop('checked', true);

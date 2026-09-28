@@ -39,14 +39,13 @@ $counter     = 0;
         </div>
     </div>
     <script>
-        var clicked = 0,
-            format = "<?= $escaper->escapeJs($block->getDateFormat()) ?>";
-        $('increment-counter').observe('click', function(){
-            var initialValue = $(this).next().value;
+        var clicked = 0;
+        document.getElementById('increment-counter').addEventListener('click', function(){
+            var initialValue = this.nextElementSibling.value;
             if(clicked == 0){
-                $(this).addClassName('disabled');
-                $(this).next().value = parseInt(initialValue, 10) + 1;
-                $('increment-success').addClassName('visible');
+                this.classList.add('disabled');
+                this.nextElementSibling.value = parseInt(initialValue, 10) + 1;
+                document.getElementById('increment-success').classList.add('visible');
                 clicked++;
             }
         });

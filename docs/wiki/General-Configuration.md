@@ -2,7 +2,7 @@
 
 General Configuration defines the store context, output location, delimiter, price behavior, and stock behavior for one feed.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.0.0` plus unreleased review fixes. Last reviewed: 2026-09-24.
 
 ## Feed settings
 
@@ -15,6 +15,12 @@ General Configuration defines the store context, output location, delimiter, pri
 | Delimiter | The field separator for generated rows. Google templates default to tab-delimited output. |
 
 Changing the store view can change the category tree and attribute values. Save the feed, then review Categories Map, currency, URLs, and representative product output again.
+
+## Public feed files
+
+Generated files are publicly downloadable from the media URL. Default filenames contain the feed ID and can be guessed. FTP or SFTP upload leaves the local file in place; a custom filename is not access control. The module does not provide a private-output mode.
+
+Review every mapped attribute before generation and include only data intended for public distribution. If a recipient requires confidential data, arrange access controls with the hosting operator before generating it. Verify the exact URL from a signed-out session and confirm the recipient can still fetch it after any hosting change.
 
 ## Price and inventory settings
 

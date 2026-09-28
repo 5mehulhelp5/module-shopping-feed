@@ -336,7 +336,7 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
         $this->setChild(
             'form_after',
             $this->getLayout()->createBlock(
-                'Magento\Backend\Block\Widget\Form\Element\Dependence'
+                \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Element\Dependence::class
             )->addFieldMap(
                 "feed_config_general_stock_attribute_code",
                 'config[general_stock_attribute_code]'

@@ -1,0 +1,8 @@
+<?php /** @var \MageOS\ShoppingFeed\Block\Adminhtml\Nebula\Toolbar $block */ ?>
+<nav aria-label="<?= $block->escapeHtmlAttr(__('Create New Feed')) ?>" style="display:flex;gap:1rem;margin-bottom:1.5rem">
+    <?php foreach ($block->getTypes() as $type => $label): ?>
+        <a class="action-default" href="<?= $block->escapeUrl($block->getUrl('mageos_shopping_feed/feed/new', ['type' => $type])) ?>">
+            <?= $block->escapeHtml(__('Create %1', $label)) ?>
+        </a>
+    <?php endforeach; ?>
+</nav>

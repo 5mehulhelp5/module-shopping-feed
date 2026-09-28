@@ -151,4 +151,15 @@ class FilterTest extends CompatibilityTestCase
         $this->assertSame('before after', $this->model->cleanField('before&#124;after'));
     }
 
+    public function testColumnLimitsCountUtf8CharactersInsteadOfBytes(): void
+    {
+        $this->feedMock->method('getConfig')->willReturn([['column' => 'title', 'limit' => 3]]);
+        $this->model->setFeed($this->feedMock);
+        foreach (['é漢😀end' => 'é漢😀', '漢字' => '漢字', 'abcdef' => 'abc'] as $input => $expected) {
+            $this->model->limitOutput($input, 'title');
+            $this->assertSame($expected, $input);
+            $this->assertTrue(mb_check_encoding($input, 'UTF-8'));
+        }
+    }
+
 }

@@ -19,8 +19,12 @@ define([
                 return;
             }
             parts = pair.split('=');
-            key = decodeURIComponent(parts.shift().replace(/\+/g, ' '));
-            result[key] = decodeURIComponent(parts.join('=').replace(/\+/g, ' '));
+            try {
+                key = decodeURIComponent(parts.shift().replace(/\+/g, ' '));
+                result[key] = decodeURIComponent(parts.join('=').replace(/\+/g, ' '));
+            } catch (error) {
+                // Ignore malformed URL encoding without interrupting product selection.
+            }
         });
 
         return result;
@@ -75,10 +79,12 @@ define([
                 var optionId = self.parameters[attributeId];
                 var option;
 
-                if (!optionId) {
+                if (typeof optionId !== 'string' || !/^\d+$/.test(optionId)) {
                     return;
                 }
-                option = attribute.find('.swatch-option[option-id="' + optionId + '"]');
+                option = attribute.find('.swatch-option').filter(function () {
+                    return $(this).attr('option-id') === optionId;
+                });
                 if (option.length) {
                     delay += 100;
                     window.setTimeout(function () {
@@ -92,7 +98,9 @@ define([
                 var attributeId = String(getSelectAttributeId(select));
                 var optionId = self.parameters[attributeId];
 
-                if (optionId && select.find('option[value="' + optionId + '"]').length) {
+                if (typeof optionId === 'string' && /^\d+$/.test(optionId) && select.find('option').filter(function () {
+                    return this.value === optionId;
+                }).length) {
                     select.val(optionId).trigger('change');
                 }
             });

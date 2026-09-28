@@ -74,6 +74,21 @@ class GeneratorTest extends ModelFramework
         );
     }
 
+    public function testDestructionDoesNotCommitPartialBatchProgress(): void
+    {
+        $generator = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Generator::class)
+            ->disableOriginalConstructor()->onlyMethods(['updateBatchQueue'])->getMock();
+        (new \ReflectionProperty($generator, 'batch'))->setValue(
+            $generator, new \MageOS\ShoppingFeed\Model\Generator\Batch(['enabled' => true, 'offset' => 100])
+        );
+        $generator->expects($this->never())->method('updateBatchQueue');
+        try {
+            $generator->__destruct();
+        } finally {
+            (new \ReflectionProperty($generator, 'batch'))->setValue($generator, null);
+        }
+    }
+
     public function testWriteFeedKeepsGoogleRowsAlignedWithoutTrailingTabs(): void
     {
         $this->expectReturn($this->feedMock, 'getData', 'google_shopping');

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Model\Layout\Merge">
+        <plugin name="shopping_feed_nebula_layout" type="MageOS\ShoppingFeed\Plugin\Adminhtml\NebulaLayout"/>
+        <plugin name="shopping_feed_editor_layout" type="MageOS\ShoppingFeed\Plugin\Adminhtml\FeedEditorTheme" sortOrder="200"/>
+    </type>
+    <type name="Magento\Ui\Component\MassAction\Filter">
+        <plugin name="shopping_feed_nebula_selection" type="MageOS\ShoppingFeed\Plugin\Adminhtml\NebulaMassAction"/>
+    </type>
+    <type name="Qoliber\NebulaGrid\Model\Registry\CollectionRegistry">
+        <arguments><argument name="bindings" xsi:type="array">
+            <item name="shopping_feed.collection" xsi:type="string">MageOS\ShoppingFeed\Model\ResourceModel\Feed\Nebula\Collection</item>
+        </argument></arguments>
+    </type>
+    <type name="Qoliber\NebulaGrid\Block\Grid">
+        <plugin name="shopping_feed_grid_permissions" type="MageOS\ShoppingFeed\Plugin\Adminhtml\NebulaDefinition"/>
+    </type>
+    <type name="Magento\Theme\Model\View\Design">
+        <plugin name="shopping_feed_editor_theme" type="MageOS\ShoppingFeed\Plugin\Adminhtml\FeedEditorTheme" sortOrder="200"/>
+    </type>
+    <type name="Qoliber\NebulaComponent\Model\Registry\FilterOptionSourceRegistry">
+        <arguments><argument name="bindings" xsi:type="array">
+            <item name="shopping_feed.stores" xsi:type="string">MageOS\ShoppingFeed\Model\Adminhtml\StoreOptions</item>
+            <item name="shopping_feed.types" xsi:type="string">MageOS\ShoppingFeed\Model\Feed\Source\Type</item>
+        </argument></arguments>
+    </type>
+    <type name="Qoliber\NebulaGrid\Model\DataProvider\CollectionProvider">
+        <plugin name="shopping_feed_complete_export" type="MageOS\ShoppingFeed\Plugin\Adminhtml\NebulaExport"/>
+    </type>
+</config>

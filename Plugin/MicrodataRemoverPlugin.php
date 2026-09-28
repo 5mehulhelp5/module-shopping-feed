@@ -37,14 +37,23 @@ class MicrodataRemoverPlugin
      */
     protected $scopeConfig;
 
+    private $feedCollectionFactory;
+    private $storeManager;
+    private array $selectedFeeds = [];
+
     /**
      * Constructor
      *
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      */
-    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig)
-    {
+    public function __construct(
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \MageOS\ShoppingFeed\Model\ResourceModel\Feed\CollectionFactory $feedCollectionFactory,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
+    ) {
         $this->scopeConfig = $scopeConfig;
+        $this->feedCollectionFactory = $feedCollectionFactory;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -66,6 +75,16 @@ class MicrodataRemoverPlugin
      */
     public function isEnabled()
     {
-        return (bool) ($this->scopeConfig->getValue(self::XML_PATH_ENABLED));
+        if (!(bool)$this->scopeConfig->getValue(self::XML_PATH_ENABLED)) {
+            return false;
+        }
+        $storeId = (int)$this->storeManager->getStore()->getId();
+        if (!array_key_exists($storeId, $this->selectedFeeds)) {
+            $this->selectedFeeds[$storeId] = $this->feedCollectionFactory->create()
+                ->addFieldToFilter('store_id', $storeId)
+                ->addFieldToFilter('use_microdata', 1)
+                ->getSize() > 0;
+        }
+        return $this->selectedFeeds[$storeId];
     }
 }

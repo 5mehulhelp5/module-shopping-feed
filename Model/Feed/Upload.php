@@ -35,6 +35,9 @@ class Upload extends AbstractModel
      */
     protected $encryptor;
 
+    /** @var string|null Ciphertext retained independently of decrypted original data. */
+    private $encryptedPassword;
+
     /**
      * Event prefix for observer
      *
@@ -78,20 +81,38 @@ class Upload extends AbstractModel
     /**
      * Encrypts password before save
      *
-     * It also reverts password to one from original data if it still set to
-     * obscured value. This means that user didn't change password in the frontend.
+     * A masked value retains the loaded ciphertext. Original model data contains
+     * the decrypted password after a resource load and cannot be stored directly.
      *
      * @return $this
      */
     public function beforeSave()
     {
         if ($this->getPassword() === self::OBSCURED_VALUE) {
-            $this->setPassword($this->getOrigData('password'));
-        } else {
-            $this->setPassword($this->encryptor->encrypt($this->getPassword()));
+            if ($this->encryptedPassword === null) {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __('Enter a password for the new upload destination.')
+                );
+            }
+            if ($this->encryptor->decrypt($this->encryptedPassword) === '') {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __('The saved upload password cannot be read. Enter it again.')
+                );
+            }
+            $this->setPassword($this->encryptedPassword);
+        } elseif ($this->getPassword() !== $this->encryptedPassword) {
+            $this->setPassword($this->encryptor->encrypt((string)$this->getPassword()));
         }
+        $this->encryptedPassword = (string)$this->getPassword();
 
         return parent::beforeSave();
+    }
+
+    /** Restore the in-memory credential for upload and subsequent saves. */
+    public function afterSave()
+    {
+        $this->setData('password', $this->encryptor->decrypt($this->encryptedPassword));
+        return parent::afterSave();
     }
 
     /**
@@ -101,7 +122,8 @@ class Upload extends AbstractModel
      */
     protected function _afterLoad()
     {
-        $this->setData('password', $this->encryptor->decrypt($this->getData('password')));
+        $this->encryptedPassword = (string)$this->getData('password');
+        $this->setData('password', $this->encryptor->decrypt($this->encryptedPassword));
 
         return parent::_afterLoad();
     }

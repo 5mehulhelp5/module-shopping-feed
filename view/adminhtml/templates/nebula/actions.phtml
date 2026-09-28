@@ -1,0 +1,5 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+// FeedRow builds this markup from escaped URLs, labels and a form key after checking each ACL.
+?>
+<?= /* @noEscape */ $block->getData('item')['actions'] ?? '' ?>

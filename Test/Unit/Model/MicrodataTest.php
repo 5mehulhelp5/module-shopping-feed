@@ -96,6 +96,8 @@ class MicrodataTest extends CompatibilityTestCase
      */
     protected $adapterFactoryMock;
 
+    private bool $hasSelectedFeed = true;
+
     /**
      * @inheritdoc
      */
@@ -123,10 +125,11 @@ class MicrodataTest extends CompatibilityTestCase
         $feedCollection = $this->getMockBuilder(
             'MageOS\ShoppingFeed\Model\ResourceModel\Feed\Collection'
         )->disableOriginalConstructor()
-            ->onlyMethods(['addFieldToFilter', 'count'])
+            ->onlyMethods(['addFieldToFilter', 'count', 'getFirstItem'])
             ->getMock();
         $feedCollection->method('addFieldToFilter')->willReturnSelf();
-        $feedCollection->method('count')->willReturn(0);
+        $feedCollection->method('count')->willReturnCallback(fn() => $this->hasSelectedFeed ? 1 : 0);
+        $feedCollection->method('getFirstItem')->willReturn($this->feedMock);
         $feedCollectionFactory = $this->createMock(
             'MageOS\ShoppingFeed\Model\ResourceModel\Feed\CollectionFactory'
         );
@@ -151,6 +154,14 @@ class MicrodataTest extends CompatibilityTestCase
                 ]
             ]
         );
+    }
+
+    public function testNoSelectedFeedEmitsNoMicrodataAndDoesNotLoadAnArbitraryFeed(): void
+    {
+        $this->hasSelectedFeed = false;
+        $this->feedFactoryMock->expects($this->never())->method('create');
+        $this->adapterFactoryMock->expects($this->never())->method('create');
+        $this->assertNull($this->model->getMicrodata());
     }
 
     /**
@@ -240,7 +251,7 @@ class MicrodataTest extends CompatibilityTestCase
             ->method('getId')
             ->will($this->returnValue(true));
 
-        $this->feedMock->expects($this->once())
+        $this->feedMock->expects($this->any())
             ->method('getConfig')
             ->with('general_currency')
             ->will($this->returnValue('USD'));

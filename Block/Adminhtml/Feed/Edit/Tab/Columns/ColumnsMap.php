@@ -227,20 +227,7 @@ class ColumnsMap extends AbstractArrayElement implements RendererInterface
             ];
         }
 
-        $configs = $feed->getConfig('columns_product_columns');
-        if ($configs != null && is_array($configs) && count($configs) > 0) {
-            foreach ($configs as $config) {
-                $attribute = isset($config['attribute']) ? $config['attribute'] : null;
-                if (array_key_exists($attribute, $directivesConfig)
-                    && $directivesConfig[$attribute]['renderer'] != 'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage'
-                    && array_key_exists('param', $config) && $config['param'] != $directivesConfig[$attribute]['param']
-                ) {
-                    // We have a value inside the DB, so need for default value to show!
-                    $directivesConfig[$attribute]['param'] = $config['param'];
-                }
-            }
-        }
-
+        // Saved parameters belong to individual rows, not shared directive defaults.
         return $this->jsonEncoder->encode(
             [
             'directives' => $directivesConfig

@@ -77,6 +77,11 @@ class Queue extends AbstractModel
     public function setRunning()
     {
         if ($this->getId()) {
+            // The caller holds the feed lock. A read row left behind by a worker
+            // has uncommitted file output, so restart instead of appending it twice.
+            if ($this->getData('is_read')) {
+                $this->batch->setOffset(0);
+            }
             $this->setIsRead(true);
             $this->save();
         }

@@ -163,8 +163,8 @@ class Filter
             foreach ($limitData as $data) {
                 $limit = intval($data['limit']);
                 if ($data['column'] == $column) {
-                    if (strlen($string) > $limit) {
-                        $string = substr($string, 0, $limit);
+                    if (mb_strlen($string, 'UTF-8') > $limit) {
+                        $string = mb_substr($string, 0, $limit, 'UTF-8');
                     }
                     continue;
                 }

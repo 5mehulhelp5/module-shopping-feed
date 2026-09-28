@@ -862,6 +862,8 @@ class Generator extends DataObject
      */
     public function updateBatchQueue()
     {
+        // Flush output before making the next offset available to another worker.
+        $this->closeTemporaryHandle();
         $this->batch->setOffset($this->currentIteration);
 
         if (!is_null($this->queue) && $this->queue->getId()) {
@@ -871,7 +873,6 @@ class Generator extends DataObject
             $this->batch = null;
             return true;
         }
-         // We unset this so its not re-run in destructor()
         return false;
     }
 
@@ -895,13 +896,10 @@ class Generator extends DataObject
     }
 
     /**
-     * Release the lock in case of issues
+     * Close output without committing progress from an interrupted batch.
      */
     public function __destruct()
     {
-        // Class can be destroyed (exception), so update queue if$this->batch is set!
-        if (!is_null($this->batch)) {
-            $this->updateBatchQueue();
-        }
+        $this->closeTemporaryHandle();
     }
 }

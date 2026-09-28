@@ -52,6 +52,20 @@ class ProcessTest extends CompatibilityTestCase
         $this->assertTrue($result);
     }
 
+    public function testCompletedQueueIsNotRunAgainAfterAcquiringTheLock(): void
+    {
+        $generator = $this->getMockBuilder(Generator::class)->disableOriginalConstructor()->onlyMethods(['run'])->getMock();
+        $generator->expects($this->never())->method('run');
+        $queue = $this->createCompatibleMock(Queue::class, ['load', 'getGenerator', 'setRunning', 'getFeedId']);
+        $queue->setId(42);
+        $queue->method('getFeedId')->willReturn(17);
+        $queue->expects($this->once())->method('load')->with(42)->willReturnSelf();
+        $queue->expects($this->never())->method('setRunning');
+        $subject = $this->createProcess($generator, $this->createMock(Logger::class), $queue);
+        $this->assertTrue($subject->execute());
+        $this->assertTrue($subject->released);
+    }
+
     public function testReleaseLockUnlocksAndClosesHandle(): void
     {
         $subject = new Process(
@@ -74,9 +88,9 @@ class ProcessTest extends CompatibilityTestCase
         $this->assertNull($property->getValue($subject));
     }
 
-    private function createProcess(Generator $generator, Logger $logger): Process
+    private function createProcess(Generator $generator, Logger $logger, ?Queue $queue = null): Process
     {
-        $queue = $this->createCompatibleMock(
+        $queue = $queue ?? $this->createCompatibleMock(
             Queue::class,
             ['getGenerator', 'setRunning', 'getFeedId']
         );

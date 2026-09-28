@@ -22,7 +22,8 @@ use MageOS\ShoppingFeed\Test\Unit\CompatibilityTestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class LocalInventoryTest extends CompatibilityTestCase
 {
-    public function testRemapsSourcesWithoutTestModeOrLosingAssociatedAdapters(): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('sourceStates')]
+    public function testRemapsSourcesWithoutTestModeOrLosingAssociatedAdapters(bool $enabled): void
     {
         $sourceItem = new class extends DataObject {
             public function getSourceItemId(): int
@@ -67,7 +68,7 @@ class LocalInventoryTest extends CompatibilityTestCase
                 return $adapter;
             }
         );
-        $adapter->expects($this->once())
+        $adapter->expects($this->exactly($enabled ? 1 : 0))
             ->method('internalMap')
             ->with(false, false)
             ->willReturnCallback(
@@ -79,7 +80,7 @@ class LocalInventoryTest extends CompatibilityTestCase
                     return [['parent']];
                 }
             );
-        $adapter->expects($this->once())->method('mapAssociatedProducts')->with(false)->willReturn([['associated']]);
+        $adapter->expects($this->exactly($enabled ? 1 : 0))->method('mapAssociatedProducts')->with(false)->willReturn([['associated']]);
         $adapter->expects($this->never())->method('setTestMode');
 
         $associatedAdapter->method('getFeed')->willReturn($feed);
@@ -123,7 +124,11 @@ class LocalInventoryTest extends CompatibilityTestCase
             }
         };
         $objectManager = $this->createMock(ObjectManagerInterface::class);
-        $objectManager->method('create')->willReturnOnConsecutiveCalls($stockResolver, $stockLinks);
+        $sourceRepository = $this->createMock(\Magento\InventoryApi\Api\SourceRepositoryInterface::class);
+        $source = $this->createMock(\Magento\InventoryApi\Api\Data\SourceInterface::class);
+        $source->method('isEnabled')->willReturn($enabled);
+        $sourceRepository->method('get')->with('default')->willReturn($source);
+        $objectManager->method('create')->willReturnOnConsecutiveCalls($stockResolver, $stockLinks, $sourceRepository);
 
         $processor = $this->getMockBuilder(LocalInventory::class)
             ->setConstructorArgs([$objectManager, $searchCriteriaBuilder, $this->createMock(Manager::class)])
@@ -131,12 +136,17 @@ class LocalInventoryTest extends CompatibilityTestCase
             ->getMock();
         $processor->method('usesDefaultStock')->willReturn(true);
         $processor->method('isMsiEnabled')->willReturn(true);
-        $processor->expects($this->exactly(2))
+        $processor->expects($this->exactly($enabled ? 2 : 0))
             ->method('getSourceItems')
             ->willReturn([$sourceItem]);
         $processor->setAdapter($adapter);
 
-        $this->assertSame([['parent'], ['associated']], $processor->execute([['original']]));
+        $this->assertSame($enabled ? [['parent'], ['associated']] : [], $processor->execute([['original']]));
         $this->assertSame([$associatedAdapter], $adapterData['associated_product_adapters']);
+    }
+
+    public static function sourceStates(): array
+    {
+        return ['enabled source' => [true], 'disabled source has no fallback row' => [false]];
     }
 }

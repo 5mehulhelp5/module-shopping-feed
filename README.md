@@ -36,6 +36,10 @@ Mage-OS 3.4.0, based on Magento Open Source 2.4.9, is an explicit CI compatibili
 
 Mage-OS 3.5.0 on PHP 8.4.24 was also verified locally on Magebox with Hyva: a complete 160-row storefront feed, all exported prices and stock values, and all 38 available configurable deep links passed the recorded checks. This local evidence is separate from CI and Merchant Center acceptance.
 
+The module supports Magento's standard Admin grid and an optional native Nebula Admin grid. With Nebula enabled, feed editing, previews, and logs open in the standard Admin layout so the complete existing editor remains available; returning to the list restores Nebula. No Nebula dependency is required for standard installations. See the [Admin compatibility acceptance report](docs/reviews/2026-09-25-admin-compatibility.md) for the tested versions and limits.
+
+A fresh Mage-OS 3.5.0 installation with no Nebula packages also passed Composer installation, schema upgrades, DI compilation, production-mode generation, and standard Admin browser checks. See the [installation without Nebula report](docs/reviews/2026-09-28-without-nebula-acceptance.md).
+
 ## Installation
 
 Install the 1.x release from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
@@ -67,7 +71,7 @@ bin/magento mage-os:shopping-feed:schedule
 
 The dedicated `mageos_shopping_feed` cron group schedules feeds hourly and processes its queue every minute by default.
 
-Feed output is restricted to `pub/media/mageos-shopping-feed` and its safe subdirectories. Per-feed logs are restricted to `var/log` and use `mageos_shopping_feed_*.log` by default.
+Feed output is restricted to `pub/media/mageos-shopping-feed` and its safe subdirectories. Files are publicly downloadable for recipient fetches; default filenames contain the feed ID and are predictable. FTP or SFTP upload leaves that public local copy in place. Export only data intended for public distribution. Per-feed logs are restricted to `var/log` and use `mageos_shopping_feed_*.log` by default.
 
 ## Documentation
 

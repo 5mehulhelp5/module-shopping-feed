@@ -386,7 +386,7 @@ class Provider
                 $cartRulesCollection = $this->promotionsCollection->getPromotionRules($this->getFeed());
 
                 if (count($activeIds)) {
-                    $cartRulesCollection->addFieldToFilter('rule_id', ['in' => implode(',', $activeIds)]);
+                    $cartRulesCollection->addFieldToFilter('rule_id', ['in' => $activeIds]);
                 }
 
                 /** @var \Magento\SalesRule\Model\Rule $rule */

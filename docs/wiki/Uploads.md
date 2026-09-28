@@ -2,11 +2,13 @@
 
 Upload destinations run after a successful feed generation. Establish and validate the feed locally before enabling a transfer.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.0.0` plus unreleased review fixes. Last reviewed: 2026-09-24.
 
 ## Security boundary
 
 Prefer SFTP. FTP sends credentials and data without transport encryption and should only be used when the recipient requires it and the network risk is accepted.
+
+The generated local feed remains publicly downloadable under `pub/media/mageos-shopping-feed`, including after a successful upload. SFTP protects the transfer; it does not make the local file private. See [General configuration](General-Configuration).
 
 Use a dedicated remote account restricted to the intended directory. Start with a non-serving or quarantine destination so a test cannot replace an accepted production feed.
 
@@ -27,6 +29,8 @@ Open the feed, select **Uploads**, then add a row:
 The uploaded remote filename is the basename of the local file. **Path** selects the remote directory, not a replacement filename.
 
 Passwords are encrypted with Magento's encryption service before database storage. The Admin shows `******` for a saved password. Leave that placeholder unchanged to retain the existing secret; enter a new value only when rotating it.
+
+**Unreleased credential fixes:** masked saves explicitly retain the loaded ciphertext, repeated saves avoid double encryption, and the password column uses `text` to hold encryption overhead. Installation requires the normal `setup:upgrade` schema step. If a previously stored password cannot be decrypted, enter it again; the module does not infer a secret from damaged or plaintext data.
 
 Saving the feed does not prove that the remote connection works. A connection and directory change occur during generation and upload.
 

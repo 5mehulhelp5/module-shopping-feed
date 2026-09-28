@@ -455,6 +455,7 @@ class FeedTest extends ModelFramework
 
     public function testSaveSchedules()
     {
+        $this->feed->setId($this->feedId);
         $this->expectSelf($this->scheduleMock, 'load');
         $schedules = [
             ['id' => 1, 'start_at' => 1, 'batch_mode' => true, 'batch_limit' => 5000],
@@ -462,7 +463,10 @@ class FeedTest extends ModelFramework
         ];
         $this->scheduleMock->expects($this->any())
             ->method('getId')
-            ->will($this->onConsecutiveCalls(null, null, 1, 1));
+            ->willReturn(1);
+        $this->scheduleMock->method('getData')->willReturnCallback(
+            fn($key) => $key === 'feed_id' ? $this->feedId : 1
+        );
         $this->feed->setData('schedules', $schedules);
         $this->feed->saveSchedules();
 
@@ -471,16 +475,16 @@ class FeedTest extends ModelFramework
 
     public function testChangedScheduleCanRunOnTheSameDay(): void
     {
+        $this->feed->setId($this->feedId);
         $this->scheduleMock->expects($this->any())
             ->method('getId')
             ->willReturn(1);
         $this->scheduleMock->expects($this->any())
             ->method('getData')
-            ->with('start_at')
-            ->willReturn(1);
+            ->willReturnCallback(fn($key) => $key === 'feed_id' ? $this->feedId : 1);
         $this->localeDateMock->expects($this->once())
             ->method('date')
-            ->with('-1 day');
+            ->with(null);
         $this->scheduleMock->expects($this->once())->method('save');
 
         $this->feed->setData('schedules', [['id' => 1, 'start_at' => 12]]);
@@ -489,14 +493,14 @@ class FeedTest extends ModelFramework
 
     public function testUnchangedScheduleKeepsItsProcessedDate(): void
     {
+        $this->feed->setId($this->feedId);
         $this->scheduleMock->setData('processed_at', '2026-08-18 09:00:00');
         $this->scheduleMock->expects($this->any())
             ->method('getId')
             ->willReturn(1);
         $this->scheduleMock->expects($this->any())
             ->method('getData')
-            ->with('start_at')
-            ->willReturn(12);
+            ->willReturnCallback(fn($key) => $key === 'feed_id' ? $this->feedId : 12);
         $this->localeDateMock->expects($this->never())->method('date');
 
         $this->feed->setData('schedules', [['id' => 1, 'start_at' => 12]]);
