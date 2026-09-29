@@ -4,7 +4,7 @@ The feed type provides a starting column map and default behavior. All feeds the
 
 > Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
-The 1.2 development branch also includes [Meta Catalog](Meta-Catalog), [Microsoft Merchant Center](Microsoft-Merchant-Center), and [TikTok Catalog](TikTok-Catalog). These are unreleased and require destination validation before production use. Pinterest is the remaining Tier 1 candidate and is not implemented yet.
+The 1.2 development branch includes the four Tier 1 additions: [Meta Catalog](Meta-Catalog), [Microsoft Merchant Center](Microsoft-Merchant-Center), [TikTok Catalog](TikTok-Catalog), and [Pinterest Catalog](Pinterest-Catalog). These are unreleased and require destination validation before production use.
 
 ## Feed types
 
@@ -17,6 +17,7 @@ The 1.2 development branch also includes [Meta Catalog](Meta-Catalog), [Microsof
 | Meta Catalog (1.2 development) | Facebook and Instagram product catalogs using a scheduled TSV data feed |
 | Microsoft Merchant Center (1.2 development) | Microsoft Shopping product catalogs using tab-delimited TXT |
 | TikTok Catalog (1.2 development) | TikTok Ads Manager product catalogs using a scheduled CSV feed |
+| Pinterest Catalog (1.2 development) | Pinterest retail catalogs and product Pins using a scheduled TSV feed |
 
 See the individual feed guides before relying on their default columns.
 

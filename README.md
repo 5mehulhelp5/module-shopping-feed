@@ -12,6 +12,8 @@ It also adds [Microsoft Merchant Center](docs/wiki/Microsoft-Merchant-Center.md)
 
 [TikTok Catalog](docs/wiki/TikTok-Catalog.md) adds quoted CSV output for Ads Manager catalogs, including `sku_id`, TikTok availability values, variant grouping, and row validation. TikTok import acceptance remains unverified.
 
+[Pinterest Catalog](docs/wiki/Pinterest-Catalog.md) adds quoted TSV for retail catalogs, with Pinterest field limits, availability values, and configurable grouping checks. Pinterest import acceptance and real catalog image quality remain release checks.
+
 This repository consolidates four related Rocket Web modules into one independently named Mage-OS module:
 
 - Generic product feeds

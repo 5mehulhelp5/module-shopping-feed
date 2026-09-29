@@ -84,6 +84,9 @@ class Generator extends DataObject
     /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\TikTokCatalog */
     private $tikTokCatalogValidator;
 
+    /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\PinterestCatalog */
+    private $pinterestCatalogValidator;
+
     /**
      * @var \Magento\Framework\Model\ResourceModel\Iterator
      */
@@ -201,6 +204,7 @@ class Generator extends DataObject
         \MageOS\ShoppingFeed\Model\Feed\Validation\MetaCatalog $metaCatalogValidator,
         \MageOS\ShoppingFeed\Model\Feed\Validation\MicrosoftMerchantCenter $microsoftMerchantCenterValidator,
         \MageOS\ShoppingFeed\Model\Feed\Validation\TikTokCatalog $tikTokCatalogValidator,
+        \MageOS\ShoppingFeed\Model\Feed\Validation\PinterestCatalog $pinterestCatalogValidator,
         ?\MageOS\ShoppingFeed\Model\Generator\Queue $queue = null,
         $testSku = null,
         $data = []
@@ -240,6 +244,7 @@ class Generator extends DataObject
         $this->metaCatalogValidator = $metaCatalogValidator;
         $this->microsoftMerchantCenterValidator = $microsoftMerchantCenterValidator;
         $this->tikTokCatalogValidator = $tikTokCatalogValidator;
+        $this->pinterestCatalogValidator = $pinterestCatalogValidator;
 
         parent::__construct($data);
     }
@@ -477,7 +482,10 @@ class Generator extends DataObject
         }
 
         foreach ($rows as $row) {
-            $this->writeFeed($row);
+            $requiresItemGroupId = $this->feed->getData('type') === 'pinterest_catalog'
+                && ($productAdapter instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable
+                    || $productAdapter->getParentAdapter() instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable);
+            $this->writeFeed($row, true, $requiresItemGroupId);
         }
         return $this;
     }
@@ -485,9 +493,10 @@ class Generator extends DataObject
     /**
      * @param  $fields
      * @param  bool|true $addNewLine
+     * @param  bool $requiresItemGroupId
      * @return Generator
      */
-    protected function writeFeed($fields, $addNewLine = true)
+    protected function writeFeed($fields, $addNewLine = true, bool $requiresItemGroupId = false)
     {
         if ($addNewLine && $this->feed->getData('type') === 'google_shopping') {
             $requiresDate = in_array($fields['availability'] ?? '', ['backorder', 'preorder'], true);
@@ -511,13 +520,17 @@ class Generator extends DataObject
         $isMetaFeed = $this->feed->getData('type') === 'meta_catalog';
         $isMicrosoftFeed = $this->feed->getData('type') === 'microsoft_merchant_center';
         $isTikTokFeed = $this->feed->getData('type') === 'tiktok_catalog';
-        if ($addNewLine && ($isMetaFeed || $isMicrosoftFeed || $isTikTokFeed)) {
+        $isPinterestFeed = $this->feed->getData('type') === 'pinterest_catalog';
+        if ($addNewLine && ($isMetaFeed || $isMicrosoftFeed || $isTikTokFeed || $isPinterestFeed)) {
             [$validator, $destination] = match (true) {
+                $isPinterestFeed => [$this->pinterestCatalogValidator, 'Pinterest Catalog'],
                 $isTikTokFeed => [$this->tikTokCatalogValidator, 'TikTok Catalog'],
                 $isMicrosoftFeed => [$this->microsoftMerchantCenterValidator, 'Microsoft Merchant Center'],
                 default => [$this->metaCatalogValidator, 'Meta Catalog'],
             };
-            $validation = $validator->validate($fields);
+            $validation = $isPinterestFeed
+                ? $validator->validate($fields, $requiresItemGroupId)
+                : $validator->validate($fields);
             $identifier = $fields[$isTikTokFeed ? 'sku_id' : 'id'] ?? null;
             $id = is_scalar($identifier) ? (string)$identifier : '(no id)';
             if ($validation['errors']) {
@@ -536,7 +549,7 @@ class Generator extends DataObject
         }
 
         if ($addNewLine
-            && ($isGoogleFeed || $isMetaFeed || $isMicrosoftFeed || $isTikTokFeed)
+            && ($isGoogleFeed || $isMetaFeed || $isMicrosoftFeed || $isTikTokFeed || $isPinterestFeed)
             && !empty($fields['sale_price'])
             && isset($fields['price'])
             && is_scalar($fields['sale_price'])

@@ -140,6 +140,12 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'text' => __('Generate and review the CSV file, then add its public URL through Data Feed Schedule in TikTok Ads Manager > Assets > Catalog. Match the catalog currency and targeting location. Schedule generation before the fetch and keep sale prices current; TikTok does not use sale_price_effective_date to expire discounts. Match sku_id values to your TikTok Pixel content IDs. Review brand, identifiers, images, and variant mappings. This template does not configure tracking or synchronize TikTok Shop orders.'),
             ]);
         }
+        if ($model->getType() === 'pinterest_catalog') {
+            $fieldset->addField('pinterest_catalog_setup', 'note', [
+                'label' => __('Connect to Pinterest'),
+                'text' => __('Generate and review the TSV file. In Pinterest Catalogs and product groups, add a data source with its public URL and choose TSV. Review country, language, currency, and claimed website before creating Pins. Schedule generation before the daily fetch; hosted URLs must use port 80 or 443. Use clear primary images at least 1000 by 1500 pixels and change image URLs when replacing images. Keep variant group IDs and tracking IDs consistent. This template does not configure the Pinterest tag or synchronize orders.'),
+            ]);
+        }
 
         if ($model->getId()) {
             $fieldset->addField('id', 'hidden', ['name' => 'id']);
@@ -324,6 +330,7 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                     'meta_catalog' => __('Use in_stock, out_of_stock, backorder, or preorder. Meta product feeds support in stock and out of stock. Backorders and preorders export as out of stock until available.'),
                     'microsoft_merchant_center' => __('Use in_stock, out_of_stock, backorder, or preorder. Microsoft supports in stock, out of stock, and preorder. Backorders export as out of stock until available.'),
                     'tiktok_catalog' => __('Use in_stock, out_of_stock, backorder, or preorder. TikTok exports these as in stock, out of stock, available for order, and preorder respectively.'),
+                    'pinterest_catalog' => __('Use in_stock, out_of_stock, backorder, or preorder. Pinterest supports in stock, out of stock, and preorder. Backorders export as out of stock until available.'),
                     default => __('To fill \'availability\'. The attribute\'s values can be: \'in stock\', \'available for order\', \'out of stock\', \'preorder\'. Other values will be replaced by \'out of stock\'.'),
                 },
             ]
