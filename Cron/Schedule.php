@@ -127,6 +127,9 @@ class Schedule
             if (!$queue->getId()) {
                 $feed = $this->feedFactory->create()
                     ->load($schedule->getFeedId());
+                if ((int)$feed->getStatus() === \MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_DISABLED) {
+                    continue;
+                }
                 if ($schedule->getBatchMode()) {
                     $batch = $this->batchFactory->create();
                     $batch->setEnabled(true)

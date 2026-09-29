@@ -2,7 +2,7 @@
 
 The Shipping tab configures the output produced by a column mapped to the **Shipping** directive. It does nothing unless that directive is present in Columns Map.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Settings
 

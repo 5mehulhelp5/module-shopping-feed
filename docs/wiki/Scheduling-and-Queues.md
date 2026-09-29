@@ -2,7 +2,7 @@
 
 Schedules decide when work enters the queue. A separate worker consumes queued work and generates feed files.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Enable module cron processing
 
@@ -13,7 +13,7 @@ The module defines its own `mageos_shopping_feed` cron group:
 | Job | Built-in schedule | Purpose |
 | --- | --- | --- |
 | `mageos_shopping_feed_schedule` | Minute 10 of every hour | Adds feeds due in the current store-timezone hour to the queue |
-| `mageos_shopping_feed_process` | Every minute | Processes one unread queue item |
+| `mageos_shopping_feed_process` | Every minute | Processes one queue item |
 
 Magento's normal cron runner must be installed and healthy. Saving a feed schedule does not replace the platform cron requirement.
 
@@ -32,9 +32,13 @@ Allow enough time between schedules for the earlier generation and any uploads t
 * Manual requests are selected before scheduled requests when both are waiting.
 * The oldest unread item is processed first within that priority.
 * A worker handles one queue item per invocation.
-* A schedule does not enqueue the same feed again while unread work for that feed exists.
+* A schedule does not enqueue the same feed again while queued or running work for that feed exists.
 * Queue lookups remain independent across feeds. An already queued feed does not suppress another due feed, and a previously empty lookup does not hide newly queued work.
-* Queued batch state is retained so the next worker continues from the prior offset.
+* Completed batch state is retained so the next worker continues from the prior offset.
+
+**Recovery in 1.1:** a queue row left marked running is eligible on the next worker invocation, including the same day. The worker acquires the feed lock and reloads the row before starting. If another worker completed it, no duplicate generation starts. An interrupted run restarts from the beginning so partially appended output cannot duplicate rows. Completed batches still resume normally. Repeated failures remain visible as errors and will be retried; correct the underlying error in the logs.
+
+File locks require workers to share the same lock filesystem. This is not a distributed lease across independent hosts.
 
 ## Standalone command scheduling
 

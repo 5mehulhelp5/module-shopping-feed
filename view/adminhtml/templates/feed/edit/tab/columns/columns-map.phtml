@@ -206,7 +206,21 @@ var <?php echo $block->escapeHtml($block->getControlName()) ?> = {
         this.preselectParamsColumn(data);
     },
     preselectParamsColumn : function (data) {
-        var options = $('<?php echo $block->escapeHtml($block->getControlName()) ?>_row_'+data.index+'_param').select('select option');
+        var paramColumn = $('<?php echo $block->escapeHtml($block->getControlName()) ?>_row_'+data.index+'_param');
+        var select = paramColumn.select('select[multiple]')[0];
+        // Keep saved attribute codes when the attribute is absent from this catalog.
+        // Otherwise the browser omits the parameter and a later save can change its meaning.
+        if (select && data.param instanceof Array) {
+            data.param.forEach(function (value) {
+                var exists = Array.prototype.some.call(select.options, function (option) {
+                    return option.value === String(value);
+                });
+                if (!exists && value !== '') {
+                    select.add(new Option(String(value), String(value)));
+                }
+            });
+        }
+        var options = paramColumn.select('select option');
         if (options instanceof Array && options.length) {
             if (data.param instanceof Array && data.param.length) {
                 for (var key = 0; key < data.param.length; ++key) {

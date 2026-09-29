@@ -583,7 +583,7 @@ class ModelFramework extends CompatibilityTestCase
                 'getPriceModel', 'setData', 'setSpecialPrice', 'setFinalPrice', 'getTotalPrices',
                 'getAssociatedProductCollection', 'addFilterByRequiredOptions', 'setPositionOrder',
                 'addStoreFilter', 'getOptions', 'hasSpecialPrice', 'calculatePrice', 'setStoreId', 'getStoreId',
-                'getPriceInfo', 'load']
+                'getPriceInfo', 'getTierPrice', 'load']
         );
         $this->expectSelf($this->productMock, ['setData', 'setSpecialPrice', 'setFinalPrice', 'getPriceModel', 'setStoreId', 'load']);
 
@@ -737,6 +737,7 @@ class ModelFramework extends CompatibilityTestCase
         $datetimeMock->expects($this->any())
             ->method('format')
             ->will($this->returnValue(date('Y-m-d H:i:s')));
+        $datetimeMock->method('modify')->willReturnSelf();
 
         $this->localeDateMock = $this->getModelMock(
             '\Magento\Framework\Stdlib\DateTime\TimezoneInterface'

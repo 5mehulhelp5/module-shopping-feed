@@ -26,11 +26,14 @@ define(
                     }
                 },
                 _switchTabs: function (e) {
-                    if ($(this).data('tab-id') !== undefined) {
-                        e.preventDefault();
-                        var id = $(this).data('tab-id'),
-                        switchToId = $('ul[data-ui-id="feed-tabs-tab-feed-tabs"] li').index($('ul[data-ui-id="feed-tabs-tab-feed-tabs"]').find(id).parent());
-                        $('#feed_tabs').tabs({active: switchToId});
+                    var id = $(this).data('tab-id') || $(this).attr('href'),
+                        switchToId;
+                    if (typeof id === 'string' && /^#feed_tabs_[a-z_]+$/.test(id)) {
+                        switchToId = $('ul[data-ui-id="feed-tabs-tab-feed-tabs"] li').index($('ul[data-ui-id="feed-tabs-tab-feed-tabs"]').find(id).closest('li'));
+                        if (switchToId >= 0) {
+                            e.preventDefault();
+                            $('#feed_tabs').tabs({active: switchToId});
+                        }
                     }
                 }
             }

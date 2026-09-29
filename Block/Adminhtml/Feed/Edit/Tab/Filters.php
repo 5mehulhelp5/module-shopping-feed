@@ -154,7 +154,7 @@ class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'title' => __('Replace empty values'),
                 'required' => false,
                 'disabled' => $isElementDisabled,
-                'note' => __('Columns must exist in <a href="#" data-tab-id="#feed_tabs_columns">Columns Map</a>. <strong>Save you config before looking for a new columns here.</strong> Grid has similar functions as <a href="#" data-tab-id="#feed_tabs_columns">Columns Map</a>'),
+                'note' => __('Columns must exist in <a href="#feed_tabs_columns">Columns Map</a>. <strong>Save you config before looking for a new columns here.</strong> Grid has similar functions as <a href="#feed_tabs_columns">Columns Map</a>'),
             ]
         );
 
@@ -210,7 +210,7 @@ class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'required' => true,
                 'values' => $this->sourceProductColumns->toOptionArray(),
                 'disabled' => $isElementDisabled,
-                'note' => __('Avoid having empty values for your items in the feed. Columns must exist in <a href="#" data-tab-id="#feed_tabs_columns">Columns Map</a>, save your config before looking for columns here.')
+                'note' => __('Avoid having empty values for your items in the feed. Columns must exist in <a href="#feed_tabs_columns">Columns Map</a>, save your config before looking for columns here.')
             ]
         );
 

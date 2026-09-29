@@ -32,9 +32,13 @@ class Availability extends \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Sim
         $sourceItem = $this->getAdapter()->getData('inventory_source_item');
 
         if (!$sourceItem) {
-            return parent::getStockStatus($adapter);
+            $status = parent::getStockStatus($adapter);
+            return $status === self::IN_STOCK ? self::IN_STOCK : self::OUT_OF_STOCK;
         }
 
+        if (!$sourceItem->getStatus()) {
+            return self::OUT_OF_STOCK;
+        }
         $qty = $sourceItem->getQuantity();
         if ($this->getAdapter()->getFeed()->getConfig('general_use_stock_reservations')) {
             $reservationCount = $this->sourceInventoryApi->getReservations(
@@ -44,19 +48,6 @@ class Availability extends \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Sim
         }
 
         if ($qty > 0) {
-            $cell = self::IN_STOCK;
-        }
-
-        $product = $adapter->getProduct();
-        $stockItem = $this->stockRegistryProvider->getStockItem($product->getId(), $product->getStoreId());
-        if (!is_null($stockItem)
-            && (int)$stockItem->getData('is_in_stock') > 0
-            && (int)$stockItem->getData('backorders') > 0
-            && (int)$stockItem->getData('qty') <= 0) {
-            $cell = self::BACKORDER;
-        }
-
-        if ($cell == self::OUT_OF_STOCK && !$this->isStockManaged($stockItem)) {
             $cell = self::IN_STOCK;
         }
 

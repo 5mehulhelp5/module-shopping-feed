@@ -2,7 +2,7 @@
 
 Test mode renders feed values for a chosen product without replacing the normal feed file, changing normal feed status, uploading files, or generating a Promotions companion file.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Test in the Admin
 
@@ -27,6 +27,8 @@ One successful SKU does not prove the whole feed. Test at least:
 * A regular-price simple product
 * A product with an active special price and valid dates
 * An out-of-stock product
+* Google backorder/preorder products with valid and missing availability dates
+* Products with real identifiers and confirmed identifier absence
 * A product containing quotes, delimiters, line breaks, Unicode, or HTML in mapped text
 * Each enabled complex-product type
 * A configurable with multiple child options
@@ -45,4 +47,4 @@ Check values at the configured store view and currency scope:
 7. Category and taxonomy values
 8. Shipping and promotion identifiers where enabled
 
-After test output is correct, generate a complete file and confirm product counts and row shape. See [Manual and CLI generation](Manual-and-CLI-Generation).
+A Google row skipped for a missing or invalid availability date is explained in the test log. The preview shows cell values; CSV quotation is applied when writing the complete file. After test output is correct, generate a complete file and confirm product counts and row shape with the recipient's parser. See [Manual and CLI generation](Manual-and-CLI-Generation).

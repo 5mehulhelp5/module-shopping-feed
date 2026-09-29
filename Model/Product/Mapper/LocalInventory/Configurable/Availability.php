@@ -39,19 +39,6 @@ class Availability extends ConfigurableAvailability
             $cell = self::IN_STOCK;
         }
 
-        $product = $this->getAdapter()->getProduct();
-        $stockItem = $this->stockRegistryProvider->getStockItem($product->getId(), $product->getStoreId());
-        if (!is_null($stockItem)
-            && (int)$stockItem->getData('is_in_stock') > 0
-            && (int)$stockItem->getData('backorders') > 0
-            && (int)$stockItem->getData('qty') <= 0) {
-            $cell = self::BACKORDER;
-        }
-
-        if ($cell == self::OUT_OF_STOCK && !$this->isStockManaged($stockItem)) {
-            $cell = self::IN_STOCK;
-        }
-
         return $this->getAdapter()->getFilter()->cleanField($cell, $params);
     }
 }

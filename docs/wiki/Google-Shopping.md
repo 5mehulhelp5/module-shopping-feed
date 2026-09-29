@@ -2,7 +2,7 @@
 
 The Google Shopping template supplies a product-data column map, Google taxonomy mapping, price filters, variant handling, shipping output, and optional promotion IDs. The merchant remains responsible for mapping those fields to the real catalog and meeting Google's current requirements.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Before configuration
 
@@ -37,6 +37,7 @@ Test at least:
 * `link`
 * `image_link`
 * `availability`
+* `availability_date` for backorders and preorders
 * `price`
 * `sale_price`
 * `sale_price_effective_date`
@@ -48,9 +49,29 @@ Test at least:
 
 For variants, test `item_group_id` and every applicable standard variant attribute. The current template also contains `item_group_title` and `variant_option`; validate all template columns with the intended data source rather than assuming every default is required.
 
+## Identifiers
+
+New feeds include empty MPN and GTIN mappings. Select **Identifier Attribute** and choose the catalog attribute containing the real manufacturer-assigned value. SKU is not an MPN unless the manufacturer actually uses that value. Existing saved mappings are preserved, so review older feeds that map SKU to MPN. [Google MPN requirements](https://support.google.com/merchants/answer/6324482?hl=en).
+
+**Identifier Exists** leaves the field blank by default; Google treats an omitted value as yes. Missing brand, GTIN, or MPN data does not prove that no identifier exists. Select **Confirmed: no assigned identifiers** only for products whose manufacturer assigned none. That option writes `FALSE` only when brand, GTIN, and MPN are all empty. A supplied identifier takes precedence over the absence setting. Older comma-separated parameters no longer infer absence from missing fields. [Google identifier requirements](https://support.google.com/merchants/answer/6324478?hl=en).
+
+The confirmation applies to every row using that directive. For a mixed catalog, map a verified per-product `identifier_exists` value or separate products with no assigned identifiers into their own feed. Do not use the confirmation to hide incomplete catalog data.
+
+## Backorders and preorders
+
+Map `availability_date` to the product's expected shipping date whenever `availability` can be `backorder` or `preorder`. New feeds include an empty **Static Value** placeholder for this column. Change its source to your date attribute; a static date is suitable only when it is accurate for every applicable product. Existing feeds must add the column themselves.
+
+The writer accepts ISO dates/timestamps and Magento datetime attribute values such as `2026-10-15 09:00:00`. Values without a timezone are interpreted as UTC and exported as ISO 8601 with a timezone. Use a future date no more than one year away and show the same expected date on the landing page. Relative text such as `tomorrow`, invalid dates, expired dates, and dates beyond one year are rejected. [Google availability-date requirements](https://support.google.com/merchants/answer/6324470?hl=en).
+
+A Google Shopping row that needs a date but lacks a valid one is skipped. **Test Feed** and the generation log explain the missing or invalid `availability_date`; the skipped count increases. The module does not invent a date or relabel the product as in stock. Generic feeds keep their own availability fields and rules.
+
+For other availability values, a valid mapped date is normalized the same way. An invalid optional date is left blank without skipping the product.
+
 ## Prices and sale dates
 
 The feed uses the selected store context and currency. Catalog price rules can participate when enabled. Sale dates use the configured store timezone.
+
+Guest and all-group tier discounts available at quantity one are included. Bulk-only tiers and discounts restricted to other customer groups are excluded. A tier-only discount does not inherit dates from an expired special price. Compare the result with the product page as a signed-out visitor.
 
 If the rendered sale price is equal to or greater than regular price, the module leaves sale price and its effective date empty. The header and row shape remain intact.
 

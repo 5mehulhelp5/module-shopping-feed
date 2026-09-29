@@ -100,11 +100,9 @@ class Result extends \Magento\Backend\Block\Widget\Form\Renderer\Fieldset\Elemen
                 }
 
                 $messages[] = __('Test feed was generated.');
-            } catch (\Exception $e) {
-                // We show any and all errors on test run
-                $messages[] = $e->getMessage();
-                $traceAsArray = explode("\n", $e->getTraceAsString());
-                $messages = array_merge($messages, array_slice($traceAsArray, 0, 5));
+            } catch (\Throwable $e) {
+                $this->_logger->critical($e);
+                $messages[] = __('Test generation failed. Check the application log for details.');
             }
         }
         $this->setMessages($messages);

@@ -23,7 +23,9 @@ use MageOS\ShoppingFeed\Test\Unit\CompatibilityTestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ScheduleTest extends CompatibilityTestCase
 {
-    public function testScheduledGenerationUsesQueueInvariantEntryPoint(): void
+    /** @dataProvider feedStatuses */
+    #[\PHPUnit\Framework\Attributes\DataProvider('feedStatuses')]
+    public function testScheduledGenerationUsesQueueInvariantEntryPoint(int $status, int $queued): void
     {
         $scopeConfig = $this->createMock(ScopeConfigInterface::class);
         $scopeConfig->method('getValue')->with(ScheduleCron::XML_PATH_ENABLED)->willReturn(true);
@@ -35,7 +37,7 @@ class ScheduleTest extends CompatibilityTestCase
         $schedule->method('getFeedId')->willReturn(17);
         $schedule->method('getBatchMode')->willReturn(false);
         $schedule->method('setProcessedAt')->willReturnSelf();
-        $schedule->expects($this->once())->method('save');
+        $schedule->expects($this->exactly($queued))->method('save');
 
         $scheduleCollection = $this->getMockBuilder(ScheduleCollection::class)
             ->disableOriginalConstructor()
@@ -52,7 +54,8 @@ class ScheduleTest extends CompatibilityTestCase
             ->onlyMethods(['load', 'saveStatus'])
             ->getMock();
         $feed->method('load')->with(17)->willReturnSelf();
-        $feed->expects($this->once())->method('saveStatus');
+        $feed->setData('status', $status);
+        $feed->expects($this->exactly($queued))->method('saveStatus');
         $feedFactory = $this->createMock(FeedFactory::class);
         $feedFactory->method('create')->willReturn($feed);
 
@@ -61,7 +64,7 @@ class ScheduleTest extends CompatibilityTestCase
             ->onlyMethods(['getId', 'add'])
             ->getMock();
         $queue->method('getId')->willReturn(null);
-        $queue->expects($this->once())->method('add')->with($feed, $schedule)->willReturnSelf();
+        $queue->expects($this->exactly($queued))->method('add')->with($feed, $schedule)->willReturnSelf();
         $queueCollection = $this->getMockBuilder(QueueCollection::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getQueue'])
@@ -84,6 +87,15 @@ class ScheduleTest extends CompatibilityTestCase
 
         $subject->execute();
 
-        $this->assertSame(1, $subject->getCounter());
+        $this->assertSame($queued, $subject->getCounter());
+    }
+
+    public static function feedStatuses(): array
+    {
+        return [
+            'scheduled' => [Feed\Source\Status::STATUS_SCHEDULED, 1],
+            'completed' => [Feed\Source\Status::STATUS_COMPLETED, 1],
+            'disabled' => [Feed\Source\Status::STATUS_DISABLED, 0],
+        ];
     }
 }

@@ -88,6 +88,9 @@ class Microdata extends \Magento\Framework\Model\AbstractModel
 
         /** @var \MageOS\ShoppingFeed\Model\Feed $feed */
         $feed = $this->getFeed();
+        if ($feed === null) {
+            return [];
+        }
 
         /** @var \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter */
         $adapter = $this->adapterFactory->create($product, $feed);
@@ -110,7 +113,7 @@ class Microdata extends \Magento\Framework\Model\AbstractModel
     /**
      * Find the feed set to be used for microdata
      *
-     * @return \MageOS\ShoppingFeed\Model\Feed
+     * @return \MageOS\ShoppingFeed\Model\Feed|null
      */
     public function getFeed()
     {
@@ -120,13 +123,7 @@ class Microdata extends \Magento\Framework\Model\AbstractModel
             ->addFieldToFilter('store_id', $store->getId())
             ->addFieldToFilter('use_microdata', 1);
 
-        if ($feedLookup->count()) {
-            $feed = $feedLookup->getFirstItem();
-        } else {
-            $feed = $this->feedFactory->create()->load($store->getId(), 'store_id');
-        }
-
-        return $feed;
+        return $feedLookup->count() ? $feedLookup->getFirstItem() : null;
     }
 
     /**

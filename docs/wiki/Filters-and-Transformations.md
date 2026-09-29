@@ -2,7 +2,7 @@
 
 Product Filters decides which products reach the output and how selected column values are changed. Rule order matters.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Catalog selection
 
@@ -32,7 +32,7 @@ Applies string replacement at column output. Large rule sets add work to every a
 
 ### Limit column output
 
-Truncates selected output columns to a character limit. If several limits target the same column, only the first applicable rule is used.
+Truncates selected output columns to a character limit. In 1.1, limits count UTF-8 characters without splitting a multibyte character. Limits run before output encoding and HTML cleanup. If several limits target the same column, they run in order.
 
 ### Skip Products with empty
 
@@ -61,7 +61,7 @@ Think of the feed as a pipeline:
 
 Test interacting rules together. A transformation that produces an empty value can affect a later required-field filter.
 
-HTML entities are decoded before a final pass removes line breaks and the active field delimiter. Encoded tabs such as `&#09;` therefore cannot add an extra column to a tab-delimited row. Verify the complete generated file, including rows containing encoded punctuation or whitespace.
+HTML entities are decoded before a final pass removes line breaks and, for output without an enclosure, the active field delimiter. An explicitly configured enclosure preserves embedded delimiters. Generic comma-delimited feeds preserve commas and quote each CSV field, including embedded quotes. Encoded tabs such as `&#09;` therefore cannot add an extra column to a tab-delimited row. Verify the complete generated file, including rows containing encoded punctuation or whitespace.
 
 ## Verification
 

@@ -2,7 +2,7 @@
 
 [![CI on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml?query=branch%3Amain)
 
-Release **1.0.0 passed all 27 CI checks** on commit `f14a763`. [View the passing release run](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/34402149180).
+Version **1.1.0** adds optional Nebula Admin support, safer upload and queue handling, corrected Google feed output, guest tier pricing, consistent variant grouping, and configurable custom output. Read the [1.1.0 release notes](docs/releases/1.1.0.md) and [upgrade checklist](docs/wiki/Installation-and-Upgrade.md#upgrading-from-10-to-11).
 
 `MageOS_ShoppingFeed` generates product feeds for Mage-OS and Magento Open Source.
 
@@ -19,9 +19,9 @@ The package has its own Composer name, PHP namespace, Magento module name, datab
 
 ## Status
 
-Version [1.0.0](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.0.0) is the first stable release of this independently named module. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) before evaluating it on a store that already uses a Rocket Web shopping feed module.
+Version [1.1.0](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.1.0) is the current stable release. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) before evaluating it on a store that already uses a Rocket Web shopping feed module.
 
-This release includes Hyva custom-option and configurable-variant selection, safer microdata selection, and corrections to queue scheduling, output encoding, uploads, and stock inheritance. See the [release notes](docs/releases/1.0.0.md) and [full-feed validation record](docs/reviews/2026-09-09-full-feed-validation.md).
+The release retains custom feed mapping and Hyva/Luma deep links while correcting identifier defaults, backorder dates, Local Inventory statuses, and CSV serialization. Existing Google mappings need review, comma-feed recipients must accept quoted CSV, and `setup:upgrade` is required for the upload-password column and feed-search index. See the [changelog](CHANGELOG.md), [Google/custom-feed acceptance report](docs/reviews/2026-09-28-google-custom-feed-fixes.md), and [issue acceptance report](docs/reviews/2026-09-28-github-issues.md). Historical [1.0.0 notes](docs/releases/1.0.0.md) remain available.
 
 Run [ACCEPTANCE-TEST-PLAN.md](ACCEPTANCE-TEST-PLAN.md) against the exact release candidate before enabling production schedules or uploads.
 
@@ -36,12 +36,16 @@ Mage-OS 3.4.0, based on Magento Open Source 2.4.9, is an explicit CI compatibili
 
 Mage-OS 3.5.0 on PHP 8.4.24 was also verified locally on Magebox with Hyva: a complete 160-row storefront feed, all exported prices and stock values, and all 38 available configurable deep links passed the recorded checks. This local evidence is separate from CI and Merchant Center acceptance.
 
+The module supports Magento's standard Admin grid and an optional native Nebula Admin grid. With Nebula enabled, feed editing, previews, and logs open in the standard Admin layout so the complete existing editor remains available; returning to the list restores Nebula. No Nebula dependency is required for standard installations. See the [Admin compatibility acceptance report](docs/reviews/2026-09-25-admin-compatibility.md) for the tested versions and limits.
+
+A fresh Mage-OS 3.5.0 installation with no Nebula packages also passed Composer installation, schema upgrades, DI compilation, production-mode generation, and standard Admin browser checks. See the [installation without Nebula report](docs/reviews/2026-09-28-without-nebula-acceptance.md).
+
 ## Installation
 
-Install the 1.x release from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
+Install the 1.1 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.0'
+composer require 'mage-os/module-shopping-feed:^1.1'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
@@ -67,13 +71,13 @@ bin/magento mage-os:shopping-feed:schedule
 
 The dedicated `mageos_shopping_feed` cron group schedules feeds hourly and processes its queue every minute by default.
 
-Feed output is restricted to `pub/media/mageos-shopping-feed` and its safe subdirectories. Per-feed logs are restricted to `var/log` and use `mageos_shopping_feed_*.log` by default.
+Feed output is restricted to `pub/media/mageos-shopping-feed` and its safe subdirectories. Files are publicly downloadable for recipient fetches; default filenames contain the feed ID and are predictable. FTP or SFTP upload leaves that public local copy in place. Export only data intended for public distribution. Per-feed logs are restricted to `var/log` and use `mageos_shopping_feed_*.log` by default.
 
 ## Documentation
 
 For setup and troubleshooting, use the [Shopping Feed support bot on Rocket Web](https://rocketweb.com/rocket-shopping-feeds). Select **Open support chat** on the product page.
 
-The reviewable GitHub Wiki source is under [`docs/wiki`](docs/wiki), starting with [`Home.md`](docs/wiki/Home.md). Documentation contributors should update that source and follow [`docs/WIKI-MAINTENANCE.md`](docs/WIKI-MAINTENANCE.md) rather than editing the public wiki independently.
+The [public GitHub Wiki](https://github.com/mage-os-lab/module-shopping-feed/wiki) is published separately; it does not automatically update when this repository changes. The reviewable GitHub Wiki source is under [`docs/wiki`](docs/wiki), starting with [`Home.md`](docs/wiki/Home.md). Documentation contributors should update that source and follow [`docs/WIKI-MAINTENANCE.md`](docs/WIKI-MAINTENANCE.md) rather than editing the public wiki independently.
 
 ## Development validation
 

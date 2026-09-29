@@ -87,7 +87,9 @@ class Filter
             "\r" => " ",
         ];
         $activeDelimiter = $delimiter == 'other' ? $delimiter_other : ($delimiter == '\t' ? "\t" : $delimiter);
-        if ($activeDelimiter !== '') {
+        $isCustomCsv = $this->feed->getData('type') === 'generic' && $activeDelimiter === ',';
+        $hasEnclosure = $isCustomCsv || (string)$this->feed->getConfig('output_params_enclose_cell', '') !== '';
+        if ($activeDelimiter !== '' && !$hasEnclosure) {
             $replacements[$activeDelimiter] = ' ';
         }
         $field = strtr($field, $replacements);
@@ -98,7 +100,7 @@ class Filter
         }
         /** Decoding can reintroduce separators that were absent from the source text. */
         $separators = ["\n" => ' ', "\r" => ' '];
-        if ($activeDelimiter !== '') {
+        if ($activeDelimiter !== '' && !$hasEnclosure) {
             $separators[$activeDelimiter] = ' ';
         }
         $field = strtr($field, $separators);
@@ -163,8 +165,8 @@ class Filter
             foreach ($limitData as $data) {
                 $limit = intval($data['limit']);
                 if ($data['column'] == $column) {
-                    if (strlen($string) > $limit) {
-                        $string = substr($string, 0, $limit);
+                    if (mb_strlen($string, 'UTF-8') > $limit) {
+                        $string = mb_substr($string, 0, $limit, 'UTF-8');
                     }
                     continue;
                 }

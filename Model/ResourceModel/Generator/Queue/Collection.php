@@ -78,9 +78,9 @@ class Collection extends AbstractCollection
             $lookup->getSelect()
                 ->where('feed_id = ?', $feedId);
         }
-        $lookup->getSelect()
-            ->where('is_read = 0 OR (is_read = 1 && TO_DAYS(`created_at`) < TO_DAYS(?))', $this->date->date())
-            ->limit(1);
+        // Running rows also reserve their feed for scheduling. The process lock
+        // distinguishes a live worker from an interrupted run, regardless of date.
+        $lookup->getSelect()->limit(1);
         $lookup->setPageSize(1);
 
         return $lookup->getFirstItem();

@@ -154,6 +154,6 @@ class Options extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
      */
     public function getTabNotice()
     {
-        return __('In order for the feed to varry products by their options, the <strong>Feed Columns</strong> needs to have the variant columns (i.e. size and color) mapped to the <strong>Product Options</strong> directive.<br />Use the <strong>Product Option</strong> directive parameter to specify which options should be pulled.');
+        return __('In order for the feed to vary products by their options, the <strong>Feed Columns</strong> needs to have the variant columns (i.e. size and color) mapped to the <strong>Product Options</strong> directive.<br />Use the <strong>Product Option</strong> directive parameter to specify which options should be pulled.');
     }
 }

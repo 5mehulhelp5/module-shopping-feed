@@ -156,6 +156,6 @@ class Bundle extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic 
      */
     public function getTabNotice()
     {
-        return __('This section applies to all bundle produts in your catalog. Bundle type should be enabled under <a href="#" data-tab-id="#feed_tabs_filters">Filters</a> section.');
+        return __('This section applies to all bundle products in your catalog. Bundle type should be enabled under <a href="#feed_tabs_filters">Filters</a> section.');
     }
 }

@@ -3,6 +3,7 @@ define(
     [
     "jquery",
     "jquery/ui",
+    "mage/backend/form",
     "domReady!"
     ], function ($) {
         "use strict";

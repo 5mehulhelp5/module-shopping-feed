@@ -116,6 +116,14 @@ class Process
                 $succeeded = true;
                 $generator = null;
                 try {
+                    if ($queue->getId()) {
+                        $queueId = $queue->getId();
+                        $queue->unsetData()->load($queueId);
+                        if (!$queue->getId()) {
+                            // A worker completed this row between lookup and lock.
+                            return true;
+                        }
+                    }
                     $queue->setRunning();
                     $generator = $queue->getGenerator();
                     $generator->run();

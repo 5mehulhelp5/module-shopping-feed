@@ -75,6 +75,26 @@ class FilterTest extends CompatibilityTestCase
         );
     }
 
+    public function testCustomCsvPreservesLiteralAndEncodedCommas(): void
+    {
+        $this->feedMock->setData('type', 'generic');
+        $this->feedMock->method('getConfig')->willReturnCallback(
+            fn($key, $default = null) => $key === 'output_params_delimiter' ? ',' : $default
+        );
+        $this->model->setFeed($this->feedMock);
+        $this->assertSame('"Quoted", café, 東京', $this->model->cleanField('&quot;Quoted&quot;, café&#44; 東京'));
+    }
+
+    public function testEnclosedCustomDelimiterSurvivesCleaning(): void
+    {
+        $settings = ['output_params_delimiter' => '|', 'output_params_enclose_cell' => '"'];
+        $this->feedMock->method('getConfig')->willReturnCallback(
+            static fn($key, $default = null) => $settings[$key] ?? $default
+        );
+        $this->model->setFeed($this->feedMock);
+        $this->assertSame('A|B|C', $this->model->cleanField('A|B&#124;C'));
+    }
+
     public function testFindAndReplace()
     {
         $params = 'columnName';
@@ -149,6 +169,17 @@ class FilterTest extends CompatibilityTestCase
         );
         $this->model->setFeed($this->feedMock);
         $this->assertSame('before after', $this->model->cleanField('before&#124;after'));
+    }
+
+    public function testColumnLimitsCountUtf8CharactersInsteadOfBytes(): void
+    {
+        $this->feedMock->method('getConfig')->willReturn([['column' => 'title', 'limit' => 3]]);
+        $this->model->setFeed($this->feedMock);
+        foreach (['é漢😀end' => 'é漢😀', '漢字' => '漢字', 'abcdef' => 'abc'] as $input => $expected) {
+            $this->model->limitOutput($input, 'title');
+            $this->assertSame($expected, $input);
+            $this->assertTrue(mb_check_encoding($input, 'UTF-8'));
+        }
     }
 
 }

@@ -216,6 +216,6 @@ class Configurable extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Ge
      */
     public function getTabNotice()
     {
-        return __('This section applyes to all configurable and their associated produts in your catalog. Configurable type should be enabled under <a href="#" data-tab-id="#feed_tabs_filters">Filters</a> section.');
+        return __('This section applies to all configurable and their associated products in your catalog. Configurable type should be enabled under <a href="#feed_tabs_filters">Filters</a> section.');
     }
 }

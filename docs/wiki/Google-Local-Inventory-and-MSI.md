@@ -2,7 +2,7 @@
 
 Google Local Inventory output connects a product ID with store-level availability, quantity, and price. With Magento Multi-Source Inventory enabled, the module can produce source-specific rows for sources linked to the selected website stock.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Prerequisites
 
@@ -52,6 +52,14 @@ Sources outside the selected website stock should not produce rows.
 
 Without source-level MSI context, the mapper falls back to a `default` or `custom` source label and the normal product inventory path. Do not treat that fallback as proof of a valid Local Inventory implementation.
 
+## Local availability
+
+Online backorders do not establish stock in a physical store. Source rows report `in_stock` only when the source item is enabled and its quantity after configured reservations is positive; otherwise they report `out_of_stock`. Online backorder settings and disabled stock management do not override an empty or disabled source. Without source context, an online `backorder` or `preorder` result becomes `out_of_stock`.
+
+Configurable and grouped parent rows continue to use associated-product quantities; an online parent backorder flag no longer overrides their local quantity. Test parent and child modes against your physical inventory before enabling uploads.
+
+Google also accepts `limited_availability` and `on_display_to_order`. The default mapper does not infer display-to-order eligibility. Google can classify an available quantity of one or two as limited availability when quantity is supplied. Use a deliberate custom mapping if your store needs another supported local status; do not send online `backorder` or `preorder` values. [Accepted availability values](https://support.google.com/merchants/answer/14819809?hl=en).
+
 ## Reservations
 
 **Use Stock Reservations** is enabled by default for Local Inventory. The module adds matching reservation quantities to the source quantity and does not emit a negative result.
@@ -59,6 +67,8 @@ Without source-level MSI context, the mapper falls back to a `default` or `custo
 Record the physical source quantity, reservation total, expected feed quantity, and expected availability for each test SKU. Reservation behavior must be proven with real fixtures before production use.
 
 ## Complex products
+
+When **Inherit parent out-of-stock** is enabled for configurable children using default stock, the parent is checked for salability rather than positive parent quantity. Configurable parents normally have zero legacy quantity; that alone no longer marks in-stock children out of stock. Each child still needs available local stock. Custom availability attributes retain their configured behavior.
 
 The configurable, grouped, and bundle modes still control whether parent rows, associated rows, or both are emitted. Local Inventory preserves the source context while mapping associated items.
 

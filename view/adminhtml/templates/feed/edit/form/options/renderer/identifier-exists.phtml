@@ -3,7 +3,10 @@
 ?>
 
 <div>
-    <span><?php echo $block->escapeHtml(__('Required identification columns:')) ?></span>
-    <input type="text" name="#{htmlName}[#{index}][param]" value="#{param}" />
+    <span><?php echo $block->escapeHtml(__('Identifier status:')) ?></span>
+    <select name="#{htmlName}[#{index}][param]" class="select">
+        <option value=""><?php echo $block->escapeHtml(__('Identifiers exist or are unknown')) ?></option>
+        <option value="no_identifiers"><?php echo $block->escapeHtml(__('Confirmed: no assigned identifiers')) ?></option>
+    </select>
 </div>
-<p class="note"><?php echo $block->escapeHtml(__('Comma separated list, defaults to "gtin,mpn,brand". Returns FALSE if brand or any of other two (mpn, gtin) is missing, otherwise retunrs nothing. When customized, output is FALSE if any of the spcified columns is empty.')) ?></p>
+<p class="note"><?php echo $block->escapeHtml(__('Returns FALSE only when you confirm that no identifiers were assigned and brand, GTIN, and MPN are all empty. Otherwise leaves the field blank (Google defaults to yes). Missing mappings do not prove that identifiers are absent.')) ?></p>

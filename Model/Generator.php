@@ -474,6 +474,20 @@ class Generator extends DataObject
      */
     protected function writeFeed($fields, $addNewLine = true)
     {
+        if ($addNewLine && $this->feed->getData('type') === 'google_shopping') {
+            $requiresDate = in_array($fields['availability'] ?? '', ['backorder', 'preorder'], true);
+            $date = $this->normalizeAvailabilityDate($fields['availability_date'] ?? '');
+            if ($requiresDate && $date === null) {
+                $this->updateCountSkip();
+                $this->getLogger()->warning(sprintf(
+                    'Skipped Google Shopping row %s: %s requires a valid future availability_date within one year. Map the expected shipping date in Columns Map.',
+                    $fields['id'] ?? '(no id)',
+                    $fields['availability']
+                ));
+                return $this;
+            }
+            $fields['availability_date'] = $date ?? '';
+        }
         $isGoogleFeed = in_array(
             $this->feed->getData('type'),
             ['google_shopping', 'google_local_inventory'],
@@ -513,7 +527,7 @@ class Generator extends DataObject
                     $value = $defaultValue;
                 }
                 if (!$this->isTestMode()) {
-                    if ($encloseCell !== false) {
+                    if ($encloseCell !== '') {
                         $value = str_replace($encloseCell, $encloseEscape . $encloseCell, $value);
                         $value = sprintf('%s%s%s', $encloseCell, $value, $encloseCell);
                     }
@@ -534,6 +548,29 @@ class Generator extends DataObject
         }
 
         return $this;
+    }
+
+    /** Normalize mapped ISO dates or Magento datetime attributes (UTC), without guessing dates. */
+    private function normalizeAvailabilityDate($value): ?string
+    {
+        if (!is_string($value)
+            || !preg_match('/^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2})?(?:Z|[+-]\d{2}:?\d{2})?)?$/D', $value)
+        ) {
+            return null;
+        }
+        try {
+            $date = new \DateTimeImmutable($value, new \DateTimeZone('UTC'));
+            $errors = \DateTimeImmutable::getLastErrors();
+            $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+            if (($errors !== false && ($errors['warning_count'] || $errors['error_count']))
+                || $date <= $now || $date > $now->modify('+1 year')
+            ) {
+                return null;
+            }
+            return $date->format('c');
+        } catch (\Exception $exception) {
+            return null;
+        }
     }
 
     private function getOutputColumns(bool $isGoogleFeed): array
@@ -714,15 +751,19 @@ class Generator extends DataObject
      */
     protected function getWriteFeedParams()
     {
-        $encloseCell = $this->feed->getConfig('output_parameters_enclose_cell', '');
-        $cellEncloseEscape = $this->feed->getConfig('output_parameters_enclose_escape', '');
+        $encloseCell = (string)$this->feed->getConfig('output_params_enclose_cell', '');
+        $cellEncloseEscape = (string)$this->feed->getConfig('output_params_enclose_escape', '');
         $delimiter = $this->feed->getConfig('output_params_delimiter', "\t");
         $delimiter_other = $this->feed->getConfig('output_params_delimiter_other', "\t");
+        $delimiter = $delimiter == 'other' ? "$delimiter_other" : ($delimiter == '\t' ? "\t" : "$delimiter");
+        if ($this->feed->getData('type') === 'generic' && $delimiter === ',' && $encloseCell === '') {
+            $encloseCell = '"';
+        }
         $params = [
-            'defaultValue' => $this->feed->getConfig('output_parameters_default_value', ''),
-            'delimiter' => $delimiter == 'other' ? "$delimiter_other" : ($delimiter == '\t' ? "\t" : "$delimiter"),
+            'defaultValue' => $this->feed->getConfig('output_params_default_value', ''),
+            'delimiter' => $delimiter,
             'encloseCell' => $encloseCell,
-            'encloseEscape' => $encloseCell !== '' ? $cellEncloseEscape : ''
+            'encloseEscape' => $encloseCell !== '' ? ($cellEncloseEscape !== '' ? $cellEncloseEscape : $encloseCell) : ''
         ];
         return $params;
     }
@@ -862,6 +903,8 @@ class Generator extends DataObject
      */
     public function updateBatchQueue()
     {
+        // Flush output before making the next offset available to another worker.
+        $this->closeTemporaryHandle();
         $this->batch->setOffset($this->currentIteration);
 
         if (!is_null($this->queue) && $this->queue->getId()) {
@@ -871,7 +914,6 @@ class Generator extends DataObject
             $this->batch = null;
             return true;
         }
-         // We unset this so its not re-run in destructor()
         return false;
     }
 
@@ -895,13 +937,10 @@ class Generator extends DataObject
     }
 
     /**
-     * Release the lock in case of issues
+     * Close output without committing progress from an interrupted batch.
      */
     public function __destruct()
     {
-        // Class can be destroyed (exception), so update queue if$this->batch is set!
-        if (!is_null($this->batch)) {
-            $this->updateBatchQueue();
-        }
+        $this->closeTemporaryHandle();
     }
 }

@@ -12,7 +12,8 @@
             "updated_at": true
         },
         "index": {
-            "MAGEOS_SF_FEED_NAME_TYPE": true
+            "MAGEOS_SF_FEED_NAME_TYPE": true,
+            "MAGEOS_SF_FEED_NAME_FULLTEXT": true
         },
         "constraint": {
             "PRIMARY": true

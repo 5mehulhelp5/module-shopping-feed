@@ -1,8 +1,8 @@
 # Status and compatibility
 
-Mage-OS Shopping Feed 1.0.0 is the first stable release of this independently named module. Existing Rocket Web installations are not upgraded or migrated automatically.
+Mage-OS Shopping Feed 1.1.0 is the current stable release. See [Release 1.1.0](Release-1-1-0) for changes and recorded acceptance. Existing Rocket Web installations are not upgraded or migrated automatically.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Package identity
 
@@ -33,6 +33,16 @@ Mage-OS 3.5.0 on PHP 8.4.24 was verified locally on Magebox with Hyva, including
 
 Compatibility in CI is not a production acceptance result. Test the exact module commit against a representative store, catalog, inventory setup, and external destination before enabling production schedules or uploads.
 
+## Admin theme compatibility
+
+The module retains Magento's standard Admin grid and provides an optional native grid for Nebula Admin. Nebula installations use its native filtering, sorting, selection, and pagination controls. Feed editing, product previews, and logs open in Magento's standard Admin layout, with the existing configuration tabs and widgets. Back and Save return to the Nebula list. This is a native grid integration with the standard editor, not a replacement editor built with Nebula forms.
+
+The integration activates automatically when the Nebula modules and theme are active. It adds no required Nebula package and does not change unrelated Admin screens. Mass actions retain the module's existing POST, form-key, and ACL checks. The grid excludes feed configuration and upload credentials.
+
+The tested local combination and remaining limits are recorded in the [Admin compatibility report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.1.0/docs/reviews/2026-09-25-admin-compatibility.md). Storefront Hyva support is a separate feature.
+
+A separate fresh Mage-OS 3.5.0 installation with no Nebula packages passed Composer installation, schema updates, DI compilation, production-mode generation, and standard Admin browser checks. This covered both the default Mage-OS Admin grid and Magento's classic Admin theme. See the [installation without Nebula report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.1.0/docs/reviews/2026-09-28-without-nebula-acceptance.md) for the exact scope and the additional keyword-search and editor-initialization fixes.
+
 ## Feed support
 
 | Capability | Status |
@@ -48,7 +58,7 @@ Compatibility in CI is not a production acceptance result. Test the exact module
 
 ## Distribution status
 
-The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.x line with `composer require 'mage-os/module-shopping-feed:^1.0'`, or use the tagged source installation described in [Installation and upgrade](Installation-and-Upgrade).
+The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.1 line with `composer require 'mage-os/module-shopping-feed:^1.1'`, or use the tagged source installation described in [Installation and upgrade](Installation-and-Upgrade).
 
 Do not infer release availability from the presence of source code alone. Check the repository's releases and the configured Composer repository at the point of installation.
 

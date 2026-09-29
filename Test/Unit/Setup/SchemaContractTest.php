@@ -38,6 +38,24 @@ class SchemaContractTest extends TestCase
         $this->assertSame('0', $column->getAttribute('default'));
     }
 
+    public function testEncryptedUploadPasswordUsesTextStorage(): void
+    {
+        $column = $this->xpath->query('//table[@name="mageos_shopping_feed_feed_upload"]/column[@name="password"]')->item(0);
+        $this->assertSame('text', $column->getAttribute('xsi:type'));
+        $this->assertFalse($column->hasAttribute('length'));
+    }
+
+    public function testStandardGridKeywordSearchHasAFulltextIndex(): void
+    {
+        // Magento's FulltextFilter silently skips filtering without this index.
+        $columns = $this->xpath->query(
+            '//table[@name="mageos_shopping_feed_feed"]/index[@indexType="fulltext"]/column'
+        );
+
+        $this->assertSame(1, $columns->length);
+        $this->assertSame('name', $columns->item(0)->getAttribute('name'));
+    }
+
     private function getQueueColumn(string $name): DOMElement
     {
         $nodes = $this->xpath->query(

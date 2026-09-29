@@ -2,7 +2,7 @@
 
 Use manual generation while building or diagnosing a feed. The Admin queue action and the direct CLI command have different execution behavior.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Admin actions
 
@@ -62,6 +62,6 @@ Confirm all of the following:
 
 For a Google Shopping feed, also check every row for a unique `id`, required values, valid prices and currency, and reachable product and image URLs. Compare prices and stock values with the selected store view. Open configurable links in a new browser session and confirm the expected variant and price.
 
-Run the command without the optional SKU argument to generate the complete feed. The number of exported rows can exceed the number of visible products when configurable or custom-option rows expand. Required-field filters can skip products, so reconcile skips with the log instead of assuming that a successful command exported every catalog entry. See the recorded [1.0.0 validation result](Release-1-0-0).
+Run the command without the optional SKU argument to generate the complete feed. The number of exported rows can exceed the number of visible products when configurable or custom-option rows expand. Required-field filters can skip products, so reconcile skips with the log instead of assuming that a successful command exported every catalog entry. Google backorder/preorder rows can also be skipped for invalid availability dates. See the recorded [1.1.0 validation results](Release-1-1-0).
 
 For queued automation, continue with [Scheduling and queues](Scheduling-and-Queues).

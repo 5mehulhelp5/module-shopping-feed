@@ -2,7 +2,7 @@
 
 Columns Map controls the output schema. Each row gives the output column a name and maps it to a Magento product attribute or a module directive.
 
-> Documentation baseline: public repository commit `b77605d`. Last reviewed: 2026-08-29.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## How a column is built
 
@@ -23,7 +23,7 @@ Save the feed after changing Columns Map. Several filters and inheritance contro
 | Product Id | Writes a product identifier using the selected identifier mode. |
 | Product URL | Builds a store-view URL and can add configured parameters. |
 | Price | Maps the regular or calculated product price and formats its currency. |
-| Tier Price | Maps price for the selected customer group. |
+| Tier Price | Maps a tier available for one unit for the selected customer group or all groups. Bulk-only tiers are excluded; no applicable tier leaves the field empty. |
 | Sale Price | Maps a lower active sale price. |
 | Sale Price Date Range | Maps the active special-price date range. |
 | Availability | Maps stock state using default inventory or the configured availability attribute. |
@@ -51,7 +51,7 @@ Google Shopping adds:
 | Directive | Purpose |
 | --- | --- |
 | Adwords Price Buckets | Maps a value from the price-range rules configured under Product Filters. The Admin retains the historical field name. |
-| Identifier Exists | Calculates whether the configured product identifiers are present. |
+| Identifier Exists | Leaves unknown/present identifiers unspecified; writes FALSE only after explicit absence confirmation and when brand, GTIN, and MPN are empty. |
 | Identifier Attribute | Maps an identifier from a selected attribute. |
 | Item Group ID | Groups related variants under a stable parent-derived value. |
 | Item Group Title | Maps the module's item-group title value. |
@@ -63,7 +63,7 @@ The correct output column is `promotion_id`, singular. Do not restore the histor
 
 ## Google Shopping defaults
 
-The current template includes columns for product identity, item grouping, `color`, `size`, `material`, `pattern`, `gender`, `age_group`, title, description, URL, images, price, sale price, sale dates, availability, weight, brand, MPN, condition, Magento product type, Google product category, identifier state, bundle state, shipping, and promotion IDs.
+The current template includes columns for product identity, item grouping, `color`, `size`, `material`, `pattern`, `gender`, `age_group`, title, description, URL, images, price, sale price, sale dates, availability, availability date, weight, brand, MPN, GTIN, condition, Magento product type, Google product category, identifier state, bundle state, shipping, and promotion IDs.
 
 Template defaults still require review. Map `brand`, MPN, GTIN, apparel attributes, and categories to the real catalog attributes used by the target store. Confirm the current requirements in Google's [product data specification](https://support.google.com/merchants/answer/7052112?hl=en).
 
@@ -83,7 +83,9 @@ Its default columns are:
 
 ## Sale-price behavior
 
-The module leaves `sale_price` and `sale_price_effective_date` empty when the rendered sale price is not lower than the regular price. The header remains present, and every row must retain the same number of positional columns.
+Google Shopping and Local Inventory leave `sale_price` and `sale_price_effective_date` empty when the rendered sale price is not lower than the regular price. The header remains present, and every row must retain the same number of positional columns.
+
+Generic feeds preserve their custom names, ordering, and values. Google sale-price suppression does not apply to Generic output. See [Generic feeds](Generic-Feeds) for CSV quoting and [Google Shopping](Google-Shopping) for identifier and backorder-date configuration.
 
 ## Verification
 

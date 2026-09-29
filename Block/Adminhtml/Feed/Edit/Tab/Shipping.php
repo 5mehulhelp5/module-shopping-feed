@@ -140,7 +140,7 @@ class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
                 'required' => false,
                 'values' => $this->sourceProductColumns->toOptionArray(),
                 'disabled' => $isElementDisabled,
-                'note' => __('Set shipping weight column from which we calculate shipping costs. Columns must exist in <a href="#" data-tab-id="#feed_tabs_columns">Columns Map</a>, save your config before looking for columns here.'),
+                'note' => __('Set shipping weight column from which we calculate shipping costs. Columns must exist in <a href="#feed_tabs_columns">Columns Map</a>, save your config before looking for columns here.'),
             ]
         );
 
@@ -227,6 +227,6 @@ class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
      */
     public function getTabNotice()
     {
-        return __('This setting tunes how <strong>Shipping</strong> directive works. You must also add your shipping column under <a href="#" data-tab-id="#feed_tabs_columns">Columns Map</a> and map it to the <strong>Shipping</strong> directive.');
+        return __('This setting tunes how <strong>Shipping</strong> directive works. You must also add your shipping column under <a href="#feed_tabs_columns">Columns Map</a> and map it to the <strong>Shipping</strong> directive.');
     }
 }

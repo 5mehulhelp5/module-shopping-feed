@@ -18,6 +18,6 @@ $element = $block->getElement();
         &nbsp;/&nbsp;
         <input id="file_feed" style="width:120px;margin-left:10px;clear:right;" name="config[file_feed]" value="<?= $escaper->escapeHtmlAttr($filename)?>"
                type="text" class="input-text admin__control-text _required" />
-        <div class="note admin__field-note"><?= $escaper->escapeHtml(__('Feed output is restricted to pub/media/mageos-shopping-feed and safe subdirectories. Directories are created automatically. Use a unique .txt, .csv, .tsv, or .xml filename.'))?></div>
+        <div class="note admin__field-note"><?= $escaper->escapeHtml(__('Feed output is restricted to pub/media/mageos-shopping-feed and safe subdirectories. Directories are created automatically. Use a unique .txt, .csv, .tsv, or .xml filename. These files are publicly downloadable, including after FTP or SFTP upload. Export only data intended for public distribution.'))?></div>
     </div>
 </div>

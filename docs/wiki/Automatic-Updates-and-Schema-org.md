@@ -2,7 +2,7 @@
 
 The module can add schema.org offer data to product pages using the same feed mapping used for Google Shopping. Google can use structured product data to reconcile selected price and availability differences.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## What the module renders
 
@@ -26,6 +26,8 @@ It also disables Magento's default price microdata in the affected renderer to a
 3. Open the Google Shopping feed for that store.
 4. Set **Use for microdata** to **Yes**.
 5. Save and clear all applicable Magento, full-page, reverse-proxy, and CDN caches.
+
+**Feed selection in 1.1:** the module requires a feed explicitly marked **Use for microdata** in the current store. Without one, it emits no feed-derived metadata and preserves Magento's native price metadata.
 
 Only one feed per store can be marked for microdata. If another feed already owns that role, the module refuses the second selection and shows a warning.
 

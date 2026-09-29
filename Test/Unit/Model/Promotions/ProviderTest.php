@@ -69,6 +69,32 @@ class ProviderTest extends TestCase
         $method->invoke($provider, 42, 'hash', ['PROMO']);
     }
 
+    public function testMultipleIncludedRulesAreFilteredAsSeparateIds(): void
+    {
+        $feed = $this->createMock(\MageOS\ShoppingFeed\Model\Feed::class);
+        $config = [
+            'promotions_enabled' => true,
+            'promotions_provider_widget' => [
+                'hash' => 'test', 'counter' => 1,
+                'promotion' => [12 => ['include' => 1], 34 => ['include' => 1]],
+            ],
+        ];
+        $feed->method('getConfig')->willReturnCallback(static fn($key) => $config[$key] ?? null);
+        $rules = $this->createMock(\Magento\SalesRule\Model\ResourceModel\Rule\Quote\Collection::class);
+        $rules->expects($this->once())->method('addFieldToFilter')->with('rule_id', ['in' => [12, 34]])->willReturnSelf();
+        $rules->method('getIterator')->willReturn(new \ArrayIterator([]));
+        $collection = $this->createMock(Collection::class);
+        $collection->method('getPromotionRules')->with($feed)->willReturn($rules);
+        $provider = $this->getMockBuilder(Provider::class)->disableOriginalConstructor()
+            ->onlyMethods(['getPromotionCache', 'setPromotionCache'])->getMock();
+        $provider->method('getPromotionCache')->willReturn(false);
+        foreach (['promotionsCollection' => $collection, 'map' => $this->createMock(Map::class)] as $name => $value) {
+            (new \ReflectionProperty(Provider::class, $name))->setValue($provider, $value);
+        }
+        $provider->setFeed($feed);
+        $this->assertSame([], $provider->getPromotionIds($this->createMock(\Magento\Catalog\Model\Product::class)));
+    }
+
     private function createProvider(JsonHelper $helper, DirectoryList $directoryList, File $fileDriver): Provider
     {
         return new Provider(

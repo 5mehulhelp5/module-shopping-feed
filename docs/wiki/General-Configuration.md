@@ -2,7 +2,7 @@
 
 General Configuration defines the store context, output location, delimiter, price behavior, and stock behavior for one feed.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Feed settings
 
@@ -12,15 +12,24 @@ General Configuration defines the store context, output location, delimiter, pri
 | Store View | The store context used for product attributes, URLs, prices, categories, and inventory. |
 | Feed Currency | The currency used when formatting price directives. Only currencies allowed for the selected store are offered. |
 | Feed Path | The directory and generated filename. Output is restricted to `pub/media/mageos-shopping-feed` and safe subdirectories. |
-| Delimiter | The field separator for generated rows. Google templates default to tab-delimited output. |
+| Delimiter | The field separator for generated rows. Google templates default to tabs. Generic comma output quotes CSV fields by default. |
+| Cell Enclosure (Generic) | Optional enclosure for each header and value. Blank uses double quotes for comma output and no enclosure for other delimiters. |
+| Enclosure Escape (Generic) | Prefix for an enclosure inside a cell. Blank doubles the enclosure character. |
+| Empty Cell Value (Generic) | Optional replacement for empty values. Numeric zero is retained. |
 
 Changing the store view can change the category tree and attribute values. Save the feed, then review Categories Map, currency, URLs, and representative product output again.
+
+## Public feed files
+
+Generated files are publicly downloadable from the media URL. Default filenames contain the feed ID and can be guessed. FTP or SFTP upload leaves the local file in place; a custom filename is not access control. The module does not provide a private-output mode.
+
+Review every mapped attribute before generation and include only data intended for public distribution. If a recipient requires confidential data, arrange access controls with the hosting operator before generating it. Verify the exact URL from a signed-out session and confirm the recipient can still fetch it after any hosting change.
 
 ## Price and inventory settings
 
 ### Apply Catalog Price Rules
 
-When enabled, catalog price rules participate in sale-price calculation. Confirm the resulting regular price, sale price, and sale dates against the selected store view and timezone.
+When enabled, catalog price rules participate in sale-price calculation. Guest and all-group tier discounts available for one unit also participate; bulk-only and other customer-group discounts do not. Tier-only discounts have no invented sale date range. Confirm the resulting regular price, sale price, and sale dates against the selected store view and timezone.
 
 ### Use default Stock Statuses
 
@@ -29,6 +38,8 @@ When enabled, the module uses Magento stock information. Set it to **No** only w
 ### Alternate Stock/Availability Attribute
 
 Select the custom attribute used when default stock status is disabled. Supported output values are `in_stock`, `out_of_stock`, `backorder`, and `preorder`; spaces in `in stock` and `out of stock` are normalized to underscores. Unrecognized values fall back to `out_of_stock`.
+
+Google Shopping backorders and preorders also require a valid `availability_date` in 1.1. Google Local Inventory uses local availability rules and does not accept online backorder or preorder states. See [Google Shopping](Google-Shopping) and [Local Inventory](Google-Local-Inventory-and-MSI).
 
 ### Use Qty Increments
 
@@ -40,7 +51,7 @@ When enabled, reservations participate in quantity and availability calculations
 
 ### Complex Product Context Prioritization
 
-When enabled, simple products attached to configurable, grouped, or bundle products are prioritized for processing in their complex-product context. This can reduce duplicate or contextually wrong rows, but it adds work to generation. Measure it on large catalogs.
+When enabled, simple products attached to configurable, grouped, or bundle products are prioritized for processing in their complex-product context. This includes Catalog, Search, and Catalog/Search visibility, so a Search-only child created before its parent can retain variant grouping. It adds work to generation. Measure it on large catalogs.
 
 ## Global settings
 

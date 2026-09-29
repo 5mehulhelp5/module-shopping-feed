@@ -34,7 +34,7 @@ class TierPrice extends MapperAbstract
     public function map(array $params = [])
     {
         $price = '';
-        $product = $this->getAdapter()->getProduct();
+        $product = clone $this->getAdapter()->getProduct();
 
         $customerGroup = array_key_exists('param', $params) ? $params['param'] : \Magento\Customer\Model\Group::NOT_LOGGED_IN_ID;
         $groups = [\Magento\Customer\Model\Group::CUST_GROUP_ALL, $customerGroup];
@@ -42,8 +42,8 @@ class TierPrice extends MapperAbstract
 
         $prices = [];
         foreach ($rows as $row) {
-            if (in_array($row['cust_group'], $groups)) {
-                $prices[] = $row['price'];
+            if (in_array($row['cust_group'], $groups) && $row['price_qty'] > 0 && $row['price_qty'] <= 1) {
+                $prices[] = $row['website_price'] ?? $row['price'];
             }
         }
         if (!empty($prices)) {

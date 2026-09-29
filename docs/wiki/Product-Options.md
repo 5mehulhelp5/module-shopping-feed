@@ -2,7 +2,7 @@
 
 Product Options controls how Magento custom options affect row count and option output.
 
-> Documentation baseline: release `v1.0.0`. Last reviewed: 2026-09-09.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
 ## Output modes
 

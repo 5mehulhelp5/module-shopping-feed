@@ -226,6 +226,26 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
         $renderer->setData('delimiter_other_value', array_key_exists('config_output_params_delimiter_other', $values) ? $values['config_output_params_delimiter_other'] : '');
         $field->setRenderer($renderer);
 
+        if ($model->getType() === 'generic') {
+            foreach ([
+                'enclose_cell' => [__('Cell Enclosure'), __('Leave blank for double quotes with a comma delimiter, or no enclosure with other delimiters.')],
+                'enclose_escape' => [__('Enclosure Escape'), __('Character placed before an enclosure inside a value. Leave blank to double the enclosure.')],
+                'default_value' => [__('Empty Cell Value'), __('Value used for empty cells. Leave blank to keep them empty.')],
+            ] as $key => [$label, $note]) {
+                $options = [
+                    'name' => 'config[output_params_' . $key . ']',
+                    'label' => $label,
+                    'title' => $label,
+                    'disabled' => $isElementDisabled,
+                    'note' => $note,
+                ];
+                if ($key !== 'default_value') {
+                    $options['maxlength'] = 1;
+                }
+                $fieldset->addField('config_output_params_' . $key, 'text', $options);
+            }
+        }
+
 //        $fieldset->addField(
 //            'config_output_params_encoding',
 //            'select',
@@ -336,7 +356,7 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
         $this->setChild(
             'form_after',
             $this->getLayout()->createBlock(
-                'Magento\Backend\Block\Widget\Form\Element\Dependence'
+                \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Element\Dependence::class
             )->addFieldMap(
                 "feed_config_general_stock_attribute_code",
                 'config[general_stock_attribute_code]'

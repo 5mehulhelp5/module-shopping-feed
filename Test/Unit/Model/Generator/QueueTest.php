@@ -83,4 +83,23 @@ class QueueTest extends ModelFramework
         $this->model->setBatch($batch);
         $this->assertEquals($batch, $this->model->getBatch());
     }
+    public function testInterruptedRunRestartsFromZeroWhileCompletedBatchKeepsItsOffset(): void
+    {
+        foreach ([1 => 0, 0 => 500] as $isRead => $expectedOffset) {
+            $queue = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Generator\Queue::class)
+                ->disableOriginalConstructor()->onlyMethods(['save'])->getMock();
+            $queue->setId(1)->setData('is_read', $isRead);
+            $batch = new \MageOS\ShoppingFeed\Model\Generator\Batch([
+                'enabled' => true, 'limit' => 100, 'offset' => 500,
+            ]);
+            $queue->setBatch($batch);
+            $queue->expects($this->once())->method('save')->willReturnSelf();
+            $queue->setRunning();
+            $this->assertSame($expectedOffset, $batch->getOffset());
+            $this->assertTrue($batch->isEnabled());
+            $this->assertSame(100, $batch->getLimit());
+            $this->assertTrue($queue->getIsRead());
+        }
+    }
+
 }

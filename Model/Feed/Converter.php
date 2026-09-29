@@ -74,6 +74,7 @@ class Converter
         $config = array_key_exists('config', $formData) ? $formData['config'] : false;
         if ($config && is_array($config)) {
             foreach ($config as $path => $value) {
+                $value = $this->normalizeColumnParameters($path, $value);
                 $this->_configDeleteKeys($value);
 
                 if ($path === 'categories_provider_taxonomy_by_category') {
@@ -167,7 +168,7 @@ class Converter
 
         if (isset($feedFormData['config']) && ($feedFormData['config'] instanceof \Magento\Framework\DataObject)) {
             foreach ($feedFormData['config']->getData() as $path => $value) {
-                $feedFormData['config_' . $path] = $value;
+                $feedFormData['config_' . $path] = $this->normalizeColumnParameters($path, $value);
             }
             unset($feedFormData['config']);
         }
@@ -176,5 +177,22 @@ class Converter
         $feedFormData['uploads'] = $feed->getUploads();
 
         return $feedFormData;
+    }
+
+    /** Match the mapper's legacy SKU default to the editor's explicit option. */
+    private function normalizeColumnParameters($path, $value)
+    {
+        if (in_array($path, ['columns_product_columns', 'filters_map_replace_empty_columns'], true)
+            && is_array($value)
+        ) {
+            foreach ($value as &$row) {
+                if (is_array($row) && ($row['attribute'] ?? '') === 'directive_item_group_id'
+                    && empty($row['param'])
+                ) {
+                    $row['param'] = 'sku';
+                }
+            }
+        }
+        return $value;
     }
 }

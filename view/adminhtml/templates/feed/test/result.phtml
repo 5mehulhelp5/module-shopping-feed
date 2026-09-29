@@ -16,8 +16,8 @@
             <tbody>
             <?php foreach ($section as $row) :?>
                 <tr>
-                    <td class="label"><strong><?=$block->escapeHtml(__($row['label']))?></strong></td>
-                    <td><?=$block->escapeHtml(__($row['value']))?></td>
+                    <td class="label"><strong><?=$block->escapeHtml($row['label'])?></strong></td>
+                    <td><?=$block->escapeHtml($row['value'])?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

@@ -74,6 +74,44 @@ class GeneratorTest extends ModelFramework
         );
     }
 
+    public function testConfiguredEnclosureEscapeAndDefaultValueAreUsed(): void
+    {
+        $settings = [
+            'output_params_delimiter' => '|',
+            'output_params_enclose_cell' => '"',
+            'output_params_enclose_escape' => '"',
+            'output_params_default_value' => 'missing',
+        ];
+        $this->feedMock->method('getConfig')->willReturnCallback(
+            static fn($key, $default = '') => $settings[$key] ?? $default
+        );
+        $this->feedMock->method('getColumnsMap')->willReturn([
+            ['column' => 'title'], ['column' => 'empty'], ['column' => 'zero'],
+        ]);
+        $this->fileDriverMock->expects($this->once())->method('fileWrite')
+            ->with('handle', PHP_EOL . '"A|""B"""|"missing"|"0"');
+        $this->createModel();
+        $this->model->setData('temporary_handle', 'handle');
+        (new \ReflectionMethod($this->model, 'writeFeed'))->invoke(
+            $this->model, ['title' => 'A|"B"', 'empty' => '', 'zero' => 0]
+        );
+    }
+
+    public function testDestructionDoesNotCommitPartialBatchProgress(): void
+    {
+        $generator = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Generator::class)
+            ->disableOriginalConstructor()->onlyMethods(['updateBatchQueue'])->getMock();
+        (new \ReflectionProperty($generator, 'batch'))->setValue(
+            $generator, new \MageOS\ShoppingFeed\Model\Generator\Batch(['enabled' => true, 'offset' => 100])
+        );
+        $generator->expects($this->never())->method('updateBatchQueue');
+        try {
+            $generator->__destruct();
+        } finally {
+            (new \ReflectionProperty($generator, 'batch'))->setValue($generator, null);
+        }
+    }
+
     public function testWriteFeedKeepsGoogleRowsAlignedWithoutTrailingTabs(): void
     {
         $this->expectReturn($this->feedMock, 'getData', 'google_shopping');

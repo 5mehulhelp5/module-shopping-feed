@@ -1,0 +1,7 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$column = $block->getData('column');
+$item = $block->getData('item');
+$value = $item[$block->getData('key')] ?? '';
+?>
+<?= $block->escapeHtml((string) ($column['filterOptions'][(string) $value] ?? $value)) ?>

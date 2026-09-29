@@ -18,6 +18,9 @@
       <column name="name"/>
       <column name="type"/>
     </index>
+    <index referenceId="MAGEOS_SF_FEED_NAME_FULLTEXT" indexType="fulltext">
+      <column name="name"/>
+    </index>
   </table>
 
   <table name="mageos_shopping_feed_feed_config" resource="default" engine="innodb" comment="Feed configs table">
@@ -81,7 +84,7 @@
     <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Upload Id"/>
     <column xsi:type="int" name="feed_id" padding="10" unsigned="true" nullable="false" comment="Feed Id"/>
     <column xsi:type="varchar" name="username" length="255" comment="Upload username"/>
-    <column xsi:type="varchar" name="password" length="255" comment="Upload password"/>
+    <column xsi:type="text" name="password" comment="Encrypted upload password"/>
     <column xsi:type="varchar" name="host" comment="Upload host"/>
     <column xsi:type="int" name="port" padding="10" unsigned="true" nullable="false" comment="Upload port"/>
     <column xsi:type="varchar" name="path" comment="Upload path"/>
