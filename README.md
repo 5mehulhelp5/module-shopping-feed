@@ -8,6 +8,8 @@ Version **1.1.0** adds optional Nebula Admin support, safer upload and queue han
 
 The **1.2 development branch** adds a [Meta Catalog template](docs/wiki/Meta-Catalog.md) for Facebook and Instagram. It generates UTF-8 TSV with Meta availability values, variant grouping, and row validation. This work is unreleased and still needs Commerce Manager acceptance.
 
+It also adds [Microsoft Merchant Center](docs/wiki/Microsoft-Merchant-Center.md), with tab-delimited TXT output, Microsoft stock values, configurable variants, and destination-specific validation. Microsoft import acceptance remains a release check.
+
 This repository consolidates four related Rocket Web modules into one independently named Mage-OS module:
 
 - Generic product feeds

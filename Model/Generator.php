@@ -78,6 +78,9 @@ class Generator extends DataObject
     /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\MetaCatalog */
     private $metaCatalogValidator;
 
+    /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\MicrosoftMerchantCenter */
+    private $microsoftMerchantCenterValidator;
+
     /**
      * @var \Magento\Framework\Model\ResourceModel\Iterator
      */
@@ -193,6 +196,7 @@ class Generator extends DataObject
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \MageOS\ShoppingFeed\Model\Feed\OutputPath $outputPath,
         \MageOS\ShoppingFeed\Model\Feed\Validation\MetaCatalog $metaCatalogValidator,
+        \MageOS\ShoppingFeed\Model\Feed\Validation\MicrosoftMerchantCenter $microsoftMerchantCenterValidator,
         ?\MageOS\ShoppingFeed\Model\Generator\Queue $queue = null,
         $testSku = null,
         $data = []
@@ -230,6 +234,7 @@ class Generator extends DataObject
         $this->scopeConfig = $scopeConfig;
         $this->outputPath = $outputPath;
         $this->metaCatalogValidator = $metaCatalogValidator;
+        $this->microsoftMerchantCenterValidator = $microsoftMerchantCenterValidator;
 
         parent::__construct($data);
     }
@@ -499,25 +504,29 @@ class Generator extends DataObject
             true
         );
         $isMetaFeed = $this->feed->getData('type') === 'meta_catalog';
-        if ($addNewLine && $isMetaFeed) {
-            $validation = $this->metaCatalogValidator->validate($fields);
+        $isMicrosoftFeed = $this->feed->getData('type') === 'microsoft_merchant_center';
+        if ($addNewLine && ($isMetaFeed || $isMicrosoftFeed)) {
+            $validator = $isMicrosoftFeed ? $this->microsoftMerchantCenterValidator : $this->metaCatalogValidator;
+            $destination = $isMicrosoftFeed ? 'Microsoft Merchant Center' : 'Meta Catalog';
+            $validation = $validator->validate($fields);
             $id = is_scalar($fields['id'] ?? null) ? (string)$fields['id'] : '(no id)';
             if ($validation['errors']) {
                 $this->updateCountSkip();
                 $this->getLogger()->warning(sprintf(
-                    'Skipped Meta Catalog row %s: %s. Review Columns Map.',
+                    'Skipped %s row %s: %s. Review Columns Map.',
+                    $destination,
                     $id,
                     implode('; ', $validation['errors'])
                 ));
                 return $this;
             }
             foreach ($validation['warnings'] as $warning) {
-                $this->getLogger()->warning(sprintf('Meta Catalog row %s: %s.', $id, $warning));
+                $this->getLogger()->warning(sprintf('%s row %s: %s.', $destination, $id, $warning));
             }
         }
 
         if ($addNewLine
-            && ($isGoogleFeed || $isMetaFeed)
+            && ($isGoogleFeed || $isMetaFeed || $isMicrosoftFeed)
             && !empty($fields['sale_price'])
             && isset($fields['price'])
             && is_scalar($fields['sale_price'])
@@ -540,7 +549,7 @@ class Generator extends DataObject
         extract($params);
         $row = [];
 
-        foreach ($this->getOutputColumns($isGoogleFeed) as $arr) {
+        foreach ($this->getOutputColumns($isGoogleFeed || $isMicrosoftFeed) as $arr) {
             $column = $arr['column'];
             $values = isset($fields[$column]) ? $fields[$column] : '';
             if (!is_array($values)) {
@@ -598,10 +607,10 @@ class Generator extends DataObject
         }
     }
 
-    private function getOutputColumns(bool $isGoogleFeed): array
+    private function getOutputColumns(bool $putIdLast): array
     {
         $columns = $this->feed->getColumnsMap();
-        if (!$isGoogleFeed) {
+        if (!$putIdLast) {
             return $columns;
         }
 

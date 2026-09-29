@@ -19,6 +19,7 @@
 * [Google Local Inventory and MSI](Google-Local-Inventory-and-MSI)
 * [Google Promotions](Google-Promotions)
 * [Meta Catalog (1.2 development)](Meta-Catalog)
+* [Microsoft Merchant Center (1.2 development)](Microsoft-Merchant-Center)
 
 **Configuration**
 

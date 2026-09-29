@@ -19,6 +19,20 @@
       </argument>
     </arguments>
   </virtualType>
+  <virtualType name="MageOS\ShoppingFeed\Model\Product\Formatter\Microsoft\Availability" type="MageOS\ShoppingFeed\Model\Product\Formatter\ValueMap">
+    <arguments>
+      <argument name="values" xsi:type="array">
+        <item name="in_stock" xsi:type="string">in stock</item>
+        <item name="out_of_stock" xsi:type="string">out of stock</item>
+        <item name="backorder" xsi:type="string">out of stock</item>
+        <item name="preorder" xsi:type="string">preorder</item>
+        <item name="in stock" xsi:type="string">in stock</item>
+        <item name="out of stock" xsi:type="string">out of stock</item>
+        <item name="available for order" xsi:type="string">out of stock</item>
+        <item name="discontinued" xsi:type="string">out of stock</item>
+      </argument>
+    </arguments>
+  </virtualType>
   <virtualType name="MageOS\ShoppingFeed\Model\ResourceModel\Feed\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
     <arguments>
       <argument name="mainTable" xsi:type="string">mageos_shopping_feed_feed</argument>

@@ -128,6 +128,12 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'text' => __('Generate and review the TSV file, then add its public URL as a scheduled data feed in Meta Commerce Manager. Schedule generation before Meta fetches it. Review condition, brand, GTIN/MPN, and variant mappings in Columns Map. Match feed IDs to your Meta Pixel or Conversions API content IDs. This template does not configure tracking or synchronize orders.'),
             ]);
         }
+        if ($model->getType() === 'microsoft_merchant_center') {
+            $fieldset->addField('microsoft_merchant_center_setup', 'note', [
+                'label' => __('Connect to Microsoft'),
+                'text' => __('Generate and review the tab-delimited TXT file. In Microsoft Merchant Center, create an online product feed and choose Automatically download file from URL. Use a public URL and schedule generation before the fetch. Match the store domain and target currency. Review identifiers, tax treatment, apparel fields, and shipping requirements for your target country; shipping is required for Austria and Germany. This template does not configure UET tracking or synchronize orders.'),
+            ]);
+        }
 
         if ($model->getId()) {
             $fieldset->addField('id', 'hidden', ['name' => 'id']);
@@ -308,9 +314,11 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'required' => false,
                 'values' => $this->sourceAttributes->toOptionArray(true),
                 'disabled' => $isElementDisabled,
-                'note' => $model->getType() === 'meta_catalog'
-                    ? __('Use in_stock, out_of_stock, backorder, or preorder. Meta product feeds support in stock and out of stock. Backorders and preorders export as out of stock until available.')
-                    : __('To fill \'availability\'. The attribute\'s values can be: \'in stock\', \'available for order\', \'out of stock\', \'preorder\'. Other values will be replaced by \'out of stock\'.'),
+                'note' => match ($model->getType()) {
+                    'meta_catalog' => __('Use in_stock, out_of_stock, backorder, or preorder. Meta product feeds support in stock and out of stock. Backorders and preorders export as out of stock until available.'),
+                    'microsoft_merchant_center' => __('Use in_stock, out_of_stock, backorder, or preorder. Microsoft supports in stock, out of stock, and preorder. Backorders export as out of stock until available.'),
+                    default => __('To fill \'availability\'. The attribute\'s values can be: \'in stock\', \'available for order\', \'out of stock\', \'preorder\'. Other values will be replaced by \'out of stock\'.'),
+                },
             ]
         );
 
