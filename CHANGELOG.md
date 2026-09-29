@@ -4,6 +4,13 @@ All notable changes to this project will be documented here.
 
 ## Unreleased
 
+### Added for 1.2
+
+- Meta Catalog (Facebook and Instagram) template with quoted UTF-8 TSV, currency prices, configurable variants, Google taxonomy, and editable identifier mappings.
+- A reusable value-map formatter with Meta product-feed availability defaults. Backorders and preorders export as `out of stock` until available.
+- Meta required-field (including brand), condition, availability, price-format, and URL validation in generation and Test Feed. Invalid rows are skipped with reasons; missing identifiers produce warnings.
+- Meta setup guidance in the Admin and a catalog feed guide. Commerce Manager acceptance remains a release check.
+
 ## 1.1.0 - 2026-09-28
 
 ### Added

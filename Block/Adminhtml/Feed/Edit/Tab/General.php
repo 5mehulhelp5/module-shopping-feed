@@ -122,6 +122,13 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
 
         $fieldset = $form->addFieldset('feed_settings', ['legend' => __('Feed Settings')]);
 
+        if ($model->getType() === 'meta_catalog') {
+            $fieldset->addField('meta_catalog_setup', 'note', [
+                'label' => __('Connect to Meta'),
+                'text' => __('Generate and review the TSV file, then add its public URL as a scheduled data feed in Meta Commerce Manager. Schedule generation before Meta fetches it. Review condition, brand, GTIN/MPN, and variant mappings in Columns Map. Match feed IDs to your Meta Pixel or Conversions API content IDs. This template does not configure tracking or synchronize orders.'),
+            ]);
+        }
+
         if ($model->getId()) {
             $fieldset->addField('id', 'hidden', ['name' => 'id']);
         } else {
@@ -301,7 +308,9 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'required' => false,
                 'values' => $this->sourceAttributes->toOptionArray(true),
                 'disabled' => $isElementDisabled,
-                'note' => __('To fill \'availability\'. The attribute\'s values can be: \'in stock\', \'available for order\', \'out of stock\', \'preorder\'. Other values will be replaced by \'out of stock\'.'),
+                'note' => $model->getType() === 'meta_catalog'
+                    ? __('Use in_stock, out_of_stock, backorder, or preorder. Meta product feeds support in stock and out of stock. Backorders and preorders export as out of stock until available.')
+                    : __('To fill \'availability\'. The attribute\'s values can be: \'in stock\', \'available for order\', \'out of stock\', \'preorder\'. Other values will be replaced by \'out of stock\'.'),
             ]
         );
 

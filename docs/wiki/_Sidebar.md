@@ -18,6 +18,7 @@
 * [Google Shopping](Google-Shopping)
 * [Google Local Inventory and MSI](Google-Local-Inventory-and-MSI)
 * [Google Promotions](Google-Promotions)
+* [Meta Catalog (1.2 development)](Meta-Catalog)
 
 **Configuration**
 

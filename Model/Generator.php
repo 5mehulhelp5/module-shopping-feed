@@ -75,6 +75,9 @@ class Generator extends DataObject
      */
     protected $feed;
 
+    /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\MetaCatalog */
+    private $metaCatalogValidator;
+
     /**
      * @var \Magento\Framework\Model\ResourceModel\Iterator
      */
@@ -189,6 +192,7 @@ class Generator extends DataObject
         \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \MageOS\ShoppingFeed\Model\Feed\OutputPath $outputPath,
+        \MageOS\ShoppingFeed\Model\Feed\Validation\MetaCatalog $metaCatalogValidator,
         ?\MageOS\ShoppingFeed\Model\Generator\Queue $queue = null,
         $testSku = null,
         $data = []
@@ -225,6 +229,7 @@ class Generator extends DataObject
         $this->scheduleFactory = $scheduleFactory;
         $this->scopeConfig = $scopeConfig;
         $this->outputPath = $outputPath;
+        $this->metaCatalogValidator = $metaCatalogValidator;
 
         parent::__construct($data);
     }
@@ -493,10 +498,30 @@ class Generator extends DataObject
             ['google_shopping', 'google_local_inventory'],
             true
         );
+        $isMetaFeed = $this->feed->getData('type') === 'meta_catalog';
+        if ($addNewLine && $isMetaFeed) {
+            $validation = $this->metaCatalogValidator->validate($fields);
+            $id = is_scalar($fields['id'] ?? null) ? (string)$fields['id'] : '(no id)';
+            if ($validation['errors']) {
+                $this->updateCountSkip();
+                $this->getLogger()->warning(sprintf(
+                    'Skipped Meta Catalog row %s: %s. Review Columns Map.',
+                    $id,
+                    implode('; ', $validation['errors'])
+                ));
+                return $this;
+            }
+            foreach ($validation['warnings'] as $warning) {
+                $this->getLogger()->warning(sprintf('Meta Catalog row %s: %s.', $id, $warning));
+            }
+        }
+
         if ($addNewLine
-            && $isGoogleFeed
+            && ($isGoogleFeed || $isMetaFeed)
             && !empty($fields['sale_price'])
             && isset($fields['price'])
+            && is_scalar($fields['sale_price'])
+            && is_scalar($fields['price'])
             && (float)$fields['sale_price'] >= (float)$fields['price']
         ) {
             $fields['sale_price'] = '';

@@ -4,6 +4,8 @@ The feed type provides a starting column map and default behavior. All feeds the
 
 > Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 
+The 1.2 development branch also includes [Meta Catalog](Meta-Catalog). It is unreleased and requires destination validation before production use. Microsoft Merchant Center, TikTok, and Pinterest are the remaining Tier 1 candidates and are not implemented yet.
+
 ## Feed types
 
 | Feed | Use it for |
@@ -12,8 +14,11 @@ The feed type provides a starting column map and default behavior. All feeds the
 | Google Shopping | Google product data, variants, taxonomy, shipping, and product-linked promotion IDs |
 | Google Local Inventory | Store-level availability, quantity, and price, optionally expanded by MSI source |
 | Google Promotions | A companion file configured and generated from a Google Shopping feed |
+| Meta Catalog (1.2 development) | Facebook and Instagram product catalogs using a scheduled TSV data feed |
 
 See the individual feed guides before relying on their default columns.
+
+These templates generate advertising and catalog feeds. Marketplace listing management and order synchronization for Amazon, Walmart, or eBay require separate integrations.
 
 ## Grid actions
 
