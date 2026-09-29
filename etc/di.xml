@@ -33,6 +33,7 @@
       </argument>
     </arguments>
   </virtualType>
+  <virtualType name="MageOS\ShoppingFeed\Model\Product\Mapper\OpenAi\AdditionalImageLink" type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\AdditionalImageLink"/>
   <virtualType name="MageOS\ShoppingFeed\Model\Product\Mapper\TikTok\AdditionalImageLink" type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\AdditionalImageLink"/>
   <virtualType name="MageOS\ShoppingFeed\Model\Product\Formatter\Microsoft\Availability" type="MageOS\ShoppingFeed\Model\Product\Formatter\ValueMap">
     <arguments>

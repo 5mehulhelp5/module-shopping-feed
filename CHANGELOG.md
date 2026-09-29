@@ -6,6 +6,8 @@ All notable changes to this project will be documented here.
 
 ### Added for 1.2
 
+- OpenAI / ChatGPT (Google-compatible, beta) TSV preset with required brand, explicit identifier exemptions, GTIN checksums, availability dates, configurable grouping, and sale validation. Includes the mobile-subscription zero-price exception, short expiration metadata, and onboarding guidance. OpenAI ingestion acceptance remains unverified.
+
 - Pinterest Catalog preset with quoted UTF-8 TSV, native availability values, configurable grouping checks, five-level product category paths, and field validation. Includes primary and supplemental feed setup guidance. Pinterest import acceptance remains a release check.
 - TikTok Catalog preset with quoted UTF-8 CSV, required `sku_id`, native availability values, configurable variants, comma-separated additional images, and field validation. TikTok import acceptance remains a release check.
 - Microsoft Merchant Center preset with UTF-8 tab-delimited TXT, native availability and sale-price formatting, configurable variants, identifier mappings, and field validation. The required ID is emitted last to avoid trailing tabs. Microsoft import acceptance remains a release check.

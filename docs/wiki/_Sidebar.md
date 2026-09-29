@@ -22,6 +22,7 @@
 * [Microsoft Merchant Center (1.2 development)](Microsoft-Merchant-Center)
 * [TikTok Catalog (1.2 development)](TikTok-Catalog)
 * [Pinterest Catalog (1.2 development)](Pinterest-Catalog)
+* [OpenAI / ChatGPT (beta, 1.2 development)](OpenAI-ChatGPT)
 
 **Configuration**
 

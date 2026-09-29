@@ -14,6 +14,8 @@ It also adds [Microsoft Merchant Center](docs/wiki/Microsoft-Merchant-Center.md)
 
 [Pinterest Catalog](docs/wiki/Pinterest-Catalog.md) adds quoted TSV for retail catalogs, with Pinterest field limits, availability values, and configurable grouping checks. Pinterest import acceptance and real catalog image quality remain release checks.
 
+[OpenAI / ChatGPT (Google-compatible, beta)](docs/wiki/OpenAI-ChatGPT.md) adds a TSV discovery preset with conditional identifier and availability-date checks. OpenAI must confirm this profile during onboarding; local generation does not establish account access, ingestion acceptance, or checkout support.
+
 This repository consolidates four related Rocket Web modules into one independently named Mage-OS module:
 
 - Generic product feeds

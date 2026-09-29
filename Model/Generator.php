@@ -87,6 +87,9 @@ class Generator extends DataObject
     /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\PinterestCatalog */
     private $pinterestCatalogValidator;
 
+    /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\OpenAiGoogleCompatible */
+    private $openAiGoogleCompatibleValidator;
+
     /**
      * @var \Magento\Framework\Model\ResourceModel\Iterator
      */
@@ -205,6 +208,7 @@ class Generator extends DataObject
         \MageOS\ShoppingFeed\Model\Feed\Validation\MicrosoftMerchantCenter $microsoftMerchantCenterValidator,
         \MageOS\ShoppingFeed\Model\Feed\Validation\TikTokCatalog $tikTokCatalogValidator,
         \MageOS\ShoppingFeed\Model\Feed\Validation\PinterestCatalog $pinterestCatalogValidator,
+        \MageOS\ShoppingFeed\Model\Feed\Validation\OpenAiGoogleCompatible $openAiGoogleCompatibleValidator,
         ?\MageOS\ShoppingFeed\Model\Generator\Queue $queue = null,
         $testSku = null,
         $data = []
@@ -245,6 +249,7 @@ class Generator extends DataObject
         $this->microsoftMerchantCenterValidator = $microsoftMerchantCenterValidator;
         $this->tikTokCatalogValidator = $tikTokCatalogValidator;
         $this->pinterestCatalogValidator = $pinterestCatalogValidator;
+        $this->openAiGoogleCompatibleValidator = $openAiGoogleCompatibleValidator;
 
         parent::__construct($data);
     }
@@ -482,7 +487,7 @@ class Generator extends DataObject
         }
 
         foreach ($rows as $row) {
-            $requiresItemGroupId = $this->feed->getData('type') === 'pinterest_catalog'
+            $requiresItemGroupId = in_array($this->feed->getData('type'), ['pinterest_catalog', 'openai_google_compatible'], true)
                 && ($productAdapter instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable
                     || $productAdapter->getParentAdapter() instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable);
             $this->writeFeed($row, true, $requiresItemGroupId);
@@ -521,14 +526,19 @@ class Generator extends DataObject
         $isMicrosoftFeed = $this->feed->getData('type') === 'microsoft_merchant_center';
         $isTikTokFeed = $this->feed->getData('type') === 'tiktok_catalog';
         $isPinterestFeed = $this->feed->getData('type') === 'pinterest_catalog';
-        if ($addNewLine && ($isMetaFeed || $isMicrosoftFeed || $isTikTokFeed || $isPinterestFeed)) {
+        $isOpenAiFeed = $this->feed->getData('type') === 'openai_google_compatible';
+        if ($addNewLine && $isOpenAiFeed && is_bool($fields['identifier_exists'] ?? null)) {
+            $fields['identifier_exists'] = $fields['identifier_exists'] ? 'true' : 'false';
+        }
+        if ($addNewLine && ($isMetaFeed || $isMicrosoftFeed || $isTikTokFeed || $isPinterestFeed || $isOpenAiFeed)) {
             [$validator, $destination] = match (true) {
+                $isOpenAiFeed => [$this->openAiGoogleCompatibleValidator, 'OpenAI Google-compatible'],
                 $isPinterestFeed => [$this->pinterestCatalogValidator, 'Pinterest Catalog'],
                 $isTikTokFeed => [$this->tikTokCatalogValidator, 'TikTok Catalog'],
                 $isMicrosoftFeed => [$this->microsoftMerchantCenterValidator, 'Microsoft Merchant Center'],
                 default => [$this->metaCatalogValidator, 'Meta Catalog'],
             };
-            $validation = $isPinterestFeed
+            $validation = ($isPinterestFeed || $isOpenAiFeed)
                 ? $validator->validate($fields, $requiresItemGroupId)
                 : $validator->validate($fields);
             $identifier = $fields[$isTikTokFeed ? 'sku_id' : 'id'] ?? null;
