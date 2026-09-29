@@ -67,11 +67,11 @@ class AdditionalImageLink extends MapperAbstract
                 $urls[] = $img;
             }
         }
-        $glue = ",";
+        $glue = $this->hasConfiguration('separator') ? (string)$this->getConfiguration('separator') : ",";
         $feed = $this->getAdapter()->getFeed();
         $delimiter = $feed->getConfig('output_params_delimiter', "\t");
         $delimiter_other = $feed->getConfig('output_params_delimiter_other', "\t");
-        if (trim($delimiter) == $glue || trim($delimiter_other) == $glue) {
+        if (!$this->hasConfiguration('separator') && (trim($delimiter) == $glue || trim($delimiter_other) == $glue)) {
             $glue = "|";
         }
         $cell = implode($glue, $urls);

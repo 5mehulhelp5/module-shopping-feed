@@ -81,6 +81,9 @@ class Generator extends DataObject
     /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\MicrosoftMerchantCenter */
     private $microsoftMerchantCenterValidator;
 
+    /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\TikTokCatalog */
+    private $tikTokCatalogValidator;
+
     /**
      * @var \Magento\Framework\Model\ResourceModel\Iterator
      */
@@ -197,6 +200,7 @@ class Generator extends DataObject
         \MageOS\ShoppingFeed\Model\Feed\OutputPath $outputPath,
         \MageOS\ShoppingFeed\Model\Feed\Validation\MetaCatalog $metaCatalogValidator,
         \MageOS\ShoppingFeed\Model\Feed\Validation\MicrosoftMerchantCenter $microsoftMerchantCenterValidator,
+        \MageOS\ShoppingFeed\Model\Feed\Validation\TikTokCatalog $tikTokCatalogValidator,
         ?\MageOS\ShoppingFeed\Model\Generator\Queue $queue = null,
         $testSku = null,
         $data = []
@@ -235,6 +239,7 @@ class Generator extends DataObject
         $this->outputPath = $outputPath;
         $this->metaCatalogValidator = $metaCatalogValidator;
         $this->microsoftMerchantCenterValidator = $microsoftMerchantCenterValidator;
+        $this->tikTokCatalogValidator = $tikTokCatalogValidator;
 
         parent::__construct($data);
     }
@@ -505,11 +510,16 @@ class Generator extends DataObject
         );
         $isMetaFeed = $this->feed->getData('type') === 'meta_catalog';
         $isMicrosoftFeed = $this->feed->getData('type') === 'microsoft_merchant_center';
-        if ($addNewLine && ($isMetaFeed || $isMicrosoftFeed)) {
-            $validator = $isMicrosoftFeed ? $this->microsoftMerchantCenterValidator : $this->metaCatalogValidator;
-            $destination = $isMicrosoftFeed ? 'Microsoft Merchant Center' : 'Meta Catalog';
+        $isTikTokFeed = $this->feed->getData('type') === 'tiktok_catalog';
+        if ($addNewLine && ($isMetaFeed || $isMicrosoftFeed || $isTikTokFeed)) {
+            [$validator, $destination] = match (true) {
+                $isTikTokFeed => [$this->tikTokCatalogValidator, 'TikTok Catalog'],
+                $isMicrosoftFeed => [$this->microsoftMerchantCenterValidator, 'Microsoft Merchant Center'],
+                default => [$this->metaCatalogValidator, 'Meta Catalog'],
+            };
             $validation = $validator->validate($fields);
-            $id = is_scalar($fields['id'] ?? null) ? (string)$fields['id'] : '(no id)';
+            $identifier = $fields[$isTikTokFeed ? 'sku_id' : 'id'] ?? null;
+            $id = is_scalar($identifier) ? (string)$identifier : '(no id)';
             if ($validation['errors']) {
                 $this->updateCountSkip();
                 $this->getLogger()->warning(sprintf(
@@ -526,7 +536,7 @@ class Generator extends DataObject
         }
 
         if ($addNewLine
-            && ($isGoogleFeed || $isMetaFeed || $isMicrosoftFeed)
+            && ($isGoogleFeed || $isMetaFeed || $isMicrosoftFeed || $isTikTokFeed)
             && !empty($fields['sale_price'])
             && isset($fields['price'])
             && is_scalar($fields['sale_price'])

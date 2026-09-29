@@ -10,6 +10,8 @@ The **1.2 development branch** adds a [Meta Catalog template](docs/wiki/Meta-Cat
 
 It also adds [Microsoft Merchant Center](docs/wiki/Microsoft-Merchant-Center.md), with tab-delimited TXT output, Microsoft stock values, configurable variants, and destination-specific validation. Microsoft import acceptance remains a release check.
 
+[TikTok Catalog](docs/wiki/TikTok-Catalog.md) adds quoted CSV output for Ads Manager catalogs, including `sku_id`, TikTok availability values, variant grouping, and row validation. TikTok import acceptance remains unverified.
+
 This repository consolidates four related Rocket Web modules into one independently named Mage-OS module:
 
 - Generic product feeds

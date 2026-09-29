@@ -20,6 +20,7 @@
 * [Google Promotions](Google-Promotions)
 * [Meta Catalog (1.2 development)](Meta-Catalog)
 * [Microsoft Merchant Center (1.2 development)](Microsoft-Merchant-Center)
+* [TikTok Catalog (1.2 development)](TikTok-Catalog)
 
 **Configuration**
 

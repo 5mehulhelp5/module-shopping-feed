@@ -79,6 +79,7 @@ $expectedFeeds = [
     'google_shopping' => ['directives' => 32, 'columns' => 31],
     'google_local_inventory' => ['directives' => 11, 'columns' => 7],
     'meta_catalog' => ['directives' => 25, 'columns' => 23],
+    'tiktok_catalog' => ['directives' => 25, 'columns' => 24],
     'microsoft_merchant_center' => ['directives' => 26, 'columns' => 24],
 ];
 foreach ($expectedFeeds as $feedName => $expected) {
