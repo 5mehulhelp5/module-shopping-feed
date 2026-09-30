@@ -12,7 +12,7 @@ The default map contains 24 fields. Product IDs stay stable; configurable childr
 
 Map manufacturer-assigned GTINs and MPNs to real attributes. They start unmapped. The **Identifier Exists** directive offers explicit confirmation for products with no assigned identifiers; missing catalog data does not set it to FALSE automatically. Brand defaults to Manufacturer. Do not invent identifiers or use your store name as a brand unless you manufacture the item.
 
-The preset emits the required `id` column last so empty optional values do not produce trailing tabs. It does not enclose cells in quotes. Existing field cleaning removes markup and embedded tab/newline separators; Unicode and embedded quotation marks remain readable.
+The preset emits UTF-8 without a byte-order mark (BOM) and places the required `id` column last so empty optional values do not produce trailing tabs. It does not enclose cells in quotes. Existing field cleaning removes markup and embedded tab/newline separators; Unicode and embedded quotation marks remain readable.
 
 ## Destination behavior
 

@@ -12,6 +12,8 @@ The default map has 24 fields. TikTok uses `sku_id` as its required product iden
 
 Brand defaults to Manufacturer and is required. Map real manufacturer-assigned GTINs and MPNs; they start unmapped. Do not invent identifiers or substitute your store's name for another manufacturer's brand. The optional `video_link` starts empty; map a publicly reachable video URL if available.
 
+Map `google_product_category` to a reviewed taxonomy value. An empty value produces a local warning without rejecting the product; a custom `product_type` path alone can still receive TikTok's category recommendation.
+
 ## Destination behavior
 
 | Area | Preset behavior |

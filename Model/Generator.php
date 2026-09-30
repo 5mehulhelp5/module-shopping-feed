@@ -710,8 +710,8 @@ class Generator extends DataObject
             }
             $handle = $this->fileDriver->fileOpen($this->getFeedFile() . '.tmp', $mode);
 
-            // Write UTF-8 BOM only in write mode (new file)
-            if ($mode === "w") {
+            // Microsoft TSV uses plain UTF-8 so the first header has no BOM prefix.
+            if ($mode === "w" && $this->feed->getData('type') !== 'microsoft_merchant_center') {
                 $this->fileDriver->fileWrite($handle, self::UTF8_BOM);
             }
 

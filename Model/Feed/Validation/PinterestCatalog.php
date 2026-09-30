@@ -119,6 +119,9 @@ class PinterestCatalog
             }
         }
         $category = $row['product_type'] ?? '';
+        if (($row['google_product_category'] ?? '') === '') {
+            $warnings[] = 'google_product_category is empty; map a reviewed taxonomy category for better product matching';
+        }
         if (count(explode('>', $category)) > 5 || preg_match('/(?<! )>|>(?! )/', $category)) {
             $errors[] = 'product_type supports at most five levels separated by space, >, space';
         }

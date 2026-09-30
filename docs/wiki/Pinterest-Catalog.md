@@ -12,6 +12,8 @@ The default map has 23 fields. Product IDs default to Magento IDs; keep them sta
 
 Brand defaults to Manufacturer but is optional. Condition defaults to `new`; map the actual condition for used or refurbished products. GTIN and MPN start unmapped. Use real manufacturer identifiers when available. Missing both produces a review warning, not a fabricated identifier.
 
+Map `google_product_category` to the most specific accurate taxonomy value. An empty value produces a local warning without rejecting the product. Pinterest may also recommend more detail for a broad category even when the file is valid.
+
 ## Output and validation
 
 | Area | Preset behavior |

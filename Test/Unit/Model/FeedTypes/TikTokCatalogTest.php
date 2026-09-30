@@ -92,6 +92,7 @@ class TikTokCatalogTest extends ModelFramework
             'availability' => 'in stock', 'condition' => 'new', 'price' => '29.99 USD',
             'link' => 'https://example.com/shirt', 'image_link' => 'https://example.com/shirt.jpg',
             'brand' => 'Example', 'gtin' => '0123456789012', 'mpn' => '', 'item_group_id' => 'parent-sku',
+            'google_product_category' => 'Apparel & Accessories > Clothing > Shirts & Tops',
         ];
     }
 
@@ -104,6 +105,16 @@ class TikTokCatalogTest extends ModelFramework
         $result = $validator->validate($row);
         self::assertSame([], $result['errors']);
         self::assertCount(1, $result['warnings']);
+    }
+
+    public function testMissingTaxonomyWarnsWithoutRejectingTheProduct(): void
+    {
+        $row = self::validRow();
+        $row['google_product_category'] = '  ';
+        $row['product_type'] = 'Our Store > Clothing';
+        $result = (new TikTokCatalog())->validate($row);
+        self::assertSame([], $result['errors']);
+        self::assertStringContainsString('google_product_category', implode(' ', $result['warnings']));
     }
 
     /** @dataProvider invalidRows */

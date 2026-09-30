@@ -99,6 +99,9 @@ class TikTokCatalog
                 $errors[] = sprintf('%s supports at most three category levels', $field);
             }
         }
+        if (($row['google_product_category'] ?? '') === '') {
+            $warnings[] = 'google_product_category is empty; map a reviewed taxonomy category for better product matching';
+        }
         if (($row['gtin'] ?? '') !== '' && !preg_match('/^(?:\d{8}|\d{12,14})$/D', $row['gtin'])) {
             $errors[] = 'gtin must be an 8, 12, 13, or 14-digit identifier; convert ISBN-10 to ISBN-13';
         }
