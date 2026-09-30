@@ -94,8 +94,10 @@ class Generator implements ObserverInterface
         $this->provider->validateGooglePromotions();
 
         $config = $feed->getConfig('promotions_provider_widget');
-        $promotion = $config['promotion'];
-        $hashString = $config['counter']. $this->helper->jsonEncode($promotion);
+        $config = is_array($config) ? $config : [];
+        $promotion = is_array($config['promotion'] ?? null) ? $config['promotion'] : [];
+        $counter = (int) ($config['counter'] ?? 0);
+        $hashString = $counter . $this->helper->jsonEncode($promotion);
         $hash = hash('sha256', $hashString);
         $file = $this->provider->getPromotionFile();
 
@@ -106,10 +108,10 @@ class Generator implements ObserverInterface
 
             $fileLines[] = $this->createFeedHeader();
             foreach ($promotion as $key => $row) {
-                if (array_key_exists('include', $row) && $row['include']) {
+                if (is_array($row) && !empty($row['include'])) {
                     /** @var \Magento\SalesRule\Model\Rule $rule */
                     $rule = $this->ruleFactory->create()->load($key);
-                    $fileLines[] = $this->createFeedLine($config['counter'], $rule, $this->map, $row);
+                    $fileLines[] = $this->createFeedLine($counter, $rule, $this->map, $row);
                 }
             }
         }

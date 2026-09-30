@@ -578,6 +578,36 @@ class GeneratorTest extends ModelFramework
         $this->assertInstanceOf('MageOS\ShoppingFeed\Model\Generator', $this->model->run());
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidRotationLimits')]
+    public function testInvalidLogRotationSettingDoesNotAbortGeneration($limit): void
+    {
+        $this->setTestRunMocks();
+        $this->feedMock->method('getId')->willReturn(1);
+        $this->feedMock->method('getUploadCollection')->willReturn([]);
+        $config = $this->createMock(\Magento\Framework\App\Config\ScopeConfigInterface::class);
+        $config->method('getValue')->willReturn($limit);
+        $directory = $this->createMock(\Magento\Framework\App\Filesystem\DirectoryList::class);
+        $directory->method('getRoot')->willReturn('');
+        $this->objectData['scopeConfig'] = $config;
+        $this->objectData['directoryList'] = $directory;
+        $this->createModel();
+        $path = tempnam(sys_get_temp_dir(), 'feed-log-');
+        file_put_contents($path, 'original log');
+        $this->model->setData('feed_log_file', $path);
+        try {
+            self::assertSame($this->model, $this->model->run());
+            self::assertSame('original log', file_get_contents($path));
+        } finally {
+            unlink($path);
+            foreach (glob($path . '.*.gz') as $archive) {unlink($archive);}
+        }
+    }
+
+    public static function invalidRotationLimits(): array
+    {
+        return [['abc'], [''], [null], [-1], [0], [[]]];
+    }
+
     public function testProcessUploadsCompressesAndRemovesGzipArtifact()
     {
         $upload = $this->getModelMock(

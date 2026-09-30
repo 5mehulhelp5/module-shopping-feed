@@ -2,7 +2,7 @@
 
 General Configuration defines the store context, output location, delimiter, price behavior, and stock behavior for one feed.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-30.
 
 ## Feed settings
 
@@ -24,6 +24,8 @@ Changing the store view can change the category tree and attribute values. Save 
 Generated files are publicly downloadable from the media URL. Default filenames contain the feed ID and can be guessed. FTP or SFTP upload leaves the local file in place; a custom filename is not access control. The module does not provide a private-output mode.
 
 Review every mapped attribute before generation and include only data intended for public distribution. If a recipient requires confidential data, arrange access controls with the hosting operator before generating it. Verify the exact URL from a signed-out session and confirm the recipient can still fetch it after any hosting change.
+
+When inspecting CSV or TSV feeds in a spreadsheet, import the columns as text and disable formula evaluation. Values beginning with `=`, `+`, `-`, or `@` can be interpreted as formulas. The module preserves those values for feed recipients without adding apostrophes or tabs. Check the raw file in a text editor if the spreadsheet changes a value.
 
 ## Price and inventory settings
 

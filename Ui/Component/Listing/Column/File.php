@@ -60,7 +60,8 @@ class File extends Column
         UiComponentFactory $uiComponentFactory,
         StoreManagerInterface $storeManager,
         FeedFactory $feedFactory,
-        \Magento\Framework\Filesystem\DirectoryList $directoryList,
+        \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
+        private \Magento\Framework\Escaper $escaper,
         array $components = [],
         array $data = []
     ) {
@@ -86,40 +87,33 @@ class File extends Column
                 if (isset($item['id'])) {
                     $feed = $this->feedFactory->create()->setData($item);
                     $fileInformation = $feed->getMessages();
-                    $filepath = isset($fileInformation['file']) ? $fileInformation['file'] : '';
-                    $absfilepath = rtrim($mageRootPath) . '/'. ltrim($filepath, '/');
-
-                    if (file_exists($absfilepath) && isset($fileInformation['skipped'])) {
-                        /**
- * @var \Magento\Store\Model\Store $store
-*/
-                        $store = $this->storeManager->getStore((int)$fileInformation['store_id']);
-                        $pathHasPub = strpos($_SERVER['DOCUMENT_ROOT'], '/pub');
-                        $path = $pathHasPub > 0 ? str_replace('pub/', '', $filepath) : $filepath;
-                        $url = sprintf(
-                            '%s%s',
-                            $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB),
-                            $path
-                        );
-                        $item[$name] = '<a href="' . $url . '" target="_blank">' . $url . '</a><br />'
-                            . __(
-                                '%4 - processed %1 products, added %2 rows, %3 rows skipped',
-                                $fileInformation['added'],
-                                $fileInformation['exported'],
-                                $fileInformation['skipped'],
-                                $fileInformation['date']
-                            );
-                    } elseif (file_exists($absfilepath . '.tmp') && isset($fileInformation['skipped'])) {
-                        $item[$name] = __('Feed file not ready.'). '<br />'. __(
-                            '%4 - processed %1 products, added %2 rows, %3 rows skipped',
-                            $fileInformation['added'],
-                            $fileInformation['exported'],
-                            $fileInformation['skipped'],
-                            $fileInformation['date']
-                        );
-                    } else {
-                        $item[$name] = 'Feed file not ready.';
+                    $filepath = $fileInformation['file'] ?? '';
+                    $item[$name] = $this->escaper->escapeHtml((string) __('Feed file not ready.'));
+                    if (!is_string($filepath) || $filepath === '' || !isset($fileInformation['skipped'])) {
+                        continue;
                     }
+                    $absolute = rtrim($mageRootPath, '/') . '/' . ltrim($filepath, '/');
+                    $path = realpath($absolute);
+                    $temporary = realpath($absolute . '.tmp');
+                    $media = realpath($this->directoryList->getPath('media'));
+                    $existing = $path ?: $temporary;
+                    if (!$media || !$existing || !is_file($existing) || !str_starts_with($existing, $media . '/')) {
+                        continue;
+                    }
+                    if ($path) {
+                        $store = $this->storeManager->getStore((int) ($fileInformation['store_id'] ?? $feed->getStoreId()));
+                        $url = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)
+                            . substr($path, strlen($media) + 1);
+                        $item[$name] = '<a href="' . $this->escaper->escapeUrl($url) . '" target="_blank" rel="noopener">'
+                            . $this->escaper->escapeHtml($url) . '</a>';
+                    }
+                    $item[$name] .= '<br />' . $this->escaper->escapeHtml((string) __(
+                        '%4 - processed %1 products, added %2 rows, %3 rows skipped',
+                        (int) ($fileInformation['added'] ?? 0),
+                        (int) ($fileInformation['exported'] ?? 0),
+                        (int) $fileInformation['skipped'],
+                        is_string($fileInformation['date'] ?? null) ? $fileInformation['date'] : ''
+                    ));
                 }
             }
         }

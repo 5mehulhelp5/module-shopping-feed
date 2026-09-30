@@ -9,6 +9,24 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ChildOwnershipTest extends TestCase
 {
+    public function testExistingUploadMayOmitDeleteFlag(): void
+    {
+        $feed = (new \ReflectionClass(Feed::class))->newInstanceWithoutConstructor();
+        $feed->setId(8);
+        $child = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Feed\Upload::class)
+            ->disableOriginalConstructor()->onlyMethods(['load','save','delete'])->getMock();
+        $child->setId(12)->setData('feed_id', 8);
+        $child->method('load')->willReturnSelf();
+        $child->expects(self::once())->method('save');
+        $child->expects(self::never())->method('delete');
+        $factory = $this->createMock(\MageOS\ShoppingFeed\Model\Feed\UploadFactory::class);
+        $factory->method('create')->willReturn($child);
+        (new \ReflectionProperty(Feed::class, 'uploadFactory'))->setValue($feed, $factory);
+        $feed->setData('uploads', [['id'=>12,'mode'=>'sftp','host'=>'example.test','port'=>22,
+            'username'=>'fixture','password'=>'synthetic','gzip'=>0,'path'=>'']]);
+        $feed->saveUploads();
+    }
+
     public static function foreignRows(): array
     {
         return [

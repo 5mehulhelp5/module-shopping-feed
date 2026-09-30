@@ -68,20 +68,29 @@ class Builder
      */
     public function build($formData)
     {
-        $feedId = (int) isset($formData['id']) ? $formData['id'] : 0;
+        $feedId = $this->nonNegativeInteger($formData['id'] ?? 0, 'id');
+        $storeId = $this->nonNegativeInteger($formData['store_id'] ?? 0, 'store_id');
+        $typeId = $formData['type'] ?? null;
+        if ($typeId !== null && !is_string($typeId)) {
+            throw new \Magento\Framework\Exception\LocalizedException(__('Invalid feed type.'));
+        }
+        $useMicrodata = $this->nonNegativeInteger(
+            $formData['use_microdata'] ?? ($typeId !== 'generic' ? 1 : 0), 'use_microdata'
+        );
+        if ($useMicrodata > 1) {
+            throw new \Magento\Framework\Exception\LocalizedException(__('Invalid use_microdata value.'));
+        }
         /**
  * @var $feed \MageOS\ShoppingFeed\Model\Feed
 */
         $feed = $this->feedFactory->create();
-        $feed->setStoreId((int) isset($formData['store_id']) ? $formData['store_id'] : 0);
+        $feed->setStoreId($storeId);
 
-        $typeId = isset($formData['type']) ? $formData['type'] : null;
         if (!$feedId && $typeId) {
             $feed->setType($typeId);
         }
 
-        $use_microdata = $typeId != 'generic' ? 1 : 0;
-        $feed->setUseMicrodata((int) isset($formData['use_microdata']) ? $formData['use_microdata'] : $use_microdata);
+        $feed->setUseMicrodata($useMicrodata);
 
         if ($feedId) {
             try {
@@ -107,5 +116,17 @@ class Builder
         $this->registry->register('current_feed', $currentFeed);
 
         return $feed;
+    }
+
+    private function nonNegativeInteger($value, string $field): int
+    {
+        if ((is_int($value) || is_string($value)) && ctype_digit((string)$value)) {
+            $integer = filter_var(ltrim((string)$value, '0') ?: '0', FILTER_VALIDATE_INT,
+                ['options' => ['min_range' => 0]]);
+            if ($integer !== false) {
+                return $integer;
+            }
+        }
+        throw new \Magento\Framework\Exception\LocalizedException(__('Invalid %1 value.', $field));
     }
 }

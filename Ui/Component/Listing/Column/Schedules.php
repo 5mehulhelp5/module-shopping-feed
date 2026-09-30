@@ -50,6 +50,7 @@ class Schedules extends Column
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         FeedFactory $feedFactory,
+        private \Magento\Framework\Escaper $escaper,
         array $components = [],
         array $data = []
     ) {
@@ -72,7 +73,9 @@ class Schedules extends Column
                     $feed = $this->feedFactory->create()->setData($item);
                     $formattedSchedules = [];
                     foreach ($feed->getFormattedSchedules() as $schedule) {
-                        $formattedSchedules[] = sprintf('<p %s>%s</p>', self::SCHEDULE_PARAGRAPH_CLASS, $schedule);
+                        $text = $this->escaper->escapeHtml((string)$schedule);
+                        $text = str_replace(['&lt;br /&gt;', '&lt;br&gt;'], '<br />', $text);
+                        $formattedSchedules[] = sprintf('<p %s>%s</p>', self::SCHEDULE_PARAGRAPH_CLASS, $text);
                     }
                     $item[$name] = implode($formattedSchedules);
                 }

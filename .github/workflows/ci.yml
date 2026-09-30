@@ -21,11 +21,11 @@ jobs:
     name: Storefront auto-selection checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '22'
-      - uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
           php-version: '8.3'
           coverage: none
@@ -38,8 +38,8 @@ jobs:
       matrix:
         php-version: ['8.1', '8.2', '8.3', '8.4', '8.5']
     steps:
-      - uses: actions/checkout@v6
-      - uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
@@ -59,8 +59,8 @@ jobs:
       magento_matrix: ${{ steps.magento.outputs.matrix }}
       mageos_matrix: ${{ steps.mageos.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: graycoreio/github-actions-magento2/supported-version@v8.9.0
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: graycoreio/github-actions-magento2/supported-version@a65d0e50647829a9f6f972d72d87054a9c848fe0 # v8.9.0
         id: magento
         with:
           project: magento-open-source
@@ -74,7 +74,7 @@ jobs:
   check-magento:
     name: Magento Open Source production checks
     needs: compute-platform-matrix
-    uses: graycoreio/github-actions-magento2/.github/workflows/check-extension.yaml@v8.9.0
+    uses: graycoreio/github-actions-magento2/.github/workflows/check-extension.yaml@a65d0e50647829a9f6f972d72d87054a9c848fe0 # v8.9.0
     with:
       magento_repository: https://mirror.mage-os.org/
       matrix: ${{ needs.compute-platform-matrix.outputs.magento_matrix }}
@@ -85,7 +85,7 @@ jobs:
   check-mageos:
     name: Mage-OS 3.4.0 production checks
     needs: compute-platform-matrix
-    uses: graycoreio/github-actions-magento2/.github/workflows/check-extension.yaml@v8.9.0
+    uses: graycoreio/github-actions-magento2/.github/workflows/check-extension.yaml@a65d0e50647829a9f6f972d72d87054a9c848fe0 # v8.9.0
     with:
       magento_repository: https://repo.mage-os.org/
       matrix: ${{ needs.compute-platform-matrix.outputs.mageos_matrix }}

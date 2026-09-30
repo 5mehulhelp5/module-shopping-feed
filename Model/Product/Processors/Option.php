@@ -228,6 +228,9 @@ class Option extends ProcessorAbstract
      */
     protected function _updateConcatenate($oldValue, $newValue)
     {
+        if ($oldValue === null || $oldValue === '') {
+            return;
+        }
         foreach ($this->getAdapter()->getFeed()->getColumnsMap() as $column) {
             if (in_array($column['attribute'], (array)$this->concatenateMapper->getDirectiveNames(), true)) {
                 $this->_item[$column['column']] = str_replace($oldValue, $newValue, $this->_item[$column['column']]);
@@ -276,6 +279,11 @@ class Option extends ProcessorAbstract
         }
 
         $parts = parse_url($this->_item['link']);
+        if (!is_array($parts) || empty($parts['host'])
+            || !in_array(strtolower($parts['scheme'] ?? ''), ['http', 'https'], true)) {
+            $this->_item['link'] = '';
+            return $this;
+        }
 
         if (isset($parts['fragment'])) {
             parse_str($parts['fragment'], $old_params);

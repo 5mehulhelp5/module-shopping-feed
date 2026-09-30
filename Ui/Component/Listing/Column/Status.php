@@ -66,6 +66,7 @@ class Status extends Column
         UiComponentFactory $uiComponentFactory,
         \MageOS\ShoppingFeed\Model\Feed\Source\Status $sourceStatus,
         FeedFactory $feedFactory,
+        private \Magento\Framework\Escaper $escaper,
         array $components = [],
         array $data = []
     ) {
@@ -105,11 +106,15 @@ class Status extends Column
 
                     if ($item[$name] == \MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_PROCESSING) {
                         $messages = $this->feedFactory->create()->setData($item)->getMessages();
-                        $statusText = $messages['progress']. '%';
+                        $progress = is_array($messages) ? ($messages['progress'] ?? null) : null;
+                        if (is_numeric($progress) && $progress >= 0 && $progress <= 100) {
+                            $statusText = (string) (float) $progress . '%';
+                        }
                     }
 
                     $statusClass = $this->getClassByStatus($item[$name]);
-                    $item[$name] = sprintf('<span class="%s"><span>%s</span></span>', $statusClass, $statusText);
+                    $item[$name] = sprintf('<span class="%s"><span>%s</span></span>',
+                        $statusClass, $this->escaper->escapeHtml((string) $statusText));
                 }
             }
         }

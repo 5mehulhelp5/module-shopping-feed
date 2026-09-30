@@ -15,10 +15,32 @@ use MageOS\ShoppingFeed\Model\Promotions\Provider;
 use MageOS\ShoppingFeed\Model\Promotions\Provider\Collection;
 use MageOS\ShoppingFeed\Model\Promotions\Provider\Map;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ProviderTest extends TestCase
 {
+    #[DataProvider('malformedWidgetConfiguration')]
+    public function testMalformedWidgetConfigurationDoesNotBreakRuleValidation($config): void
+    {
+        $feed = $this->createMock(\MageOS\ShoppingFeed\Model\Feed::class);
+        $feed->method('getConfig')->willReturn($config);
+        $rules = $this->createMock(\Magento\SalesRule\Model\ResourceModel\Rule\Quote\Collection::class);
+        $rules->method('getAllIds')->willReturn([]);
+        $collection = $this->createMock(Collection::class);
+        $collection->method('getPromotionRules')->willReturn($rules);
+        $collection->expects($this->never())->method('updatePromotionsData');
+        $provider = (new \ReflectionClass(Provider::class))->newInstanceWithoutConstructor();
+        (new \ReflectionProperty(Provider::class, 'promotionsCollection'))->setValue($provider, $collection);
+        $provider->setFeed($feed);
+        self::assertSame($provider, $provider->validateGooglePromotions());
+    }
+
+    public static function malformedWidgetConfiguration(): array
+    {
+        return [[null], [''], [['promotion' => 'invalid']], [['promotion' => 1]]];
+    }
+
     public function testPromotionCacheIsReloadedWhenConfigurationHashChanges(): void
     {
         $directoryList = $this->createMock(DirectoryList::class);

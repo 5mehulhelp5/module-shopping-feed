@@ -83,6 +83,8 @@ The dedicated `mageos_shopping_feed` cron group schedules feeds hourly and proce
 
 Feed output is restricted to `pub/media/mageos-shopping-feed` and its safe subdirectories. Files are publicly downloadable for recipient fetches; default filenames contain the feed ID and are predictable. FTP or SFTP upload leaves that public local copy in place. Export only data intended for public distribution. Per-feed logs are restricted to `var/log` and use `mageos_shopping_feed_*.log` by default.
 
+When inspecting CSV or TSV feeds in a spreadsheet, import the columns as text and disable formula evaluation. Feed values beginning with `=`, `+`, `-`, or `@` can be interpreted as formulas by spreadsheet software. The module preserves these values for feed recipients without adding apostrophes or tabs.
+
 ## Documentation
 
 For setup and troubleshooting, use the [Shopping Feed support bot on Rocket Web](https://rocketweb.com/rocket-shopping-feeds). Select **Open support chat** on the product page.

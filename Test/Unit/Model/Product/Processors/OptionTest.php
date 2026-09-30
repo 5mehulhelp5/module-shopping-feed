@@ -25,6 +25,14 @@ use MageOS\ShoppingFeed\Test\Unit\Model\ModelFramework;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class OptionTest extends ModelFramework
 {
+    public function testMalformedOptionLinkIsNotReplacedWithAFragmentOnlyUrl(): void
+    {
+        $property = new \ReflectionProperty($this->model, '_item');
+        $property->setValue($this->model, ['link'=>'http://shop.test:invalid/item']);
+        (new \ReflectionMethod($this->model, 'updateItemLink'))->invoke($this->model, [2=>3]);
+        self::assertSame('', $property->getValue($this->model)['link']);
+    }
+
     /**
      * @var \MageOS\ShoppingFeed\Model\Product\Processors\Option
      */

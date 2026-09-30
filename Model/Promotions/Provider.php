@@ -169,7 +169,7 @@ class Provider
         $config = $this->getFeed()->getConfig('promotions_provider_widget');
         $cartRulesIds = $this->promotionsCollection->getPromotionRules($this->getFeed())->getAllIds();
 
-        if (isset($config['promotion'])) {
+        if (is_array($config) && is_array($config['promotion'] ?? null)) {
             $promotionIds = array_keys($config['promotion']);
             $removeIds = array_diff($promotionIds, $cartRulesIds);
             if (count($removeIds) > 0) {

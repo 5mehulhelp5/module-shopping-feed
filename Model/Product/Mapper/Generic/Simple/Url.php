@@ -46,6 +46,11 @@ class Url extends MapperAbstract
 
         $url = parse_url($product->getProductUrl());
         $pieces = parse_url($product->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK, false));
+        if (!is_array($url) || empty($url['path']) || !is_array($pieces)
+            || empty($pieces['host']) || !in_array(strtolower($pieces['scheme'] ?? ''), ['http', 'https'], true)) {
+            $this->logger->warning('Cannot map product link: invalid product URL or store base URL.');
+            return '';
+        }
         $cell = $pieces['scheme'] . '://' . $pieces['host']
             . (isset($pieces['port']) ? ':' . $pieces['port'] : '') . $url['path'];
 

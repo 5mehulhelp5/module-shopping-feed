@@ -29,6 +29,10 @@ class DiWiringTest extends TestCase
     public function testServiceIsInstantiableViaDi(string $service): void
     {
         $instance = Bootstrap::getObjectManager()->create($service);
+        $reflection = new \ReflectionClass($instance);
+        if (method_exists($reflection, 'isUninitializedLazyObject') && $reflection->isUninitializedLazyObject($instance)) {
+            $reflection->initializeLazyObject($instance);
+        }
 
         $this->assertInstanceOf($service, $instance);
     }
@@ -43,6 +47,10 @@ class DiWiringTest extends TestCase
             Process::class => [Process::class],
             Provider::class => [Provider::class],
             GoogleShopping::class => [GoogleShopping::class],
+            'File column' => [\MageOS\ShoppingFeed\Ui\Component\Listing\Column\File::class],
+            'Promotion file column' => [\MageOS\ShoppingFeed\Ui\Component\Listing\Column\File\Plugin::class],
+            'Schedules column' => [\MageOS\ShoppingFeed\Ui\Component\Listing\Column\Schedules::class],
+            'Status column' => [\MageOS\ShoppingFeed\Ui\Component\Listing\Column\Status::class],
         ];
     }
 }

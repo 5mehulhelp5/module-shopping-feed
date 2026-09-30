@@ -108,6 +108,6 @@ class Schedule extends AbstractModel
             return __('Daily at %1', $startAtFormatted);
         }
 
-        return __('Daily, starting at %1<br /> in batches of %2', $startAtFormatted, $this->getBatchLimit());
+        return __('Daily, starting at %1<br /> in batches of %2', $startAtFormatted, (int)$this->getBatchLimit());
     }
 }

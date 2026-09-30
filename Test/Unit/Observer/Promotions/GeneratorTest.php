@@ -55,6 +55,38 @@ class GeneratorTest extends TestCase
         );
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('missingPromotionConfiguration')]
+    public function testIncompleteConfigurationWritesAnEmptyPromotionFeed($config): void
+    {
+        $feed = $this->createMock(\MageOS\ShoppingFeed\Model\Feed::class);
+        $feed->method('getConfig')->willReturnCallback(
+            static fn ($key) => $key === 'promotions_enabled' ? true : $config
+        );
+        $feed->expects($this->once())->method('saveMessages')->with([
+            'promotion_file' => '/test/promotions.txt', 'promotion_added' => 0,
+        ]);
+        $generator = $this->createMock(\MageOS\ShoppingFeed\Model\Generator::class);
+        $generator->method('getLogger')->willReturn($this->createMock(\MageOS\ShoppingFeed\Model\Logger::class));
+        $generator->method('isTestMode')->willReturn(false);
+        $provider = $this->createMock(\MageOS\ShoppingFeed\Model\Promotions\Provider::class);
+        $provider->method('getPromotionFile')->willReturn('/test/promotions.txt');
+        $json = $this->createMock(\Magento\Framework\Json\Helper\Data::class);
+        $json->method('jsonEncode')->willReturnCallback(static fn ($data) => json_encode($data));
+        $this->observer = new Generator($json, $provider, $this->createMock(Map::class),
+            $this->createMock(\MageOS\ShoppingFeed\Model\Promotions\Provider\Collection::class),
+            $this->createMock(\Magento\SalesRule\Model\RuleFactory::class), $this->fileDriver);
+        $header = implode("\t", $this->invoke('createFeedHeader')) . "\n";
+        $this->fileDriver->expects($this->once())->method('filePutContents')->with('/test/promotions.txt.tmp', $header);
+        $this->fileDriver->expects($this->once())->method('rename')->with('/test/promotions.txt.tmp', '/test/promotions.txt');
+        $event = new \Magento\Framework\Event(['generator' => $generator, 'feed' => $feed]);
+        self::assertSame($this->observer, $this->observer->execute(new \Magento\Framework\Event\Observer(['event' => $event])));
+    }
+
+    public static function missingPromotionConfiguration(): array
+    {
+        return [[null], [[]], [''], [['promotion' => 'invalid']], [['promotion' => [1 => null]]]];
+    }
+
     public function testLineTargetsOnlineShoppingAdsAndFreeListings(): void
     {
         $rule = $this->createMock('Magento\SalesRule\Model\Rule');

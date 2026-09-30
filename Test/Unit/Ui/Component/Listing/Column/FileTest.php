@@ -64,6 +64,7 @@ class FileTest extends ModelFramework
                 'context' => $contextMock,
                 'feedFactory' => $feedFactoryMock,
                 'directoryList' => $directoryList,
+                'escaper' => new \Magento\Framework\Escaper(),
             ]
         );
 

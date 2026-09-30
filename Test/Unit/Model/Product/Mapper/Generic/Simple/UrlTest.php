@@ -94,4 +94,25 @@ class UrlTest extends ModelFramework
         $this->assertSame('https://store.example:8443/product.html?source=feed', $this->model->map(['column' => 'link', 'param' => 'source=feed']));
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidUrls')]
+    public function testMalformedUrlReturnsEmptyLink(string $base, string $url): void
+    {
+        $store = $this->createMock(\Magento\Store\Model\Store::class);
+        $store->method('getBaseUrl')->willReturn($base);
+        $product = $this->createMock(\Magento\Catalog\Model\Product::class);
+        $product->method('getStore')->willReturn($store);
+        $product->method('getProductUrl')->willReturn($url);
+        $adapter = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class);
+        $adapter->method('getProduct')->willReturn($product);
+        $adapter->method('getFilter')->willReturn($this->createMock(\MageOS\ShoppingFeed\Model\Product\Filter::class));
+        $this->model->addAdapter($adapter);
+        self::assertSame('', $this->model->map(['column'=>'link']));
+    }
+
+    public static function invalidUrls(): array
+    {
+        return [['http://shop.test:invalid/', '/item'], ['invalid', '/item'],
+            ['https://shop.test/', 'http://shop.test:invalid/item'], ['https://shop.test/', '']];
+    }
+
 }

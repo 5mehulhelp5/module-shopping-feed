@@ -283,7 +283,10 @@ class Generator extends DataObject
         // Log rotate
         $logger = $this->getLogger();
         $logFile = $this->directoryList->getRoot(). $this->getData('feed_log_file');
-        if (is_file($logFile) && filesize($logFile) > 1024 * $this->scopeConfig->getValue(self::XML_LOG_ROTATE)) {
+        $rotateKb = $this->scopeConfig->getValue(self::XML_LOG_ROTATE);
+        $rotateKb = is_numeric($rotateKb) && (float)$rotateKb > 0 && is_finite((float)$rotateKb)
+            ? (float)$rotateKb : 512;
+        if (is_file($logFile) && filesize($logFile) > 1024 * $rotateKb) {
             $archiveFile = $logFile . '.' . date('Y-m-d-H-i-s') . '.gz';
             file_put_contents('compress.zlib://' . $archiveFile, file_get_contents($logFile));
             file_put_contents($logFile, '');
@@ -431,7 +434,7 @@ class Generator extends DataObject
             );
         }
 
-        unset($product, $productAdapter, $row);
+        unset($product, $adapter, $row);
     }
 
     /**

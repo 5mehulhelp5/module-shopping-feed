@@ -491,7 +491,7 @@ class Feed extends AbstractModel
                     $scheduleObject->setData('batch_mode', $schedule['batch_mode']);
                 }
                 if (array_key_exists('batch_limit', $schedule)) {
-                    $scheduleObject->setData('batch_limit', $schedule['batch_limit']);
+                    $scheduleObject->setData('batch_limit', max(0, (int)$schedule['batch_limit']));
                 }
 
                 if (!$scheduleObject->hasData('processed_at')) {
@@ -555,7 +555,7 @@ class Feed extends AbstractModel
                     }
                 }
 
-                if ($uploadObject->getId() && $upload['delete']) {
+                if ($uploadObject->getId() && !empty($upload['delete'])) {
                     $uploadObject->delete();
                     continue;
                 }
