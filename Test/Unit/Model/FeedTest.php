@@ -94,6 +94,15 @@ class FeedTest extends ModelFramework
         );
     }
 
+    public function testUiFormSavePreservesStructuredAndLiteralColumnParameters(): void
+    {
+        $columns = [['column' => 'custom', 'attribute' => 'vendor_custom', 'order' => 10,
+            'param' => ['zero' => 0, 'false' => false, 'literal' => "line 1\nline 2\t\\d+ " . '${literal}']]];
+        $this->feed->setData('config', new \Magento\Framework\DataObject(['columns_product_columns' => $columns]));
+        $this->feed->beforeSave();
+        self::assertSame($columns, $this->feed->getConfig()->getData('columns_product_columns'));
+    }
+
     /**
      * Test columns map
      */
@@ -269,7 +278,7 @@ class FeedTest extends ModelFramework
         $this->assertSame('[]', $this->feed->getData('messages'));
     }
 
-    public function testBeforeSaveNormalizesNullColumnDefaultsWithoutDeprecations(): void
+    public function testBeforeSavePreservesNullAndLiteralColumnValuesWithoutDeprecations(): void
     {
         $this->feed->setData('config', new \Magento\Framework\DataObject([
             'columns_product_columns' => [[
@@ -295,10 +304,10 @@ class FeedTest extends ModelFramework
 
         $this->assertSame([], $deprecations);
         $this->assertSame([[
-            'column' => 'custom column',
-            'default_value' => '',
-            'param' => 'first second third',
-            'order' => '10',
+            'column' => "custom\tcolumn",
+            'default_value' => null,
+            'param' => "first\nsecond\rthird",
+            'order' => 10,
         ]], $this->feed->getConfig('columns_product_columns'));
     }
 

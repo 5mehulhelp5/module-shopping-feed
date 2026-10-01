@@ -14,24 +14,6 @@
   <event name="layout_generate_blocks_after">
     <observer name="mageos_shopping_feed_remove_block" instance="MageOS\ShoppingFeed\Observer\PopupLayout"/>
   </event>
-  <event name="mageos_shopping_feed_feed_edit_tab_filters_prepare_form_google_shopping">
-    <observer name="mageos_shopping_feed_google_observer_filters" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\AddGoogleFiltersFieldsObserver"/>
-  </event>
-  <event name="mageos_shopping_feed_feed_edit_tab_general_prepare_form_google_shopping">
-    <observer name="mageos_shopping_feed_google_observer_general" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\AddGoogleGeneralMicrodataFieldsObserver"/>
-  </event>
-  <event name="mageos_shopping_feed_feed_edit_tab_categories_prepare_form_google_local_inventory">
-    <observer name="mageos_shopping_feed_google_inventory_observer_categories_local_inventory" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Categories\LocalInventoryFilterFields"/>
-  </event>
-  <event name="mageos_shopping_feed_feed_edit_tab_configurable_prepare_form_google_local_inventory">
-    <observer name="mageos_shopping_feed_google_inventory_observer_configurable_local_inventory" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Configurable\LocalInventoryFilterFields"/>
-  </event>
-  <event name="mageos_shopping_feed_feed_edit_tab_grouped_prepare_form_google_local_inventory">
-    <observer name="mageos_shopping_feed_google_inventory_observer_grouped_local_inventory" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Grouped\LocalInventoryFilterFields"/>
-  </event>
-  <event name="mageos_shopping_feed_feed_edit_tab_bundle_prepare_form_google_local_inventory">
-    <observer name="mageos_shopping_feed_google_inventory_observer_bundle_local_inventory" instance="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Bundle\LocalInventoryFilterFields"/>
-  </event>
   <event name="mageos_shopping_feed_before_generate_google_shopping">
     <observer name="mageos_shopping_feed_google_promotions_observer_generator" instance="MageOS\ShoppingFeed\Observer\Promotions\Generator"/>
   </event>

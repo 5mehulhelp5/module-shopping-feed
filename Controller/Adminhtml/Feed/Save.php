@@ -33,7 +33,9 @@ class Save extends \Magento\Backend\App\Action implements \Magento\Framework\App
      */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter,
-        \Magento\Backend\App\Action\Context $context
+        \Magento\Backend\App\Action\Context $context,
+        private \MageOS\ShoppingFeed\Model\Adminhtml\FeedFormData $formData,
+        private \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor
     ) {
         $this->feedConverter = $feedConverter;
         parent::__construct($context);
@@ -60,19 +62,23 @@ class Save extends \Magento\Backend\App\Action implements \Magento\Framework\App
 */
         $resultRedirect = $this->resultRedirectFactory->create();
         if ($formData) {
-            $feed = $this->feedConverter->populateFeedData($formData);
-
-            $this->_eventManager->dispatch(
-                'mageos_shopping_feed_feed_prepare_save',
-                ['feed' => $feed, 'request' => $this->getRequest()]
-            );
-
             try {
+                if (array_key_exists('feed_form_data', $formData)) {
+                    $formData = $this->formData->decode($formData['feed_form_data']);
+                    // Retain the existing prepare-save observer request contract.
+                    $this->getRequest()->setParams($formData);
+                }
+                $feed = $this->feedConverter->populateFeedData($formData);
+                $this->_eventManager->dispatch(
+                    'mageos_shopping_feed_feed_prepare_save',
+                    ['feed' => $feed, 'request' => $this->getRequest()]
+                );
                 $feed->save();
                 $this->messageManager->addSuccess(__('You saved this feed.'));
                 $this->_getSession()->setMageosShoppingFeedData(false);
+                $this->dataPersistor->clear(\MageOS\ShoppingFeed\Model\Adminhtml\FeedFormData::PERSISTOR_KEY);
                 if ($this->getRequest()->getParam('back')) {
-                    return $resultRedirect->setPath('*/*/edit', ['id' => $feed->getId(), '_current' => true]);
+                    return $resultRedirect->setPath('*/*/edit', ['id' => $feed->getId()]);
                 }
                 return $resultRedirect->setPath('*/*/');
             } catch (\Magento\Framework\Exception\LocalizedException $e) {
@@ -83,9 +89,27 @@ class Save extends \Magento\Backend\App\Action implements \Magento\Framework\App
                 $this->messageManager->addException($e, __('Something went wrong while saving the feed.'));
             }
 
-            $formData = $this->feedConverter->createArrayFromObject($feed);
-            $this->_getSession()->setMageosShoppingFeedData($formData);
-            return $resultRedirect->setPath('*/*/edit', ['id' => $this->getRequest()->getParam('id')]);
+            // Do not persist the raw envelope, decrypted model data, or newly typed passwords.
+            unset($formData['feed_form_data'], $formData['form_key']);
+            if (isset($feed)) {
+                $formData['id'] = $feed->getId();
+                $formData['type'] = $feed->getType();
+                $formData['store_id'] = $feed->getStoreId();
+            }
+            $this->dataPersistor->set(
+                \MageOS\ShoppingFeed\Model\Adminhtml\FeedFormData::PERSISTOR_KEY,
+                $this->formData->redact($formData)
+            );
+            if (!empty($formData['uploads'])) {
+                $this->messageManager->addNoticeMessage(__('Re-enter any new or changed upload passwords before saving again.'));
+            }
+            $redirect = [];
+            foreach (['id', 'type', 'store_id'] as $key) {
+                if (isset($formData[$key]) && is_scalar($formData[$key])) {
+                    $redirect[$key] = $formData[$key];
+                }
+            }
+            return $resultRedirect->setPath(!empty($redirect['id']) || !empty($redirect['type']) ? '*/*/edit' : '*/*/', $redirect);
         }
         return $resultRedirect->setPath('*/*/');
     }

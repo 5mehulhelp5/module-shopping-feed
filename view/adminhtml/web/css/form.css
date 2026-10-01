@@ -1,0 +1,39 @@
+.shopping-feed-mapping .admin__control-table {
+    table-layout: fixed;
+    min-width: 960px;
+}
+
+.shopping-feed-mapping th:first-child {
+    width: 80px;
+}
+
+.shopping-feed-mapping th:nth-child(2) {
+    width: 22%;
+}
+
+.shopping-feed-mapping th:nth-child(3) {
+    width: 28%;
+}
+
+.shopping-feed-mapping th:last-child {
+    width: 70px;
+}
+
+.shopping-feed-mapping .admin__control-select,
+.shopping-feed-mapping .admin__control-multiselect,
+.shopping-feed-mapping .admin__control-text,
+.shopping-feed-mapping .admin__control-textarea {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.shopping-feed-parameter-label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.shopping-feed-mapping pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}

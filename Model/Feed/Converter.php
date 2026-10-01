@@ -78,7 +78,7 @@ class Converter
                 $this->_configDeleteKeys($value);
 
                 if ($path === 'categories_provider_taxonomy_by_category') {
-                    if ($value != '') {
+                    if (is_string($value) && $value !== '') {
                         $value = $this->jsonDecoder->decode($value);
                     }
                     $value = $this->_configTaxonomyDeleteDefaults($value);
@@ -90,7 +90,7 @@ class Converter
 
         if (isset($formData['schedules']) && is_array($formData['schedules']) && !$feed->hasData('schedules')) {
             foreach ($formData['schedules'] as $key => $schedule) {
-                if (!$schedule['id'] && $schedule['delete']) {
+                if (empty($schedule['id']) && !empty($schedule['delete'])) {
                     unset($formData['schedules'][$key]);
                 }
             }
@@ -99,7 +99,7 @@ class Converter
 
         if (isset($formData['uploads']) && is_array($formData['uploads']) && !$feed->hasData('uploads')) {
             foreach ($formData['uploads'] as $key => $upload) {
-                if (!$upload['id'] && $upload['delete']) {
+                if (empty($upload['id']) && !empty($upload['delete'])) {
                     unset($formData['uploads'][$key]);
                 }
             }
@@ -125,7 +125,7 @@ class Converter
                 if (!empty($row['delete'])) {
                     unset($data[$key]);
                 }
-                if (isset($row['delete'])) {
+                if (isset($data[$key], $row['delete'])) {
                     unset($data[$key]['delete']);
                 }
             }

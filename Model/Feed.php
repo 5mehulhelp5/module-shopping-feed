@@ -311,18 +311,6 @@ class Feed extends AbstractModel
             $this->setData('messages', $this->serializer->serialize($messages));
         }
 
-        // Clean up new line characters breaking the JS widget for column maps
-        $config = $this->getConfig();
-        $columns = $this->getConfig('columns_product_columns', []);
-        array_walk_recursive(
-            $columns, function (&$value, $key) {
-                if (!is_array($value)) {
-                    $value = strtr((string)$value, "\n\r\t", '   ');
-                }
-            }
-        );
-        $config->setData('columns_product_columns', $columns);
-
         return parent::beforeSave();
     }
 
