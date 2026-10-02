@@ -2,7 +2,9 @@
 
 Upload destinations run after a successful feed generation. Establish and validate the feed locally before enabling a transfer.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+
+The unreleased [UI Component editor](Admin-UI-Component-Forms) masks credentials before provider serialization. After a failed save, new or changed passwords must be re-entered; the previously saved password remains masked. Removing the final upload row and saving clears the destination list. Browser persistence checks did not attempt a remote connection or transfer.
 
 ## Security boundary
 

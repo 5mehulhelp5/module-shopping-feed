@@ -6,7 +6,7 @@ This map records how the historical Rocket Web documentation is treated in the M
 | --- | --- | --- |
 | Product overview and supported feeds | `Home`, `Status-and-Compatibility`, `Feed-Types-and-Lifecycle` | Rewritten for the consolidated Mage-OS module |
 | Installation and Magento Marketplace access | `Installation-and-Upgrade` | Replaced with the current package identity and source-install option |
-| Creating and managing feeds | `Quick-Start`, `Feed-Types-and-Lifecycle` | Rewritten around the current Admin route and actions |
+| Creating and managing feeds | `Quick-Start`, `Feed-Types-and-Lifecycle`, `Admin-UI-Component-Forms` | Released and unreleased editor behavior is distinguished; candidate blockers and customization migration are explicit |
 | General feed settings and output files | `General-Configuration`, `Commands-Paths-and-Settings` | Updated for safe output paths, current filenames, currency, delimiter, and stock behavior |
 | Column mapping and directive reference | `Columns-and-Directives` | Consolidated and checked against current feed configuration |
 | Categories and Google taxonomy | `Categories-and-Taxonomy` | Retained, with current terminology and verification guidance |

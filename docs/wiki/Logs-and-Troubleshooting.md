@@ -2,7 +2,9 @@
 
 Start with the feed-specific log and the feed grid status. They distinguish queue problems, product skips, generation failures, and upload failures.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+
+For unreleased `9f07e46`, consult [Admin UI Component forms](Admin-UI-Component-Forms) before treating a category-preview failure or blank promotion dates as store configuration errors. Both are reproduced candidate defects awaiting fixes.
 
 ## Log settings and location
 
@@ -23,6 +25,8 @@ Use **View Log** from the Feeds Management grid, or inspect the file as the Mage
 
 | Symptom | First checks |
 | --- | --- |
+| New category mapping causes `Undefined array key "id"` in candidate `9f07e46` | Known missing-ID serialization defect; preserve the fixture and do not rely on a successful editor save as generation acceptance. |
+| Promotion dates reopen blank in candidate `9f07e46` | Stop before saving again, which can erase stored dates. Preserve the pre-upgrade configuration and compare it during recovery. |
 | Feed stays Pending | Confirm Magento cron, the `mageos_shopping_feed` cron group, and the process command are running. |
 | Direct command says generation failed | Check whether another process holds the per-feed lock, then open the feed log. |
 | Feed reaches Error | Read the first exception or error for that run, not only the final status line. |

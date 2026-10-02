@@ -29,7 +29,7 @@ Google Shopping defaults include item grouping and standard variant columns. Con
 
 With default stock statuses and parent out-of-stock inheritance enabled, the module checks the parent's Magento salability before checking the child's stock. A configurable parent's own quantity can be zero while its children remain purchasable. Since 1.0.0, the module does not treat that zero parent quantity alone as out of stock. Custom stock attributes and disabled inheritance retain their configured behavior.
 
-Google Local Inventory removes the unique-link and attribute-separator controls from the configurable tab. Its source-level rows focus on inventory context.
+Google Local Inventory removes the unique-link and attribute-separator controls from the Configurable Products section. Its source-level rows focus on inventory context.
 
 ## Grouped products
 
@@ -54,7 +54,7 @@ Test fixed and dynamic price or weight bundles separately. Optional and required
 
 ## Complex Product Context Prioritization
 
-The General Configuration setting can prioritize individually visible simple products in their complex-product context, including Search-only children. With it enabled, a child created before its parent retains the same parent grouping as a child created later. Enable it when standalone processing produces duplicate or contextually wrong rows, then measure the generation cost.
+The **Complex Product Context Prioritization** setting in General Configuration (General in the candidate) can prioritize individually visible simple products in their complex-product context, including Search-only children. With it enabled, a child created before its parent retains the same parent grouping as a child created later. Enable it when standalone processing produces duplicate or contextually wrong rows, then measure the generation cost.
 
 ## Verification matrix
 

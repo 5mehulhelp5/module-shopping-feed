@@ -2,7 +2,7 @@
 
 Columns Map controls the output schema. Each row gives the output column a name and maps it to a Magento product attribute or a module directive.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
 
 ## How a column is built
 
@@ -14,6 +14,8 @@ A column has:
 * An optional parameter used by that directive
 
 Save the feed after changing Columns Map. Several filters and inheritance controls only list columns already present in the saved map.
+
+For the unreleased UI Component editor, use single-line output names without tabs or other control characters. The local repair rejects those characters at model save. Literal values and structured directive parameters remain intact. The deployed `9f07e46` lacks this validation and can corrupt unenclosed headers; see [Admin UI Component forms](Admin-UI-Component-Forms) for the repair and deployment status.
 
 ## Common directives
 
@@ -38,7 +40,7 @@ Save the feed after changing Columns Map. Several filters and inheritance contro
 | Product Review Count | Maps the product's review count. |
 | Concatenate Attributes | Renders a text pattern containing product attributes. |
 | Product Option | Maps custom-option values. |
-| Shipping | Uses the feed's Shipping tab to calculate output. |
+| Shipping | Uses the feed's Shipping section to calculate output. |
 | Shipping Weight | Maps and converts the shipping weight. |
 | Is Bundle | Writes whether the row represents a bundle product. |
 | Type by Magento Category Path | Writes a Magento category path to the configured depth. |

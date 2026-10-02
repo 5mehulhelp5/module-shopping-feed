@@ -2,7 +2,9 @@
 
 Categories Map filters the catalog and maps Magento categories to marketplace taxonomy or product-type values.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+
+**Unreleased editor repair:** `9f07e46` omitted IDs needed during category generation. The working tree now includes those IDs on save and recovers missing IDs from existing map keys before sorting. New-mapping preview and full generation passed in disposable Mage-OS acceptance. Malformed rows produce recoverable validation errors. The fixes are not yet deployed to `mageos-latest`; see [Admin UI Component forms](Admin-UI-Component-Forms).
 
 ## Feed Localization
 
@@ -43,7 +45,7 @@ The Google Shopping feed downloads and searches taxonomy data for the selected l
 
 ## Local Inventory source mapping
 
-Google Local Inventory changes this tab. It removes taxonomy localization and category-priority fields, then adds **Inventory Source to Google Store Code**.
+Google Local Inventory changes this section. It removes taxonomy localization and category-priority fields, then adds **Inventory Source to Google Store Code**.
 
 Enter one mapping per line:
 

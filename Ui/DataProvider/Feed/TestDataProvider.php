@@ -23,7 +23,8 @@ class TestDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
     public function getData()
     {
         $id = $this->registry->registry('feed')->getId();
-        return [$id => ['id' => $id, 'sku' => (string)$this->request->getParam('sku', ''),
+        $sku = $this->request->getParam('sku', '');
+        return [$id => ['id' => $id, 'sku' => is_string($sku) || is_int($sku) ? (string)$sku : '',
             'type' => $this->request->getParam('type') === 'id' ? 'id' : 'sku']];
     }
 }

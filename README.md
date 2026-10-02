@@ -31,7 +31,11 @@ The package has its own Composer name, PHP namespace, Magento module name, datab
 
 Version [1.1.0](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.1.0) is the current stable release. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) before evaluating it on a store that already uses a Rocket Web shopping feed module.
 
-The release retains custom feed mapping and Hyva/Luma deep links while correcting identifier defaults, backorder dates, Local Inventory statuses, and CSV serialization. Existing Google mappings need review, comma-feed recipients must accept quoted CSV, and `setup:upgrade` is required for the upload-password column and feed-search index. See the [changelog](CHANGELOG.md), [Google/custom-feed acceptance report](docs/reviews/2026-09-28-google-custom-feed-fixes.md), and [issue acceptance report](docs/reviews/2026-09-28-github-issues.md). Historical [1.0.0 notes](docs/releases/1.0.0.md) remain available.
+The unreleased `feat/ui-component-editor` candidate at `9f07e46` makes Magento UI Component forms the default for New/Edit Feed and Test Feed. It retains the existing schema and save routes, but changes the editor customization API. See the [Admin form guide](docs/wiki/Admin-UI-Component-Forms.md) and [developer migration guide](docs/ui-component-editor.md).
+
+**Local repairs are verified; deployment and release remain separate.** The deployed `9f07e46` failed category generation and promotion-date preservation. The working tree now repairs those defects, header/category validation, preview input handling, hidden microdata defaults, and null directive parameters. Complete Docker installations of Magento Open Source 2.4.8 and 2.4.9 passed the repaired form and output workflows; the [Docker acceptance report](docs/reviews/2026-10-02-magento-docker-acceptance.md) also records a remaining read-only grid control issue. See the [repair evidence and remaining acceptance limits](docs/reviews/2026-10-02-ui-component-editor-fixes.md). The [original Chrome report](docs/reviews/2026-10-01-ui-component-chrome-acceptance.md) remains the record for `mageos-latest`, which has not received these fixes. The Nebula editor fallback remains in place; native bridge rendering is unverified.
+
+Version 1.1.0 retains custom feed mapping and Hyva/Luma deep links while correcting identifier defaults, backorder dates, Local Inventory statuses, and CSV serialization. Existing Google mappings need review, comma-feed recipients must accept quoted CSV, and `setup:upgrade` is required for the upload-password column and feed-search index. See the [changelog](CHANGELOG.md), [Google/custom-feed acceptance report](docs/reviews/2026-09-28-google-custom-feed-fixes.md), and [issue acceptance report](docs/reviews/2026-09-28-github-issues.md). Historical [1.0.0 notes](docs/releases/1.0.0.md) remain available.
 
 Run [ACCEPTANCE-TEST-PLAN.md](ACCEPTANCE-TEST-PLAN.md) against the exact release candidate before enabling production schedules or uploads.
 
@@ -90,6 +94,8 @@ When inspecting CSV or TSV feeds in a spreadsheet, import the columns as text an
 For setup and troubleshooting, use the [Shopping Feed support bot on Rocket Web](https://rocketweb.com/rocket-shopping-feeds). Select **Open support chat** on the product page.
 
 The [public GitHub Wiki](https://github.com/mage-os-lab/module-shopping-feed/wiki) is published separately; it does not automatically update when this repository changes. The reviewable GitHub Wiki source is under [`docs/wiki`](docs/wiki), starting with [`Home.md`](docs/wiki/Home.md). Documentation contributors should update that source and follow [`docs/WIKI-MAINTENANCE.md`](docs/WIKI-MAINTENANCE.md) rather than editing the public wiki independently.
+
+For the unreleased editor, start with the [operating guide](docs/wiki/Admin-UI-Component-Forms.md), [implementation and customization contract](docs/ui-component-editor.md), [earlier platform checks](docs/ui-component-editor-acceptance.md), and [later deployed Chrome results](docs/reviews/2026-10-01-ui-component-chrome-acceptance.md). Read dated acceptance reports in order; passing automated or platform checks do not override a later reproduced failure.
 
 ## Development validation
 

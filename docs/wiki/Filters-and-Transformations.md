@@ -8,7 +8,7 @@ Product Filters decides which products reach the output and how selected column 
 
 ### Allow Out of Stock
 
-Controls whether out-of-stock products remain eligible for the feed. Complex-product tabs have separate out-of-stock controls for associated products.
+Controls whether out-of-stock products remain eligible for the feed. Complex-product sections have separate out-of-stock controls for associated products.
 
 ### Submit only products of these types
 

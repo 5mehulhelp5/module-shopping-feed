@@ -2,7 +2,13 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+
+## Evaluating the unreleased UI Component editor
+
+Commit `9f07e46` changes the default feed editor and its customization hooks, with no schema migration or new Composer platform requirement. That revision failed deployed category-generation and promotion-date checks. Local repairs pass the affected disposable Mage-OS workflows but are not yet deployed or released. Read [Admin UI Component forms](Admin-UI-Component-Forms) before evaluating it. Audit custom PHP form observers, tab plugins, and parameter renderers; they need migration to UI metadata or components. Retained legacy classes do not provide an editor switch.
+
+Back up feed configuration before evaluation. Code rollback restores the previous editor after DI/static/cache rebuilds, but does not recover erased dates or repair category data written by the candidate. The stable installation instructions below remain for version 1.1.0.
 
 ## Before installation
 
@@ -99,7 +105,7 @@ Review saved feeds before resuming uploads:
 3. **Local Inventory:** zero-stock backorders export as `out_of_stock`. Disabled source items also export as out of stock. Compare local quantities and statuses with the stores they represent.
 4. **Generic CSV:** comma-delimited feeds now preserve commas and use CSV quotation rules for headers and values. Test the recipient's CSV parser; line splitting is not sufficient. Tab and other custom delimiters retain their existing behavior when no enclosure is set.
 
-5. **Saved output settings:** the declared `output_params_enclose_cell`, `output_params_enclose_escape`, and `output_params_default_value` settings now take effect. Inspect any values set by scripts or imports. Generic feeds expose these controls in the General tab.
+5. **Saved output settings:** the declared `output_params_enclose_cell`, `output_params_enclose_escape`, and `output_params_default_value` settings now take effect. Inspect any values set by scripts or imports. Generic feeds expose these controls in the General section.
 6. **Pricing and variants:** compare guest quantity-one tier prices with the storefront, check custom Tier Price columns for previous bulk-only prices, and enable Complex Product Context Prioritization when visible children must retain their parent's grouping. Search-only children are now included in that setting.
 
 The Google and CSV changes do not overwrite saved column maps or need their own data migration. The 1.1 release still requires the schema upgrade described above. See [Google Shopping](Google-Shopping), [Local Inventory](Google-Local-Inventory-and-MSI), and [Generic feeds](Generic-Feeds) for setup and examples.

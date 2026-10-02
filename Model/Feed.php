@@ -576,6 +576,16 @@ class Feed extends AbstractModel
     protected function validate()
     {
         $this->outputPath->validateFeed($this);
+        foreach ((array)$this->getConfig('columns_product_columns', []) as $row) {
+            if (!is_array($row) || !isset($row['column']) || !is_scalar($row['column'])) {
+                throw new \Magento\Framework\Exception\LocalizedException(__('Invalid column name in Columns Map.'));
+            }
+            if (preg_match('/[\x00-\x1F\x7F]/', (string)$row['column'])) {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __('Column names must not contain control characters.')
+                );
+            }
+        }
         return $this;
     }
 

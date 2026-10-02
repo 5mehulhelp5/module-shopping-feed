@@ -1,6 +1,8 @@
 # TikTok Catalog
 
-> Documentation baseline: 1.2 development (unreleased). Last reviewed: 2026-09-29.
+> Documentation baseline: 1.2 development preset with unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+
+When using the unreleased `9f07e46` editor, read [Admin UI Component forms](Admin-UI-Component-Forms) before editing. Local repairs address category generation and hidden microdata defaults, but have not been deployed to `mageos-latest`. Template-level generation results do not establish acceptance of every editor workflow.
 
 The **TikTok Catalog** preset produces a quoted UTF-8 CSV file for product catalogs in TikTok Ads Manager. It shares the module's generation, Test Feed, scheduling, and upload tools. An actual TikTok catalog import has not been verified.
 

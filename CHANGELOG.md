@@ -4,6 +4,30 @@ All notable changes to this project will be documented here.
 
 ## Unreleased
 
+### Changed: Admin editor
+
+- New/Edit Feed and Test Feed now use Magento UI Component forms, with collapsible sections, declarative dependencies, DynamicRows, explicit mapping order, and custom category/parameter controls. Routes, feed types, database schema, and server-side save permissions are retained.
+- UI data-provider modifiers and declarative parameter definitions replace legacy PHP form observers, tab plugins, and PHTML parameter renderers on the default editor. Existing site-specific editor customizations require migration; see [the developer guide](docs/ui-component-editor.md). Retained legacy files are not an alternate editor mode.
+- Form data preserves structured parameters, empty collections, zero/false values, and literal template-like text. Upload passwords are masked before provider serialization; failed saves require re-entry of new or changed passwords.
+- The shared form reduces dependence on legacy editor rendering. The optional Nebula grid, standard-theme editor fallback, and menu handling remain; no native Nebula UI Bridge acceptance or removal of the grid integration is claimed.
+
+### Fixed after the `9f07e46` review (local, unreleased)
+
+- Include category IDs in new mappings, validate submitted category rows, and recover missing embedded IDs from existing map keys before generator sorting.
+- Keep promotion dates in `Y/m/d` storage while displaying the Admin locale's format. All four dates persist through reopening and an unchanged second save.
+- Reject control characters in column names at model save without coercing literal values or structured parameters.
+- Validate preview lookup modes, SKU shapes, and positive product IDs with recoverable errors; preserve numeric SKU identity.
+- Default new non-Google feeds to `use_microdata=0`, preserving existing and explicitly selected values.
+- Preserve null directive parameters through UI initialization and save. Magento's initial value links and base input defaults otherwise changed null to an empty string, removing Generic feeds' default shipping-weight unit. Docker browser/output checks reproduced the failure on Magento 2.4.8 and 2.4.9 and verified the fix.
+
+The [repair report](docs/reviews/2026-10-02-ui-component-editor-fixes.md) records regression tests, disposable browser acceptance, generated output, and remaining platform/deployment limits. These repairs have not been deployed to `mageos-latest`; [the original failure report](docs/reviews/2026-10-01-ui-component-chrome-acceptance.md) still applies there. No data migration recovers already-erased dates. Intentional custom configuration support and retained classes with live callers are preserved.
+
+### Fixed before the editor migration
+
+- Hardened legacy editor escaping, request ID validation, schedule/status/file grid output, malformed URL handling, and log-rotation configuration.
+- Corrected recursive promotion minimum-purchase condition handling and incomplete configuration handling; invalid legacy non-JSON rule conditions produce a recoverable error.
+- Pinned direct CI workflow/action references to full commit hashes. See [the September 30 fix verification](docs/reviews/2026-09-30-review-fixes.md) for reproduced defects, accepted limits, and installed-runtime checks. Those fixes do not resolve the new editor blockers above.
+
 ### Added for 1.2
 
 - OpenAI / ChatGPT (Google-compatible, beta) TSV preset with required brand, explicit identifier exemptions, GTIN checksums, availability dates, configurable grouping, and sale validation. Includes the mobile-subscription zero-price exception, short expiration metadata, and onboarding guidance. OpenAI ingestion acceptance remains unverified.

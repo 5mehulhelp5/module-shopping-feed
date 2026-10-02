@@ -46,4 +46,35 @@ class BuilderTest extends TestCase
         self::assertSame(2, $result->getStoreId());
         self::assertSame(0, $result->getUseMicrodata());
     }
+
+    #[DataProvider('feedTypes')]
+    public function testOnlyGoogleShoppingDefaultsNewFeedsToMicrodata(string $type, int $expected): void
+    {
+        $feed = $this->getMockBuilder(Feed::class)->disableOriginalConstructor()
+            ->onlyMethods(['setType', 'getSchedules', 'isObjectNew'])->getMock();
+        $factory = $this->createMock(\MageOS\ShoppingFeed\Model\FeedFactory::class);
+        $factory->method('create')->willReturn($feed);
+        self::assertSame($expected, $this->builder($factory)->build(['type' => $type])->getUseMicrodata());
+    }
+
+    public static function feedTypes(): array
+    {
+        return [['google_shopping', 1], ['generic', 0], ['google_local_inventory', 0],
+            ['meta_catalog', 0], ['microsoft_merchant_center', 0], ['tiktok_catalog', 0],
+            ['pinterest_catalog', 0], ['openai_google_compatible', 0]];
+    }
+
+    public function testExistingMicrodataSelectionsArePreserved(): void
+    {
+        foreach ([0, 1] as $selection) {
+            $feed = $this->getMockBuilder(Feed::class)->disableOriginalConstructor()
+                ->onlyMethods(['load', 'getSchedules', 'isObjectNew'])->getMock();
+            $feed->method('load')->willReturnCallback(function () use ($feed, $selection) {
+                return $feed->setData('use_microdata', $selection);
+            });
+            $factory = $this->createMock(\MageOS\ShoppingFeed\Model\FeedFactory::class);
+            $factory->method('create')->willReturn($feed);
+            self::assertSame($selection, $this->builder($factory)->build(['id' => 7])->getUseMicrodata());
+        }
+    }
 }

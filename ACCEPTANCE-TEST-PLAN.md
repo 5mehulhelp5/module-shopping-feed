@@ -2,7 +2,9 @@
 
 ## Purpose
 
-Use this plan to decide whether `MageOS_ShoppingFeed` is ready for its first production release. Run it against the exact release commit on real store copies before enabling live schedules or uploads.
+Use this plan to decide whether a `MageOS_ShoppingFeed` release candidate is ready for production. Run it against the exact candidate commit on representative store copies before enabling live schedules or uploads.
+
+The deployed UI Component candidate `9f07e46` failed category-generation and promotion-date preservation checks. The [local repair report](docs/reviews/2026-10-02-ui-component-editor-fixes.md) records subsequent fixes and verification; the [Docker platform report](docs/reviews/2026-10-02-magento-docker-acceptance.md) now covers the repaired workflows on Magento 2.4.8 and 2.4.9. Deployment and complete release acceptance remain separate gates, including the read-only grid control finding. See the [deployed Chrome report](docs/reviews/2026-10-01-ui-component-chrome-acceptance.md) for completed checks and failures, and the [earlier disposable platform record](docs/ui-component-editor-acceptance.md) for its narrower historical scope. The checkboxes below are a reusable plan, not a completed acceptance record.
 
 The minimum platform acceptance target is Mage-OS 3.4.0. Add another currently supported Magento Open Source store when available. A store with Multi-Source Inventory is required for Local Inventory acceptance.
 
@@ -135,16 +137,31 @@ Acceptance: the modules can be evaluated together without migration, overwrite, 
 
 - [ ] Sign in as a full administrator and open **Catalog > Mage-OS Shopping Feed > Feeds Management**.
 - [ ] Open global settings under **Stores > Configuration > Mage-OS > Mage-OS Shopping Feed**.
-- [ ] Create one Generic, one Google Shopping, and one Google Local Inventory feed.
-- [ ] Save each feed, reload it, and confirm every configured field persists.
+- [ ] Create each bundled preset. For this candidate: Generic, Google Shopping, Google Local Inventory, Meta, Microsoft, TikTok, Pinterest, and OpenAI Google-compatible beta. Google Promotions is configured inside Google Shopping.
+- [ ] Inspect and remove default schedules/uploads before saving disposable fixtures on a shared store. Confirm the microdata role has not changed unexpectedly, including for types without a visible control.
+- [ ] Save each feed, reload it, save again without changes, and confirm every configured field persists. Include Save and Continue Edit.
 - [ ] Edit columns, filters, categories, product-type modes, schedules, and upload rows. Confirm add, edit, and delete controls work.
-- [ ] Clone a feed. Confirm it receives its own identity, schedules, uploads, output file, and logs.
+- [ ] Remove the final schedule, upload, and find/replace row; save and confirm the stored collections are empty.
+- [ ] Change Store View, save and reload, and confirm category and attribute choices reflect that store before editing them.
+- [ ] Clone a feed. Confirm a new disabled identity and copied child records; inspect filenames and destinations before generation. Test `%s` substitution and a literal filename separately: current literal filenames are copied unchanged and can collide with the source.
 - [ ] Test grid filters, sorting, mass actions, generation action, log view, and delete action.
+- [ ] Test Cancel/Confirm on individual Delete Feed. Test bulk Delete only on an exact disposable selection: the standard grid currently deletes immediately without a confirmation dialog. Verify original feeds remain untouched.
 - [ ] Submit malformed required fields and confirm validation is clear and the stored feed is unchanged.
 - [ ] Try an output path outside `pub/media/mageos-shopping-feed`. Confirm it is rejected or safely contained.
 - [ ] Create a restricted Admin role with view access only. Confirm mutation routes and controls are unavailable.
 - [ ] Use a role without module access. Confirm direct Admin URLs are denied.
 - [ ] Confirm state-changing requests enforce the Admin form key.
+- [ ] Verify custom data-provider modifiers and parameter editors, including unknown stored values and failure recovery. Preserve passwords in storage while excluding decrypted or newly typed values from recovered browser data.
+- [ ] Preserve an unexposed custom `config` key through save, reopen, and failed-save recovery; verify a modifier-owned key round-trips without allowing child reassignment or secret disclosure.
+- [ ] Repeat new-form acceptance on Magento Open Source 2.4.8, 2.4.9, and the intended Mage-OS version. Record standard Admin, Nebula fallback, and native bridge rendering as separate profiles; no native bridge acceptance exists for this candidate.
+
+### Category save-to-generation regression
+
+- [ ] Begin with a category that has no saved mapping; set priority zero, taxonomy, and product type, then save and reopen.
+- [ ] Confirm the saved category object carries its embedded ID as well as priority and mapped values. Do not rely on the numeric map key surviving generator sorting.
+- [ ] Preview a product assigned to that category and generate the full disposable feed; verify taxonomy and product-type output without warnings or exceptions.
+- [ ] Repeat with inherited values, exclusion, inactive categories, store-root changes, and existing mappings. Preserve unknown saved category entries.
+- [ ] On disposable fixtures, send malformed category containers, scalar rows, and rows missing required fields through both the JSON envelope and legacy JSON-string request form. Require a recoverable validation message and unchanged stored data, without a warning or uncaught `TypeError`. The original candidate failed this check; local repair coverage now includes controlled Admin requests. A normal UI round trip does not exercise it.
 
 Acceptance: authorized workflows work, unauthorized users cannot read or mutate feed configuration, and unsafe output paths cannot escape the module directory.
 
@@ -161,6 +178,7 @@ bin/magento mage-os:shopping-feed:generate <feed_id> <sku>
 - [ ] Compare every displayed value to the Admin product, website, currency, tax, category, and inventory state.
 - [ ] Confirm the test command does not alter the last successful production file.
 - [ ] Confirm secrets and credentials do not appear in console output or logs.
+- [ ] Exercise the Admin Test Feed form separately with valid string SKUs, numeric SKUs, and positive product IDs. Send array-valued/malformed lookup inputs and unsupported modes through controlled requests; require a clear recoverable message. The repaired controller separates feed identity from lookup mode and rejects malformed inputs before product lookup.
 
 ## 6. Generic feed output
 
@@ -169,6 +187,7 @@ bin/magento mage-os:shopping-feed:generate <feed_id> <sku>
 - [ ] Confirm headers, delimiter, enclosure, encoding, and line endings match configuration.
 - [ ] Confirm columns remain in the configured order and duplicate column names behave as configured.
 - [ ] Confirm quotes, delimiters, line breaks, HTML, Unicode, and empty values do not corrupt rows.
+- [ ] Submit column names containing tabs, newlines, and carriage returns through the save boundary. Require field-specific rejection without coercing literal values or structured directive parameters. The local repair adds model save validation. Verify configured delimiters and enclosures separately: before repair, an isolated probe corrupted unenclosed TSV headers but preserved a newline-containing header as one logical quoted CSV record.
 - [ ] Confirm included and excluded categories behave as configured.
 - [ ] Confirm disabled products and products excluded by filters are absent.
 - [ ] Confirm configured find-and-replace, price buckets, output limits, and empty-column rules work.
@@ -231,6 +250,8 @@ Acceptance: source rows, store codes, quantities, availability, and parent or ch
 
 - [ ] Configure one eligible active cart rule and one ineligible rule.
 - [ ] Save and reload all promotion fields. Confirm no values disappear or move to another feed.
+- [ ] Set effective-from, effective-to, display-from, and display-to to distinct valid dates. Compare all four stored values after save, reopen, an unchanged save, and another reopen. Include month/day-ambiguous dates and year boundaries under the supported Admin locale.
+- [ ] Verify browser serialization agrees with the provider's `Y/m/d` date contract and generated companion dates. A passing title/counter test does not establish date preservation.
 - [ ] Generate the promotion file and confirm only eligible rules appear.
 - [ ] Confirm promotion IDs in the Shopping feed match the generated promotion IDs.
 - [ ] Use **Submit as new promotion** and confirm the intended ID changes exactly once.

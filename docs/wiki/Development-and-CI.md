@@ -2,7 +2,15 @@
 
 The repository validates module identity, configuration integrity, PHP behavior, and supported Magento-family platforms. Run focused checks before requesting review.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-02.
+
+## Unreleased editor implementation and evidence
+
+The default forms in `9f07e46` live in `view/adminhtml/ui_component/mageos_shopping_feed_form.xml` and `mageos_shopping_feed_test_form.xml`, with providers under `Ui/DataProvider/Feed` and controls under `view/adminhtml/web/js/form`. Use `ShoppingFeedFormModifierPool` for custom metadata/data and the repository's `docs/ui-component-editor.md` for the contract. Previous form files remain for transition; their passing tests do not prove the replacement form. The legacy menu and category tree still have live callers, and renderer class names remain active configuration identifiers. Audit those dependencies and validator/test references before removing files.
+
+The deployed acceptance run passed **722 PHP tests / 1,908 assertions**, **28 JavaScript tests**, and schema validation of **26 XML files**, then found category-generation and promotion-date regressions in Chrome. Subsequent local repairs are recorded in `docs/reviews/2026-10-02-ui-component-editor-fixes.md`; they have not been deployed to `mageos-latest`. `docs/reviews/2026-10-02-magento-docker-acceptance.md` records the latest Magento Docker browser results, including the null-parameter regression and remaining read-only grid control issue; `docs/ui-component-editor-acceptance.md` records the earlier disposable Magento 2.4.8/2.4.9 checks. Read [Admin UI Component forms](Admin-UI-Component-Forms) for the current limits. The historical counts below describe earlier releases, not the candidate suite.
+
+Only eight of those JavaScript tests are in the active-form suite, `admin-ui-form.test.cjs`; four other test files exercise retained legacy behavior and two cover the storefront. The reconciled `docs/reviews/2026-10-01-ui-component-editor-review.md` records 21 passing focused PHP tests / 58 assertions and eight passing active-form JavaScript tests, alongside separate probes that reproduce malformed category rows and unenclosed header corruption. The repair adds failing-before/passing-after regression checks plus disposable Mage-OS browser and output verification. The final Mage-OS PHP suite passes 788 tests / 2,067 assertions. The subsequent Docker run passes 788 unit tests, 14 official Magento integration tests, and four database tests per platform, plus 29 frontend tests and five framework JavaScript cases per Magento version. Nine frontend tests now cover the active form. Restricted-role route enforcement passes; permission-based grid control visibility remains incomplete.
 
 ## Local validation
 
@@ -21,6 +29,8 @@ Run the unit suite with the PHPUnit installation from an existing Magento or Mag
 ```bash
 MAGENTO_ROOT=/path/to/magento /path/to/magento/vendor/bin/phpunit -c phpunit.xml.dist
 ```
+
+Run `MAGENTO_ROOT=/path/to/magento node --test dev/tests/magento-ui-form.test.cjs` for promotion-date conversion and directive initialization against the installed platform's actual date, abstract-field, and value-link components. This separate suite needs a framework checkout and covers three Admin locale formats plus preservation of null directive parameters.
 
 The consolidated validation checks package and module identity, feed configuration, Magento XML, schema whitelist alignment, isolated runtime identifiers, storefront integration markers, and selected regression-sensitive behaviors. Wiki validation checks navigation, page baselines, and known legacy instructions.
 

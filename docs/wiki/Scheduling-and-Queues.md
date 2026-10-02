@@ -2,7 +2,7 @@
 
 Schedules decide when work enters the queue. A separate worker consumes queued work and generates feed files.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with unreleased editor labels. Last reviewed: 2026-10-01.
 
 ## Enable module cron processing
 
@@ -19,11 +19,13 @@ Magento's normal cron runner must be installed and healthy. Saving a feed schedu
 
 ## Configure a feed schedule
 
-Open a feed, select **Run Schedule**, then add one or more rows:
+Open a feed and select **Run Schedule** in 1.1, or **Schedule** in the [UI Component candidate](Admin-UI-Component-Forms), then add one or more rows:
 
 * **Start At** selects the daily hour.
 * **Batch Mode** splits one complete generation across multiple worker runs.
 * **Batch Limit** sets the maximum number of product objects processed per batch.
+
+New feeds can start with a default daily schedule. Remove all schedule rows and save when generation should remain manual; final-row deletion was verified in the UI Component candidate. Live cron execution remains a separate acceptance check.
 
 Allow enough time between schedules for the earlier generation and any uploads to finish. The first schedule row's batch settings are also used by **Run Now**.
 

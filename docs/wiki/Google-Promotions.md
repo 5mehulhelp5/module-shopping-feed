@@ -2,7 +2,9 @@
 
 Google Promotions is a companion file generated from an enabled Google Shopping feed. It maps selected Magento cart price rules into promotion rows and can add matching promotion IDs to product rows.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+
+**Unreleased editor repair:** the working tree keeps localized date display separate from `Y/m/d` storage. All four effective/display dates passed two saves and companion generation in disposable Mage-OS acceptance. The deployed `9f07e46` still has the blank-date/data-loss defect. Already-erased dates require recovery from a configuration backup; the fix does not reconstruct them. See [Admin UI Component forms](Admin-UI-Component-Forms).
 
 ## Prerequisites
 
@@ -25,7 +27,7 @@ The header is singular. The directive returns IDs for configured promotions that
 
 ## Configure the companion feed
 
-Open the **Google Promotions** tab:
+Open **Google Promotions**, a tab in 1.1 and a collapsible section in the candidate:
 
 1. Set **Enable feed** to **Yes**.
 2. Select the cart price rules to include.
@@ -62,6 +64,6 @@ When a new Promotions file is created, it uses the Google Shopping feed's config
 
 1. Confirm the product feed contains expected `promotion_id` values.
 2. Confirm only selected and eligible cart rules appear in the Promotions file.
-3. Check titles, dates, coupon codes, applicability, destinations, and minimum purchase values.
+3. Check titles, dates, coupon codes, applicability, destinations, and minimum purchase values. Verify effective-from, effective-to, display-from, and display-to after reopening and again after an unchanged save; then compare them with the generated companion file.
 4. Submit to a non-serving Promotions destination.
 5. Record Google processing results before enabling a production schedule.

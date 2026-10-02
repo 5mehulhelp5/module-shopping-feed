@@ -48,3 +48,11 @@ Both module identities can be installed for evaluation because their runtime res
 ## Future importer
 
 A migration utility, if added, should be an explicit preview-and-confirm command. It must copy into the new tables, preserve the original data, report unsupported fields, and leave generation and uploads disabled until approved. No such importer is included today.
+
+## Upgrading existing Mage-OS editor customizations
+
+The unreleased UI Component editor at `9f07e46` is a separate change from Rocket Web data migration. It keeps the Mage-OS schema, routes, configuration keys, and prepare-save event, but replaces the default PHP form blocks and tabs. The module's own former observers/plugins have been converted; downstream customizations of those hooks require their own migration.
+
+Use `ShoppingFeedFormModifierPool` for UI metadata/data modifiers and declarative parameter definitions or custom UI components for directive editors. Legacy `prepare_form_*` observers, tab-block plugins, and arbitrary PHP/PHTML parameter renderers do not customize the new default form. Stores without such customizations do not need a custom adapter. See [the developer contract](docs/ui-component-editor.md).
+
+The original `9f07e46` failed category-generation and promotion-date checks. [Local repairs and verification](docs/reviews/2026-10-02-ui-component-editor-fixes.md) now cover those failures, but they are not deployed to `mageos-latest` or released. Evaluate the exact repaired revision on staging. No schema change is required, but saved configuration still needs a backup: code rollback cannot restore erased date values. There is no old/new editor configuration switch, and changing the Admin theme does not restore the old editor.

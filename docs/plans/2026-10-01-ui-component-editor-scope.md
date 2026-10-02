@@ -2,7 +2,7 @@
 
 Prepared October 1, 2026 against `feat/1.2-release` at `f8488b1258cf52f8bb38dc53b983cc745ba28599`.
 
-Status: source-based scope and estimates. No application implementation or runtime acceptance was performed for this scope.
+Historical scope and estimates, prepared before implementation. The default editor was subsequently implemented in `9f07e46` and deployed locally. The Nebula fallback and grid integration remain. Later [Chrome acceptance failed on category generation and promotion-date preservation](../reviews/2026-10-01-ui-component-chrome-acceptance.md); the work is not release-ready. Use the [implementation guide](../ui-component-editor.md) for the actual extension points. The proposals, counts, and effort estimates below describe the original baseline, not remaining work or elapsed time.
 
 ## Recommendation
 

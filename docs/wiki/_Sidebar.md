@@ -11,6 +11,7 @@
 * [Quick start](Quick-Start)
 * [Migration and coexistence](Migration-and-Coexistence)
 * [Feed types and lifecycle](Feed-Types-and-Lifecycle)
+* [Admin UI Component forms (unreleased)](Admin-UI-Component-Forms)
 
 **Feed guides**
 

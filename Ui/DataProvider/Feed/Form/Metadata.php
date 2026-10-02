@@ -181,6 +181,7 @@ class Metadata
                 foreach (['date' => 'Effective', 'display' => 'Display'] as $key => $label) {
                     foreach (['from', 'to'] as $boundary) {
                         $children[$key . '.' . $boundary] = ['label' => __($label . ' ' . $boundary),
+                            'component' => 'MageOS_ShoppingFeed/js/form/promotion-date',
                             'formElement' => 'date', 'dataType' => 'date', 'options' => ['dateFormat' => 'yyyy/MM/dd'],
                             'inputDateFormat' => 'yyyy/MM/dd', 'outputDateFormat' => 'yyyy/MM/dd'];
                     }

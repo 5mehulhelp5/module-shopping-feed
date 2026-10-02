@@ -31,7 +31,7 @@ define(['Magento_Ui/js/form/element/abstract', 'ko'], function (Element, ko) {
             this.rows.forEach(function (row) {
                 if (row.store_active) {
                     result[row.id] = Object.assign({}, result[row.id] || {}, {
-                        d: row.enabled() ? 1 : 0, p: row.priority(), tx: row.taxonomy(), ty: row.productType()
+                        id: row.id, d: row.enabled() ? 1 : 0, p: row.priority(), tx: row.taxonomy(), ty: row.productType()
                     });
                 }
             });

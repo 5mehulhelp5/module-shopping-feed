@@ -50,6 +50,16 @@ test('opening a custom parameter keeps its exact structure; explicit directive c
     assert.equal(field.value(), '1');
 });
 
+test('parameter initialization preserves null defaults and explicit empty values', () => {
+    const component = load('parameter', [base, load('preserve-options')]);
+    for (const value of [null, '', '0', 0, false, ['literal']]) {
+        const field = Object.assign({}, component, {value: observable(value), default: 'replacement'});
+        assert.equal(field.getInitialValue(), value);
+    }
+    const missing = Object.assign({}, component, {value: observable(undefined), default: 'kg'});
+    assert.equal(missing.getInitialValue(), 'kg');
+});
+
 test('provider submits empty arrays and literal nested parameters in a lossless envelope', () => {
     const provider = load('provider', [base]);
     const data = {config: {columns_product_columns: [], custom: {param: ['0', false, '\\d+ <x>']}}, uploads: []};
@@ -143,6 +153,8 @@ test('category edits preserve zero priorities, inactive and unknown mappings, an
     field.rows[0].productType('Parent type');
     field.disableAll();
     const mapping = plain(field.value());
+    assert.equal(mapping[2].id, 2);
+    assert.equal(mapping[3].id, 3);
     assert.equal(mapping[3].tx, 'Office > Paper');
     assert.equal(mapping[3].ty, 'Keep this');
     assert.equal(mapping[2].d, 0);

@@ -2,7 +2,9 @@
 
 General Configuration defines the store context, output location, delimiter, price behavior, and stock behavior for one feed.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-30.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+
+The unreleased editor labels this section **General**. Its [Admin form guide](Admin-UI-Component-Forms) covers save controls, store-view reloads, and current acceptance blockers.
 
 ## Feed settings
 
@@ -11,7 +13,8 @@ General Configuration defines the store context, output location, delimiter, pri
 | Name | The label shown in the Admin. It is not the output filename. |
 | Store View | The store context used for product attributes, URLs, prices, categories, and inventory. |
 | Feed Currency | The currency used when formatting price directives. Only currencies allowed for the selected store are offered. |
-| Feed Path | The directory and generated filename. Output is restricted to `pub/media/mageos-shopping-feed` and safe subdirectories. |
+| Feed Path | The output directory. Output is restricted to `pub/media/mageos-shopping-feed` and safe subdirectories. |
+| File Name | The output filename; `%s` substitutes the feed ID. A literal name is retained when cloning, so review it before generating a clone. |
 | Delimiter | The field separator for generated rows. Google templates default to tabs. Generic comma output quotes CSV fields by default. |
 | Cell Enclosure (Generic) | Optional enclosure for each header and value. Blank uses double quotes for comma output and no enclosure for other delimiters. |
 | Enclosure Escape (Generic) | Prefix for an enclosure inside a cell. Blank doubles the enclosure character. |

@@ -75,7 +75,7 @@ class Builder
             throw new \Magento\Framework\Exception\LocalizedException(__('Invalid feed type.'));
         }
         $useMicrodata = $this->nonNegativeInteger(
-            $formData['use_microdata'] ?? ($typeId !== 'generic' ? 1 : 0), 'use_microdata'
+            $formData['use_microdata'] ?? ($typeId === 'google_shopping' ? 1 : 0), 'use_microdata'
         );
         if ($useMicrodata > 1) {
             throw new \Magento\Framework\Exception\LocalizedException(__('Invalid use_microdata value.'));

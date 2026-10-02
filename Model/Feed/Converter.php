@@ -18,6 +18,8 @@
 
 namespace MageOS\ShoppingFeed\Model\Feed;
 
+use Magento\Framework\Exception\LocalizedException;
+
 class Converter
 {
     /**
@@ -79,7 +81,11 @@ class Converter
 
                 if ($path === 'categories_provider_taxonomy_by_category') {
                     if (is_string($value) && $value !== '') {
-                        $value = $this->jsonDecoder->decode($value);
+                        try {
+                            $value = $this->jsonDecoder->decode($value);
+                        } catch (\InvalidArgumentException $exception) {
+                            throw new LocalizedException(__('Invalid Categories Map JSON.'));
+                        }
                     }
                     $value = $this->_configTaxonomyDeleteDefaults($value);
                 }
@@ -142,15 +148,33 @@ class Converter
      */
     protected function _configTaxonomyDeleteDefaults($data)
     {
-        if (is_array($data)) {
-            foreach ($data as $k => $row) {
-                if (empty($row['tx']) && empty($row['ty'])
-                    && $row['d'] == 1 && $row['p'] == 0
-                ) {
-                    unset($data[$k]);
-                }
+        if ($data === '' || $data === null) {
+            return [];
+        }
+        if (!is_array($data)) {
+            throw new LocalizedException(__('Invalid Categories Map.'));
+        }
+        foreach ($data as $id => &$row) {
+            if (!ctype_digit((string)$id) || (int)$id <= 0 || !is_array($row)
+                || !isset($row['d'], $row['p'])
+                || !in_array($row['d'], [0, 1, '0', '1'], true)
+                || (!is_int($row['p']) && !is_string($row['p']))
+                || ($row['p'] !== '' && !ctype_digit((string)$row['p']))
+                || (isset($row['tx']) && !is_string($row['tx']))
+                || (isset($row['ty']) && !is_string($row['ty']))
+                || (isset($row['id']) && (!is_scalar($row['id']) || (string)$row['id'] !== (string)$id))
+            ) {
+                throw new LocalizedException(__('Invalid category mapping for category %1.', $id));
+            }
+            // Numeric map keys are reindexed when the generator sorts the rows.
+            $row['id'] = (int)$id;
+            if (empty($row['tx']) && empty($row['ty']) && $row['d'] == 1 && (int)$row['p'] === 0
+                && !array_diff(array_keys($row), ['id', 'd', 'p', 'tx', 'ty'])
+            ) {
+                unset($data[$id]);
             }
         }
+        unset($row);
 
         return $data;
     }

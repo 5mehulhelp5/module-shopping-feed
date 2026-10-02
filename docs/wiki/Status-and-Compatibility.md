@@ -2,7 +2,9 @@
 
 Mage-OS Shopping Feed 1.1.0 is the current stable release. See [Release 1.1.0](Release-1-1-0) for changes and recorded acceptance. Existing Rocket Web installations are not upgraded or migrated automatically.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-02.
+
+The unreleased [UI Component editor candidate](Admin-UI-Component-Forms) at `9f07e46` keeps the Composer requirements. Earlier disposable Magento Open Source 2.4.8 and 2.4.9 checks passed their fixtures, but later Mage-OS browser testing found two shared-code regressions. Local repairs now pass production-mode Docker browser/output checks, 788 unit tests, 14 integration tests, and four database tests on each Magento version, plus the earlier disposable Mage-OS browser checks. The Docker run also repaired loss of null directive defaults. Server-side restricted-role checks pass; the standard grid still exposes denied controls. Deployment to `mageos-latest` remains outstanding. See `docs/reviews/2026-10-02-magento-docker-acceptance.md` in the repository. Native Nebula bridge rendering remains unverified.
 
 ## Package identity
 
@@ -35,7 +37,7 @@ Compatibility in CI is not a production acceptance result. Test the exact module
 
 ## Admin theme compatibility
 
-The module retains Magento's standard Admin grid and provides an optional native grid for Nebula Admin. Nebula installations use its native filtering, sorting, selection, and pagination controls. Feed editing, product previews, and logs open in Magento's standard Admin layout, with the existing configuration tabs and widgets. Back and Save return to the Nebula list. This is a native grid integration with the standard editor, not a replacement editor built with Nebula forms.
+Released version 1.1.0 retains Magento's standard Admin grid and provides an optional native grid for Nebula Admin. Nebula installations use its native filtering, sorting, selection, and pagination controls. Feed editing, product previews, and logs open in Magento's standard Admin layout, with the existing configuration tabs and widgets. Back and Save return to the Nebula list. This is a native grid integration with the standard editor, not a replacement editor built with Nebula forms.
 
 The integration activates automatically when the Nebula modules and theme are active. It adds no required Nebula package and does not change unrelated Admin screens. Mass actions retain the module's existing POST, form-key, and ACL checks. The grid excludes feed configuration and upload credentials.
 

@@ -2,7 +2,9 @@
 
 The safest first feed has one store view, no upload destination, no schedule, and a small set of known products. Generate it, inspect it, correct it, then add automation.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+
+For the unreleased editor, read [Admin UI Component forms](Admin-UI-Component-Forms) first. Its collapsible sections replace the old tabs, and category generation and promotion-date preservation currently block acceptance. Use disposable fixtures for candidate evaluation.
 
 ## 1. Open feed management
 
@@ -16,18 +18,19 @@ Choose one of the available templates:
 * **Google Shopping** for a Google product data source
 * **Google Local Inventory** for location-specific inventory data
 
-Google Promotions are configured inside a Google Shopping feed rather than created as a fourth feed type in the New Feed menu.
+Google Promotions are configured inside a Google Shopping feed rather than created as a separate New Feed preset. The development branch also includes Meta, Microsoft, TikTok, Pinterest, and OpenAI Google-compatible presets; see [Feed types and lifecycle](Feed-Types-and-Lifecycle).
 
 ## 3. Set the feed identity
 
-On **General Configuration**:
+On **General Configuration** in 1.1, or **General** in the UI Component candidate:
 
 1. Enter a clear Admin name.
 2. Select the store view.
 3. Select the feed currency.
 4. Keep the output under `pub/media/mageos-shopping-feed`.
 5. Review delimiter and stock behavior.
-6. Save before configuring fields that depend on the current column map.
+6. Open **Run Schedule** in 1.1, or **Schedule** in the candidate, and remove any default schedule before the first save. New feeds can start with a daily schedule.
+7. Confirm **Uploads** is empty, then save before configuring fields that depend on the current column map.
 
 ## 4. Review the default columns
 

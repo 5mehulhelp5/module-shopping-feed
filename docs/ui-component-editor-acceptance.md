@@ -1,6 +1,10 @@
 # UI Component editor acceptance
 
-Pre-deployment acceptance of the implementation on `feat/ui-component-editor`, based on `f8488b1258cf52f8bb38dc53b983cc745ba28599`. This report records the disposable-installation checks below; deployment verification is recorded separately in the target installation's backup directory.
+Historical pre-deployment checks of the implementation on `feat/ui-component-editor`, built on `f8488b1258cf52f8bb38dc53b983cc745ba28599` and subsequently committed as `9f07e46`. This report records the disposable-installation checks below; it does not describe a separate fixed revision.
+
+**Superseded for the release decision by the [deployed Chrome acceptance report](reviews/2026-10-01-ui-component-chrome-acceptance.md).** Later testing on October 1, 2026 found two blocking regressions: newly saved category mappings omit IDs required by generation, and promotion dates can be blanked and then erased by an ordinary save. The earlier checks below passed their fixtures but did not prove generation after creating a new category mapping or preservation of all four promotion dates through two saves. No fix or unrestricted compatibility claim is implied by this report.
+
+The repaired working tree was subsequently tested in complete Magento Open Source Docker installations. See the [October 2 Docker report](reviews/2026-10-02-magento-docker-acceptance.md) for current platform evidence and remaining findings. This historical report is unchanged below.
 
 ## Tested installations
 
@@ -50,6 +54,8 @@ php dev/tests/validate-magento-xml.php /path/to/magento
 Local evidence is retained under `/private/tmp/shopping-feed-ui-20261001/evidence/`: `roundtrip248-comparison.json`, `roundtrip249-comparison.json`, `advanced248-final.log`, `advanced249-final.log`, `advanced350.log`, `preview350-final.log`, `create-all*-final.log`, `create-all350.log`, `save-all350.log`, `production248.log`, `production249.log`, `compile248-final.log`, `compile249-final.log`, `delete249-final.log`, `unit-final.log`, `frontend-final.log`, `rollback-check.log`, `source-parity.json`, and `ui-component-form249.png`.
 
 ## Remaining release boundaries
+
+Fix the two browser-reproduced regressions and repeat their full save/reload/generate sequences on Magento Open Source 2.4.8, 2.4.9, and Mage-OS 3.5.0. Restricted-role/ACL browser acceptance, external delivery, live scheduled execution, provider ingestion, and large-catalog performance remain unverified in the later deployed run. Static ACL guards and tests do not establish restricted-role browser acceptance.
 
 Native rendering through a Nebula UI Bridge has not been accepted. The existing editor theme fallback and separate Nebula grid integration remain. No Nebula dependency was added, and no unsupported bridge path was enabled.
 

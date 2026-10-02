@@ -2,6 +2,8 @@ define(['Magento_Ui/js/form/element/abstract', './preserve-options'], function (
     'use strict';
     return Element.extend({
         defaults: {
+            // Initial value links must not replace a stored null with the base field's empty string.
+            value: null,
             definitions: {}, kind: 'none', parameterLabel: '', parameterNotice: '', parameterOptions: [],
             ignoreTmpls: {definitions: true}, listens: {attribute: 'changeAttribute'}
         },
@@ -11,6 +13,11 @@ define(['Magento_Ui/js/form/element/abstract', './preserve-options'], function (
         },
         normalizeData: function (value) {
             return value === undefined ? '' : value;
+        },
+        getInitialValue: function () {
+            var value = this.value();
+            // Null invokes generator defaults; an explicit empty string does not.
+            return value === undefined ? this.normalizeData(this.default) : value;
         },
         changeAttribute: function (attribute) {
             var known = Object.prototype.hasOwnProperty.call(this.definitions, attribute),

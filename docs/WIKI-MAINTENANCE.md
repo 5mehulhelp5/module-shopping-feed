@@ -54,7 +54,7 @@ Publishing wiki content does not imply permission to commit or push changes to t
 Review the wiki for every release that changes:
 
 * Composer or platform requirements
-* Admin paths, tabs, fields, or ACL resources
+* Admin paths, sections, fields, or ACL resources
 * Feed types, directives, or default columns
 * Output files, logs, locks, commands, or cron behavior
 * Upload modes or credential handling
@@ -62,3 +62,9 @@ Review the wiki for every release that changes:
 * Migration behavior
 
 At minimum, recheck Google-owned links and terminology at release time. Keep Merchant Center navigation brief because its interface changes independently of this module.
+
+## Unreleased editor documentation
+
+The `9f07e46` UI Component candidate is not a release. `Admin-UI-Component-Forms` and the marked candidate notes in other pages describe that revision and its unresolved browser failures. Keep released 1.1 instructions identifiable. Do not replace historical acceptance results; add a prominent link to later evidence when it changes the release decision.
+
+The current browser record is `docs/reviews/2026-10-01-ui-component-chrome-acceptance.md`. Both category generation and promotion-date preservation must pass after repair before removing their blocker notices. When preparing publication, update every linked candidate notice, the README, changelog, developer guide, and acceptance record together. Verify that the referenced commit and evidence are publicly available before copying these pages into the wiki. Local documentation edits do not publish the wiki.

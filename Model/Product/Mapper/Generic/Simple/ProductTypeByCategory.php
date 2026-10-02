@@ -79,6 +79,8 @@ class ProductTypeByCategory extends MapperAbstract
             ];
 
             foreach ($map as $categoryId => $data) {
+                // Recover identity for rows saved by the initial UI editor before numeric keys are sorted away.
+                $map[$categoryId]['id'] = $data['id'] ?? $categoryId;
                 // Build a sort array by category level and priority
                 $sort['level'][$categoryId] = isset($categories[$categoryId]) ? $categories[$categoryId]['level'] : 0;
                 $sort['priority'][$categoryId] = $data['p'];

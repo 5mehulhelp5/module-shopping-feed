@@ -1,6 +1,8 @@
 # Pinterest Catalog
 
-> Documentation baseline: 1.2 development (unreleased). Last reviewed: 2026-09-29.
+> Documentation baseline: 1.2 development preset with unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+
+When using the unreleased `9f07e46` editor, read [Admin UI Component forms](Admin-UI-Component-Forms) before editing. Local repairs address category generation and hidden microdata defaults, but have not been deployed to `mageos-latest`. Template-level generation results do not establish acceptance of every editor workflow.
 
 The **Pinterest Catalog** preset produces quoted UTF-8 TSV for a primary retail catalog. It uses the module's generation, Test Feed, scheduling, and upload tools. Pinterest import acceptance has not been verified.
 

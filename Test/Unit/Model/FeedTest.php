@@ -103,6 +103,22 @@ class FeedTest extends ModelFramework
         self::assertSame($columns, $this->feed->getConfig()->getData('columns_product_columns'));
     }
 
+    #[DataProvider('invalidHeaderNames')]
+    public function testRejectsHeaderControlCharactersAtTheModelSaveBoundary(string $name): void
+    {
+        $this->feed->setData('config', new \Magento\Framework\DataObject([
+            'columns_product_columns' => [['column' => $name, 'attribute' => 'sku']]
+        ]));
+        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
+        $this->expectExceptionMessage('Column names must not contain control characters.');
+        (new \ReflectionMethod($this->feed, 'validate'))->invoke($this->feed);
+    }
+
+    public static function invalidHeaderNames(): array
+    {
+        return [["title\textra"], ["title\nextra"], ["title\rextra"], ["title\0extra"], ["title\x7fextra"]];
+    }
+
     /**
      * Test columns map
      */

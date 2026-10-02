@@ -1,6 +1,8 @@
 # Meta Catalog
 
-> Documentation baseline: 1.2 development (unreleased). Last reviewed: 2026-09-29.
+> Documentation baseline: 1.2 development preset with unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+
+When using the unreleased `9f07e46` editor, read [Admin UI Component forms](Admin-UI-Component-Forms) before editing. Local repairs address category generation and hidden microdata defaults, but have not been deployed to `mageos-latest`. Template-level generation results do not establish acceptance of every editor workflow.
 
 The **Meta Catalog (Facebook and Instagram)** template produces a quoted UTF-8 TSV file for a product catalog in Meta Commerce Manager. It uses the existing generation queue, Test Feed, scheduling, and upload tools. A local Mage-OS 3.5.0 demo passed generated-file, Admin preview, inventory, and storefront variant checks on 2026-09-29. Commerce Manager acceptance has not been verified for this template yet.
 
@@ -25,7 +27,7 @@ Create a feed at **Catalog > Mage-OS Shopping Feed > Feeds Management**, select 
 | `google_product_category` | Taxonomy by Magento Category | Configure the Categories Map where applicable. |
 | `product_type` | Magento category path | Review the path depth. |
 
-The template exports configurable children with parent context and enables complex-product context prioritization to keep grouping consistent. Check representative parent and child products with **Test Feed**. Grouped, bundle, and custom-option behavior remains configurable in the existing tabs.
+The template exports configurable children with parent context and enables complex-product context prioritization to keep grouping consistent. Check representative parent and child products with **Test Feed**. Grouped, bundle, and custom-option behavior remains configurable in the corresponding editor sections.
 
 ## Availability
 

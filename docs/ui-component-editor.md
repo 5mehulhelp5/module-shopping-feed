@@ -1,6 +1,16 @@
 # Admin UI Component editor
 
-The default New/Edit Feed screen and Test Feed screen use Magento UI Component forms. The editor keeps the existing routes, feed types, configuration keys, database schema, generators, and save permissions. General settings, mappings, categories, filters, product options, product relationships, shipping, schedules, uploads, and Google promotions remain available, with the existing type-specific differences.
+Baseline: unreleased `feat/ui-component-editor` working tree based on `9f07e46`, including the local defect repairs. Reviewed October 2, 2026. Released version 1.1.0 uses the previous editor.
+
+**The reproduced defects are repaired locally.** The [repair report](reviews/2026-10-02-ui-component-editor-fixes.md) records passing save/reload/generation checks in a disposable Mage-OS installation and framework regression coverage on Magento 2.4.8/2.4.9. The [deployed Chrome failures](reviews/2026-10-01-ui-component-chrome-acceptance.md) still apply to `mageos-latest`, which has not received these fixes. The repaired workflows now pass browser/output checks in production-mode Docker installations of both Magento versions. The [Docker report](reviews/2026-10-02-magento-docker-acceptance.md) records exact coverage, a further null-parameter fix, and the remaining read-only grid control issue. Deployment and release gates remain separate.
+
+The candidate's default New/Edit Feed screen and Test Feed screen use Magento UI Component forms. The editor keeps the existing routes, feed types, configuration keys, database schema, generators, and save permissions. General settings, mappings, categories, filters, product options, product relationships, shipping, schedules, uploads, and Google promotions have corresponding form sections, with the existing type-specific differences. See the [operating guide](wiki/Admin-UI-Component-Forms.md) for controls and current limitations.
+
+## Platform and customization compatibility
+
+The migration does not raise Composer's platform requirements. Earlier disposable Magento Open Source 2.4.8 and 2.4.9 installations passed the recorded form, output, DI, and static-deployment checks but missed the later defects. The repairs now pass unit, integration, database, framework JavaScript, production compilation, and browser/output checks on both versions. The Docker run used PHP 8.4.26 and the standard Magento/backend Admin. This verifies the recorded workflows and fixtures; it does not establish third-party editor customization, native Nebula bridge, external delivery, or large-catalog acceptance.
+
+The customization change affects both the module's own former observers/plugins, now replaced with metadata, and any third-party modules that extended those old editor hooks. A store without those customizations does not need to write its own adapter. Sites with custom observers, plugins, or parameter renderers need the migration described below. Inventory downstream integrations before upgrading.
 
 ## Form architecture
 
@@ -12,11 +22,13 @@ The default New/Edit Feed screen and Test Feed screen use Magento UI Component f
 - The converter applies submitted configuration keys to the loaded feed. Unexposed custom configuration remains stored. Selects preserve unavailable saved options, and unknown parameter renderers preserve their values with a read-only notice.
 - Failed saves use `DataPersistor` keyed to the feed ID, type, and store. New and changed passwords must be entered again; decrypted passwords and typed replacement passwords are not restored into provider JSON.
 
-The old column widget required stripping newlines and coercing all mapping values to strings before saving. That workaround is removed. The new form preserves literal text and structured parameters. Normal existing feed output is unchanged; deliberately entering literal whitespace can now affect that column's output.
+The old column widget required stripping newlines and coercing all mapping values to strings before saving. That workaround is removed. The new form preserves literal text, structured parameters, and null parameters. Its parameter component starts with a null value and preserves it during initial-value calculation because Magento skips null imports while exporting non-null defaults. This keeps generator defaults distinct from an explicitly empty parameter. Model save now rejects control characters in column names, preventing unenclosed header corruption without changing parameter text. Product-value cleaning and CSV serialization still apply during generation.
+
+Category conversion validates both decoded envelopes and legacy JSON maps, preserves valid custom row fields, and supplies embedded IDs before pruning defaults. Generation also recovers missing IDs from existing map keys before sorting. Preview validates lookup inputs before product loading. The `promotion-date` component keeps localized display separate from canonical storage. New Google Shopping feeds retain the microdata default of one; all other new presets default to zero, and existing selections are preserved. See the [reconciled review](reviews/2026-10-01-ui-component-editor-review.md) for the original failure mechanisms.
 
 ## Extending the editor
 
-PHP form-block `prepare_form_*` events and plugins on the legacy tab blocks no longer customize the default editor. Their six bundled observers and two tab-visibility plugins have been replaced by metadata behavior. The legacy class/template files remain in the package for a transition period, but the default routes do not render them.
+PHP form-block `prepare_form_*` events and plugins on the legacy tab blocks no longer customize the default editor. Their six bundled observers and two tab-visibility plugins have been replaced by metadata behavior. The previous form classes/templates remain in the package for a transition period. Some related classes still have live callers: `Block/Adminhtml/Feed/Edit/Menu` supports the Nebula fallback, and `Edit/Tab/Options/Category/Tree` supplies category suggestions. Legacy renderer class names also remain configuration identifiers resolved by `Form/Parameters`. Audit these dependencies, validator references, and tests before removing retained files.
 
 Use a Magento UI data-provider modifier implementing `Magento\Ui\DataProvider\Modifier\ModifierInterface`. Register it in your module's `etc/adminhtml/di.xml`, with a module sequence after `MageOS_ShoppingFeed`:
 
@@ -39,14 +51,18 @@ For a custom directive's parameter editor, add its existing PHP renderer class i
 
 The `mageos_shopping_feed_feed_prepare_save` event remains available and receives decoded form parameters. Existing non-UI save requests remain supported. Do not rely on browser validation for authorization or data ownership.
 
+Modifier authors must mask secrets before returning data. The built-in projection is redacted before `modifyData()` runs, so a modifier must not add decrypted upload passwords or other private model fields back into the response. Preserve unknown configuration and child ownership when adding fields; cover failed-save recovery as well as successful saves. Custom `config` keys are an intentional extension contract and may be consumed by downstream directives or modules. Validate known fields without replacing that contract with a built-in-only key allowlist. Custom controls must enforce their own permission and escaping requirements.
+
 ## Nebula support
 
 This is one shared Magento form implementation and has no required Nebula dependency. It removes the default editor's reliance on the old PHP form renderer, Prototype-era row widgets, global editor scripts, and the custom PHP dependency element. Future theme support can use the same form metadata and persistence contract.
 
-The existing `FeedEditorTheme` fallback and menu cache handling remain. The inspected Nebula 0.9.0 installation does not include UI Bridge, and translating the custom parameter/category controls through a bridge has not been accepted. Nebula installations therefore continue using Magento/backend for the editor, preview, and log routes. The separate Nebula grid integration is unchanged. This migration does **not** claim that most of the approximately 575 lines of Nebula integration have been removed; roughly 495 lines concern the grid, and removing the editor fallback requires separate native Nebula acceptance.
+The existing `FeedEditorTheme` fallback and menu cache handling remain. The inspected Nebula 0.9.0 installation does not include UI Bridge, and translating the custom parameter/category controls through a bridge has not been accepted. Nebula installations therefore continue using Magento/backend for the editor, preview, and log routes. The separate Nebula grid integration is unchanged. The scope review counted approximately 575 integration lines, roughly 495 of them for the grid. These counts include comments and whitespace. The migration removes the active editor's need for legacy dependency/rendering workarounds; it does not delete most of that integration. Retiring the remaining editor fallback requires separate native Nebula acceptance. See the [original scope and counts](plans/2026-10-01-ui-component-editor-scope.md#reduction-in-nebula-specific-customization).
 
 Existing users with custom observers, tab plugins, or parameter renderers should migrate those editor integrations before upgrading. This is an extension customization API change, independent of Magento platform compatibility.
 
 ## Rollback
 
-There is no database migration. Reverting the package code restores the previous editor after the normal DI compilation, static asset deployment, and cache refresh for that installation. Retain a normal deployment backup and test any site-specific custom parameter structures against the older editor, which normalizes mapping values more aggressively.
+There is no schema migration or configuration switch between the old and new Shopping Feed editors. Changing the Admin theme does not restore the old editor. Reverting the package code restores it after the normal DI compilation, static asset deployment, and cache refresh for that installation.
+
+Code rollback does not repair promotion dates already erased by a save or category mappings already written without IDs. Retain the pre-upgrade configuration backup and compare affected feeds before restoring individual values. Test site-specific structured parameters against the older editor, which normalizes mapping values more aggressively. The local deployment's rollback script is documented in the [Chrome acceptance record](reviews/2026-10-01-ui-component-chrome-acceptance.md#local-deployment-record).

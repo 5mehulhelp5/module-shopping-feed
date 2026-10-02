@@ -2,7 +2,7 @@
 
 Treat feed performance as a measured workload. Product count alone does not explain cost because field directives and complex-product expansion can dominate generation time.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with unreleased editor labels. Last reviewed: 2026-10-01.
 
 ## Start with a baseline
 
@@ -32,7 +32,7 @@ Disable unused work rather than increasing resource limits first.
 
 ## Batch mode
 
-Enable **Batch Mode** on the feed's **Run Schedule** tab and set **Batch Limit** to a product-object count that completes comfortably inside the environment's time and memory limits.
+Enable **Batch Mode** under **Run Schedule** in 1.1, or **Schedule** in the [UI Component candidate](Admin-UI-Component-Forms), and set **Batch Limit** to a product-object count that completes comfortably inside the environment's time and memory limits.
 
 If no positive limit is stored, the batch object defaults to 1000. Generation can also switch itself into batch mode when it approaches available execution time or memory, preserving the next offset in the schedule or queue.
 

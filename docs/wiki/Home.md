@@ -8,7 +8,9 @@ Mage-OS Shopping Feed generates product feeds from Mage-OS and Magento Open Sour
 
 The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) covers the required schema update and changes to saved Google and comma-delimited feeds. [Release 1.0.0](Release-1-0-0) remains available as a historical record.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-02.
+
+The unreleased [Admin UI Component forms](Admin-UI-Component-Forms) candidate changes the editor and its customization hooks. Local repairs now pass the affected Mage-OS browser workflows and production-mode Docker checks on Magento Open Source 2.4.8 and 2.4.9. The standard grid still shows mutation controls to read-only users, although the server denies those requests. Deployment and release gates remain separate. The deployed `9f07e46` still has the original defects. The guide separates candidate behavior from the released 1.1 editor.
 
 ## What the module does
 
