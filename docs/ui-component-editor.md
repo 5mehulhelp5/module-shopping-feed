@@ -1,8 +1,8 @@
 # Admin UI Component editor
 
-Baseline: unreleased `feat/ui-component-editor` working tree based on `9f07e46`, including the local defect repairs. Reviewed October 2, 2026. Released version 1.1.0 uses the previous editor.
+Baseline: unreleased `feat/ui-component-editor`, with form repairs committed as `c8092ca` and the subsequent grid permission repair. Reviewed October 2, 2026. Released version 1.1.0 uses the previous editor.
 
-**The reproduced defects are repaired locally.** The [repair report](reviews/2026-10-02-ui-component-editor-fixes.md) records passing save/reload/generation checks in a disposable Mage-OS installation and framework regression coverage on Magento 2.4.8/2.4.9. The [deployed Chrome failures](reviews/2026-10-01-ui-component-chrome-acceptance.md) still apply to `mageos-latest`, which has not received these fixes. The repaired workflows now pass browser/output checks in production-mode Docker installations of both Magento versions. The [Docker report](reviews/2026-10-02-magento-docker-acceptance.md) records exact coverage, a further null-parameter fix, and the remaining read-only grid control issue. Deployment and release gates remain separate.
+**The reproduced defects are repaired locally.** The [repair report](reviews/2026-10-02-ui-component-editor-fixes.md) records passing save/reload/generation checks in a disposable Mage-OS installation and framework regression coverage on Magento 2.4.8/2.4.9. The [deployed Chrome failures](reviews/2026-10-01-ui-component-chrome-acceptance.md) still apply to `mageos-latest`, which has not received these fixes. The repaired workflows now pass browser/output checks in production-mode Docker installations of both Magento versions. The [Docker report](reviews/2026-10-02-magento-docker-acceptance.md) records exact coverage and a further null-parameter fix. Its read-only grid control finding is resolved in the [permission follow-up](reviews/2026-10-02-grid-permission-acceptance.md). Deployment and release gates remain separate.
 
 The candidate's default New/Edit Feed screen and Test Feed screen use Magento UI Component forms. The editor keeps the existing routes, feed types, configuration keys, database schema, generators, and save permissions. General settings, mappings, categories, filters, product options, product relationships, shipping, schedules, uploads, and Google promotions have corresponding form sections, with the existing type-specific differences. See the [operating guide](wiki/Admin-UI-Component-Forms.md) for controls and current limitations.
 
@@ -52,6 +52,14 @@ For a custom directive's parameter editor, add its existing PHP renderer class i
 The `mageos_shopping_feed_feed_prepare_save` event remains available and receives decoded form parameters. Existing non-UI save requests remain supported. Do not rely on browser validation for authorization or data ownership.
 
 Modifier authors must mask secrets before returning data. The built-in projection is redacted before `modifyData()` runs, so a modifier must not add decrypted upload passwords or other private model fields back into the response. Preserve unknown configuration and child ownership when adding fields; cover failed-save recovery as well as successful saves. Custom `config` keys are an intentional extension contract and may be consumed by downstream directives or modules. Validate known fields without replacing that contract with a built-in-only key allowlist. Custom controls must enforce their own permission and escaping requirements.
+
+## Grid permissions and extensions
+
+The standard grid checks `MageOS_ShoppingFeed::save` for Create New Feed, Configure, Enable, Disable, and Clone; `MageOS_ShoppingFeed::generate` for Run Now; and `MageOS_ShoppingFeed::delete` for bulk Delete. Test Feed, View Log, and Export remain available with the grid permission. The bulk-action dropdown is omitted when no permitted actions remain. Controller ACL and POST/form-key checks still enforce requests independently of visibility.
+
+The grid uses `Ui/Component/Listing/MassAction`, which filters each action's `config/aclResource` after Magento collects the actions. Custom actions without that setting retain their existing visibility; mutation actions added by other modules should declare their own ACL resource and enforce it in their controller. Explicitly disabled actions remain disabled.
+
+`Ui/Component/Listing/Column/FeedActions` now receives `Magento\Framework\AuthorizationInterface` after `$urlBuilder` and before the optional arrays. Magento DI supplies it. A downstream subclass that calls this constructor explicitly must pass the added dependency; a plugin that adds row actions must check its own permissions.
 
 ## Nebula support
 

@@ -108,7 +108,7 @@
                 </argument>
             </filterSelect>
         </filters>
-        <massaction name="listing_massaction">
+        <massaction name="listing_massaction" class="MageOS\ShoppingFeed\Ui\Component\Listing\MassAction">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="selectProvider" xsi:type="string">mageos_shopping_feed_grid.mageos_shopping_feed_grid.feed_columns.ids</item>
@@ -119,6 +119,7 @@
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">enable</item>
+                        <item name="aclResource" xsi:type="string">MageOS_ShoppingFeed::save</item>
                         <item name="label" xsi:type="string" translate="true">Enable</item>
                         <item name="url" xsi:type="url" path="*/*/massEnable"/>
                     </item>
@@ -128,6 +129,7 @@
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">disable</item>
+                        <item name="aclResource" xsi:type="string">MageOS_ShoppingFeed::save</item>
                         <item name="label" xsi:type="string" translate="true">Disable</item>
                         <item name="url" xsi:type="url" path="*/*/massDisable"/>
                     </item>
@@ -137,6 +139,7 @@
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">clone</item>
+                        <item name="aclResource" xsi:type="string">MageOS_ShoppingFeed::save</item>
                         <item name="label" xsi:type="string" translate="true">Clone</item>
                         <item name="url" xsi:type="url" path="*/*/massClone"/>
                     </item>
@@ -146,6 +149,7 @@
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">delete</item>
+                        <item name="aclResource" xsi:type="string">MageOS_ShoppingFeed::delete</item>
                         <item name="label" xsi:type="string" translate="true">Delete</item>
                         <item name="url" xsi:type="url" path="*/*/massDelete"/>
                     </item>

@@ -51,6 +51,8 @@ class DiWiringTest extends TestCase
             'Promotion file column' => [\MageOS\ShoppingFeed\Ui\Component\Listing\Column\File\Plugin::class],
             'Schedules column' => [\MageOS\ShoppingFeed\Ui\Component\Listing\Column\Schedules::class],
             'Status column' => [\MageOS\ShoppingFeed\Ui\Component\Listing\Column\Status::class],
+            'Feed actions column' => [\MageOS\ShoppingFeed\Ui\Component\Listing\Column\FeedActions::class],
+            'Feed mass actions' => [\MageOS\ShoppingFeed\Ui\Component\Listing\MassAction::class],
         ];
     }
 }

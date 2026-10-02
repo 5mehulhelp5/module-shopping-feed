@@ -22,6 +22,7 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 use Magento\Framework\UrlInterface;
+use Magento\Framework\AuthorizationInterface;
 
 /**
  * Class FeedActions
@@ -41,10 +42,13 @@ class FeedActions extends Column
      */
     protected $urlBuilder;
 
+    private AuthorizationInterface $authorization;
+
     /**
      * @param ContextInterface   $context
      * @param UiComponentFactory $uiComponentFactory
      * @param UrlInterface       $urlBuilder
+     * @param AuthorizationInterface $authorization
      * @param array              $components
      * @param array              $data
      */
@@ -52,10 +56,12 @@ class FeedActions extends Column
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         UrlInterface $urlBuilder,
+        AuthorizationInterface $authorization,
         array $components = [],
         array $data = []
     ) {
         $this->urlBuilder = $urlBuilder;
+        $this->authorization = $authorization;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
@@ -67,6 +73,8 @@ class FeedActions extends Column
      */
     public function prepareDataSource(array $dataSource)
     {
+        $canGenerate = $this->authorization->isAllowed('MageOS_ShoppingFeed::generate');
+        $canSave = $this->authorization->isAllowed('MageOS_ShoppingFeed::save');
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as & $item) {
                 $name = $this->getData('name');
@@ -94,6 +102,12 @@ class FeedActions extends Column
                         'label' => __('View Log'),
                         'target' => '_blank',
                     ];
+                    if (!$canGenerate) {
+                        unset($item[$name]['generate']);
+                    }
+                    if (!$canSave) {
+                        unset($item[$name]['edit']);
+                    }
                 }
             }
         }

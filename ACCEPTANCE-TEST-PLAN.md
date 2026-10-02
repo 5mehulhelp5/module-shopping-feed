@@ -4,7 +4,7 @@
 
 Use this plan to decide whether a `MageOS_ShoppingFeed` release candidate is ready for production. Run it against the exact candidate commit on representative store copies before enabling live schedules or uploads.
 
-The deployed UI Component candidate `9f07e46` failed category-generation and promotion-date preservation checks. The [local repair report](docs/reviews/2026-10-02-ui-component-editor-fixes.md) records subsequent fixes and verification; the [Docker platform report](docs/reviews/2026-10-02-magento-docker-acceptance.md) now covers the repaired workflows on Magento 2.4.8 and 2.4.9. Deployment and complete release acceptance remain separate gates, including the read-only grid control finding. See the [deployed Chrome report](docs/reviews/2026-10-01-ui-component-chrome-acceptance.md) for completed checks and failures, and the [earlier disposable platform record](docs/ui-component-editor-acceptance.md) for its narrower historical scope. The checkboxes below are a reusable plan, not a completed acceptance record.
+The deployed UI Component candidate `9f07e46` failed category-generation and promotion-date preservation checks. The [local repair report](docs/reviews/2026-10-02-ui-component-editor-fixes.md) records subsequent fixes and verification; the [Docker platform report](docs/reviews/2026-10-02-magento-docker-acceptance.md) now covers the repaired workflows on Magento 2.4.8 and 2.4.9. The [grid permission follow-up](docs/reviews/2026-10-02-grid-permission-acceptance.md) resolves the read-only control finding. Deployment and complete release acceptance remain separate gates. See the [deployed Chrome report](docs/reviews/2026-10-01-ui-component-chrome-acceptance.md) for completed checks and failures, and the [earlier disposable platform record](docs/ui-component-editor-acceptance.md) for its narrower historical scope. The checkboxes below are a reusable plan, not a completed acceptance record.
 
 The minimum platform acceptance target is Mage-OS 3.4.0. Add another currently supported Magento Open Source store when available. A store with Multi-Source Inventory is required for Local Inventory acceptance.
 
@@ -149,6 +149,7 @@ Acceptance: the modules can be evaluated together without migration, overwrite, 
 - [ ] Submit malformed required fields and confirm validation is clear and the stored feed is unchanged.
 - [ ] Try an output path outside `pub/media/mageos-shopping-feed`. Confirm it is rejected or safely contained.
 - [ ] Create a restricted Admin role with view access only. Confirm mutation routes and controls are unavailable.
+- [ ] Test save-only, generate-only, and delete-only roles separately. Verify the rendered row/bulk menus, new-feed button, permitted page access, and HTTP 403 for forbidden routes; confirm an empty Actions menu is omitted.
 - [ ] Use a role without module access. Confirm direct Admin URLs are denied.
 - [ ] Confirm state-changing requests enforce the Admin form key.
 - [ ] Verify custom data-provider modifiers and parameter editors, including unknown stored values and failure recovery. Preserve passwords in storage while excluding decrypted or newly typed values from recovered browser data.

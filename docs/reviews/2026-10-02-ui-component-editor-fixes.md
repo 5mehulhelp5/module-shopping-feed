@@ -1,5 +1,7 @@
 # UI Component editor defect fixes
 
+**Follow-up:** The form repairs were committed as `c8092ca`. The later [grid permission repair](2026-10-02-grid-permission-acceptance.md) resolves the read-only control finding on both Docker installations. The original results and candidate state below are retained as the record of this run.
+
 Verification completed October 2, 2026.
 
 Local working-tree changes based on `9f07e46`, following the [code review](2026-10-01-ui-component-editor-review.md) and [deployed Chrome failures](2026-10-01-ui-component-chrome-acceptance.md). These fixes are not committed, deployed to `mageos-latest`, or released. The previously deployed `9f07e46` still contains the reported defects.

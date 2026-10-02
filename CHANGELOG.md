@@ -19,6 +19,7 @@ All notable changes to this project will be documented here.
 - Validate preview lookup modes, SKU shapes, and positive product IDs with recoverable errors; preserve numeric SKU identity.
 - Default new non-Google feeds to `use_microdata=0`, preserving existing and explicitly selected values.
 - Preserve null directive parameters through UI initialization and save. Magento's initial value links and base input defaults otherwise changed null to an empty string, removing Generic feeds' default shipping-weight unit. Docker browser/output checks reproduced the failure on Magento 2.4.8 and 2.4.9 and verified the fix.
+- Hide standard-grid mutation controls when the Admin role lacks their save, generate, or delete permission. Read-only users retain Test Feed, View Log, and Export; an empty bulk-action menu is omitted. Six role profiles passed browser checks on Magento 2.4.8 and 2.4.9. See the [permission follow-up](docs/reviews/2026-10-02-grid-permission-acceptance.md).
 
 The [repair report](docs/reviews/2026-10-02-ui-component-editor-fixes.md) records regression tests, disposable browser acceptance, generated output, and remaining platform/deployment limits. These repairs have not been deployed to `mageos-latest`; [the original failure report](docs/reviews/2026-10-01-ui-component-chrome-acceptance.md) still applies there. No data migration recovers already-erased dates. Intentional custom configuration support and retained classes with live callers are preserved.
 
