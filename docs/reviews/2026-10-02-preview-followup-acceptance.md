@@ -20,9 +20,13 @@ The test commands are Magento's `vendor/bin/phpunit -c app/code/MageOS/ShoppingF
 
 Magento 2.4.8 passes Generic SKU preview, invalid Product ID recovery, and a valid retry with Product ID 2. The SKU submission is a POST to the preview controller and returns HTTP 200 with the expected product URL. The invalid ID remains visible with the message `Product ID must be a positive integer.`; the valid retry returns product 2.
 
-Magento 2.4.9 browser verification is pending: Chrome reports an extension popup blocking automation after login. The server-side checks above are complete. No pass is inferred from them for browser submission.
+Magento 2.4.9 now passes the same three cases after the blocking Chrome extension popup was dismissed. The Generic SKU preview contains the expected product URL and `1.00 kg` shipping weight. An invalid Product ID of `-1` retains the input and displays the recoverable validation error. Retrying with Product ID 2 returns product 2; captured network events show a POST to `/admin/mageos_shopping_feed/feed/test/` followed by HTTP 200, without the former navigation to the missing index controller.
 
-Chrome's input automation still requires explicit field change events. The checks use the rendered fields and button handlers through Chrome's debugging interface; they do not assign UI registry data or call form save methods directly. This continues the automation limitation recorded in the deployment report.
+All three 2.4.9 submissions used the rendered Test Now button through the browser's normal click action. The captured browser error log is empty. Screenshots, response snapshots, the retry's request/status evidence, and table-preservation results are retained alongside the server-side logs.
+
+Fresh before/after hashes match across all seven module tables on 2.4.9: 16 feeds, 1,073 configuration rows, 16 process rows, and no schedules, uploads, queued feeds, or shipping-cache rows. All feeds remain disabled, the Generic URL parameter remains null, and the instance remains in production mode. No new fixtures or accounts were created for this follow-up.
+
+Chrome's input automation still requires explicit field change events sent through its debugging interface after replacing field text. These events reach the normal field handlers; no UI registry data is assigned and no form save method is called directly. The 2.4.8 checks also used the rendered button's click handler through the debugging interface. Native keyboard entry remains outside this acceptance claim, as recorded in the deployment report.
 
 ## Deployed state
 
