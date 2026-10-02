@@ -15,7 +15,7 @@ A column has:
 
 Save the feed after changing Columns Map. Several filters and inheritance controls only list columns already present in the saved map.
 
-For the unreleased UI Component editor, use single-line output names without tabs or other control characters. The local repair rejects those characters at model save. Literal values and structured directive parameters remain intact. The deployed `9f07e46` lacks this validation and can corrupt unenclosed headers; see [Admin UI Component forms](Admin-UI-Component-Forms) for the repair and deployment status.
+For the unreleased UI Component editor, use single-line output names without tabs or other control characters. The repaired candidate rejects those characters at model save and preserves literal values, structured parameters, and null defaults. The updated `mageos-latest` deployment also fixes null product-URL parameters under PHP 8.4 error handling. See [Admin UI Component forms](Admin-UI-Component-Forms) for deployment status and test limits.
 
 ## Common directives
 

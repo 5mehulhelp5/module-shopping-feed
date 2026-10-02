@@ -4,7 +4,7 @@ Categories Map filters the catalog and maps Magento categories to marketplace ta
 
 > Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
 
-**Unreleased editor repair:** `9f07e46` omitted IDs needed during category generation. The working tree now includes those IDs on save and recovers missing IDs from existing map keys before sorting. New-mapping preview and full generation passed in disposable Mage-OS acceptance. Malformed rows produce recoverable validation errors. The fixes are not yet deployed to `mageos-latest`; see [Admin UI Component forms](Admin-UI-Component-Forms).
+**Unreleased editor repair:** `9f07e46` omitted IDs needed during category generation. The repair includes those IDs on save and recovers missing IDs from existing map keys before sorting. New-mapping preview and full generation pass in disposable Mage-OS, both Magento Docker versions, and the updated `mageos-latest` deployment. Zero priority persists; invalid priority values produce a recoverable validation error. See [Admin UI Component forms](Admin-UI-Component-Forms).
 
 ## Feed Localization
 

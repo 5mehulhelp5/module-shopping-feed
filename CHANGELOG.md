@@ -11,7 +11,7 @@ All notable changes to this project will be documented here.
 - Form data preserves structured parameters, empty collections, zero/false values, and literal template-like text. Upload passwords are masked before provider serialization; failed saves require re-entry of new or changed passwords.
 - The shared form reduces dependence on legacy editor rendering. The optional Nebula grid, standard-theme editor fallback, and menu handling remain; no native Nebula UI Bridge acceptance or removal of the grid integration is claimed.
 
-### Fixed after the `9f07e46` review (local, unreleased)
+### Fixed after the `9f07e46` review (unreleased)
 
 - Include category IDs in new mappings, validate submitted category rows, and recover missing embedded IDs from existing map keys before generator sorting.
 - Keep promotion dates in `Y/m/d` storage while displaying the Admin locale's format. All four dates persist through reopening and an unchanged second save.
@@ -21,7 +21,10 @@ All notable changes to this project will be documented here.
 - Preserve null directive parameters through UI initialization and save. Magento's initial value links and base input defaults otherwise changed null to an empty string, removing Generic feeds' default shipping-weight unit. Docker browser/output checks reproduced the failure on Magento 2.4.8 and 2.4.9 and verified the fix.
 - Hide standard-grid mutation controls when the Admin role lacks their save, generate, or delete permission. Read-only users retain Test Feed, View Log, and Export; an empty bulk-action menu is omitted. Six role profiles passed browser checks on Magento 2.4.8 and 2.4.9. See the [permission follow-up](docs/reviews/2026-10-02-grid-permission-acceptance.md).
 
-The [repair report](docs/reviews/2026-10-02-ui-component-editor-fixes.md) records regression tests, disposable browser acceptance, generated output, and remaining platform/deployment limits. These repairs have not been deployed to `mageos-latest`; [the original failure report](docs/reviews/2026-10-01-ui-component-chrome-acceptance.md) still applies there. No data migration recovers already-erased dates. Intentional custom configuration support and retained classes with live callers are preserved.
+- Treat a null product-URL query parameter as an empty query string, avoiding a PHP 8.4 deprecation that Magento CLI turns into a failed preview.
+- Prevent Test Now from also executing Magento's default button navigation. The UI-component preview submission now reaches its controller instead of redirecting to a missing page.
+
+The [deployment report](docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md) records the repaired candidate on `mageos-latest`, including two follow-ups included in this revision found by real CLI and browser checks. All eight presets preserve configuration and normalized generated output through unchanged saves. No data migration recovers already-erased dates. Intentional custom configuration support and retained classes with live callers are preserved.
 
 ### Fixed before the editor migration
 

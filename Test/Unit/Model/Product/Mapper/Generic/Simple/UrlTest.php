@@ -80,6 +80,24 @@ class UrlTest extends ModelFramework
         $cell = $this->model->map($params);
         $this->assertEquals('http://base.url/some/product/url/', $cell);
     }
+
+    public function testNullQueryParameterDoesNotRaiseADeprecation(): void
+    {
+        $this->expectReturn($this->productMock, 'getProductUrl', 'https://base.url/some/product/url/');
+        $this->expectReturn($this->adapterMock, 'getProduct', $this->productMock);
+        $this->model->addAdapter($this->adapterMock);
+
+        // Magento's CLI converts deprecated calls into failed feed generation.
+        set_error_handler(static function (int $severity, string $message, string $file, int $line): never {
+            throw new \ErrorException($message, 0, $severity, $file, $line);
+        }, E_DEPRECATED);
+        try {
+            self::assertSame('http://base.url/some/product/url/', $this->model->map(['column' => 'link', 'param' => null]));
+        } finally {
+            restore_error_handler();
+        }
+    }
+
     public function testStorePortSurvivesUrlMapping(): void
     {
         $store = $this->createMock(\Magento\Store\Model\Store::class);

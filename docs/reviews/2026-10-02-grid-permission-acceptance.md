@@ -1,5 +1,7 @@
 # Standard Admin grid permission acceptance
 
+> Follow-up: the [Mage-OS deployment acceptance report](2026-10-02-mageos-latest-deployment-acceptance.md) records the subsequent `mageos-latest` deployment and two additional preview fixes. Deployment-status statements below describe this earlier run.
+
 Tested October 2, 2026, on `feat/ui-component-editor` after form repair commit `c8092ca`. This follow-up resolves the control-visibility finding in the [Magento Docker acceptance report](2026-10-02-magento-docker-acceptance.md). It changes the standard grid's presentation; controller ACL enforcement already denied unauthorized requests.
 
 ## Repair

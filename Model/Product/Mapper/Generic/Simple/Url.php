@@ -39,7 +39,7 @@ class Url extends MapperAbstract
         // @var $product \Magento\Catalog\Model\Product
         $product = $adapter->getProduct();
 
-        $urlQuery = array_key_exists('param', $params) ? $params['param'] : '';
+        $urlQuery = (string)($params['param'] ?? '');
         if (substr($urlQuery, 0, 1) == '?') {
             $urlQuery = substr($urlQuery, 1);
         }

@@ -1,5 +1,7 @@
 # UI Component editor defect fixes
 
+> Follow-up: the [Mage-OS deployment acceptance report](2026-10-02-mageos-latest-deployment-acceptance.md) records the subsequent `mageos-latest` deployment and two additional preview fixes. Deployment-status statements below describe this earlier run.
+
 **Follow-up:** The form repairs were committed as `c8092ca`. The later [grid permission repair](2026-10-02-grid-permission-acceptance.md) resolves the read-only control finding on both Docker installations. The original results and candidate state below are retained as the record of this run.
 
 Verification completed October 2, 2026.

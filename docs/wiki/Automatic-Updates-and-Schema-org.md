@@ -4,7 +4,7 @@ The module can add schema.org offer data to product pages using the same feed ma
 
 > Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
 
-**Unreleased default repair:** only new Google Shopping feeds default to microdata in the repaired working tree. Other new presets default to zero, preserving existing selections and explicit choices. The old Builder default could silently select non-Google presets, and the deployed `9f07e46` still has that behavior. No existing store selections are migrated. Inspect the grid's `[microdata]` marker and storefront mapping when upgrading; see [Admin UI Component forms](Admin-UI-Component-Forms).
+**Unreleased default repair:** only new Google Shopping feeds default to microdata. Other new presets default to zero, preserving existing selections and explicit choices. The repair is deployed on `mageos-latest`; its original microdata selections were verified unchanged. No existing store selections are migrated. Inspect the grid's `[microdata]` marker and storefront mapping when upgrading; see [Admin UI Component forms](Admin-UI-Component-Forms).
 
 ## What the module renders
 

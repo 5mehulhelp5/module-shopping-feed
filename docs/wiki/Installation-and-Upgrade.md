@@ -6,7 +6,7 @@ Install the module on staging first. Feed generation writes files and records qu
 
 ## Evaluating the unreleased UI Component editor
 
-Commit `9f07e46` changes the default feed editor and its customization hooks, with no schema migration or new Composer platform requirement. That revision failed deployed category-generation and promotion-date checks. Local repairs pass the affected disposable Mage-OS workflows but are not yet deployed or released. Read [Admin UI Component forms](Admin-UI-Component-Forms) before evaluating it. Audit custom PHP form observers, tab plugins, and parameter renderers; they need migration to UI metadata or components. Retained legacy classes do not provide an editor switch.
+The unreleased UI Component candidate changes the default feed editor and its customization hooks, with no schema migration or new Composer platform requirement. The original `9f07e46` failed deployed category-generation and promotion-date checks. Repairs now pass the affected workflows on Mage-OS and Magento Open Source 2.4.8/2.4.9; `mageos-latest` has received the repairs and two local preview follow-ups. Read [Admin UI Component forms](Admin-UI-Component-Forms) for the exact deployment state and remaining limits. Audit custom PHP form observers, tab plugins, and parameter renderers; they need migration to UI metadata or components. Retained legacy classes do not provide an editor switch.
 
 Back up feed configuration before evaluation. Code rollback restores the previous editor after DI/static/cache rebuilds, but does not recover erased dates or repair category data written by the candidate. The stable installation instructions below remain for version 1.1.0.
 

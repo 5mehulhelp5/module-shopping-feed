@@ -4,7 +4,7 @@ Google Promotions is a companion file generated from an enabled Google Shopping 
 
 > Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
 
-**Unreleased editor repair:** the working tree keeps localized date display separate from `Y/m/d` storage. All four effective/display dates passed two saves and companion generation in disposable Mage-OS acceptance. The deployed `9f07e46` still has the blank-date/data-loss defect. Already-erased dates require recovery from a configuration backup; the fix does not reconstruct them. See [Admin UI Component forms](Admin-UI-Component-Forms).
+**Unreleased editor repair:** localized date display is separate from `Y/m/d` storage. All four effective/display dates pass two saves and companion generation in disposable Mage-OS, Magento 2.4.8/2.4.9 Docker, and the updated `mageos-latest` deployment. Already-erased dates require recovery from a configuration backup; the fix does not reconstruct them. See [Admin UI Component forms](Admin-UI-Component-Forms).
 
 ## Prerequisites
 

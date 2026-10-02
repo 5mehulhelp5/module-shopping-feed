@@ -1,5 +1,7 @@
 # Deployed UI Component forms: Chrome acceptance
 
+> Follow-up: the [Mage-OS deployment acceptance report](2026-10-02-mageos-latest-deployment-acceptance.md) records the subsequent `mageos-latest` deployment and two additional preview fixes. Deployment-status statements below describe this earlier run.
+
 Date: October 1, 2026. Candidate: `9f07e46b56e5cd6daa403d67f48a45ba5eddc896` on `feat/ui-component-editor`.
 
 Target: `http://mageos-latest.localhost:8080/admin/`, Mage-OS 3.5.0, PHP 8.4.24, Magento/backend Admin theme. Nebula remains disabled. Tests used authenticated Chrome sessions and 13 disposable `UIQA-20261001-*` feeds across the initial and resumed runs. No module source was changed during this review.
