@@ -2,14 +2,14 @@
 
 Tested October 2, 2026, on `http://mageos-latest.localhost:8080/admin/`. The deployment uses Mage-OS 3.5.0, native PHP 8.4.24, developer mode, and Magento/backend. All 16 installed Nebula modules remain disabled.
 
-The deployed candidate is commit `f3edab579487c8463c18fa1ea9705750a84dff78` plus two fixes included in this revision found during this acceptance run. It includes the earlier form repairs and permission-filtered grid. No push, merge, release, or wiki publication was performed.
+The deployed candidate is commit `c07de812e8cb740073c213734bc54f029b8a31c1`. It combines base `f3edab5` with the two fixes found during this acceptance run. It includes the earlier form repairs and permission-filtered grid. No push, merge, release, or wiki publication was performed.
 
 ## Defects found and repaired
 
 1. A preserved null product-URL parameter reached `substr()` in the Generic URL mapper. PHP 8.4 emitted a deprecation that Magento's CLI error handler converted into failed preview generation. The mapper now treats null as an empty query string. A regression test explicitly promotes deprecations to exceptions, so the unit bootstrap's normal deprecation suppression cannot hide this failure.
 2. Test Now supplied the UI-component button adapter but omitted `on_click`. Magento's default UI button renderer therefore added a navigation handler pointing at the module's nonexistent index controller. Clicking the button produced a GET and 404 before any preview POST reached PHP. An explicit empty `on_click` suppresses that extra handler. The regression uses the actual Magento button renderer and failed before the fix. Browser submission now returns product output.
 
-Both fixes are included in this revision and deployed. They change no constructor, schema, dependency, or Nebula integration.
+Both fixes are committed as `c07de81` and deployed. They change no constructor, schema, dependency, or Nebula integration.
 
 ## Verification
 
@@ -42,7 +42,7 @@ The first CLI-created fixtures had an empty currency. Their first Admin save cor
 
 Chrome automation intermittently detached while sending input. Text replacement also failed to emit the change events used by Magento's fields. Acceptance therefore used explicit DOM change events and, where needed, the rendered button's click handlers through the Chrome debugging interface. No registry values were assigned and no form save methods were invoked directly. Stored values, server requests, visible success/error responses, and generated files verified the results. Native keyboard automation is not established by this run. Chrome also logged a view-transition abort during navigation; the final grid rendered correctly. This is not a zero-console-error claim.
 
-The six-role permission matrix and official integration/database tests remain the results of the [Magento Docker run](2026-10-02-magento-docker-acceptance.md) and [grid follow-up](2026-10-02-grid-permission-acceptance.md). They were not repeated with new Admin accounts on this shared Mage-OS installation. The two retained Docker runtimes received the follow-up code and passed the complete final unit suites; their browser matrices were not rerun for these two additional fixes.
+The six-role permission matrix and official integration/database tests remain the results of the [Magento Docker run](2026-10-02-magento-docker-acceptance.md) and [grid follow-up](2026-10-02-grid-permission-acceptance.md). They were not repeated with new Admin accounts on this shared Mage-OS installation. The [committed preview follow-up](2026-10-02-preview-followup-acceptance.md) records the subsequent unit, integration, CLI preview, source-parity, and focused browser checks on the retained Docker runtimes. The full eight-preset and six-role browser matrices were not repeated for these two additional fixes.
 
 ## Preservation and cleanup
 
@@ -54,7 +54,7 @@ Temporary feeds `178` through `185` and clone `186` were removed. Their database
 
 ## Deployment and rollback
 
-The target module is `/Users/matt/code/mageos-latest/app/code/MageOS/ShoppingFeed`. The initial deployment changed 14 runtime paths from the original `9f07e46` copy. The two follow-ups bring the scoped rollback set to 16 paths. All 408 deployed runtime/package files match the recorded base commit plus the two follow-up hashes.
+The target module is `/Users/matt/code/mageos-latest/app/code/MageOS/ShoppingFeed`. The initial deployment changed 14 runtime paths from the original `9f07e46` copy. The two follow-ups bring the scoped rollback set to 16 paths. All 408 deployed runtime/package files match commit `c07de81`; this was rechecked after committing, together with all 254 preserved target file hashes. The deployment manifest records that source commit and retains the original rollback hashes.
 
 The protected backup is `/Users/matt/code/mageos-latest/var/backups/shopping-feed-repairs-20261002T144327Z/`. It contains the original module archive, deployment and preservation manifests, follow-up patches and before/after files, test-data snapshots, generated-file quarantine, and `restore-module.py` with `ROLLBACK.md`.
 

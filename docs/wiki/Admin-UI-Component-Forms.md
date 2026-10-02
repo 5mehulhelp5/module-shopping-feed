@@ -2,7 +2,7 @@
 
 The `feat/ui-component-editor` candidate replaces the default New/Edit Feed and Test Feed forms with Magento UI Components. Version 1.1.0 retains the previous editor. This guide describes the candidate's controls and upgrade implications.
 
-> Documentation baseline: unreleased `f3edab5` plus local URL-parameter and preview-button fixes. Last reviewed: 2026-10-02.
+> Documentation baseline: unreleased `c07de81`, including the URL-parameter and preview-button fixes. Last reviewed: 2026-10-02.
 
 ## Current acceptance status
 
@@ -10,7 +10,7 @@ The working tree repairs the defects found in `9f07e46`. Disposable Mage-OS brow
 
 The repaired PHP suite passes on the Mage-OS, Magento Open Source 2.4.8, and Magento Open Source 2.4.9 frameworks. Actual framework date conversion passed US, British, and German locale tests on all three. Production-mode Docker installations of both Magento versions now pass create/save/reopen for all eight presets, category and promotion output, dynamic rows, failed-save recovery, and malformed-request checks. These tests also found and repaired loss of null directive defaults. The repository's `docs/reviews/2026-10-02-magento-docker-acceptance.md` records the current evidence. The follow-up in `docs/reviews/2026-10-02-grid-permission-acceptance.md` verifies permission-filtered controls and server-side denials with six role profiles on both versions. Earlier automated results did not catch these defects, so they are preserved as historical evidence rather than substituted for the new regression checks.
 
-The repairs are deployed on `mageos-latest` from `f3edab5`, plus two fixes included in this revision found during that run: safely handling null URL parameters and suppressing the Test Now button's extra navigation handler. Eight-preset save/reopen, unchanged-save, CLI preview, full generation, category mapping, promotion dates, cloning, and deletion checks pass on Mage-OS 3.5.0. All original feed data and output hashes are preserved. See the repository's `docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md`. The candidate remains unreleased. Updating code does not reconstruct promotion dates already erased by an earlier candidate.
+The repairs are deployed on `mageos-latest` at `c07de81`, including two fixes found during that run: safely handling null URL parameters and suppressing the Test Now button's extra navigation handler. Eight-preset save/reopen, unchanged-save, CLI preview, full generation, category mapping, promotion dates, cloning, and deletion checks pass on Mage-OS 3.5.0. All original feed data and output hashes are preserved. See the repository's `docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md`. The candidate remains unreleased. Updating code does not reconstruct promotion dates already erased by an earlier candidate.
 
 Column names must be single-line and contain no control characters. Invalid category rows and malformed preview requests now produce recoverable Admin errors. Custom configuration keys remain supported; see [Columns and directives](Columns-and-Directives) and [Development and CI](Development-and-CI).
 

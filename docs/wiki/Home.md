@@ -10,7 +10,7 @@ The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) co
 
 > Documentation baseline: release `v1.1.0`, with explicitly marked unreleased UI Component editor notes. Last reviewed: 2026-10-02.
 
-The unreleased [Admin UI Component forms](Admin-UI-Component-Forms) candidate changes the editor and its customization hooks. The form and grid repairs are deployed and verified on `mageos-latest`, including category and promotion-date persistence and output checks. That run found two further preview defects, now fixed locally and deployed. Magento Open Source 2.4.8 and 2.4.9 retain production-mode Docker acceptance and six-role grid checks. The repository's `docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md` records the current deployment, follow-up fixes, and remaining limits. This does not change the released 1.1 editor.
+The unreleased [Admin UI Component forms](Admin-UI-Component-Forms) candidate changes the editor and its customization hooks. The form and grid repairs are deployed and verified on `mageos-latest`, including category and promotion-date persistence and output checks. That run found two further preview defects, now committed as `c07de81` and deployed. Magento Open Source 2.4.8 and 2.4.9 retain production-mode Docker acceptance and six-role grid checks. The repository's `docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md` records the current deployment, follow-up fixes, and remaining limits. This does not change the released 1.1 editor.
 
 ## What the module does
 
