@@ -6,6 +6,11 @@ All notable changes to this project will be documented here.
 
 Release preparation: [1.2.0 notes and upgrade requirements](docs/releases/1.2.0.md). Version 1.1.0 remains the latest published release until 1.2.0 is approved and published.
 
+### Compatibility
+
+- Add an exact Magento Open Source 2.4.7-p10 / PHP 8.3 CI profile with one visible upstream Flysystem advisory exception, rejection of additional advisories, and a separately tested optional Flysystem 2.5.0 backport. See the [platform guidance](docs/compatibility/magento-2.4.7-p10.md).
+- Restore PHPUnit 9 data-provider annotations alongside attributes in 21 test methods so the same unit suite runs on older and newer supported test frameworks. No runtime or Composer requirement change is introduced by this compatibility work.
+
 ### Changed: Admin editor
 
 - New/Edit Feed and Test Feed now use Magento UI Component forms, with collapsible sections, declarative dependencies, DynamicRows, explicit mapping order, and custom category/parameter controls. Routes, feed types, database schema, and server-side save permissions are retained.

@@ -37,6 +37,8 @@ Mage-OS 3.5.0 on PHP 8.4.24 was verified locally on Magebox with Hyva, including
 
 Compatibility in CI is not a production acceptance result. Test the exact module commit against a representative store, catalog, inventory setup, and external destination before enabling production schedules or uploads.
 
+Magento Open Source 2.4.7-p10 uses a dedicated PHP 8.3 CI profile with a single visible upstream Flysystem advisory exception. Other platform jobs retain their normal security policy. The repository's [2.4.7-p10 guidance](https://github.com/mage-os-lab/module-shopping-feed/blob/feat/ui-component-editor/docs/compatibility/magento-2.4.7-p10.md) covers the scope and optional tested backport; its [acceptance record](https://github.com/mage-os-lab/module-shopping-feed/blob/feat/ui-component-editor/docs/reviews/2026-10-03-magento-247-acceptance.md) distinguishes compatibility from platform security approval.
+
 ## Admin theme compatibility
 
 Released version 1.1.0 retains Magento's standard Admin grid and provides an optional native grid for Nebula Admin. Nebula installations use its native filtering, sorting, selection, and pagination controls. Feed editing, product previews, and logs open in Magento's standard Admin layout, with the existing configuration tabs and widgets. Back and Save return to the Nebula list. This is a native grid integration with the standard editor, not a replacement editor built with Nebula forms.

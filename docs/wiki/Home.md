@@ -12,6 +12,8 @@ The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) co
 
 The unreleased [Admin UI Component forms](Admin-UI-Component-Forms) candidate changes the editor and its customization hooks. Candidate `133af71` is deployed on `mageos-latest`, with form, grid-permission, preview, stock-selection, Local Inventory, frontend-scope, and currency-preservation corrections. Magento Open Source 2.4.8 and 2.4.9 retain production-mode form/output and six-role acceptance. The repository's `docs/reviews/2026-10-03-local-acceptance.md` is the current evidence record, including extended operational checks and remaining limits. Released 1.1 continues to use the previous editor.
 
+Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
+
 ## What the module does
 
 The module gives a merchant control over which products enter a feed, how Magento data maps into columns, how complex products are represented, and when completed files are transferred.

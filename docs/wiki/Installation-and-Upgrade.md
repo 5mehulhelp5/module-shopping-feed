@@ -4,6 +4,8 @@ Install the module on staging first. Feed generation writes files and records qu
 
 > Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
+Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
+
 ## Upgrading from 1.1 to the 1.2.0 candidate
 
 The [1.2.0 candidate](Release-1-2-0) changes the default feed editor and adds five presets. It has no new schema change or Composer platform requirement relative to 1.1.0. Local acceptance covers Magento Open Source 2.4.8, 2.4.9, and Mage-OS 3.5.0. The candidate remains unreleased; stable installation commands below still select 1.1.

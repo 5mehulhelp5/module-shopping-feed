@@ -79,3 +79,9 @@ Provide:
 5. Any unverified external service behavior or remaining limitation
 
 Passing local checks is not evidence that a wiki was published or that an external feed recipient accepted an output file.
+
+## Magento 2.4.7-p10 test profile
+
+The dedicated PHP 8.3 job tests this exact platform without changing other platform jobs. Its temporary root project permits resolution of one Flysystem advisory while retaining it in `composer audit`; additional advisories fail the job. It also tests the optional security backport in an isolated library copy. See [Status and compatibility](Status-and-Compatibility) for the dependency guidance and acceptance record. The extension package does not distribute a Composer audit exception.
+
+Magento 2.4.7 uses PHPUnit 9. Keep `@dataProvider` annotations alongside `DataProvider` attributes so parameterized tests run on both older and newer frameworks. Run the CI-policy checks with `node --test dev/tests/ci/*.test.cjs`; run actual-framework form checks with `MAGENTO_ROOT=/path/to/magento node --test dev/tests/magento-ui-form.test.cjs`.
