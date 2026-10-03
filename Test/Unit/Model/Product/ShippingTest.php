@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ShippingTest extends TestCase
 {
+    /** @dataProvider shippingMethods */
     #[DataProvider('shippingMethods')]
     public function testAllowedCarriersHandleUnconfiguredMethods($methods, array $expected): void
     {

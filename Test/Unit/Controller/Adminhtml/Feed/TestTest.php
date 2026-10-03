@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class TestTest extends TestCase
 {
+    /** @dataProvider invalidLookups */
     #[DataProvider('invalidLookups')]
     public function testMalformedLookupsRenderAnErrorWithoutLoadingAProduct(array $input): void
     {
@@ -31,6 +32,7 @@ class TestTest extends TestCase
             [['sku' => '999999999999999999999999', 'type' => 'id']]];
     }
 
+    /** @dataProvider validLookups */
     #[DataProvider('validLookups')]
     public function testPreservesSkuIdentityAndSeparatesTheLookupModeFromFeedType($sku, $type, $lookup): void
     {

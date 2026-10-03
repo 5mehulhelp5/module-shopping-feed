@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class StatusTest extends TestCase
 {
+    /** @dataProvider progressMessages */
     #[DataProvider('progressMessages')]
     public function testProcessingStatusToleratesMissingOrInvalidProgress($messages, string $label): void
     {

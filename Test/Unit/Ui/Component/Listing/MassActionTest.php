@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class MassActionTest extends TestCase
 {
+    /** @dataProvider permissions */
     #[DataProvider('permissions')]
     public function testConfiguredActionsFollowIndependentPermissions(bool $save, bool $delete): void
     {

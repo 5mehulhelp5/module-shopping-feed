@@ -55,6 +55,7 @@ class GeneratorTest extends TestCase
         );
     }
 
+    /** @dataProvider missingPromotionConfiguration */
     #[\PHPUnit\Framework\Attributes\DataProvider('missingPromotionConfiguration')]
     public function testIncompleteConfigurationWritesAnEmptyPromotionFeed($config): void
     {

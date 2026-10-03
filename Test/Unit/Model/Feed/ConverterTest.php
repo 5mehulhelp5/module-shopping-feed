@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ConverterTest extends TestCase
 {
+    /** @dataProvider malformedCategories */
     #[\PHPUnit\Framework\Attributes\DataProvider('malformedCategories')]
     public function testRejectsMalformedCategoriesWithARecoverableError($categories): void
     {

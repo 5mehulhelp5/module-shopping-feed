@@ -103,6 +103,7 @@ class FeedTest extends ModelFramework
         self::assertSame($columns, $this->feed->getConfig()->getData('columns_product_columns'));
     }
 
+    /** @dataProvider invalidHeaderNames */
     #[DataProvider('invalidHeaderNames')]
     public function testRejectsHeaderControlCharactersAtTheModelSaveBoundary(string $name): void
     {

@@ -37,6 +37,7 @@ class MemoryTest extends ModelFramework
 
     public static ?string $memoryLimitOverride = null;
 
+    /** @dataProvider invalidMemoryLimits */
     #[\PHPUnit\Framework\Attributes\DataProvider('invalidMemoryLimits')]
     public function testInvalidMemoryLimitFallsBackWithoutWarnings(string $limit): void
     {

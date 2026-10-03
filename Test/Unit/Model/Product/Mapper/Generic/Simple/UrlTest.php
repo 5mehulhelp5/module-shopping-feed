@@ -112,6 +112,7 @@ class UrlTest extends ModelFramework
         $this->assertSame('https://store.example:8443/product.html?source=feed', $this->model->map(['column' => 'link', 'param' => 'source=feed']));
     }
 
+    /** @dataProvider invalidUrls */
     #[\PHPUnit\Framework\Attributes\DataProvider('invalidUrls')]
     public function testMalformedUrlReturnsEmptyLink(string $base, string $url): void
     {

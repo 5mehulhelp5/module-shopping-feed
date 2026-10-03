@@ -17,6 +17,7 @@ class BuilderTest extends TestCase
             $this->createMock(\Magento\Backend\Model\Session::class));
     }
 
+    /** @dataProvider invalidInput */
     #[DataProvider('invalidInput')]
     public function testRejectsMalformedInputBeforeLoadingAFeed(array $input): void
     {
@@ -47,6 +48,7 @@ class BuilderTest extends TestCase
         self::assertSame(0, $result->getUseMicrodata());
     }
 
+    /** @dataProvider feedTypes */
     #[DataProvider('feedTypes')]
     public function testOnlyGoogleShoppingDefaultsNewFeedsToMicrodata(string $type, int $expected): void
     {

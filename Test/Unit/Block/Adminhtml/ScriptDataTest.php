@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class ScriptDataTest extends TestCase
 {
+    /** @dataProvider templates */
     #[DataProvider('templates')]
     public function testSavedDataCannotCreateMarkupInsideScript(string $template): void
     {

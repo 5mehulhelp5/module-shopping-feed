@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class TestDataProviderTest extends TestCase
 {
+    /** @dataProvider lookupValues */
     #[DataProvider('lookupValues')]
     public function testMalformedLookupInputCanBeRedisplayedWithoutWarnings($value, string $expected): void
     {

@@ -74,6 +74,7 @@ class GeneratorTest extends ModelFramework
         );
     }
 
+    /** @dataProvider temporaryFileEncodingCases */
     #[\PHPUnit\Framework\Attributes\DataProvider('temporaryFileEncodingCases')]
     public function testTemporaryFileEncoding(string $type, bool $batchEnabled, bool $newBatch, bool $expectBom): void
     {
@@ -578,6 +579,7 @@ class GeneratorTest extends ModelFramework
         $this->assertInstanceOf('MageOS\ShoppingFeed\Model\Generator', $this->model->run());
     }
 
+    /** @dataProvider invalidRotationLimits */
     #[\PHPUnit\Framework\Attributes\DataProvider('invalidRotationLimits')]
     public function testInvalidLogRotationSettingDoesNotAbortGeneration($limit): void
     {

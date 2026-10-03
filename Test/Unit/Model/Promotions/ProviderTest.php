@@ -20,6 +20,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ProviderTest extends TestCase
 {
+    /** @dataProvider malformedWidgetConfiguration */
     #[DataProvider('malformedWidgetConfiguration')]
     public function testMalformedWidgetConfigurationDoesNotBreakRuleValidation($config): void
     {

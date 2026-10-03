@@ -51,6 +51,7 @@ class ProductTypeByCategoryTest extends ModelFramework
         );
     }
 
+    /** @dataProvider categoryIdentityModes */
     #[\PHPUnit\Framework\Attributes\DataProvider('categoryIdentityModes')]
     public function testGetSortedTaxonomyMap(bool $embeddedIds)
     {

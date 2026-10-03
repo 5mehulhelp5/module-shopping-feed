@@ -42,6 +42,7 @@ class FeedActionsTest extends TestCase
         $this->assertSame('mageos_shopping_feed/feed/edit?id=7', $actions['edit']['href']);
     }
 
+    /** @dataProvider permissions */
     #[DataProvider('permissions')]
     public function testRowActionsFollowIndependentPermissions(bool $save, bool $generate): void
     {

@@ -30,7 +30,7 @@ jobs:
           php-version: '8.3'
           coverage: none
       - name: Test Hyva and Luma auto-selection
-        run: node --test dev/tests/frontend/*.test.cjs
+        run: node --test dev/tests/frontend/*.test.cjs dev/tests/ci/*.test.cjs
 
   validate:
     runs-on: ubuntu-latest
@@ -56,7 +56,7 @@ jobs:
     name: Compute supported platform matrix
     runs-on: ubuntu-latest
     outputs:
-      magento_matrix: ${{ steps.magento.outputs.matrix }}
+      magento_matrix: ${{ steps.partition.outputs.matrix }}
       mageos_matrix: ${{ steps.mageos.outputs.matrix }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -65,6 +65,15 @@ jobs:
         with:
           project: magento-open-source
           kind: currently-supported
+      # Keep 2.4.7-p10 covered by its dedicated job below, where its one upstream
+      # advisory can be reported without weakening the other platform jobs.
+      - name: Separate Magento 2.4.7-p10 compatibility profile
+        id: partition
+        env:
+          PLATFORM_MATRIX: ${{ steps.magento.outputs.matrix }}
+        run: |
+          matrix=$(jq -c 'del(.magento[] | select(. == "magento/project-community-edition:2.4.7-p10")) | del(.include[] | select(.magento == "magento/project-community-edition:2.4.7-p10"))' <<< "$PLATFORM_MATRIX")
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
       # The upstream matrix action does not yet list Mage-OS 3.4.0. Keep the
       # production compatibility target explicit until upstream catches up.
       - name: Load Mage-OS 3.4.0 matrix
@@ -92,3 +101,90 @@ jobs:
       fail-fast: false
     secrets:
       composer_auth: ${{ secrets.COMPOSER_AUTH }}
+
+  check-magento-247:
+    name: Magento 2.4.7-p10 compatibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: magento_integration_tests
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: rootpassword
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=10
+      opensearch:
+        image: opensearchproject/opensearch:2.19.6
+        env:
+          discovery.type: single-node
+          DISABLE_INSTALL_DEMO_CONFIG: 'true'
+          DISABLE_SECURITY_PLUGIN: 'true'
+          OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+        ports:
+          - 9200:9200
+        options: --health-cmd="curl --fail http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: graycoreio/github-actions-magento2/setup-magento@a65d0e50647829a9f6f972d72d87054a9c848fe0 # v8.9.0
+        id: magento
+        with:
+          php-version: '8.3'
+          tools: composer:v2.9.8
+          mode: extension
+          magento_version: magento/project-community-edition:2.4.7-p10
+          magento_repository: https://mirror.mage-os.org/
+          composer_auth: ${{ secrets.COMPOSER_AUTH }}
+      - name: Configure the one platform advisory exception
+        env:
+          MAGENTO_ROOT: ${{ steps.magento.outputs.path }}
+        run: php .github/scripts/configure-magento-247-compat.php "$MAGENTO_ROOT/composer.json"
+      - name: Install the extension in the disposable project
+        working-directory: ${{ steps.magento.outputs.path }}
+        env:
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+          COMPOSER_MIRROR_PATH_REPOS: 1
+          EXTENSION_ROOT: ${{ github.workspace }}
+        run: |
+          composer config repositories.local path "$EXTENSION_ROOT"
+          composer require 'mage-os/module-shopping-feed:@dev' --no-interaction
+      - name: Report and check platform advisories
+        working-directory: ${{ steps.magento.outputs.path }}
+        env:
+          EXTENSION_ROOT: ${{ github.workspace }}
+        run: |
+          status=0
+          composer audit --locked --format=json --abandoned=report > platform-audit.json || status=$?
+          cat platform-audit.json
+          test "$status" -eq 1
+          php "$EXTENSION_ROOT/.github/scripts/check-magento-247-audit.php" platform-audit.json
+      - name: Run extension unit tests
+        env:
+          MAGENTO_ROOT: ${{ steps.magento.outputs.path }}
+        run: php "$MAGENTO_ROOT/vendor/bin/phpunit" -c phpunit.xml.dist
+      - name: Verify the optional Flysystem backport in an isolated copy
+        env:
+          MAGENTO_ROOT: ${{ steps.magento.outputs.path }}
+        run: |
+          source="$RUNNER_TEMP/flysystem-backport"
+          cp -R "$MAGENTO_ROOT/vendor/league/flysystem" "$source"
+          patch --batch --fuzz=0 -d "$source" -p1 < dev/patches/league-flysystem-2.5.0-malformed-utf8.patch
+          php dev/tests/security/flysystem-path-normalizer.php "$MAGENTO_ROOT" "$source/src"
+      - name: Compile the installed extension
+        uses: graycoreio/github-actions-magento2/setup-di-compile@a65d0e50647829a9f6f972d72d87054a9c848fe0 # v8.9.0
+        with:
+          path: ${{ steps.magento.outputs.path }}
+      - name: Configure isolated integration tests
+        env:
+          MAGENTO_ROOT: ${{ steps.magento.outputs.path }}
+        run: php .github/scripts/configure-magento-247-integration.php "$MAGENTO_ROOT"
+      - name: Allow integration database routines
+        env:
+          MYSQL_PWD: rootpassword
+        run: mysql -h127.0.0.1 -uroot -e 'SET GLOBAL log_bin_trust_function_creators = 1'
+      - name: Run extension integration tests
+        working-directory: ${{ steps.magento.outputs.path }}/dev/tests/integration
+        run: ../../../vendor/bin/phpunit -c phpunit.xml --testsuite ShoppingFeed

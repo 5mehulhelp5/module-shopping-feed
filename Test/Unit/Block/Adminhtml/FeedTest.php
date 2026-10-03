@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class FeedTest extends TestCase
 {
+    /** @dataProvider permissions */
     #[DataProvider('permissions')]
     public function testCreateButtonRequiresSavePermission(bool $allowed): void
     {

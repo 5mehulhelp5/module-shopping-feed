@@ -20,6 +20,7 @@ class MapTest extends CompatibilityTestCase
         return $map->setProvider($provider);
     }
 
+    /** @dataProvider conditionTrees */
     #[\PHPUnit\Framework\Attributes\DataProvider('conditionTrees')]
     public function testMinimumAmountRespectsConditionTree(array $tree, string $expected): void
     {
