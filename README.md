@@ -2,19 +2,11 @@
 
 [![CI on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml?query=branch%3Amain)
 
-Version **1.1.0** adds optional Nebula Admin support, safer upload and queue handling, corrected Google feed output, guest tier pricing, consistent variant grouping, and configurable custom output. Read the [1.1.0 release notes](docs/releases/1.1.0.md) and [upgrade checklist](docs/wiki/Installation-and-Upgrade.md#upgrading-from-10-to-11).
-
 `MageOS_ShoppingFeed` generates product feeds for Mage-OS and Magento Open Source.
 
-The **1.2 development branch** adds a [Meta Catalog template](docs/wiki/Meta-Catalog.md) for Facebook and Instagram. It generates UTF-8 TSV with Meta availability values, variant grouping, and row validation. This work is unreleased and still needs Commerce Manager acceptance.
+**1.2.0 is being prepared.** It adds Magento UI Component forms, five catalog presets, and corrections to stock selection, configurable Local Inventory, frontend configuration scope, and existing-feed currency. Read the [1.2.0 draft release notes](docs/releases/1.2.0.md), [upgrade checklist](docs/wiki/Installation-and-Upgrade.md#upgrading-from-11-to-the-120-candidate), and [release preparation record](docs/reviews/2026-10-03-release-1.2.0-preparation.md). Version [1.1.0](docs/releases/1.1.0.md) remains the latest published release.
 
-It also adds [Microsoft Merchant Center](docs/wiki/Microsoft-Merchant-Center.md), with tab-delimited TXT output, Microsoft stock values, configurable variants, and destination-specific validation. Microsoft import acceptance remains a release check.
-
-[TikTok Catalog](docs/wiki/TikTok-Catalog.md) adds quoted CSV output for Ads Manager catalogs, including `sku_id`, TikTok availability values, variant grouping, and row validation. TikTok import acceptance remains unverified.
-
-[Pinterest Catalog](docs/wiki/Pinterest-Catalog.md) adds quoted TSV for retail catalogs, with Pinterest field limits, availability values, and configurable grouping checks. Pinterest import acceptance and real catalog image quality remain release checks.
-
-[OpenAI / ChatGPT (Google-compatible, beta)](docs/wiki/OpenAI-ChatGPT.md) adds a TSV discovery preset with conditional identifier and availability-date checks. OpenAI must confirm this profile during onboarding; local generation does not establish account access, ingestion acceptance, or checkout support.
+The candidate includes [Meta Catalog](docs/wiki/Meta-Catalog.md), [Microsoft Merchant Center](docs/wiki/Microsoft-Merchant-Center.md), [TikTok Catalog](docs/wiki/TikTok-Catalog.md), [Pinterest Catalog](docs/wiki/Pinterest-Catalog.md), and [OpenAI / ChatGPT Google-compatible beta](docs/wiki/OpenAI-ChatGPT.md). Local validation and generation pass; external provider ingestion remains unverified. The OpenAI profile requires confirmation during onboarding and does not establish account access or checkout support.
 
 This repository consolidates four related Rocket Web modules into one independently named Mage-OS module:
 
@@ -33,7 +25,7 @@ Version [1.1.0](https://github.com/mage-os-lab/module-shopping-feed/releases/tag
 
 The unreleased `feat/ui-component-editor` migration, introduced in `9f07e46`, makes Magento UI Component forms the default for New/Edit Feed and Test Feed. It retains the existing schema and save routes, but changes the editor customization API. See the [Admin form guide](docs/wiki/Admin-UI-Component-Forms.md) and [developer migration guide](docs/ui-component-editor.md).
 
-**Deployed on `mageos-latest`; unreleased.** Candidate `133af71` includes the UI Component forms, permission-filtered grid, preview repairs, feed-controlled stock selection, configurable Local Inventory corrections, and store-scoped frontend settings, and preservation of existing feeds' effective currency. The [extended local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) is the current source for results and remaining checks. All eight presets passed save/reopen and unchanged-save/output comparisons in the [earlier Mage-OS deployment](docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md) and [Magento 2.4.8/2.4.9 Docker run](docs/reviews/2026-10-02-magento-docker-acceptance.md). The final PHP suite passes 809 tests on all three frameworks; both Docker versions pass 21 official integration tests and production compilation. Nebula remains disabled on `mageos-latest`.
+**Deployed on `mageos-latest`; unreleased.** Candidate `133af71` includes the UI Component forms, permission-filtered grid, preview repairs, feed-controlled stock selection, configurable Local Inventory corrections, store-scoped frontend settings, and preservation of existing feeds' effective currency. The [extended local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) is the current source for results and remaining checks. All eight presets passed save/reopen and unchanged-save/output comparisons in the [earlier Mage-OS deployment](docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md) and [Magento 2.4.8/2.4.9 Docker run](docs/reviews/2026-10-02-magento-docker-acceptance.md). The final PHP suite passes 809 tests on all three frameworks; both Docker versions pass 21 official integration tests and production compilation. Nebula remains disabled on `mageos-latest`.
 
 Operational coverage includes scheduling edge cases, interrupted-worker recovery, private FTP/SFTP delivery, 26 semantic catalog scenarios, 15 native configurable MSI scenarios, pricing, store-scoped microdata, and eight 5,000-product preset generations per Magento version. Two real hourly cron cycles also pass with stable output and empty queues; the [current record](docs/reviews/2026-10-03-local-acceptance.md) records final cleanup and exact scope. External recipient, native Nebula bridge, and release acceptance remain separate.
 
@@ -58,7 +50,7 @@ A fresh Mage-OS 3.5.0 installation with no Nebula packages also passed Composer 
 
 ## Installation
 
-Install the 1.1 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
+Until 1.2.0 is published, install the stable 1.1 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
 
 ```bash
 composer require 'mage-os/module-shopping-feed:^1.1'
@@ -97,7 +89,7 @@ For setup and troubleshooting, use the [Shopping Feed support bot on Rocket Web]
 
 The [public GitHub Wiki](https://github.com/mage-os-lab/module-shopping-feed/wiki) is published separately; it does not automatically update when this repository changes. The reviewable GitHub Wiki source is under [`docs/wiki`](docs/wiki), starting with [`Home.md`](docs/wiki/Home.md). Documentation contributors should update that source and follow [`docs/WIKI-MAINTENANCE.md`](docs/WIKI-MAINTENANCE.md) rather than editing the public wiki independently.
 
-For the unreleased editor, start with the [operating guide](docs/wiki/Admin-UI-Component-Forms.md), [implementation and customization contract](docs/ui-component-editor.md), [earlier platform checks](docs/ui-component-editor-acceptance.md), and [later deployed Chrome results](docs/reviews/2026-10-01-ui-component-chrome-acceptance.md). Read dated acceptance reports in order; passing automated or platform checks do not override a later reproduced failure.
+For the 1.2.0 candidate, start with the [operating guide](docs/wiki/Admin-UI-Component-Forms.md), [implementation and customization contract](docs/ui-component-editor.md), [earlier platform checks](docs/ui-component-editor-acceptance.md), and [completed local acceptance](docs/reviews/2026-10-03-local-acceptance.md). Read dated acceptance reports in order; passing automated or platform checks do not override a later reproduced failure.
 
 ## Development validation
 

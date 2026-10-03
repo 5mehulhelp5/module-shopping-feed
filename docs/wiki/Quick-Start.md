@@ -2,7 +2,7 @@
 
 The safest first feed has one store view, no upload destination, no schedule, and a small set of known products. Generate it, inspect it, correct it, then add automation.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `133af71` editor notes. Last reviewed: 2026-10-03.
+> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
 For the unreleased editor, read [Admin UI Component forms](Admin-UI-Component-Forms) first. Its collapsible sections replace the old tabs, and category generation and promotion-date preservation currently block acceptance. Use disposable fixtures for candidate evaluation.
 

@@ -2,13 +2,13 @@
 
 [![CI on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml?query=branch%3Amain)
 
-Version **1.1.0** adds optional Nebula Admin support, upload and queue fixes, corrected Google identifiers and availability dates, and quoted custom CSV. Read the [release summary](Release-1-1-0) before upgrading.
+**1.2.0 is being prepared**, with UI Component forms, five catalog presets, stock and Local Inventory corrections, store-scoped frontend settings, and currency preservation. Read [Release 1.2.0 candidate](Release-1-2-0) and its [upgrade checklist](Installation-and-Upgrade#upgrading-from-11-to-the-120-candidate). [Version 1.1.0](Release-1-1-0) remains the latest published release.
 
 Mage-OS Shopping Feed generates product feeds from Mage-OS and Magento Open Source. It combines generic product feeds, Google Shopping, Google Local Inventory, and Google Promotions in one independently named module.
 
 The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) covers the required schema update and changes to saved Google and comma-delimited feeds. [Release 1.0.0](Release-1-0-0) remains available as a historical record.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased UI Component editor notes. Last reviewed: 2026-10-03.
+> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
 The unreleased [Admin UI Component forms](Admin-UI-Component-Forms) candidate changes the editor and its customization hooks. Candidate `133af71` is deployed on `mageos-latest`, with form, grid-permission, preview, stock-selection, Local Inventory, frontend-scope, and currency-preservation corrections. Magento Open Source 2.4.8 and 2.4.9 retain production-mode form/output and six-role acceptance. The repository's `docs/reviews/2026-10-03-local-acceptance.md` is the current evidence record, including extended operational checks and remaining limits. Released 1.1 continues to use the previous editor.
 

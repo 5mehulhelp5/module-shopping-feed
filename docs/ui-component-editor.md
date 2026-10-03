@@ -1,6 +1,6 @@
 # Admin UI Component editor
 
-Baseline: unreleased `feat/ui-component-editor`, candidate `133af71`. Reviewed October 3, 2026. Released version 1.1.0 uses the previous editor.
+Baseline: 1.2.0 release candidate on `feat/ui-component-editor`, runtime `133af71` (unreleased). Reviewed October 3, 2026. Released version 1.1.0 uses the previous editor.
 
 **The candidate is deployed on `mageos-latest`.** The [current acceptance record](reviews/2026-10-03-local-acceptance.md) covers `133af71`, the completed form checks, and extended product, MSI, pricing, operations, and rollback verification. The [earlier deployment report](reviews/2026-10-02-mageos-latest-deployment-acceptance.md) records eight-preset persistence/output and category/promotion-date repair evidence. Magento Open Source 2.4.8 and 2.4.9 retain their [Docker form workflows](reviews/2026-10-02-magento-docker-acceptance.md) and [six-role grid checks](reviews/2026-10-02-grid-permission-acceptance.md). The final suite passes 809 unit tests on all three frameworks and 21 official integration tests on both Docker versions. Native Nebula bridge and release acceptance remain separate.
 

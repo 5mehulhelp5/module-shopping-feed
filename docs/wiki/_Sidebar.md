@@ -5,6 +5,7 @@
 **Start here**
 
 * [Status and compatibility](Status-and-Compatibility)
+* [Release 1.2.0 candidate](Release-1-2-0)
 * [Release 1.1.0](Release-1-1-0)
 * [Release 1.0.0 history](Release-1-0-0)
 * [Installation and upgrade](Installation-and-Upgrade)
@@ -19,11 +20,11 @@
 * [Google Shopping](Google-Shopping)
 * [Google Local Inventory and MSI](Google-Local-Inventory-and-MSI)
 * [Google Promotions](Google-Promotions)
-* [Meta Catalog (1.2 development)](Meta-Catalog)
-* [Microsoft Merchant Center (1.2 development)](Microsoft-Merchant-Center)
-* [TikTok Catalog (1.2 development)](TikTok-Catalog)
-* [Pinterest Catalog (1.2 development)](Pinterest-Catalog)
-* [OpenAI / ChatGPT (beta, 1.2 development)](OpenAI-ChatGPT)
+* [Meta Catalog (1.2.0 candidate)](Meta-Catalog)
+* [Microsoft Merchant Center (1.2.0 candidate)](Microsoft-Merchant-Center)
+* [TikTok Catalog (1.2.0 candidate)](TikTok-Catalog)
+* [Pinterest Catalog (1.2.0 candidate)](Pinterest-Catalog)
+* [OpenAI / ChatGPT (beta, 1.2.0 candidate)](OpenAI-ChatGPT)
 
 **Configuration**
 

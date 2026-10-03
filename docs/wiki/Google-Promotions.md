@@ -2,7 +2,7 @@
 
 Google Promotions is a companion file generated from an enabled Google Shopping feed. It maps selected Magento cart price rules into promotion rows and can add matching promotion IDs to product rows.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `133af71` editor notes. Last reviewed: 2026-10-03.
+> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
 **Unreleased editor repair:** localized date display is separate from `Y/m/d` storage. All four effective/display dates pass two saves and companion generation in disposable Mage-OS, Magento 2.4.8/2.4.9 Docker, and the updated `mageos-latest` deployment. Already-erased dates require recovery from a configuration backup; the fix does not reconstruct them. See [Admin UI Component forms](Admin-UI-Component-Forms).
 

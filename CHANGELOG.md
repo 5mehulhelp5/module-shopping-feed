@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented here.
 
-## Unreleased
+## 1.2.0 - Unreleased
+
+Release preparation: [1.2.0 notes and upgrade requirements](docs/releases/1.2.0.md). Version 1.1.0 remains the latest published release until 1.2.0 is approved and published.
 
 ### Changed: Admin editor
 
@@ -11,7 +13,7 @@ All notable changes to this project will be documented here.
 - Form data preserves structured parameters, empty collections, zero/false values, and literal template-like text. Upload passwords are masked before provider serialization; failed saves require re-entry of new or changed passwords.
 - The shared form reduces dependence on legacy editor rendering. The optional Nebula grid, standard-theme editor fallback, and menu handling remain; no native Nebula UI Bridge acceptance or removal of the grid integration is claimed.
 
-### Fixed after the `9f07e46` review (unreleased)
+### Fixed: Admin forms and previews
 
 - Include category IDs in new mappings, validate submitted category rows, and recover missing embedded IDs from existing map keys before generator sorting.
 - Keep promotion dates in `Y/m/d` storage while displaying the Admin locale's format. All four dates persist through reopening and an unchanged second save.
@@ -26,20 +28,20 @@ All notable changes to this project will be documented here.
 
 The [deployment report](docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md) records the repaired candidate on `mageos-latest`, including two follow-ups included in this revision found by real CLI and browser checks. All eight presets preserve configuration and normalized generated output through unchanged saves. No data migration recovers already-erased dates. Intentional custom configuration support and retained classes with live callers are preserved.
 
-### Fixed during extended acceptance
+### Fixed: inventory, frontend scope, and currency
 
 - Apply feed stock settings independently of Magento's storefront out-of-stock visibility for simple, configurable, grouped, and bundle collections.
 - Derive configurable Local Inventory parent sources from their children, and require an enabled child source item at the same source before reporting the parent in stock. See the [stock regression report](docs/reviews/2026-10-02-stock-acceptance-fixes.md). Custom adapter subclasses overriding constructors must forward the new linked-product collection factory dependency.
 - Honor website and store-view overrides for microdata, native price-schema suppression, Google Ads event enablement, and the optional destination ID. Existing scoped settings now take effect; review overrides and clear applicable caches. See the [frontend scope report](docs/reviews/2026-10-03-frontend-scope-fix.md).
 - Preserve an existing feed's effective generation currency when its saved currency is blank, so opening and saving the UI Component form does not substitute a different store default. New feeds still use the store default, and explicit selections remain unchanged. See the [currency correction](docs/reviews/2026-10-03-existing-feed-currency-fix.md).
 
-### Fixed before the editor migration
+### Fixed: validation and security
 
 - Hardened legacy editor escaping, request ID validation, schedule/status/file grid output, malformed URL handling, and log-rotation configuration.
 - Corrected recursive promotion minimum-purchase condition handling and incomplete configuration handling; invalid legacy non-JSON rule conditions produce a recoverable error.
 - Pinned direct CI workflow/action references to full commit hashes. See [the September 30 fix verification](docs/reviews/2026-09-30-review-fixes.md) for reproduced defects, accepted limits, and installed-runtime checks. The subsequent editor repairs are recorded separately above.
 
-### Added for 1.2
+### Added: catalog presets
 
 - OpenAI / ChatGPT (Google-compatible, beta) TSV preset with required brand, explicit identifier exemptions, GTIN checksums, availability dates, configurable grouping, and sale validation. Includes the mobile-subscription zero-price exception, short expiration metadata, and onboarding guidance. OpenAI ingestion acceptance remains unverified.
 

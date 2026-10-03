@@ -28,6 +28,6 @@ This map records how the historical Rocket Web documentation is treated in the M
 | Large-catalog optimization | `Performance-and-Large-Catalogs` | Rewritten around measured workload and current batch behavior |
 | QA checklists | `Release-Acceptance` and repository `ACCEPTANCE-TEST-PLAN.md` | Replaced with release-candidate evidence and safe external boundaries |
 | Pricing, licensing, private support, and marketing pages | Repository license, releases, security policy, and project governance | Excluded from operating documentation unless a current public source supports the claim |
-| Release notes and acceptance | `Release-1-1-0`, historical `Release-1-0-0`, `docs/releases`, and GitHub Releases | Wiki summaries link to versioned release notes and acceptance evidence; CHANGELOG remains the full change list |
+| Release notes and acceptance | `Release-1-2-0` candidate, released `Release-1-1-0`, historical `Release-1-0-0`, `docs/releases`, and GitHub Releases | Wiki summaries link to versioned release notes and acceptance evidence; CHANGELOG remains the full change list |
 
 Historical pages remain useful for discovering user questions, but they are not authoritative for commands, package names, requirements, paths, Google interfaces, or present behavior.

@@ -4,7 +4,7 @@ The configurable-product integration dispatches a `view_item` event when a compl
 
 This event bridge uses Magento's RequireJS integration. Version 1.1.0 supports native Hyva configurable deep-link selection, but does not add a Hyva Google Ads event bridge. Verify or provide a separate theme integration before relying on events there.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased candidate notes. Last reviewed: 2026-10-03.
+> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
 ## Event data
 
