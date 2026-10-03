@@ -8,9 +8,9 @@ Mage-OS Shopping Feed generates product feeds from Mage-OS and Magento Open Sour
 
 The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) covers the required schema update and changes to saved Google and comma-delimited feeds. [Release 1.0.0](Release-1-0-0) remains available as a historical record.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased UI Component editor notes. Last reviewed: 2026-10-02.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased UI Component editor notes. Last reviewed: 2026-10-03.
 
-The unreleased [Admin UI Component forms](Admin-UI-Component-Forms) candidate changes the editor and its customization hooks. The form and grid repairs are deployed and verified on `mageos-latest`, including category and promotion-date persistence and output checks. That run found two further preview defects, now committed as `c07de81` and deployed. Magento Open Source 2.4.8 and 2.4.9 retain production-mode Docker acceptance and six-role grid checks. The repository's `docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md` records the current deployment, follow-up fixes, and remaining limits. This does not change the released 1.1 editor.
+The unreleased [Admin UI Component forms](Admin-UI-Component-Forms) candidate changes the editor and its customization hooks. Candidate `133af71` is deployed on `mageos-latest`, with form, grid-permission, preview, stock-selection, Local Inventory, frontend-scope, and currency-preservation corrections. Magento Open Source 2.4.8 and 2.4.9 retain production-mode form/output and six-role acceptance. The repository's `docs/reviews/2026-10-03-local-acceptance.md` is the current evidence record, including extended operational checks and remaining limits. Released 1.1 continues to use the previous editor.
 
 ## What the module does
 

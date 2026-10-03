@@ -7,7 +7,7 @@
 
 ## Outcome
 
-**Subsequent local fixes:** the [repair report](2026-10-02-ui-component-editor-fixes.md) records working-tree repairs and new verification for Findings 1, 4, 5, 6, 7, and 8. The findings below describe `9f07e46` as reviewed. That deployed revision has not been replaced by the local fixes.
+**Subsequent acceptance update (October 3):** Findings 1, 4, 5, 6, 7, and 8 are repaired and verified on Magento Open Source 2.4.8/2.4.9 and `mageos-latest`. The deployed candidate is now `133af71`. See the [repair report](2026-10-02-ui-component-editor-fixes.md), [deployed form acceptance](2026-10-02-mageos-latest-deployment-acceptance.md), and [extended local record](2026-10-03-local-acceptance.md). The findings and unresolved labels below describe `9f07e46` at review time; they are retained as historical evidence.
 
 **The candidate is not release-ready.** The [deployed Chrome run](2026-10-01-ui-component-chrome-acceptance.md) found two blocking regressions: new category mappings can break generation, and promotion dates can be erased after reopening and saving. Those failures take precedence over earlier passing fixture checks.
 

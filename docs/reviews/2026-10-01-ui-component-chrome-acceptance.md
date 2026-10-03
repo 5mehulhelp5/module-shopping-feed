@@ -1,5 +1,7 @@
 # Deployed UI Component forms: Chrome acceptance
 
+> Current evidence: the [October 3 local acceptance record](2026-10-03-local-acceptance.md) covers deployed candidate `133af71`, subsequent repairs, extended testing, and cleanup. Results and limits below retain their original date and scope.
+
 > Follow-up: the [Mage-OS deployment acceptance report](2026-10-02-mageos-latest-deployment-acceptance.md) records the subsequent `mageos-latest` deployment and two additional preview fixes. Deployment-status statements below describe this earlier run.
 
 Date: October 1, 2026. Candidate: `9f07e46b56e5cd6daa403d67f48a45ba5eddc896` on `feat/ui-component-editor`.

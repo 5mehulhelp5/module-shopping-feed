@@ -1,6 +1,6 @@
 # TikTok Catalog
 
-> Documentation baseline: 1.2 development preset with unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+> Documentation baseline: 1.2 development preset with unreleased `133af71` editor notes. Last reviewed: 2026-10-03.
 
 When evaluating the unreleased UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the exact candidate, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
 

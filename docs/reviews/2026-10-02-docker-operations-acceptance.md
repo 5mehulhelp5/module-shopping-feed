@@ -1,5 +1,7 @@
 # Docker scheduling, recovery, delivery, and MSI acceptance
 
+> Current evidence: the [October 3 local acceptance record](2026-10-03-local-acceptance.md) covers deployed candidate `133af71`, subsequent repairs, extended testing, and cleanup. Results and limits below retain their original date and scope.
+
 Tested October 2, 2026, against commit `5290611acb1029c80a090a690c46e2ddde212172` on `feat/ui-component-editor`. Its runtime is unchanged from preview-fix commit `c07de81`. This extends the [Docker form acceptance](2026-10-02-magento-docker-acceptance.md) and [committed preview verification](2026-10-02-preview-followup-acceptance.md).
 
 Both retained Magento Open Source installations, 2.4.8 and 2.4.9, run in production mode with PHP 8.4.26. All 408 runtime/package files match the candidate. This run found no application defects and changed no module code. The separate `mageos-latest` installation and its disabled Nebula configuration were untouched.

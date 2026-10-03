@@ -2,9 +2,9 @@
 
 Start with the feed-specific log and the feed grid status. They distinguish queue problems, product skips, generation failures, and upload failures.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `133af71` editor notes. Last reviewed: 2026-10-03.
 
-For unreleased `9f07e46`, consult [Admin UI Component forms](Admin-UI-Component-Forms) before treating a category-preview failure or blank promotion dates as store configuration errors. Both are reproduced candidate defects awaiting fixes.
+The original `9f07e46` category and promotion-date defects are repaired in candidate `133af71`. Consult [Admin UI Component forms](Admin-UI-Component-Forms) for the exact deployed revision and acceptance evidence. Code updates do not reconstruct dates already erased by an earlier save.
 
 ## Log settings and location
 
@@ -25,8 +25,11 @@ Use **View Log** from the Feeds Management grid, or inspect the file as the Mage
 
 | Symptom | First checks |
 | --- | --- |
-| New category mapping causes `Undefined array key "id"` in candidate `9f07e46` | Known missing-ID serialization defect; preserve the fixture and do not rely on a successful editor save as generation acceptance. |
-| Promotion dates reopen blank in candidate `9f07e46` | Stop before saving again, which can erase stored dates. Preserve the pre-upgrade configuration and compare it during recovery. |
+| New category mapping causes `Undefined array key "id"` in candidate `9f07e46` | Upgrade to the repaired candidate, which stores category IDs and recovers them from saved map keys before generation. Verify the mapped output after upgrading. |
+| Promotion dates reopen blank in candidate `9f07e46` | Upgrade to the repaired date component before saving again. Recover previously erased dates from the pre-upgrade configuration; the code fix cannot infer them. |
+| An unchanged editor save changes a legacy blank currency | Candidate `133af71` preserves the effective generation currency. Review earlier explicit selections against a backup; the fix does not silently reverse them. |
+| Feed stock inclusion conflicts with storefront out-of-stock hiding | The unreleased stock correction makes feed-specific inclusion settings take precedence. Recompile after upgrading, then check simple and associated-product settings. |
+| Frontend feature overrides appear ignored | The unreleased scope correction honors website/store overrides. Check the effective store value and clear the applicable caches. |
 | Feed stays Pending | Confirm Magento cron, the `mageos_shopping_feed` cron group, and the process command are running. |
 | Direct command says generation failed | Check whether another process holds the per-feed lock, then open the feed log. |
 | Feed reaches Error | Read the first exception or error for that run, not only the final status line. |

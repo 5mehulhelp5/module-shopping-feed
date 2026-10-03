@@ -2,7 +2,7 @@
 
 Schedules decide when work enters the queue. A separate worker consumes queued work and generates feed files.
 
-> Documentation baseline: release `v1.1.0`, with unreleased editor labels. Last reviewed: 2026-10-02.
+> Documentation baseline: release `v1.1.0`, with unreleased editor labels. Last reviewed: 2026-10-03.
 
 ## Enable module cron processing
 
@@ -25,9 +25,9 @@ Open a feed and select **Run Schedule** in 1.1, or **Schedule** in the [UI Compo
 * **Batch Mode** splits one complete generation across multiple worker runs.
 * **Batch Limit** sets the maximum number of product objects processed per batch.
 
-New feeds can start with a default daily schedule. Remove all schedule rows and save when generation should remain manual; final-row deletion was verified in the UI Component candidate. Live cron execution remains a separate acceptance check.
+New feeds can start with a default daily schedule. Remove all schedule rows and save when generation should remain manual; final-row deletion was verified in the UI Component candidate. Verify the cron installation on each target store.
 
-The unreleased candidate also passes controlled scheduler and interrupted-batch checks on Magento Open Source 2.4.8 and 2.4.9. Due/future/disabled feeds, same-day edits, duplicate prevention, the cron switch, restart after a killed worker, and competing writers were verified. The repository's `docs/reviews/2026-10-02-docker-operations-acceptance.md` records the exact scope. Unattended hourly cron cycles remain unverified.
+The unreleased candidate also passes controlled scheduler and interrupted-batch checks on Magento Open Source 2.4.8 and 2.4.9. Due/future/disabled feeds, same-day edits, duplicate prevention, the cron switch, restart after a killed worker, and competing writers were verified. The repository's `docs/reviews/2026-10-02-docker-operations-acceptance.md` records the exact scope. Two real hourly schedule cycles also pass on each version, producing identical per-platform files and clearing their queues. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records the timestamps, complete observation window, and cleanup.
 
 Allow enough time between schedules for the earlier generation and any uploads to finish. The first schedule row's batch settings are also used by **Run Now**.
 

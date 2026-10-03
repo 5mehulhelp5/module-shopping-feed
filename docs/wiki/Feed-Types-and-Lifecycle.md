@@ -2,9 +2,9 @@
 
 The feed type provides a starting column map and default behavior. All feeds then move through the same save, test, queue, generation, upload, and review lifecycle.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `133af71` editor notes. Last reviewed: 2026-10-03.
 
-The unreleased [UI Component editor](Admin-UI-Component-Forms) uses collapsible sections instead of the 1.1 tabs. Its category and promotion-date blockers must be fixed before release.
+The unreleased [UI Component editor](Admin-UI-Component-Forms) uses collapsible sections instead of the 1.1 tabs. Its category and promotion-date defects are repaired and verified locally. The linked guide records the deployed candidate, currency preservation, and remaining release boundaries.
 
 The 1.2 development branch includes the four Tier 1 additions: [Meta Catalog](Meta-Catalog), [Microsoft Merchant Center](Microsoft-Merchant-Center), [TikTok Catalog](TikTok-Catalog), and [Pinterest Catalog](Pinterest-Catalog). The same branch adds the [OpenAI / ChatGPT Google-compatible beta](OpenAI-ChatGPT). All additions are unreleased and require destination validation before production use.
 

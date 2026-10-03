@@ -4,7 +4,7 @@
 
 Use this plan to decide whether a `MageOS_ShoppingFeed` release candidate is ready for production. Run it against the exact candidate commit on representative store copies before enabling live schedules or uploads.
 
-The deployed UI Component candidate `9f07e46` failed category-generation and promotion-date preservation checks. The [local repair report](docs/reviews/2026-10-02-ui-component-editor-fixes.md) records subsequent fixes and verification; the [Docker platform report](docs/reviews/2026-10-02-magento-docker-acceptance.md) now covers the repaired workflows on Magento 2.4.8 and 2.4.9. The [grid permission follow-up](docs/reviews/2026-10-02-grid-permission-acceptance.md) resolves the read-only control finding. The [Mage-OS deployment report](docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md) now records acceptance on `mageos-latest` with two further preview fixes. Complete release acceptance remains a separate gate. See the [deployed Chrome report](docs/reviews/2026-10-01-ui-component-chrome-acceptance.md) for completed checks and failures, and the [earlier disposable platform record](docs/ui-component-editor-acceptance.md) for its narrower historical scope. The checkboxes below are a reusable plan, not a completed acceptance record.
+The [current local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) covers candidate `133af71` on Magento Open Source 2.4.8/2.4.9 and `mageos-latest`, including completed local checks and the remaining external/target-store boundaries. The original `9f07e46` category-generation and promotion-date defects are repaired; the record links the failing and passing evidence. Local operational tests supplement the form checks. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
 
 The minimum platform acceptance target is Mage-OS 3.4.0. Add another currently supported Magento Open Source store when available. A store with Multi-Source Inventory is required for Local Inventory acceptance.
 
@@ -198,6 +198,7 @@ bin/magento mage-os:shopping-feed:generate <feed_id> <sku>
 - [ ] Confirm image URLs, additional images, stock, quantity, weight, identifiers, and custom attributes match the source catalog.
 - [ ] Confirm regular, final, special, tier, tax-inclusive, and tax-exclusive prices match the selected feed settings.
 - [ ] Confirm currency conversion uses the selected store and feed currency.
+- [ ] Edit an existing feed with a blank saved currency when its effective generation currency differs from the store default. Confirm the editor displays the effective currency and an unchanged save preserves prices and currency. Check new-feed defaults and explicit saved selections separately.
 - [ ] Count expected products and compare that count with file rows, generator status, and logs.
 
 Acceptance: the file parses without row-shape errors and every sampled value matches the recorded source expectation.

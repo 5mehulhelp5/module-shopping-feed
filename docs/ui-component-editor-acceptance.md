@@ -1,5 +1,7 @@
 # UI Component editor acceptance
 
+> Current evidence: the [October 3 local acceptance record](reviews/2026-10-03-local-acceptance.md) covers deployed candidate `133af71`, subsequent repairs, extended testing, and cleanup. Results and limits below retain their original date and scope.
+
 Historical pre-deployment checks of the implementation on `feat/ui-component-editor`, built on `f8488b1258cf52f8bb38dc53b983cc745ba28599` and subsequently committed as `9f07e46`. This report records the disposable-installation checks below; it does not describe a separate fixed revision.
 
 **Superseded for the release decision by the [deployed Chrome acceptance report](reviews/2026-10-01-ui-component-chrome-acceptance.md).** Later testing on October 1, 2026 found two blocking regressions: newly saved category mappings omit IDs required by generation, and promotion dates can be blanked and then erased by an ordinary save. The earlier checks below passed their fixtures but did not prove generation after creating a new category mapping or preservation of all four promotion dates through two saves. No fix or unrestricted compatibility claim is implied by this report.

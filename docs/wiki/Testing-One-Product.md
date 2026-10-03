@@ -2,7 +2,7 @@
 
 Test mode renders feed values for a chosen product without replacing the normal feed file, changing normal feed status, uploading files, or generating a Promotions companion file.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `133af71` editor notes. Last reviewed: 2026-10-03.
 
 The unreleased [UI Component Test Feed form](Admin-UI-Component-Forms) uses the same saved-feed route and output renderer. The original deployed candidate failed previews using new category mappings. Local repairs now pass that workflow and reject malformed lookup inputs before product loading. Numeric SKUs remain strings; Product ID mode requires a positive integer.
 

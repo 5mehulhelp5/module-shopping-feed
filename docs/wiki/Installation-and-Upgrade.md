@@ -2,11 +2,11 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `133af71` editor notes. Last reviewed: 2026-10-03.
 
 ## Evaluating the unreleased UI Component editor
 
-The unreleased UI Component candidate changes the default feed editor and its customization hooks, with no schema migration or new Composer platform requirement. The original `9f07e46` failed deployed category-generation and promotion-date checks. Repairs now pass the affected workflows on Mage-OS and Magento Open Source 2.4.8/2.4.9; `mageos-latest` has received the repairs and two local preview follow-ups. Read [Admin UI Component forms](Admin-UI-Component-Forms) for the exact deployment state and remaining limits. Audit custom PHP form observers, tab plugins, and parameter renderers; they need migration to UI metadata or components. Retained legacy classes do not provide an editor switch.
+The unreleased UI Component candidate changes the default feed editor and its customization hooks, with no schema migration or new Composer platform requirement. The original `9f07e46` failed deployed category-generation and promotion-date checks. Repairs now pass the affected workflows on Mage-OS and Magento Open Source 2.4.8/2.4.9; `mageos-latest` runs candidate `133af71`, including the preview, stock, Local Inventory, frontend-scope, and currency corrections. Read [Admin UI Component forms](Admin-UI-Component-Forms) for the exact deployment state and remaining limits. Audit custom PHP form observers, tab plugins, and parameter renderers; they need migration to UI metadata or components. Retained legacy classes do not provide an editor switch. Custom `Composite` and `Configurable` product-adapter subclasses that override constructors must forward the added linked-product collection factory. Review existing website/store overrides for microdata and Google Ads settings, which now take effect; clear applicable caches.
 
 Back up feed configuration before evaluation. Code rollback restores the previous editor after DI/static/cache rebuilds, but does not recover erased dates or repair category data written by the candidate. The stable installation instructions below remain for version 1.1.0.
 

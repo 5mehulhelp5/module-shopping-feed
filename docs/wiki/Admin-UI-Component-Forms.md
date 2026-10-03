@@ -2,15 +2,17 @@
 
 The `feat/ui-component-editor` candidate replaces the default New/Edit Feed and Test Feed forms with Magento UI Components. Version 1.1.0 retains the previous editor. This guide describes the candidate's controls and upgrade implications.
 
-> Documentation baseline: unreleased `c07de81`, including the URL-parameter and preview-button fixes. Last reviewed: 2026-10-02.
+> Documentation baseline: unreleased `133af71`. Last reviewed: 2026-10-03.
+
+Existing feeds with a blank saved currency display the currency currently used by generation. Saving makes that selection explicit without changing prices to a different store default. New feeds still start with the store default; explicit saved selections remain unchanged.
 
 ## Current acceptance status
 
-The working tree repairs the defects found in `9f07e46`. Disposable Mage-OS browser tests now pass new-category save-to-generation and all four promotion dates through two saves plus companion generation. Header/category validation, preview input handling, and hidden microdata defaults are also repaired. The repository's `docs/reviews/2026-10-02-ui-component-editor-fixes.md` records the evidence and limits.
+The committed candidate repairs the defects found in `9f07e46`. Disposable Mage-OS browser tests now pass new-category save-to-generation and all four promotion dates through two saves plus companion generation. Header/category validation, preview input handling, and hidden microdata defaults are also repaired. The repository's `docs/reviews/2026-10-02-ui-component-editor-fixes.md` records the evidence and limits.
 
 The repaired PHP suite passes on the Mage-OS, Magento Open Source 2.4.8, and Magento Open Source 2.4.9 frameworks. Actual framework date conversion passed US, British, and German locale tests on all three. Production-mode Docker installations of both Magento versions now pass create/save/reopen for all eight presets, category and promotion output, dynamic rows, failed-save recovery, and malformed-request checks. These tests also found and repaired loss of null directive defaults. The repository's `docs/reviews/2026-10-02-magento-docker-acceptance.md` records the current evidence. The follow-up in `docs/reviews/2026-10-02-grid-permission-acceptance.md` verifies permission-filtered controls and server-side denials with six role profiles on both versions. Earlier automated results did not catch these defects, so they are preserved as historical evidence rather than substituted for the new regression checks.
 
-The repairs are deployed on `mageos-latest` at `c07de81`, including two fixes found during that run: safely handling null URL parameters and suppressing the Test Now button's extra navigation handler. Eight-preset save/reopen, unchanged-save, CLI preview, full generation, category mapping, promotion dates, cloning, and deletion checks pass on Mage-OS 3.5.0. All original feed data and output hashes are preserved. See the repository's `docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md`. The candidate remains unreleased. Updating code does not reconstruct promotion dates already erased by an earlier candidate.
+Candidate `133af71` is deployed on `mageos-latest`, including the preview, feed stock-selection, configurable Local Inventory, frontend store-scope, and currency corrections found during acceptance. Eight-preset save/reopen, unchanged-save, CLI preview, full generation, category mapping, promotion dates, cloning, and deletion checks passed on Mage-OS 3.5.0. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records the final candidate, preserved original data, extended tests, and remaining checks. The candidate remains unreleased. Updating code does not reconstruct promotion dates already erased by an earlier candidate.
 
 Column names must be single-line and contain no control characters. Invalid category rows and malformed preview requests now produce recoverable Admin errors. Custom configuration keys remain supported; see [Columns and directives](Columns-and-Directives) and [Development and CI](Development-and-CI).
 
@@ -73,6 +75,6 @@ Switching Admin themes does not switch Shopping Feed editors. The inspected Nebu
 
 Test the exact repaired revision with a disposable feed through save, reopen, unchanged save, preview, full generation, and file parsing. Category tests must create a new mapping and then generate a product that uses it. Promotion tests must compare all four dates after each save and in the companion output. Repeat on Magento Open Source 2.4.8, 2.4.9, and the intended Mage-OS environment.
 
-Also test site-specific modifiers, restricted Admin roles, failed saves, password retention, deletion of final rows, cloning, and the Admin theme actually used by the store. Remote uploads, live cron execution, provider ingestion, and large-catalog performance remain separate acceptance requirements.
+Also test site-specific modifiers, restricted Admin roles, failed saves, password retention, deletion of final rows, cloning, and the Admin theme actually used by the store. Private receiver tests and a 5,000-product synthetic envelope supplement the form checks. Use the current record for hourly cron and cleanup results; external recipient acceptance and a representative production-catalog test remain separate requirements.
 
 Restoring the previous package and rebuilding DI/static assets restores the old editor. There is no per-feed configuration switch. A code rollback does not recover erased promotion dates or repair malformed category data; compare with the pre-upgrade backup and restore affected configuration through a reviewed recovery. See [Installation and upgrade](Installation-and-Upgrade) and [Release acceptance](Release-Acceptance).

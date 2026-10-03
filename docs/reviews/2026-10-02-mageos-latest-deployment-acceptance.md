@@ -1,5 +1,7 @@
 # Mage-OS deployment acceptance
 
+> Current evidence: the [October 3 local acceptance record](2026-10-03-local-acceptance.md) covers deployed candidate `133af71`, subsequent repairs, extended testing, and cleanup. Results and limits below retain their original date and scope.
+
 Tested October 2, 2026, on `http://mageos-latest.localhost:8080/admin/`. The deployment uses Mage-OS 3.5.0, native PHP 8.4.24, developer mode, and Magento/backend. All 16 installed Nebula modules remain disabled.
 
 The deployed candidate is commit `c07de812e8cb740073c213734bc54f029b8a31c1`. It combines base `f3edab5` with the two fixes found during this acceptance run. It includes the earlier form repairs and permission-filtered grid. No push, merge, release, or wiki publication was performed.

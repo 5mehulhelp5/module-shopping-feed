@@ -2,13 +2,13 @@
 
 Release acceptance proves the extension on representative Magento runtimes and proves each generated artifact at the boundary where it is consumed.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-02.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased candidate notes. Last reviewed: 2026-10-03.
 
 ## Unreleased editor decision
 
-The `9f07e46` candidate failed deployed browser acceptance on category generation and promotion-date preservation. View Log, individual deletion, bulk deletion, and clean Generic generation/download passed; the temporary fixtures were removed and the original data/files/settings matched their baselines. The passing automated suite does not override the two failures. See [Admin UI Component forms](Admin-UI-Component-Forms).
+Candidate `133af71` is deployed on `mageos-latest` and installed on the Magento Open Source 2.4.8/2.4.9 Docker profiles. The original category-generation and promotion-date failures are repaired. Form persistence/output, permissions, previews, stock selection, native configurable MSI, pricing, frontend scope, 5,000-product generation, private receiver delivery, and rollback have recorded local evidence. See [Admin UI Component forms](Admin-UI-Component-Forms) and the repository's `docs/reviews/2026-10-03-local-acceptance.md` for the hourly soak, cleanup state, exact scope, and linked historical results.
 
-The repaired candidate is deployed and verified on `mageos-latest`, including eight-preset persistence/output, new-category save-to-generation, and all four promotion dates through two saves plus companion generation. The repository's `docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md` records two further preview fixes, original-data preservation, rollback, and the browser automation limits. The earlier Magento Docker reports cover production-mode workflows, integration/database tests, and six-role grid visibility and route denial on Magento Open Source 2.4.8 and 2.4.9. Test the exact candidate on each intended destination. Native Nebula bridge acceptance, external uploads, scheduled cron execution, provider ingestion, and large-catalog performance remain separate open gates.
+Local acceptance does not grant release approval or establish external provider ingestion, a customer's transfer destination, native Nebula UI Bridge behavior, consent-managed tag delivery, Varnish behavior, or production-catalog capacity. Test the exact candidate on each intended target and preserve those boundaries in the release record.
 
 The repository's [`ACCEPTANCE-TEST-PLAN.md`](https://github.com/mage-os-lab/module-shopping-feed/blob/main/ACCEPTANCE-TEST-PLAN.md) is the detailed test source. This page describes the evidence expected from a release candidate.
 

@@ -2,7 +2,7 @@
 
 Treat feed performance as a measured workload. Product count alone does not explain cost because field directives and complex-product expansion can dominate generation time.
 
-> Documentation baseline: release `v1.1.0`, with unreleased editor labels. Last reviewed: 2026-10-01.
+> Documentation baseline: release `v1.1.0`, with unreleased editor labels. Last reviewed: 2026-10-03.
 
 ## Start with a baseline
 
@@ -52,3 +52,5 @@ The generator logs progress periodically, with a default interval of 30 product 
 ## Acceptance
 
 A large-catalog configuration is ready only when repeated complete runs finish within the operating window, produce stable product and row counts, leave no partial final file, and complete every required upload.
+
+The unreleased candidate passed 5,000-product generation for all eight presets on Magento Open Source 2.4.8 and 2.4.9, with unique IDs and complete row shapes. The preset runs used approximately 169 to 197 MiB peak PHP memory under a 2 GiB limit. Generic output was stable on repeat and through 500-item batches. These synthetic runs overlapped other local work and do not establish production capacity or a platform speed comparison. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records each result and its limits.

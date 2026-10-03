@@ -2,9 +2,9 @@
 
 Mage-OS Shopping Feed 1.1.0 is the current stable release. See [Release 1.1.0](Release-1-1-0) for changes and recorded acceptance. Existing Rocket Web installations are not upgraded or migrated automatically.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased UI Component editor notes. Last reviewed: 2026-10-02.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased UI Component editor notes. Last reviewed: 2026-10-03.
 
-The unreleased [UI Component editor candidate](Admin-UI-Component-Forms) keeps the Composer requirements. Magento Open Source 2.4.8 and 2.4.9 passed the recorded production-mode Docker browser/output tests, 16 integration tests, four database tests, and six-role permission checks. The candidate is now deployed and tested on Mage-OS 3.5.0 at `mageos-latest`, with two further preview fixes. The final unit suite passes 801 tests on each framework. Those two follow-ups are committed as `c07de81` and deployed; this is not a release. See `docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md` in the repository for current evidence. Native Nebula bridge rendering remains unverified.
+The unreleased [UI Component editor candidate](Admin-UI-Component-Forms) keeps the Composer requirements. Candidate `133af71` is deployed on `mageos-latest` and matches both Magento Open Source 2.4.8/2.4.9 Docker installations. The final suite passes 809 unit tests on each framework and 21 official integration tests per Docker version, plus production compilation. Earlier eight-preset browser/output and six-role permission checks cover the unchanged controls; the final currency provider also passes an unchanged browser save/output comparison. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records current product, MSI, pricing, operations, frontend, and cleanup evidence. This is not a release; native Nebula bridge rendering and external recipients remain separate acceptance targets.
 
 ## Package identity
 
