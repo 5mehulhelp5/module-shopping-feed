@@ -25,7 +25,10 @@ class MicrodataRemoverPluginTest extends TestCase
     public function testNativeSchemaRequiresAnExplicitReplacementFeed(bool $enabled, bool $selected, bool $expected): void
     {
         $config = $this->createMock(ScopeConfigInterface::class);
-        $config->method('getValue')->willReturn($enabled);
+        $config->method('getValue')->with(
+            MicrodataRemoverPlugin::XML_PATH_ENABLED,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        )->willReturn($enabled);
         $config->method('isSetFlag')->willReturn($enabled);
         $store = $this->createMock(Store::class);
         $store->method('getId')->willReturn(2);

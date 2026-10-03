@@ -307,7 +307,8 @@ Acceptance: every enabled transport delivers the exact accepted payload, setting
 - [ ] Change a configurable selection and confirm its deep link and selected offer data remain correct after page load.
 - [ ] Enable Google Ads `view_item` output with a test destination ID.
 - [ ] Confirm one event is emitted with the expected product identity and value.
-- [ ] Confirm no event is emitted when the feature is disabled or the destination ID is empty.
+- [ ] Confirm no direct `gtag` call occurs when the feature is disabled. The local custom event remains available to consent and tag-manager integrations.
+- [ ] Confirm an empty destination omits `send_to` and lets the existing tag integration route the event; verify an explicit destination is isolated to its configured store view.
 - [ ] Check the browser console, CSP report, page source, and structured-data validator for errors.
 - [ ] Confirm full-page cache and Varnish do not leak one store view's currency, price, or feature state into another.
 

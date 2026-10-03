@@ -3,7 +3,7 @@
 namespace MageOS\ShoppingFeed\Test\Unit\Block\Product\View\Configurable;
 
 use MageOS\ShoppingFeed\Block\Product\View\Configurable\Selection;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 use PHPUnit\Framework\TestCase;
 
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
@@ -42,8 +42,8 @@ class SelectionTest extends TestCase
             ->onlyMethods(['getValue'])
             ->getMock();
         $scopeConfig->method('getValue')->willReturnMap([
-            [Selection::GOOGLE_ADS_DESTINATION_ID_PATH, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, ' AW-123456 '],
-            [Selection::DYNAMIC_REMARKETING_ENABLED_PATH, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, null, '1'],
+            [Selection::GOOGLE_ADS_DESTINATION_ID_PATH, ScopeInterface::SCOPE_STORE, null, ' AW-123456 '],
+            [Selection::DYNAMIC_REMARKETING_ENABLED_PATH, ScopeInterface::SCOPE_STORE, null, '1'],
         ]);
 
         $registry = $this->createMock('Magento\Framework\Registry');
