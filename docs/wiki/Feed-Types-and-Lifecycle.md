@@ -2,7 +2,11 @@
 
 The feed type provides a starting column map and default behavior. All feeds then move through the same save, test, queue, generation, upload, and review lifecycle.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+
+The [UI Component editor](Admin-UI-Component-Forms) uses collapsible sections instead of the 1.1 tabs. Its category and promotion-date defects are repaired and verified locally. The linked guide records the tested runtime, currency preservation, and remaining integration limits.
+
+Version 1.2.0 includes four additional catalog presets: [Meta Catalog](Meta-Catalog), [Microsoft Merchant Center](Microsoft-Merchant-Center), [TikTok Catalog](TikTok-Catalog), and [Pinterest Catalog](Pinterest-Catalog). Version 1.2.0 also adds the [OpenAI / ChatGPT Google-compatible beta](OpenAI-ChatGPT). All additions require destination validation before production use.
 
 ## Feed types
 
@@ -12,19 +16,26 @@ The feed type provides a starting column map and default behavior. All feeds the
 | Google Shopping | Google product data, variants, taxonomy, shipping, and product-linked promotion IDs |
 | Google Local Inventory | Store-level availability, quantity, and price, optionally expanded by MSI source |
 | Google Promotions | A companion file configured and generated from a Google Shopping feed |
+| Meta Catalog (1.2.0) | Facebook and Instagram product catalogs using a scheduled TSV data feed |
+| Microsoft Merchant Center (1.2.0) | Microsoft Shopping product catalogs using tab-delimited TXT |
+| TikTok Catalog (1.2.0) | TikTok Ads Manager product catalogs using a scheduled CSV feed |
+| Pinterest Catalog (1.2.0) | Pinterest retail catalogs and product Pins using a scheduled TSV feed |
+| OpenAI / ChatGPT (Google-compatible, beta, 1.2.0) | TSV product discovery feed requiring confirmation during OpenAI onboarding |
 
 See the individual feed guides before relying on their default columns.
+
+These templates generate advertising and catalog feeds. Marketplace listing management and order synchronization for Amazon, Walmart, or eBay require separate integrations.
 
 ## Grid actions
 
 The Feeds Management grid exposes these per-feed actions:
 
-* **Configure** opens the feed tabs.
+* **Configure** opens the feed editor.
 * **Run Now** adds the feed to the generation queue.
 * **Test Feed** renders one SKU or product ID without replacing the normal production file.
 * **View Log** opens the per-feed log.
 
-The grid also supports mass enable, disable, clone, and delete operations when the Admin role has the required ACL permissions.
+The grid also supports mass enable, disable, clone, and delete operations when the Admin role has the required ACL permissions. In the standard grid, mass **Delete** executes immediately without a confirmation dialog. Verify the selected names and count before choosing it. Individual **Delete Feed** in the editor has a confirmation dialog.
 
 ## Statuses
 
@@ -51,4 +62,4 @@ The grid also supports mass enable, disable, clone, and delete operations when t
 
 ## Clone carefully
 
-Cloning is useful when two feeds share most settings, but the copy should have its own name, store view, file, schedules, and destinations. Review all of those before enabling it.
+Cloning creates a new disabled feed with an `_clone` name and copies its configuration, schedules, and upload destinations. It does not guarantee a distinct output filename: a literal filename is copied unchanged and can overwrite the source feed's file when the clone is generated. A filename containing `%s` substitutes the new feed ID. Review the filename, store view, schedules, and destinations before enabling or generating the clone. This behavior predates the UI Component migration.

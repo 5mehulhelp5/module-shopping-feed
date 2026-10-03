@@ -64,7 +64,9 @@ class Feed extends Container
             'class_name' => 'Magento\Backend\Block\Widget\Button\SplitButton',
             'options' => $this->_getAddFeedButtonOptions(),
         ];
-        $this->buttonList->add('add_new', $addButtonProps);
+        if ($this->_authorization->isAllowed('MageOS_ShoppingFeed::save')) {
+            $this->buttonList->add('add_new', $addButtonProps);
+        }
 
         /*$importButtonProps = [
             'id' => 'import_feed',

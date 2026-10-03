@@ -53,7 +53,10 @@ class Selection extends \Magento\ConfigurableProduct\Block\Product\View\Type\Con
      */
     public function getGoogleAdsDestinationId()
     {
-        return trim((string) $this->_scopeConfig->getValue(self::GOOGLE_ADS_DESTINATION_ID_PATH));
+        return trim((string) $this->_scopeConfig->getValue(
+            self::GOOGLE_ADS_DESTINATION_ID_PATH,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        ));
     }
 
     /**
@@ -61,7 +64,10 @@ class Selection extends \Magento\ConfigurableProduct\Block\Product\View\Type\Con
      */
     public function isDynamicRemarketingEnabled()
     {
-        return (bool) $this->_scopeConfig->getValue(self::DYNAMIC_REMARKETING_ENABLED_PATH);
+        return (bool) $this->_scopeConfig->getValue(
+            self::DYNAMIC_REMARKETING_ENABLED_PATH,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**

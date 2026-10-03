@@ -35,6 +35,28 @@ class MemoryTest extends ModelFramework
      */
     public static $returnNormalLimit = false;
 
+    public static ?string $memoryLimitOverride = null;
+
+    /** @dataProvider invalidMemoryLimits */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidMemoryLimits')]
+    public function testInvalidMemoryLimitFallsBackWithoutWarnings(string $limit): void
+    {
+        self::$returnNormalLimit = true;
+        self::$memoryLimitOverride = $limit;
+        try {
+            self::assertSame(150.0, $this->model->getMemoryLimit());
+            self::assertSame('100.00 b/150.00 b', $this->model->format());
+        } finally {
+            self::$memoryLimitOverride = null;
+            self::$returnNormalLimit = false;
+        }
+    }
+
+    public static function invalidMemoryLimits(): array
+    {
+        return [['invalid'], [''], ['0M'], ['1..2M'], ['-2M']];
+    }
+
     /**
      * @var \MageOS\ShoppingFeed\Model\Generator\Memory
      */

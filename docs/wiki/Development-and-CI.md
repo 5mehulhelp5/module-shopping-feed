@@ -2,7 +2,17 @@
 
 The repository validates module identity, configuration integrity, PHP behavior, and supported Magento-family platforms. Run focused checks before requesting review.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+
+## Unreleased editor implementation and evidence
+
+The default forms in `9f07e46` live in `view/adminhtml/ui_component/mageos_shopping_feed_form.xml` and `mageos_shopping_feed_test_form.xml`, with providers under `Ui/DataProvider/Feed` and controls under `view/adminhtml/web/js/form`. Use `ShoppingFeedFormModifierPool` for custom metadata/data and the repository's `docs/ui-component-editor.md` for the contract. Previous form files remain for transition; their passing tests do not prove the replacement form. The legacy menu and category tree still have live callers, and renderer class names remain active configuration identifiers. Audit those dependencies and validator/test references before removing files.
+
+Candidate `133af71` passes **809 PHP unit tests** on Mage-OS 3.5.0 and Magento Open Source 2.4.8/2.4.9. Assertions total 1,879 on Magento 2.4.8 and 2,158 on the other two frameworks. Both Docker platforms pass **21 official integration tests / 53 assertions** and production compilation. The stock, frontend scope, and currency regressions were observed failing before their corrections. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records the current deployment, runtime evidence, and remaining checks.
+
+The unchanged JavaScript/XML code retains **29 frontend tests**, **26 XML schema checks**, and five actual-framework date/null-value cases per platform. Nine frontend tests cover the active form; others cover retained legacy behavior and the storefront. Earlier four-test database regressions, six-role browser/route checks, and eight-preset form/output comparisons remain recorded in the linked reports. Do not substitute aggregate unit counts for those runtime checks.
+
+Extended Docker checks cover scheduler edge cases, interrupted and competing workers, private FTP/SFTP delivery, semantic product modes, native configurable MSI, pricing, store-scoped frontend rendering, 5,000-product generation for every preset, and disable/re-enable rehearsals. Two real hourly cron cycles also pass with stable output and empty queues; the current record includes their observation window and final cleanup. External recipient and release acceptance remain separate gates.
 
 ## Local validation
 
@@ -21,6 +31,8 @@ Run the unit suite with the PHPUnit installation from an existing Magento or Mag
 ```bash
 MAGENTO_ROOT=/path/to/magento /path/to/magento/vendor/bin/phpunit -c phpunit.xml.dist
 ```
+
+Run `MAGENTO_ROOT=/path/to/magento node --test dev/tests/magento-ui-form.test.cjs` for promotion-date conversion and directive initialization against the installed platform's actual date, abstract-field, and value-link components. This separate suite needs a framework checkout and covers three Admin locale formats plus preservation of null directive parameters.
 
 The consolidated validation checks package and module identity, feed configuration, Magento XML, schema whitelist alignment, isolated runtime identifiers, storefront integration markers, and selected regression-sensitive behaviors. Wiki validation checks navigation, page baselines, and known legacy instructions.
 
@@ -67,3 +79,9 @@ Provide:
 5. Any unverified external service behavior or remaining limitation
 
 Passing local checks is not evidence that a wiki was published or that an external feed recipient accepted an output file.
+
+## Magento 2.4.7-p10 test profile
+
+The dedicated PHP 8.3 job tests this exact platform without changing other platform jobs. Its temporary root project permits resolution of one Flysystem advisory while retaining it in `composer audit`; additional advisories fail the job. It also tests the optional security backport in an isolated library copy. See [Status and compatibility](Status-and-Compatibility) for the dependency guidance and acceptance record. The extension package does not distribute a Composer audit exception.
+
+Magento 2.4.7 uses PHPUnit 9. Keep `@dataProvider` annotations alongside `DataProvider` attributes so parameterized tests run on both older and newer frameworks. Run the CI-policy checks with `node --test dev/tests/ci/*.test.cjs`; run actual-framework form checks with `MAGENTO_ROOT=/path/to/magento node --test dev/tests/magento-ui-form.test.cjs`.

@@ -1,0 +1,19 @@
+<div>
+    <label class="shopping-feed-parameter-label" data-bind="text: parameterLabel, attr: {for: uid}"></label>
+    <!-- ko if: kind() === 'input' -->
+    <input class="admin__control-text" type="text" data-bind="value: value, valueUpdate: 'input', disable: disabled, attr: {id: uid}"/>
+    <!-- /ko -->
+    <!-- ko if: kind() === 'textarea' -->
+    <textarea class="admin__control-textarea" rows="3" data-bind="value: value, valueUpdate: 'input', disable: disabled, attr: {id: uid}"></textarea>
+    <!-- /ko -->
+    <!-- ko if: kind() === 'select' -->
+    <select class="admin__control-select" data-bind="options: parameterOptions, optionsText: 'label', optionsValue: 'value', value: value, valueAllowUnset: true, disable: disabled, attr: {id: uid}"></select>
+    <!-- /ko -->
+    <!-- ko if: kind() === 'multiselect' -->
+    <select class="admin__control-multiselect" multiple="multiple" size="5" data-bind="options: parameterOptions, optionsText: 'label', optionsValue: 'value', selectedOptions: value, disable: disabled, attr: {id: uid}"></select>
+    <!-- /ko -->
+    <!-- ko if: kind() === 'unsupported' -->
+    <pre data-bind="text: JSON.stringify(value())"></pre>
+    <!-- /ko -->
+    <p class="admin__field-note" data-bind="text: parameterNotice"></p>
+</div>

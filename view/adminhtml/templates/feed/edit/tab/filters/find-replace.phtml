@@ -79,8 +79,8 @@ var findReplaceControl = {
         };
 
         if(arguments.length == 4) {
-            data.find = arguments[0].replace(/\\'/g, "'");
-            data.replace   = arguments[1].replace(/\\'/g, "'");
+            data.find = arguments[0];
+            data.replace   = arguments[1];
             data.column     = arguments[2];
             data.readOnly  = arguments[3];
         }
@@ -125,9 +125,9 @@ var findReplaceControl = {
 };
 <?php foreach ($block->getValues() as $item): ?>
     findReplaceControl.addItem(
-        '<?php echo $block->escapeJsQuote($item['find']) ?>',
-        '<?php echo $block->escapeJsQuote($item['replace']) ?>',
-        '<?php echo $block->escapeJsQuote($block->escapeHtml($item['column'])) ?>',
+        '<?= $escaper->escapeJs($item['find']) ?>',
+        '<?= $escaper->escapeJs($item['replace']) ?>',
+        '<?= $escaper->escapeJs($item['column']) ?>',
         <?php echo (int) !empty($item['readonly'])?>
     );
 <?php endforeach; ?>

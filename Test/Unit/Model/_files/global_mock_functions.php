@@ -10,6 +10,9 @@ function ini_get($key)
 {
     switch($key) {
         case 'memory_limit':
+            if (MemoryTest::$memoryLimitOverride !== null) {
+                return MemoryTest::$memoryLimitOverride;
+            }
             if (MemoryTest::$returnNormalLimit) {
                 return -1;
             }

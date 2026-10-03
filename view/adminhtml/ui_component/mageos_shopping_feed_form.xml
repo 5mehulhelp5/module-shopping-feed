@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">mageos_shopping_feed_form.mageos_shopping_feed_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Shopping Feed</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="back" class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Form\BackButton"/>
+            <button name="delete" class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Form\DeleteButton"/>
+            <button name="test" class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Form\TestButton"/>
+            <button name="save" class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Form\SaveButton"/>
+        </buttons>
+        <namespace>mageos_shopping_feed_form</namespace>
+        <dataScope>data</dataScope>
+        <deps><dep>mageos_shopping_feed_form.mageos_shopping_feed_form_data_source</dep></deps>
+    </settings>
+    <dataSource name="mageos_shopping_feed_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">MageOS_ShoppingFeed/js/form/provider</item>
+            </item>
+        </argument>
+        <settings><submitUrl path="mageos_shopping_feed/feed/save"/></settings>
+        <dataProvider class="MageOS\ShoppingFeed\Ui\DataProvider\Feed\FormDataProvider" name="mageos_shopping_feed_form_data_source">
+            <settings><requestFieldName>id</requestFieldName><primaryFieldName>id</primaryFieldName></settings>
+        </dataProvider>
+    </dataSource>
+</form>

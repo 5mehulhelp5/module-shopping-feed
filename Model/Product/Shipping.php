@@ -500,9 +500,13 @@ class Shipping
         $realtimeCarriers = (array) $this->adapter->getFeed()->getConfig('shipping_carrier_realtime', []);
         $methods = $this->adapter->getFeed()->getConfig('shipping_methods');
         $allowedCarriers = [];
+        if (!is_array($methods)) {
+            return $allowedCarriers;
+        }
         foreach ($methods as $m) {
-            if (!empty($m)) {
-                $allowedCarriers[] = substr($m, 0, strpos($m, "_"));
+            $separator = is_string($m) ? strpos($m, '_') : false;
+            if ($separator !== false && $separator > 0) {
+                $allowedCarriers[] = substr($m, 0, $separator);
             }
         }
         $allowedCarriers = array_unique($allowedCarriers);

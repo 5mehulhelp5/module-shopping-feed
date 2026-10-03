@@ -6,7 +6,7 @@ Associated configurable rows can link to the parent product with the child's opt
 
 ## Enable unique links
 
-In the feed's **Configurable Products** tab:
+In the feed's **Configurable Products** section:
 
 1. Choose a mode that emits associated products.
 2. Enable **Unique urls for associated products not visible**.

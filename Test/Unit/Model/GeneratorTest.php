@@ -74,6 +74,40 @@ class GeneratorTest extends ModelFramework
         );
     }
 
+    /** @dataProvider temporaryFileEncodingCases */
+    #[\PHPUnit\Framework\Attributes\DataProvider('temporaryFileEncodingCases')]
+    public function testTemporaryFileEncoding(string $type, bool $batchEnabled, bool $newBatch, bool $expectBom): void
+    {
+        $this->feedMock->method('getData')->willReturn($type);
+        $this->objectData['batch'] = new \MageOS\ShoppingFeed\Model\Generator\Batch([
+            'enabled' => $batchEnabled,
+            'offset' => $newBatch ? 0 : 100,
+        ]);
+        $mode = !$batchEnabled || $newBatch ? 'w' : 'a';
+        $this->fileDriverMock->expects($this->once())->method('fileOpen')
+            ->with('/tmp/feed.txt.tmp', $mode)->willReturn('handle');
+        $this->fileDriverMock->expects($expectBom ? $this->once() : $this->never())->method('fileWrite')
+            ->with('handle', \MageOS\ShoppingFeed\Model\Generator::UTF8_BOM);
+        $this->createModel();
+        $this->model->setData('feed_file', '/tmp/feed.txt');
+        $method = new \ReflectionMethod($this->model, 'getTemporaryHandle');
+        $this->assertSame('handle', $method->invoke($this->model));
+        $this->assertSame('handle', $method->invoke($this->model));
+    }
+
+    public static function temporaryFileEncodingCases(): array
+    {
+        return [
+            'Microsoft full feed' => ['microsoft_merchant_center', false, false, false],
+            'Microsoft first batch' => ['microsoft_merchant_center', true, true, false],
+            'Microsoft later batch' => ['microsoft_merchant_center', true, false, false],
+            'Google full feed' => ['google_shopping', false, false, true],
+            'Google first batch' => ['google_shopping', true, true, true],
+            'Google later batch' => ['google_shopping', true, false, false],
+            'Generic full feed' => ['generic', false, false, true],
+        ];
+    }
+
     public function testConfiguredEnclosureEscapeAndDefaultValueAreUsed(): void
     {
         $settings = [
@@ -543,6 +577,37 @@ class GeneratorTest extends ModelFramework
         $this->createModel();
 
         $this->assertInstanceOf('MageOS\ShoppingFeed\Model\Generator', $this->model->run());
+    }
+
+    /** @dataProvider invalidRotationLimits */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidRotationLimits')]
+    public function testInvalidLogRotationSettingDoesNotAbortGeneration($limit): void
+    {
+        $this->setTestRunMocks();
+        $this->feedMock->method('getId')->willReturn(1);
+        $this->feedMock->method('getUploadCollection')->willReturn([]);
+        $config = $this->createMock(\Magento\Framework\App\Config\ScopeConfigInterface::class);
+        $config->method('getValue')->willReturn($limit);
+        $directory = $this->createMock(\Magento\Framework\App\Filesystem\DirectoryList::class);
+        $directory->method('getRoot')->willReturn('');
+        $this->objectData['scopeConfig'] = $config;
+        $this->objectData['directoryList'] = $directory;
+        $this->createModel();
+        $path = tempnam(sys_get_temp_dir(), 'feed-log-');
+        file_put_contents($path, 'original log');
+        $this->model->setData('feed_log_file', $path);
+        try {
+            self::assertSame($this->model, $this->model->run());
+            self::assertSame('original log', file_get_contents($path));
+        } finally {
+            unlink($path);
+            foreach (glob($path . '.*.gz') as $archive) {unlink($archive);}
+        }
+    }
+
+    public static function invalidRotationLimits(): array
+    {
+        return [['abc'], [''], [null], [-1], [0], [[]]];
     }
 
     public function testProcessUploadsCompressesAndRemovesGzipArtifact()

@@ -9,9 +9,5 @@ var config = {
         'domReady': {
             deps: ['jquery']
         }
-    },
-    deps: [
-        'MageOS_ShoppingFeed/js/category-taxonomy',
-        'MageOS_ShoppingFeed/js/feed-form'
-    ]
+    }
 };

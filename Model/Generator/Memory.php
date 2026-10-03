@@ -97,11 +97,15 @@ class Memory extends \Magento\Framework\DataObject
         if (!$this->hasData('memory_limit')) {
             $memory = ini_get('memory_limit');
             if (is_numeric($memory) && $memory <= 0) {
-                return $this->getUsage() * 1.5;
+                return max(1, $this->getUsage()) * 1.5;
             }
 
             if (!is_numeric($memory)) {
-                preg_match('/^\s*([0-9.]+)\s*([KMGTPE])B?\s*$/i', $memory, $matches);
+                if (!preg_match('/^\s*([0-9]+(?:\.[0-9]+)?)\s*([KMGTPE])B?\s*$/i', $memory, $matches)
+                    || (float) $matches[1] <= 0
+                ) {
+                    return max(1, $this->getUsage()) * 1.5;
+                }
                 $num = (float)$matches[1];
                 switch (strtoupper($matches[2])) {
                 case 'E':

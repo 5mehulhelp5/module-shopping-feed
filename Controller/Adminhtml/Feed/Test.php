@@ -18,6 +18,8 @@
 
 namespace MageOS\ShoppingFeed\Controller\Adminhtml\Feed;
 
+use Magento\Framework\Exception\LocalizedException;
+
 class Test extends \Magento\Backend\App\Action
 {
     public const ADMIN_RESOURCE = 'MageOS_ShoppingFeed::grid';
@@ -91,7 +93,13 @@ class Test extends \Magento\Backend\App\Action
      */
     public function execute()
     {
-        $feed = $this->feedBuilder->build($this->getRequest()->getParams());
+        try {
+            // Preview's type is the lookup mode, not a feed preset.
+            $feed = $this->feedBuilder->build(['id' => $this->getRequest()->getParam('id')]);
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addErrorMessage($exception->getMessage());
+            return $this->resultForwardFactory->create()->forward('index');
+        }
 
         if (!$feed->getId()) {
             $this->messageManager->addError(__('Feed wasn\'t found'));
@@ -99,10 +107,14 @@ class Test extends \Magento\Backend\App\Action
             return $resultForward->forward('index');
         }
 
-        $sku = $this->getRequest()->getParam('sku');
-        $type = $this->getRequest()->getParam('type');
+        try {
+            [$sku, $type] = $this->lookup();
+        } catch (LocalizedException $exception) {
+            $this->messageManager->addErrorMessage($exception->getMessage());
+            $sku = '';
+        }
 
-        if ($sku) {
+        if ($sku !== '') {
             $product = $this->productFactory->create();
 
             switch ($type) {
@@ -131,5 +143,27 @@ class Test extends \Magento\Backend\App\Action
         $resultPage->getConfig()->getTitle()->prepend(sprintf(__('Test Feed #%s [%s]'), $feed->getId(), $feed->getName()));
 
         return $resultPage;
+    }
+
+    private function lookup(): array
+    {
+        $type = $this->getRequest()->getParam('type', 'sku');
+        if (!in_array($type, ['sku', 'id'], true)) {
+            throw new LocalizedException(__('Choose SKU or Product ID to test a product.'));
+        }
+        $sku = $this->getRequest()->getParam('sku', '');
+        if (!is_string($sku) && !is_int($sku)) {
+            throw new LocalizedException(__('Enter a valid SKU or Product ID.'));
+        }
+        $sku = (string)$sku;
+        if ($type === 'id' && $sku !== '') {
+            $id = ctype_digit($sku) ? filter_var(ltrim($sku, '0') ?: '0', FILTER_VALIDATE_INT,
+                ['options' => ['min_range' => 1]]) : false;
+            if ($id === false) {
+                throw new LocalizedException(__('Product ID must be a positive integer.'));
+            }
+            return [$id, $type];
+        }
+        return [$sku, $type];
     }
 }

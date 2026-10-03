@@ -2,7 +2,9 @@
 
 Start with the feed-specific log and the feed grid status. They distinguish queue problems, product skips, generation failures, and upload failures.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+
+The original `9f07e46` category and promotion-date defects are repaired in 1.2.0, with runtime acceptance at `133af71`. Consult [Admin UI Component forms](Admin-UI-Component-Forms) for the exact deployed revision and acceptance evidence. Code updates do not reconstruct dates already erased by an earlier save.
 
 ## Log settings and location
 
@@ -23,6 +25,11 @@ Use **View Log** from the Feeds Management grid, or inspect the file as the Mage
 
 | Symptom | First checks |
 | --- | --- |
+| New category mapping causes `Undefined array key "id"` in candidate `9f07e46` | Upgrade to 1.2.0, which stores category IDs and recovers them from saved map keys before generation. Verify the mapped output after upgrading. |
+| Promotion dates reopen blank in candidate `9f07e46` | Upgrade to the repaired date component before saving again. Recover previously erased dates from the pre-upgrade configuration; the code fix cannot infer them. |
+| An unchanged editor save changes a legacy blank currency | Candidate `133af71` preserves the effective generation currency. Review earlier explicit selections against a backup; the fix does not silently reverse them. |
+| Feed stock inclusion conflicts with storefront out-of-stock hiding | The stock correction in 1.2.0 makes feed-specific inclusion settings take precedence. Recompile after upgrading, then check simple and associated-product settings. |
+| Frontend feature overrides appear ignored | The scope correction in 1.2.0 honors website/store overrides. Check the effective store value and clear the applicable caches. |
 | Feed stays Pending | Confirm Magento cron, the `mageos_shopping_feed` cron group, and the process command are running. |
 | Direct command says generation failed | Check whether another process holds the per-feed lock, then open the feed log. |
 | Feed reaches Error | Read the first exception or error for that run, not only the final status line. |

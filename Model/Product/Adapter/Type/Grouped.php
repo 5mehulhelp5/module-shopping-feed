@@ -57,7 +57,15 @@ class Grouped extends Composite implements AdapterInterface
             /**
  * @var \Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection $associatedProductCollection
 */
-            $associatedProductCollection = $groupedProduct->getTypeInstance()->getAssociatedProductCollection($groupedProduct)
+            // ProductLinks adds storefront stock filtering before returning its collection.
+            $links = $groupedProduct->getLinkInstance();
+            $links->setLinkTypeId(\Magento\GroupedProduct\Model\ResourceModel\Product\Link::LINK_TYPE_GROUPED);
+            $associatedProductCollection = $this->linkedProductCollectionFactory->create()
+                ->setFlag('has_stock_status_filter', true)
+                ->setLinkModel($links)
+                ->setFlag('product_children', true)
+                ->setIsStrongMode()
+                ->setProduct($groupedProduct)
                 ->addAttributeToSelect('*')
                 ->addFilterByRequiredOptions()
                 ->setPositionOrder()

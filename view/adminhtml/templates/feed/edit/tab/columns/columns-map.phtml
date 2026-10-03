@@ -243,7 +243,7 @@ var <?php echo $block->escapeHtml($block->getControlName()) ?> = {
     var param = '';
 <?php foreach ($block->getValues() as $item): ?>
     <?php if (isset($item['param']) && is_array($item['param'])): ?>
-    param = <?php /* @noEscape */ echo $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($item['param']); ?>;
+    param = <?php /* @noEscape */ echo json_encode($item['param'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR); ?>;
     <?php else: ?>
     param = '<?= $escaper->escapeJs(isset($item['param']) ? addslashes($block->escapeHtml($item['param'])) : '') ?>';
     <?php endif; ?>

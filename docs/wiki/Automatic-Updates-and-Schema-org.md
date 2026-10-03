@@ -2,7 +2,9 @@
 
 The module can add schema.org offer data to product pages using the same feed mapping used for Google Shopping. Google can use structured product data to reconcile selected price and availability differences.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+
+**Unreleased default repair:** only new Google Shopping feeds default to microdata. Other new presets default to zero, preserving existing selections and explicit choices. The repair is deployed on `mageos-latest`; its original microdata selections were verified unchanged. No existing store selections are migrated. Inspect the grid's `[microdata]` marker and storefront mapping when upgrading; see [Admin UI Component forms](Admin-UI-Component-Forms).
 
 ## What the module renders
 
@@ -30,6 +32,8 @@ It also disables Magento's default price microdata in the affected renderer to a
 **Feed selection in 1.1:** the module requires a feed explicitly marked **Use for microdata** in the current store. Without one, it emits no feed-derived metadata and preserves Magento's native price metadata.
 
 Only one feed per store can be marked for microdata. If another feed already owns that role, the module refuses the second selection and shows a warning.
+
+**Unreleased scope correction:** microdata enablement and native price-schema suppression now honor the current store view, including website and global inheritance. Earlier code read only the global setting despite exposing scoped controls. Existing overrides take effect after upgrade; review them and clear caches. Native rendering and enable/disable overrides pass on Magento Open Source 2.4.8 and 2.4.9. See the repository's `docs/reviews/2026-10-03-frontend-scope-fix.md` for evidence and cache-testing limits.
 
 ## Mapping behavior
 

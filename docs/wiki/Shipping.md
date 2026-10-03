@@ -1,6 +1,6 @@
 # Shipping
 
-The Shipping tab configures the output produced by a column mapped to the **Shipping** directive. It does nothing unless that directive is present in Columns Map.
+The Shipping section configures the output produced by a column mapped to the **Shipping** directive. It does nothing unless that directive is present in Columns Map.
 
 > Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
 

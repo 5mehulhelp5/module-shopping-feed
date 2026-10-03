@@ -2,9 +2,11 @@
 
 [![CI on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml?query=branch%3Amain)
 
-Version **1.1.0** adds optional Nebula Admin support, safer upload and queue handling, corrected Google feed output, guest tier pricing, consistent variant grouping, and configurable custom output. Read the [1.1.0 release notes](docs/releases/1.1.0.md) and [upgrade checklist](docs/wiki/Installation-and-Upgrade.md#upgrading-from-10-to-11).
-
 `MageOS_ShoppingFeed` generates product feeds for Mage-OS and Magento Open Source.
+
+**Version 1.2.0 is available.** It adds Magento UI Component forms, five catalog presets, and corrections to stock selection, configurable Local Inventory, frontend configuration scope, and existing-feed currency. Read the [1.2.0 release notes](docs/releases/1.2.0.md), [upgrade checklist](docs/wiki/Installation-and-Upgrade.md#upgrading-from-11-to-120), and [compatibility results](docs/reviews/2026-10-03-magento-247-acceptance.md). Version [1.1.0](docs/releases/1.1.0.md) remains documented for existing installations.
+
+Version 1.2.0 includes [Meta Catalog](docs/wiki/Meta-Catalog.md), [Microsoft Merchant Center](docs/wiki/Microsoft-Merchant-Center.md), [TikTok Catalog](docs/wiki/TikTok-Catalog.md), [Pinterest Catalog](docs/wiki/Pinterest-Catalog.md), and [OpenAI / ChatGPT Google-compatible beta](docs/wiki/OpenAI-ChatGPT.md). Local validation and generation pass; external provider ingestion remains unverified. The OpenAI profile requires confirmation during onboarding and does not establish account access or checkout support.
 
 This repository consolidates four related Rocket Web modules into one independently named Mage-OS module:
 
@@ -19,11 +21,17 @@ The package has its own Composer name, PHP namespace, Magento module name, datab
 
 ## Status
 
-Version [1.1.0](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.1.0) is the current stable release. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) before evaluating it on a store that already uses a Rocket Web shopping feed module.
+Version [1.2.0](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.0) is the current stable release. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) before evaluating it on a store that already uses a Rocket Web shopping feed module.
 
-The release retains custom feed mapping and Hyva/Luma deep links while correcting identifier defaults, backorder dates, Local Inventory statuses, and CSV serialization. Existing Google mappings need review, comma-feed recipients must accept quoted CSV, and `setup:upgrade` is required for the upload-password column and feed-search index. See the [changelog](CHANGELOG.md), [Google/custom-feed acceptance report](docs/reviews/2026-09-28-google-custom-feed-fixes.md), and [issue acceptance report](docs/reviews/2026-09-28-github-issues.md). Historical [1.0.0 notes](docs/releases/1.0.0.md) remain available.
+Version 1.2.0 makes Magento UI Component forms the default for New/Edit Feed and Test Feed. It retains the existing schema and save routes, but changes the editor customization API. See the [Admin form guide](docs/wiki/Admin-UI-Component-Forms.md) and [developer migration guide](docs/ui-component-editor.md).
 
-Run [ACCEPTANCE-TEST-PLAN.md](ACCEPTANCE-TEST-PLAN.md) against the exact release candidate before enabling production schedules or uploads.
+The released runtime was accepted at `133af71` on `mageos-latest`. It includes the UI Component forms, permission-filtered grid, preview repairs, feed-controlled stock selection, configurable Local Inventory corrections, store-scoped frontend settings, and preservation of existing feeds' effective currency. The [extended local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) is the current source for results and remaining checks. All eight presets passed save/reopen and unchanged-save/output comparisons in the [earlier Mage-OS deployment](docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md) and [Magento 2.4.8/2.4.9 Docker run](docs/reviews/2026-10-02-magento-docker-acceptance.md). The final PHP suite passes 809 tests on all three frameworks; both Docker versions pass 21 official integration tests and production compilation. Nebula remains disabled on `mageos-latest`.
+
+Operational coverage includes scheduling edge cases, interrupted-worker recovery, private FTP/SFTP delivery, 26 semantic catalog scenarios, 15 native configurable MSI scenarios, pricing, store-scoped microdata, and eight 5,000-product preset generations per Magento version. Two real hourly cron cycles also pass with stable output and empty queues; the [current record](docs/reviews/2026-10-03-local-acceptance.md) records final cleanup and exact scope. External recipient and native Nebula bridge acceptance remain separate.
+
+Version 1.1.0 retains custom feed mapping and Hyva/Luma deep links while correcting identifier defaults, backorder dates, Local Inventory statuses, and CSV serialization. Existing Google mappings need review, comma-feed recipients must accept quoted CSV, and `setup:upgrade` is required for the upload-password column and feed-search index. See the [changelog](CHANGELOG.md), [Google/custom-feed acceptance report](docs/reviews/2026-09-28-google-custom-feed-fixes.md), and [issue acceptance report](docs/reviews/2026-09-28-github-issues.md). Historical [1.0.0 notes](docs/releases/1.0.0.md) remain available.
+
+Run [ACCEPTANCE-TEST-PLAN.md](ACCEPTANCE-TEST-PLAN.md) against the exact release before enabling production schedules or uploads.
 
 ## Requirements
 
@@ -31,6 +39,8 @@ Run [ACCEPTANCE-TEST-PLAN.md](ACCEPTANCE-TEST-PLAN.md) against the exact release
 - A PHP version supported by the selected platform release, within PHP 8.1 through PHP 8.5
 - Magento cron when scheduled feed generation is enabled
 - Magento Multi-Source Inventory APIs for source-level Local Inventory feeds
+
+Magento Open Source 2.4.7-p10 passes the dedicated compatibility profile and local eight-preset Admin/output acceptance. Its upstream Flysystem dependency remains affected by a security advisory. See the [2.4.7-p10 guidance](docs/compatibility/magento-2.4.7-p10.md) and [acceptance record](docs/reviews/2026-10-03-magento-247-acceptance.md) for the tested scope, scoped CI exception, and optional tested backport. The module does not weaken a store's Composer security settings.
 
 Mage-OS 3.4.0, based on Magento Open Source 2.4.9, is an explicit CI compatibility target. Its production checks install the package into a Mage-OS 3.4.0 project, then run the unit and integration suites, Magento coding standard, and dependency-injection compilation.
 
@@ -42,10 +52,10 @@ A fresh Mage-OS 3.5.0 installation with no Nebula packages also passed Composer 
 
 ## Installation
 
-Install the 1.1 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
+Install the stable 1.2 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.1'
+composer require 'mage-os/module-shopping-feed:^1.2'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
@@ -73,11 +83,15 @@ The dedicated `mageos_shopping_feed` cron group schedules feeds hourly and proce
 
 Feed output is restricted to `pub/media/mageos-shopping-feed` and its safe subdirectories. Files are publicly downloadable for recipient fetches; default filenames contain the feed ID and are predictable. FTP or SFTP upload leaves that public local copy in place. Export only data intended for public distribution. Per-feed logs are restricted to `var/log` and use `mageos_shopping_feed_*.log` by default.
 
+When inspecting CSV or TSV feeds in a spreadsheet, import the columns as text and disable formula evaluation. Feed values beginning with `=`, `+`, `-`, or `@` can be interpreted as formulas by spreadsheet software. The module preserves these values for feed recipients without adding apostrophes or tabs.
+
 ## Documentation
 
 For setup and troubleshooting, use the [Shopping Feed support bot on Rocket Web](https://rocketweb.com/rocket-shopping-feeds). Select **Open support chat** on the product page.
 
 The [public GitHub Wiki](https://github.com/mage-os-lab/module-shopping-feed/wiki) is published separately; it does not automatically update when this repository changes. The reviewable GitHub Wiki source is under [`docs/wiki`](docs/wiki), starting with [`Home.md`](docs/wiki/Home.md). Documentation contributors should update that source and follow [`docs/WIKI-MAINTENANCE.md`](docs/WIKI-MAINTENANCE.md) rather than editing the public wiki independently.
+
+For version 1.2.0, start with the [operating guide](docs/wiki/Admin-UI-Component-Forms.md), [implementation and customization contract](docs/ui-component-editor.md), [earlier platform checks](docs/ui-component-editor-acceptance.md), and [completed local acceptance](docs/reviews/2026-10-03-local-acceptance.md). Read dated acceptance reports in order; passing automated or platform checks do not override a later reproduced failure.
 
 ## Development validation
 

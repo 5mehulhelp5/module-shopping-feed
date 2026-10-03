@@ -1,0 +1,36 @@
+<div>
+    <div class="admin__actions-switch-text">
+        <button type="button" data-bind="click: expandAll, i18n: 'Expand all'"></button>
+        <button type="button" data-bind="click: collapseAll, i18n: 'Collapse all'"></button>
+        <button type="button" data-bind="click: enableAll, disable: disabled, i18n: 'Enable all'"></button>
+        <button type="button" data-bind="click: disableAll, disable: disabled, i18n: 'Disable all'"></button>
+    </div>
+    <datalist data-bind="attr: {id: uid + '-taxonomy'}, foreach: taxonomyOptions">
+        <option data-bind="attr: {value: $data}"></option>
+    </datalist>
+    <table class="data-grid">
+        <thead><tr>
+            <th class="data-grid-th" data-bind="i18n: 'Category'"></th>
+            <th class="data-grid-th" data-bind="i18n: 'Include'"></th>
+            <!-- ko ifnot: localInventory -->
+            <th class="data-grid-th" data-bind="i18n: 'Priority'"></th>
+            <th class="data-grid-th" data-bind="i18n: 'Taxonomy'"></th>
+            <th class="data-grid-th" data-bind="i18n: 'Product Type'"></th>
+            <!-- /ko -->
+        </tr></thead>
+        <tbody data-bind="foreach: rows">
+            <tr data-bind="visible: shown">
+                <td data-bind="style: {paddingLeft: ((level - 1) * 16 + 10) + 'px'}">
+                    <button type="button" data-bind="visible: children, click: $parent.toggle.bind($parent), text: expanded() ? '−' : '+', attr: {'aria-expanded': expanded(), 'aria-label': name}"></button>
+                    <span data-bind="text: name"></span>
+                </td>
+                <td><input type="checkbox" data-bind="checked: enabled, disable: $parent.disabled() || !store_active, attr: {'aria-label': name + ' include'}"/></td>
+                <!-- ko ifnot: $parent.localInventory -->
+                <td><input type="number" min="0" class="admin__control-text" data-bind="value: priority, disable: $parent.disabled() || !store_active, attr: {'aria-label': name + ' priority'}"/></td>
+                <td><input type="text" class="admin__control-text" data-bind="value: taxonomy, disable: $parent.disabled() || !store_active, attr: {list: $parent.uid + '-taxonomy', 'aria-label': name + ' taxonomy'}"/></td>
+                <td><input type="text" class="admin__control-text" data-bind="value: productType, disable: $parent.disabled() || !store_active, attr: {'aria-label': name + ' product type'}"/></td>
+                <!-- /ko -->
+            </tr>
+        </tbody>
+    </table>
+</div>

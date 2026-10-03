@@ -122,6 +122,37 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
 
         $fieldset = $form->addFieldset('feed_settings', ['legend' => __('Feed Settings')]);
 
+        if ($model->getType() === 'meta_catalog') {
+            $fieldset->addField('meta_catalog_setup', 'note', [
+                'label' => __('Connect to Meta'),
+                'text' => __('Generate and review the TSV file, then add its public URL as a scheduled data feed in Meta Commerce Manager. Schedule generation before Meta fetches it. Review condition, brand, GTIN/MPN, and variant mappings in Columns Map. Match feed IDs to your Meta Pixel or Conversions API content IDs. This template does not configure tracking or synchronize orders.'),
+            ]);
+        }
+        if ($model->getType() === 'microsoft_merchant_center') {
+            $fieldset->addField('microsoft_merchant_center_setup', 'note', [
+                'label' => __('Connect to Microsoft'),
+                'text' => __('Generate and review the tab-delimited TXT file. In Microsoft Merchant Center, create an online product feed and choose Automatically download file from URL. Use a public URL and schedule generation before the fetch. Match the store domain and target currency. Review identifiers, tax treatment, apparel fields, and shipping requirements for your target country; shipping is required for Austria and Germany. This template does not configure UET tracking or synchronize orders.'),
+            ]);
+        }
+        if ($model->getType() === 'tiktok_catalog') {
+            $fieldset->addField('tiktok_catalog_setup', 'note', [
+                'label' => __('Connect to TikTok'),
+                'text' => __('Generate and review the CSV file, then add its public URL through Data Feed Schedule in TikTok Ads Manager > Assets > Catalog. Match the catalog currency and targeting location. Schedule generation before the fetch and keep sale prices current; TikTok does not use sale_price_effective_date to expire discounts. Match sku_id values to your TikTok Pixel content IDs. Review brand, identifiers, images, and variant mappings. This template does not configure tracking or synchronize TikTok Shop orders.'),
+            ]);
+        }
+        if ($model->getType() === 'openai_google_compatible') {
+            $fieldset->addField('openai_google_compatible_setup', 'note', [
+                'label' => __('OpenAI / ChatGPT beta setup'),
+                'text' => __('Confirm the Google-compatible profile with OpenAI before uploading. Register the merchant name and supported markets, map brand and real GTIN/MPN identifiers, and supply availability_date for preorders and backorders. Upload only products intended for discovery: search opt-out columns do not work in this profile. Generate full snapshots at least daily and use the agreed SFTP destination with a stable filename. Expiration and sale dates are metadata, not automatic removal or sale scheduling. This template does not enable checkout or account access.'),
+            ]);
+        }
+        if ($model->getType() === 'pinterest_catalog') {
+            $fieldset->addField('pinterest_catalog_setup', 'note', [
+                'label' => __('Connect to Pinterest'),
+                'text' => __('Generate and review the TSV file. In Pinterest Catalogs and product groups, add a data source with its public URL and choose TSV. Review country, language, currency, and claimed website before creating Pins. Schedule generation before the daily fetch; hosted URLs must use port 80 or 443. Use clear primary images at least 1000 by 1500 pixels and change image URLs when replacing images. Keep variant group IDs and tracking IDs consistent. This template does not configure the Pinterest tag or synchronize orders.'),
+            ]);
+        }
+
         if ($model->getId()) {
             $fieldset->addField('id', 'hidden', ['name' => 'id']);
         } else {
@@ -301,7 +332,14 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'required' => false,
                 'values' => $this->sourceAttributes->toOptionArray(true),
                 'disabled' => $isElementDisabled,
-                'note' => __('To fill \'availability\'. The attribute\'s values can be: \'in stock\', \'available for order\', \'out of stock\', \'preorder\'. Other values will be replaced by \'out of stock\'.'),
+                'note' => match ($model->getType()) {
+                    'meta_catalog' => __('Use in_stock, out_of_stock, backorder, or preorder. Meta product feeds support in stock and out of stock. Backorders and preorders export as out of stock until available.'),
+                    'microsoft_merchant_center' => __('Use in_stock, out_of_stock, backorder, or preorder. Microsoft supports in stock, out of stock, and preorder. Backorders export as out of stock until available.'),
+                    'tiktok_catalog' => __('Use in_stock, out_of_stock, backorder, or preorder. TikTok exports these as in stock, out of stock, available for order, and preorder respectively.'),
+                    'openai_google_compatible' => __('Use in_stock, out_of_stock, preorder, or backorder. Map a real availability_date for preorder and backorder. The OpenAI native spelling pre_order is not accepted by this profile.'),
+                    'pinterest_catalog' => __('Use in_stock, out_of_stock, backorder, or preorder. Pinterest supports in stock, out of stock, and preorder. Backorders export as out of stock until available.'),
+                    default => __('To fill \'availability\'. The attribute\'s values can be: \'in stock\', \'available for order\', \'out of stock\', \'preorder\'. Other values will be replaced by \'out of stock\'.'),
+                },
             ]
         );
 

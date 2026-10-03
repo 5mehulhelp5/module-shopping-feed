@@ -78,6 +78,11 @@ $expectedFeeds = [
     'generic' => ['directives' => 24, 'columns' => 17],
     'google_shopping' => ['directives' => 32, 'columns' => 31],
     'google_local_inventory' => ['directives' => 11, 'columns' => 7],
+    'meta_catalog' => ['directives' => 25, 'columns' => 23],
+    'openai_google_compatible' => ['directives' => 25, 'columns' => 29],
+    'pinterest_catalog' => ['directives' => 25, 'columns' => 23],
+    'tiktok_catalog' => ['directives' => 25, 'columns' => 24],
+    'microsoft_merchant_center' => ['directives' => 26, 'columns' => 24],
 ];
 foreach ($expectedFeeds as $feedName => $expected) {
     $feed = $feedXpath->query(sprintf('/config/feed[@name="%s"]', $feedName))->item(0);
@@ -139,7 +144,7 @@ $assert(
     'Google Local Inventory is missing its inventory-source mapping config'
 );
 $assert(
-    $feedXpath->query('/config/feed/default_feed_config/general/feed_dir[text()="pub/media/mageos-shopping-feed"]')->length === 3,
+    $feedXpath->query('/config/feed/default_feed_config/general/feed_dir[text()="pub/media/mageos-shopping-feed"]')->length === count($expectedFeeds),
     'One or more feed output directories are not isolated'
 );
 $assert(!is_dir($root . '/Setup/Patch'), 'Historical paid-package data patches must not run under the new module identity');

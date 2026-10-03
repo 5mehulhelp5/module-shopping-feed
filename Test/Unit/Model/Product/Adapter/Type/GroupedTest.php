@@ -85,9 +85,21 @@ class GroupedTest extends ModelFramework
 
     public function testMap()
     {
+        $link = $this->getModelMock(\Magento\Catalog\Model\Product\Link::class);
+        $this->expectReturn($this->productMock, 'getLinkInstance', $link);
+        $factory = $this->getModelMock(
+            \Magento\Catalog\Model\ResourceModel\Product\Link\Product\CollectionFactory::class,
+            ['create']
+        );
+        $this->expectReturn($factory, 'create', $this->productMock);
+        $property = new \ReflectionProperty(
+            \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Composite::class,
+            'linkedProductCollectionFactory'
+        );
+        $property->setValue($this->model, $factory);
         $this->expectSelf(
             $this->productMock,
-            ['getTypeInstance', 'getAssociatedProductCollection', 'addFilterByRequiredOptions',
+            ['setLinkModel', 'setIsStrongMode', 'setProduct', 'setFlag', 'addFilterByRequiredOptions',
             'addAttributeToSelect',
             'setPositionOrder']
         );

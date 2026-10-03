@@ -4,7 +4,7 @@ The configurable-product integration dispatches a `view_item` event when a compl
 
 This event bridge uses Magento's RequireJS integration. Version 1.1.0 supports native Hyva configurable deep-link selection, but does not add a Hyva Google Ads event bridge. Verify or provide a separate theme integration before relying on events there.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
 ## Event data
 
@@ -49,6 +49,8 @@ gtag('event', 'view_item', eventData)
 ```
 
 When a destination ID is configured, the event includes `send_to`. Leave it empty when Google Tag Manager or another integration owns routing.
+
+**Unreleased scope correction:** direct-delivery enablement and the destination ID now use the current store view, inheriting website and global values when no override exists. Earlier code ignored the scoped values. Existing overrides take effect after upgrade; review them and clear applicable caches. Store-scope configuration passes native checks on Magento Open Source 2.4.8 and 2.4.9; actual consent-managed delivery remains a separate acceptance step.
 
 ## Consent boundary
 

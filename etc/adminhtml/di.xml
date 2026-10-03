@@ -27,4 +27,142 @@
     <type name="Qoliber\NebulaGrid\Model\DataProvider\CollectionProvider">
         <plugin name="shopping_feed_complete_export" type="MageOS\ShoppingFeed\Plugin\Adminhtml\NebulaExport"/>
     </type>
+    <virtualType name="ShoppingFeedFormModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool"/>
+    <type name="MageOS\ShoppingFeed\Ui\DataProvider\Feed\FormDataProvider">
+        <arguments><argument name="pool" xsi:type="object">ShoppingFeedFormModifierPool</argument></arguments>
+    </type>
+    <type name="MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\Options">
+        <arguments><argument name="sources" xsi:type="array">
+            <item name="AvailableCurrencies" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Directory\AvailableCurrencies</item>
+            <item name="Delimiter" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Delimiter</item>
+            <item name="Yesno" xsi:type="object">Magento\Config\Model\Config\Source\Yesno</item>
+            <item name="Attributes" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\Attributes</item>
+            <item name="Locale" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Locale</item>
+            <item name="PriorityMode" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Category\PriorityMode</item>
+            <item name="Types" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\Types</item>
+            <item name="AttributeSets" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\AttributeSets</item>
+            <item name="Columns" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns</item>
+            <item name="LimitColumns" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns\Limit</item>
+            <item name="OptionHandling" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\OptionHandling</item>
+            <item name="AssociatedMode" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\AssociatedMode</item>
+            <item name="PriceType" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\Grouped\PriceType</item>
+            <item name="AvailableMethods" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Shipping\AvailableMethods</item>
+            <item name="Countryofmanufacture" xsi:type="object">Magento\Catalog\Model\Product\Attribute\Source\Countryofmanufacture</item>
+            <item name="DirectivesAndAttributes" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\DirectivesAndAttributes</item>
+            <item name="Inheritance" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\Inheritance</item>
+            <item name="StartAt" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Schedule\StartAt</item>
+            <item name="TransferModes" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Uploads\TransferModes</item>
+            <item name="ImageAttributes" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\ImageAttributes</item>
+            <item name="QuantityHandling" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\QuantityHandling</item>
+            <item name="ItemGroupAttributes" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\ItemGroupAttributes</item>
+            <item name="Weight" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Shipping\Weight</item>
+            <item name="Options" xsi:type="object">MageOS\ShoppingFeed\Model\Feed\Source\Product\Options</item>
+            <item name="CustomerGroup" xsi:type="object">Magento\Customer\Model\ResourceModel\Group\Collection</item>
+            <item name="StockAttributes" xsi:type="object">MageOS\ShoppingFeed\Model\Adminhtml\StockAttributes</item>
+        </argument></arguments>
+    </type>
+    <type name="MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\Parameters">
+        <arguments><argument name="renderers" xsi:type="array">
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Concatenate" xsi:type="array">
+                <item name="kind" xsi:type="string">textarea</item>
+                <item name="label" xsi:type="string">Value</item>
+                <item name="notice" xsi:type="string">Use {{attribute_code}}, {{column_name}} or {{variants}} placeholders.</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\CustomerGroup" xsi:type="array">
+                <item name="kind" xsi:type="string">select</item>
+                <item name="label" xsi:type="string">Customer Group</item>
+                <item name="source" xsi:type="string">CustomerGroup</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Expiration" xsi:type="array">
+                <item name="kind" xsi:type="string">input</item>
+                <item name="label" xsi:type="string">No. of Days</item>
+                <item name="notice" xsi:type="string">Items cannot remain active for more than 30 days without a new feed.</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage" xsi:type="array">
+                <item name="kind" xsi:type="string">none</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\IdentifierAttribute" xsi:type="array">
+                <item name="kind" xsi:type="string">select</item>
+                <item name="label" xsi:type="string">Attribute</item>
+                <item name="source" xsi:type="string">Attributes</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\IdentifierExists" xsi:type="array">
+                <item name="kind" xsi:type="string">select</item>
+                <item name="label" xsi:type="string">Identifier status</item>
+                <item name="options" xsi:type="array">
+                    <item name="0" xsi:type="array">
+                        <item name="value" xsi:type="string"></item>
+                        <item name="label" xsi:type="string">Identifiers exist or are unknown</item>
+                    </item>
+                    <item name="1" xsi:type="array">
+                        <item name="value" xsi:type="string">no_identifiers</item>
+                        <item name="label" xsi:type="string">Confirmed: no assigned identifiers</item>
+                    </item>
+                </item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ItemGroupId" xsi:type="array">
+                <item name="kind" xsi:type="string">select</item>
+                <item name="label" xsi:type="string">Base on parent attribute</item>
+                <item name="source" xsi:type="string">ItemGroupAttributes</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductId" xsi:type="array">
+                <item name="kind" xsi:type="string">select</item>
+                <item name="label" xsi:type="string">Add Store Code</item>
+                <item name="source" xsi:type="string">Yesno</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImage" xsi:type="array">
+                <item name="kind" xsi:type="string">select</item>
+                <item name="label" xsi:type="string">Type</item>
+                <item name="source" xsi:type="string">ImageAttributes</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImageAdditional" xsi:type="array">
+                <item name="kind" xsi:type="string">select</item>
+                <item name="label" xsi:type="string">Exclude Type</item>
+                <item name="source" xsi:type="string">ImageAttributes</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductOption" xsi:type="array">
+                <item name="kind" xsi:type="string">multiselect</item>
+                <item name="label" xsi:type="string">Product Options</item>
+                <item name="source" xsi:type="string">Options</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice" xsi:type="array">
+                <item name="kind" xsi:type="string">select</item>
+                <item name="label" xsi:type="string">Add Tax</item>
+                <item name="source" xsi:type="string">Yesno</item>
+                <item name="notice" xsi:type="string">US feeds should not include tax.</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductQuantity" xsi:type="array">
+                <item name="kind" xsi:type="string">select</item>
+                <item name="label" xsi:type="string">Count Mode</item>
+                <item name="source" xsi:type="string">QuantityHandling</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductTypeMagentoCategory" xsi:type="array">
+                <item name="kind" xsi:type="string">input</item>
+                <item name="label" xsi:type="string">Paths limit</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductUrl" xsi:type="array">
+                <item name="kind" xsi:type="string">input</item>
+                <item name="label" xsi:type="string">Add URL Suffix</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ShippingWeight" xsi:type="array">
+                <item name="kind" xsi:type="string">select</item>
+                <item name="label" xsi:type="string">Unit of measure</item>
+                <item name="source" xsi:type="string">Weight</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue" xsi:type="array">
+                <item name="kind" xsi:type="string">input</item>
+                <item name="label" xsi:type="string">Value</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StockAttribute" xsi:type="array">
+                <item name="kind" xsi:type="string">select</item>
+                <item name="label" xsi:type="string">Stock Attribute</item>
+                <item name="source" xsi:type="string">StockAttributes</item>
+            </item>
+            <item name="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\VariantAttributes" xsi:type="array">
+                <item name="kind" xsi:type="string">multiselect</item>
+                <item name="label" xsi:type="string">Attributes</item>
+                <item name="source" xsi:type="string">Attributes</item>
+            </item>
+        </argument></arguments>
+    </type>
 </config>

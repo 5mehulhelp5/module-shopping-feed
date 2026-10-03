@@ -80,6 +80,24 @@ class UrlTest extends ModelFramework
         $cell = $this->model->map($params);
         $this->assertEquals('http://base.url/some/product/url/', $cell);
     }
+
+    public function testNullQueryParameterDoesNotRaiseADeprecation(): void
+    {
+        $this->expectReturn($this->productMock, 'getProductUrl', 'https://base.url/some/product/url/');
+        $this->expectReturn($this->adapterMock, 'getProduct', $this->productMock);
+        $this->model->addAdapter($this->adapterMock);
+
+        // Magento's CLI converts deprecated calls into failed feed generation.
+        set_error_handler(static function (int $severity, string $message, string $file, int $line): never {
+            throw new \ErrorException($message, 0, $severity, $file, $line);
+        }, E_DEPRECATED);
+        try {
+            self::assertSame('http://base.url/some/product/url/', $this->model->map(['column' => 'link', 'param' => null]));
+        } finally {
+            restore_error_handler();
+        }
+    }
+
     public function testStorePortSurvivesUrlMapping(): void
     {
         $store = $this->createMock(\Magento\Store\Model\Store::class);
@@ -92,6 +110,28 @@ class UrlTest extends ModelFramework
         $adapter->method('getFilter')->willReturn($this->createMock(\MageOS\ShoppingFeed\Model\Product\Filter::class));
         $this->model->addAdapter($adapter);
         $this->assertSame('https://store.example:8443/product.html?source=feed', $this->model->map(['column' => 'link', 'param' => 'source=feed']));
+    }
+
+    /** @dataProvider invalidUrls */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidUrls')]
+    public function testMalformedUrlReturnsEmptyLink(string $base, string $url): void
+    {
+        $store = $this->createMock(\Magento\Store\Model\Store::class);
+        $store->method('getBaseUrl')->willReturn($base);
+        $product = $this->createMock(\Magento\Catalog\Model\Product::class);
+        $product->method('getStore')->willReturn($store);
+        $product->method('getProductUrl')->willReturn($url);
+        $adapter = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class);
+        $adapter->method('getProduct')->willReturn($product);
+        $adapter->method('getFilter')->willReturn($this->createMock(\MageOS\ShoppingFeed\Model\Product\Filter::class));
+        $this->model->addAdapter($adapter);
+        self::assertSame('', $this->model->map(['column'=>'link']));
+    }
+
+    public static function invalidUrls(): array
+    {
+        return [['http://shop.test:invalid/', '/item'], ['invalid', '/item'],
+            ['https://shop.test/', 'http://shop.test:invalid/item'], ['https://shop.test/', '']];
     }
 
 }

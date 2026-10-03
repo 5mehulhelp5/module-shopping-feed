@@ -67,7 +67,10 @@ class Microdata extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     public function isEnabled()
     {
-        return (bool) ($this->_scopeConfig->getValue(self::XML_PATH_ENABLED));
+        return (bool) $this->_scopeConfig->getValue(
+            self::XML_PATH_ENABLED,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
 

@@ -51,7 +51,9 @@ class ProductTypeByCategoryTest extends ModelFramework
         );
     }
 
-    public function testGetSortedTaxonomyMap()
+    /** @dataProvider categoryIdentityModes */
+    #[\PHPUnit\Framework\Attributes\DataProvider('categoryIdentityModes')]
+    public function testGetSortedTaxonomyMap(bool $embeddedIds)
     {
         $this->expectReturn($this->feedMock, 'getId', 1);
         $this->expectReturn($this->adapterMock, 'getProduct', $this->productMock);
@@ -60,13 +62,11 @@ class ProductTypeByCategoryTest extends ModelFramework
         $this->expectAdvencedReturn(
             $this->feedMock,
             'getConfig',
-            $this->returnCallback(function ($arg) {
+            $this->returnCallback(function ($arg) use ($embeddedIds) {
                 switch ($arg) {
                     case 'categories_provider_taxonomy_by_category':
-                        return [
-                            1 => ['p' => 10, 'id' => 1],
-                            2 => ['p' => 5, 'id' => 2]
-                        ];
+                        return $embeddedIds ? [1 => ['p' => 10, 'id' => 1], 2 => ['p' => 5, 'id' => 2]]
+                            : [1 => ['p' => 10], 2 => ['p' => 5]];
                     case 'categories_sort_mode':
                         return 1;
                     default:
@@ -84,6 +84,11 @@ class ProductTypeByCategoryTest extends ModelFramework
         $expected = [['p' => 5, 'id' => 2], ['p' => 10, 'id' => 1]];
         $cell = $this->model->getSortedTaxonomyMap();
         $this->assertEquals($expected, $cell);
+    }
+
+    public static function categoryIdentityModes(): array
+    {
+        return ['legacy complete rows' => [true], 'rows saved by the initial UI form' => [false]];
     }
 
     public function testGetSortedTaxonomyMapOrderByLevel()

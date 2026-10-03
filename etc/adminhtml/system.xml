@@ -36,6 +36,7 @@
         </field>
         <field id="rotate" translate="label" type="text" sortOrder="40" showInDefault="1">
           <label>Log rotate (Kb)</label>
+          <validate>validate-number validate-greater-than-zero</validate>
           <comment>Archive log file when it's size exceeds kilobytes set here.</comment>
         </field>
       </group>

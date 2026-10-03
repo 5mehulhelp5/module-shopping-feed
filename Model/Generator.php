@@ -75,6 +75,21 @@ class Generator extends DataObject
      */
     protected $feed;
 
+    /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\MetaCatalog */
+    private $metaCatalogValidator;
+
+    /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\MicrosoftMerchantCenter */
+    private $microsoftMerchantCenterValidator;
+
+    /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\TikTokCatalog */
+    private $tikTokCatalogValidator;
+
+    /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\PinterestCatalog */
+    private $pinterestCatalogValidator;
+
+    /** @var \MageOS\ShoppingFeed\Model\Feed\Validation\OpenAiGoogleCompatible */
+    private $openAiGoogleCompatibleValidator;
+
     /**
      * @var \Magento\Framework\Model\ResourceModel\Iterator
      */
@@ -189,6 +204,11 @@ class Generator extends DataObject
         \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \MageOS\ShoppingFeed\Model\Feed\OutputPath $outputPath,
+        \MageOS\ShoppingFeed\Model\Feed\Validation\MetaCatalog $metaCatalogValidator,
+        \MageOS\ShoppingFeed\Model\Feed\Validation\MicrosoftMerchantCenter $microsoftMerchantCenterValidator,
+        \MageOS\ShoppingFeed\Model\Feed\Validation\TikTokCatalog $tikTokCatalogValidator,
+        \MageOS\ShoppingFeed\Model\Feed\Validation\PinterestCatalog $pinterestCatalogValidator,
+        \MageOS\ShoppingFeed\Model\Feed\Validation\OpenAiGoogleCompatible $openAiGoogleCompatibleValidator,
         ?\MageOS\ShoppingFeed\Model\Generator\Queue $queue = null,
         $testSku = null,
         $data = []
@@ -225,6 +245,11 @@ class Generator extends DataObject
         $this->scheduleFactory = $scheduleFactory;
         $this->scopeConfig = $scopeConfig;
         $this->outputPath = $outputPath;
+        $this->metaCatalogValidator = $metaCatalogValidator;
+        $this->microsoftMerchantCenterValidator = $microsoftMerchantCenterValidator;
+        $this->tikTokCatalogValidator = $tikTokCatalogValidator;
+        $this->pinterestCatalogValidator = $pinterestCatalogValidator;
+        $this->openAiGoogleCompatibleValidator = $openAiGoogleCompatibleValidator;
 
         parent::__construct($data);
     }
@@ -258,7 +283,10 @@ class Generator extends DataObject
         // Log rotate
         $logger = $this->getLogger();
         $logFile = $this->directoryList->getRoot(). $this->getData('feed_log_file');
-        if (is_file($logFile) && filesize($logFile) > 1024 * $this->scopeConfig->getValue(self::XML_LOG_ROTATE)) {
+        $rotateKb = $this->scopeConfig->getValue(self::XML_LOG_ROTATE);
+        $rotateKb = is_numeric($rotateKb) && (float)$rotateKb > 0 && is_finite((float)$rotateKb)
+            ? (float)$rotateKb : 512;
+        if (is_file($logFile) && filesize($logFile) > 1024 * $rotateKb) {
             $archiveFile = $logFile . '.' . date('Y-m-d-H-i-s') . '.gz';
             file_put_contents('compress.zlib://' . $archiveFile, file_get_contents($logFile));
             file_put_contents($logFile, '');
@@ -406,7 +434,7 @@ class Generator extends DataObject
             );
         }
 
-        unset($product, $productAdapter, $row);
+        unset($product, $adapter, $row);
     }
 
     /**
@@ -462,7 +490,10 @@ class Generator extends DataObject
         }
 
         foreach ($rows as $row) {
-            $this->writeFeed($row);
+            $requiresItemGroupId = in_array($this->feed->getData('type'), ['pinterest_catalog', 'openai_google_compatible'], true)
+                && ($productAdapter instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable
+                    || $productAdapter->getParentAdapter() instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable);
+            $this->writeFeed($row, true, $requiresItemGroupId);
         }
         return $this;
     }
@@ -470,9 +501,10 @@ class Generator extends DataObject
     /**
      * @param  $fields
      * @param  bool|true $addNewLine
+     * @param  bool $requiresItemGroupId
      * @return Generator
      */
-    protected function writeFeed($fields, $addNewLine = true)
+    protected function writeFeed($fields, $addNewLine = true, bool $requiresItemGroupId = false)
     {
         if ($addNewLine && $this->feed->getData('type') === 'google_shopping') {
             $requiresDate = in_array($fields['availability'] ?? '', ['backorder', 'preorder'], true);
@@ -493,10 +525,48 @@ class Generator extends DataObject
             ['google_shopping', 'google_local_inventory'],
             true
         );
+        $isMetaFeed = $this->feed->getData('type') === 'meta_catalog';
+        $isMicrosoftFeed = $this->feed->getData('type') === 'microsoft_merchant_center';
+        $isTikTokFeed = $this->feed->getData('type') === 'tiktok_catalog';
+        $isPinterestFeed = $this->feed->getData('type') === 'pinterest_catalog';
+        $isOpenAiFeed = $this->feed->getData('type') === 'openai_google_compatible';
+        if ($addNewLine && $isOpenAiFeed && is_bool($fields['identifier_exists'] ?? null)) {
+            $fields['identifier_exists'] = $fields['identifier_exists'] ? 'true' : 'false';
+        }
+        if ($addNewLine && ($isMetaFeed || $isMicrosoftFeed || $isTikTokFeed || $isPinterestFeed || $isOpenAiFeed)) {
+            [$validator, $destination] = match (true) {
+                $isOpenAiFeed => [$this->openAiGoogleCompatibleValidator, 'OpenAI Google-compatible'],
+                $isPinterestFeed => [$this->pinterestCatalogValidator, 'Pinterest Catalog'],
+                $isTikTokFeed => [$this->tikTokCatalogValidator, 'TikTok Catalog'],
+                $isMicrosoftFeed => [$this->microsoftMerchantCenterValidator, 'Microsoft Merchant Center'],
+                default => [$this->metaCatalogValidator, 'Meta Catalog'],
+            };
+            $validation = ($isPinterestFeed || $isOpenAiFeed)
+                ? $validator->validate($fields, $requiresItemGroupId)
+                : $validator->validate($fields);
+            $identifier = $fields[$isTikTokFeed ? 'sku_id' : 'id'] ?? null;
+            $id = is_scalar($identifier) ? (string)$identifier : '(no id)';
+            if ($validation['errors']) {
+                $this->updateCountSkip();
+                $this->getLogger()->warning(sprintf(
+                    'Skipped %s row %s: %s. Review Columns Map.',
+                    $destination,
+                    $id,
+                    implode('; ', $validation['errors'])
+                ));
+                return $this;
+            }
+            foreach ($validation['warnings'] as $warning) {
+                $this->getLogger()->warning(sprintf('%s row %s: %s.', $destination, $id, $warning));
+            }
+        }
+
         if ($addNewLine
-            && $isGoogleFeed
+            && ($isGoogleFeed || $isMetaFeed || $isMicrosoftFeed || $isTikTokFeed || $isPinterestFeed)
             && !empty($fields['sale_price'])
             && isset($fields['price'])
+            && is_scalar($fields['sale_price'])
+            && is_scalar($fields['price'])
             && (float)$fields['sale_price'] >= (float)$fields['price']
         ) {
             $fields['sale_price'] = '';
@@ -515,7 +585,7 @@ class Generator extends DataObject
         extract($params);
         $row = [];
 
-        foreach ($this->getOutputColumns($isGoogleFeed) as $arr) {
+        foreach ($this->getOutputColumns($isGoogleFeed || $isMicrosoftFeed) as $arr) {
             $column = $arr['column'];
             $values = isset($fields[$column]) ? $fields[$column] : '';
             if (!is_array($values)) {
@@ -573,10 +643,10 @@ class Generator extends DataObject
         }
     }
 
-    private function getOutputColumns(bool $isGoogleFeed): array
+    private function getOutputColumns(bool $putIdLast): array
     {
         $columns = $this->feed->getColumnsMap();
-        if (!$isGoogleFeed) {
+        if (!$putIdLast) {
             return $columns;
         }
 
@@ -643,8 +713,8 @@ class Generator extends DataObject
             }
             $handle = $this->fileDriver->fileOpen($this->getFeedFile() . '.tmp', $mode);
 
-            // Write UTF-8 BOM only in write mode (new file)
-            if ($mode === "w") {
+            // Microsoft TSV uses plain UTF-8 so the first header has no BOM prefix.
+            if ($mode === "w" && $this->feed->getData('type') !== 'microsoft_merchant_center') {
                 $this->fileDriver->fileWrite($handle, self::UTF8_BOM);
             }
 

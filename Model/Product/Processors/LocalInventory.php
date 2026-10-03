@@ -98,9 +98,18 @@ class LocalInventory extends \MageOS\ShoppingFeed\Model\Product\Processors\Proce
             try {
                 // Iterate inventory sources for current product
                 if (in_array($complexMode, $this->allowed_parent)) {
-                    $sourceItems = $this->getSourceItems($this->getAdapter()->getProduct(), $sourceCodes);
-                    // NOTE configurable products hold source item at 'default' source_code only.
-                    // It may not be linked to the website.
+                    $product = $this->getAdapter()->getProduct();
+                    if ($product->getTypeId() === 'configurable') {
+                        // Configurable inventory belongs to its children, not the parent SKU.
+                        $sourceItems = [];
+                        foreach ($associatedProductAdapters ?: [] as $associatedAdapter) {
+                            foreach ($this->getSourceItems($associatedAdapter->getProduct(), $sourceCodes) as $item) {
+                                $sourceItems[$item->getSourceCode()] = $item;
+                            }
+                        }
+                    } else {
+                        $sourceItems = $this->getSourceItems($product, $sourceCodes);
+                    }
                     foreach ($sourceItems as $sourceItem) {
                         $adapter = $this->getAdapter();
                         $this->prepareAdapter($adapter, $sourceItem);

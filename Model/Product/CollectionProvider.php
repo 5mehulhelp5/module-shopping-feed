@@ -34,6 +34,8 @@ class CollectionProvider
     public function getCollection($feed)
     {
         $collection = $this->collectionFactory->create();
+        // Feed stock settings must apply independently of storefront catalog visibility.
+        $collection->setFlag('has_stock_status_filter', true);
         $collection->setStoreId($feed->getStoreId())
             ->addStoreFilter($feed->getStoreId());
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">mageos_shopping_feed_test_form.mageos_shopping_feed_test_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Test Feed</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons><button name="test" class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Form\RunTestButton"/></buttons>
+        <namespace>mageos_shopping_feed_test_form</namespace>
+        <dataScope>data</dataScope>
+        <deps><dep>mageos_shopping_feed_test_form.mageos_shopping_feed_test_data_source</dep></deps>
+    </settings>
+    <dataSource name="mageos_shopping_feed_test_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array"><item name="component" xsi:type="string">Magento_Ui/js/form/provider</item></item>
+        </argument>
+        <settings><submitUrl path="mageos_shopping_feed/feed/test"/></settings>
+        <dataProvider class="MageOS\ShoppingFeed\Ui\DataProvider\Feed\TestDataProvider" name="mageos_shopping_feed_test_data_source">
+            <settings><requestFieldName>id</requestFieldName><primaryFieldName>id</primaryFieldName></settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="product">
+        <settings><label translate="true">Which product?</label></settings>
+        <field name="id" formElement="input">
+            <settings><dataType>text</dataType><visible>false</visible><dataScope>id</dataScope></settings>
+        </field>
+        <field name="type" formElement="select">
+            <settings><dataType>text</dataType><label translate="true">Find by</label><dataScope>type</dataScope></settings>
+            <formElements><select><settings><options>
+                <option name="sku" xsi:type="array"><item name="value" xsi:type="string">sku</item><item name="label" xsi:type="string" translate="true">SKU</item></option>
+                <option name="id" xsi:type="array"><item name="value" xsi:type="string">id</item><item name="label" xsi:type="string" translate="true">Product ID</item></option>
+            </options></settings></select></formElements>
+        </field>
+        <field name="sku" formElement="input">
+            <settings>
+                <dataType>text</dataType><label translate="true">Product</label><dataScope>sku</dataScope>
+                <notice translate="true">Use an enabled product visible in the catalog. To test an associated item, enter its parent product.</notice>
+                <validation><rule name="required-entry" xsi:type="boolean">true</rule></validation>
+            </settings>
+        </field>
+    </fieldset>
+</form>

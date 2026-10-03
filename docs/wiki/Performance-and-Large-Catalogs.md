@@ -2,7 +2,7 @@
 
 Treat feed performance as a measured workload. Product count alone does not explain cost because field directives and complex-product expansion can dominate generation time.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
 ## Start with a baseline
 
@@ -32,7 +32,7 @@ Disable unused work rather than increasing resource limits first.
 
 ## Batch mode
 
-Enable **Batch Mode** on the feed's **Run Schedule** tab and set **Batch Limit** to a product-object count that completes comfortably inside the environment's time and memory limits.
+Enable **Batch Mode** under **Run Schedule** in 1.1, or **Schedule** in the [UI Component editor](Admin-UI-Component-Forms), and set **Batch Limit** to a product-object count that completes comfortably inside the environment's time and memory limits.
 
 If no positive limit is stored, the batch object defaults to 1000. Generation can also switch itself into batch mode when it approaches available execution time or memory, preserving the next offset in the schedule or queue.
 
@@ -52,3 +52,5 @@ The generator logs progress periodically, with a default interval of 30 product 
 ## Acceptance
 
 A large-catalog configuration is ready only when repeated complete runs finish within the operating window, produce stable product and row counts, leave no partial final file, and complete every required upload.
+
+Version 1.2.0 passed 5,000-product generation for all eight presets on Magento Open Source 2.4.8 and 2.4.9, with unique IDs and complete row shapes. The preset runs used approximately 169 to 197 MiB peak PHP memory under a 2 GiB limit. Generic output was stable on repeat and through 500-item batches. These synthetic runs overlapped other local work and do not establish production capacity or a platform speed comparison. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records each result and its limits.

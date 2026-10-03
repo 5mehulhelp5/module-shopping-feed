@@ -47,7 +47,7 @@ class SchedulesTest extends ModelFramework
 
         $feedMock->expects($this->once())
             ->method('getFormattedSchedules')
-            ->willReturn(['Daily at 12:00 AM','Daily, starting at 2:00 AM']);
+            ->willReturn(['Daily at 12:00 AM','Daily, starting at 2:00 AM<br /> in batches of <img src=x onerror=alert(1)>']);
 
         $feedFactoryMock->expects($this->once())
             ->method('create')
@@ -65,6 +65,7 @@ class SchedulesTest extends ModelFramework
             [
                 'context' => $contextMock,
                 'feedFactory' => $feedFactoryMock,
+                'escaper' => new \Magento\Framework\Escaper(),
             ]
         );
 
@@ -82,7 +83,7 @@ class SchedulesTest extends ModelFramework
         $expectedItems = [
             [
                 'id' => $feedId,
-                $name => '<p class="schedule">Daily at 12:00 AM</p><p class="schedule">Daily, starting at 2:00 AM</p>',
+                $name => '<p class="schedule">Daily at 12:00 AM</p><p class="schedule">Daily, starting at 2:00 AM<br /> in batches of &lt;img src=x onerror=alert(1)&gt;</p>',
             ]
         ];
 

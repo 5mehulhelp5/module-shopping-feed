@@ -109,7 +109,7 @@ $element = $block->getElement();
             $('#edit_form').shoppingFeedForm();
             <?php if ($block->isTaxonomyAutocompleteEnabled()): ?>
             $('.category-taxonomy-suggest')
-                .mage('suggest',<?php /* @noEscape */ echo $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($block->getSelectorOptions())?>)
+                .mage('suggest',<?php /* @noEscape */ echo json_encode($block->getSelectorOptions(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) ?>)
                 .on('suggestselect', function (e, ui) {
                     if (ui.item.id) {
                         $(e.target).trigger('change');

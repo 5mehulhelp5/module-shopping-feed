@@ -13,7 +13,10 @@ class RecoveryTest extends TestCase
     private function generator(Batch $batch, Queue $queue): Generator
     {
         $generator = (new \ReflectionClass(Generator::class))->newInstanceWithoutConstructor();
-        foreach (['batch' => $batch, 'queue' => $queue, 'fileDriver' => new \Magento\Framework\Filesystem\Driver\File()] as $key => $value) {
+        $feed = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Feed::class)
+            ->disableOriginalConstructor()->onlyMethods([])->getMock();
+        $feed->setData('type', 'google_shopping');
+        foreach (['batch' => $batch, 'queue' => $queue, 'feed' => $feed, 'fileDriver' => new \Magento\Framework\Filesystem\Driver\File()] as $key => $value) {
             (new \ReflectionProperty($generator, $key))->setValue($generator, $value);
         }
         return $generator;

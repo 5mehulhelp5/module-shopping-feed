@@ -35,7 +35,9 @@ class Plugin
 
     public function __construct(
         StoreManagerInterface $storeManager,
-        FeedFactory $feedFactory
+        FeedFactory $feedFactory,
+        private \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
+        private \Magento\Framework\Escaper $escaper
     ) {
 
         $this->feedFactory = $feedFactory;
@@ -51,17 +53,22 @@ class Plugin
                 if (isset($item['id'])) {
                     $feed = $this->feedFactory->create()->setData($item);
                     $messages = $feed->getMessages();
-                    $filepath = isset($messages['promotion_file']) ? $messages['promotion_file'] : '';
-
-                    if (file_exists($filepath) && isset($messages['promotion_added'])) {
+                    $filepath = $messages['promotion_file'] ?? '';
+                    if (!is_string($filepath) || $filepath === '' || !isset($messages['promotion_added'])) {
+                        continue;
+                    }
+                    $path = realpath($filepath);
+                    $media = realpath($this->directoryList->getPath('media'));
+                    if ($media && $path && is_file($path) && str_starts_with($path, $media . '/')) {
                         $store = $this->storeManager->getStore((int)$feed->getStoreId());
                         $url = sprintf(
                             '%s%s',
-                            $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB),
-                            ltrim(str_replace(BP, '', $filepath), '/')
+                            $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA),
+                            substr($path, strlen($media) + 1)
                         );
-                        $item[$name] .= '<br /><a href="' . $url . '" target="_blank">' . $url . '</a><br />'
-                            . __('%1 promotion rows', $messages['promotion_added']);
+                        $item[$name] .= '<br /><a href="' . $this->escaper->escapeUrl($url)
+                            . '" target="_blank" rel="noopener">' . $this->escaper->escapeHtml($url) . '</a><br />'
+                            . $this->escaper->escapeHtml((string) __('%1 promotion rows', (int) $messages['promotion_added']));
                     }
                 }
             }

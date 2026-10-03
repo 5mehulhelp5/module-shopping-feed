@@ -89,7 +89,7 @@ class Map
      */
     public function mapEffectiveDates($row = array())
     {
-        return $this->mapDates($row['date']);
+        return $this->mapDates($row['date'] ?? []);
     }
 
     /**
@@ -100,7 +100,7 @@ class Map
      */
     public function mapDisplayDates($row = array())
     {
-        return $this->mapDates($row['display']);
+        return $this->mapDates($row['display'] ?? []);
     }
 
     /**
@@ -111,6 +111,10 @@ class Map
      */
     public function mapDates($row = array())
     {
+        if (!is_array($row) || !is_string($row['from'] ?? null) || !is_string($row['to'] ?? null)
+            || trim($row['from']) === '' || trim($row['to']) === '') {
+            return '';
+        }
         $format = $this->provider->getPromotionDateFormat();
         $fromDate = $this->provider->prepareDate('', $row['from'], false, $format);
         $toDate = $this->provider->prepareDate('', $row['to'], false, $format);
@@ -136,30 +140,49 @@ class Map
      */
     public function mapMinimumPurchaseAmount(\Magento\SalesRule\Model\Rule $rule)
     {
-        $conditions = $rule->getConditionsSerialized();
-        $res = array('conditions' => array((array)json_decode($conditions)));
-        if (json_last_error() != JSON_ERROR_NONE) {
-            $res = $this->serializer->unserialize($conditions);
+        $serialized = $rule->getConditionsSerialized();
+        if ($serialized === null || $serialized === '') {
+            return '';
         }
-        $conditions = count($res) > 0 ? $res : array();
-
-        $minimumPurchaseAmount = 0;
-        if (isset($conditions['conditions']) && is_array($conditions['conditions']) && count($conditions['conditions']) > 0) {
-            foreach ($conditions['conditions'] as $condition) {
-                if (
-                    in_array($condition['attribute'], array('base_subtotal'))
-                    && in_array($condition['operator'], array('>', '>=', '=='))
-                    && is_numeric($condition['value'])
-                    && $condition['value'] > 0
-                    && $condition['value'] > $minimumPurchaseAmount
-                ) {
-                    $minimumPurchaseAmount = $condition['value'];
-                }
-            }
+        try {
+            $conditions = $this->serializer->unserialize($serialized);
+        } catch (\InvalidArgumentException $exception) {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Promotion rule conditions must contain valid JSON. Resave the cart price rule.'), $exception
+            );
+        }
+        if (!is_array($conditions)) {
+            throw new \Magento\Framework\Exception\LocalizedException(__('Invalid promotion rule conditions.'));
         }
 
+        $minimumPurchaseAmount = $this->minimumSubtotal($conditions);
+        if ($minimumPurchaseAmount <= 0) {
+            return '';
+        }
         $currency = $this->provider->getFeed()->getStore()->getData('current_currency')->getCode();
-        return $minimumPurchaseAmount > 0 ? sprintf("%.2F", $minimumPurchaseAmount) . ' ' . $currency : '';
+        return sprintf("%.2F", $minimumPurchaseAmount) . ' ' . $currency;
+    }
+
+    /** Compute a lower bound without treating OR or negated conditions as AND. */
+    private function minimumSubtotal(array $condition): float
+    {
+        if (isset($condition['conditions']) && is_array($condition['conditions'])) {
+            if (!in_array($condition['value'] ?? null, [1, '1', true], true)
+                || !in_array($condition['aggregator'] ?? null, ['all', 'any'], true)
+                || !$condition['conditions']) {
+                return 0;
+            }
+            $amounts = array_map(fn($child) => is_array($child) ? $this->minimumSubtotal($child) : 0,
+                $condition['conditions']);
+            return $condition['aggregator'] === 'all' ? max($amounts) : min($amounts);
+        }
+        if (($condition['attribute'] ?? null) !== 'base_subtotal'
+            || !in_array($condition['operator'] ?? null, ['>', '>=', '=='], true)
+            || !is_numeric($condition['value'] ?? null) || (float)$condition['value'] <= 0) {
+            return 0;
+        }
+        $amount = (float)$condition['value'];
+        return $condition['operator'] === '>' ? (floor($amount * 100) + 1) / 100 : $amount;
     }
 
     /**

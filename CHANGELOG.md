@@ -2,7 +2,61 @@
 
 All notable changes to this project will be documented here.
 
-## Unreleased
+## 1.2.0 - 2026-10-03
+
+[Release 1.2.0 notes and upgrade requirements](docs/releases/1.2.0.md).
+
+### Compatibility
+
+- Add an exact Magento Open Source 2.4.7-p10 / PHP 8.3 CI profile with one visible upstream Flysystem advisory exception, rejection of additional advisories, and a separately tested optional Flysystem 2.5.0 backport. See the [platform guidance](docs/compatibility/magento-2.4.7-p10.md).
+- Restore PHPUnit 9 data-provider annotations alongside attributes in 21 test methods so the same unit suite runs on older and newer supported test frameworks. No runtime or Composer requirement change is introduced by this compatibility work.
+
+### Changed: Admin editor
+
+- New/Edit Feed and Test Feed now use Magento UI Component forms, with collapsible sections, declarative dependencies, DynamicRows, explicit mapping order, and custom category/parameter controls. Routes, feed types, database schema, and server-side save permissions are retained.
+- UI data-provider modifiers and declarative parameter definitions replace legacy PHP form observers, tab plugins, and PHTML parameter renderers on the default editor. Existing site-specific editor customizations require migration; see [the developer guide](docs/ui-component-editor.md). Retained legacy files are not an alternate editor mode.
+- Form data preserves structured parameters, empty collections, zero/false values, and literal template-like text. Upload passwords are masked before provider serialization; failed saves require re-entry of new or changed passwords.
+- The shared form reduces dependence on legacy editor rendering. The optional Nebula grid, standard-theme editor fallback, and menu handling remain; no native Nebula UI Bridge acceptance or removal of the grid integration is claimed.
+
+### Fixed: Admin forms and previews
+
+- Include category IDs in new mappings, validate submitted category rows, and recover missing embedded IDs from existing map keys before generator sorting.
+- Keep promotion dates in `Y/m/d` storage while displaying the Admin locale's format. All four dates persist through reopening and an unchanged second save.
+- Reject control characters in column names at model save without coercing literal values or structured parameters.
+- Validate preview lookup modes, SKU shapes, and positive product IDs with recoverable errors; preserve numeric SKU identity.
+- Default new non-Google feeds to `use_microdata=0`, preserving existing and explicitly selected values.
+- Preserve null directive parameters through UI initialization and save. Magento's initial value links and base input defaults otherwise changed null to an empty string, removing Generic feeds' default shipping-weight unit. Docker browser/output checks reproduced the failure on Magento 2.4.8 and 2.4.9 and verified the fix.
+- Hide standard-grid mutation controls when the Admin role lacks their save, generate, or delete permission. Read-only users retain Test Feed, View Log, and Export; an empty bulk-action menu is omitted. Six role profiles passed browser checks on Magento 2.4.8 and 2.4.9. See the [permission follow-up](docs/reviews/2026-10-02-grid-permission-acceptance.md).
+
+- Treat a null product-URL query parameter as an empty query string, avoiding a PHP 8.4 deprecation that Magento CLI turns into a failed preview.
+- Prevent Test Now from also executing Magento's default button navigation. The UI-component preview submission now reaches its controller instead of redirecting to a missing page.
+
+The [deployment report](docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md) records the repaired candidate on `mageos-latest`, including two follow-ups included in this revision found by real CLI and browser checks. All eight presets preserve configuration and normalized generated output through unchanged saves. No data migration recovers already-erased dates. Intentional custom configuration support and retained classes with live callers are preserved.
+
+### Fixed: inventory, frontend scope, and currency
+
+- Apply feed stock settings independently of Magento's storefront out-of-stock visibility for simple, configurable, grouped, and bundle collections.
+- Derive configurable Local Inventory parent sources from their children, and require an enabled child source item at the same source before reporting the parent in stock. See the [stock regression report](docs/reviews/2026-10-02-stock-acceptance-fixes.md). Custom adapter subclasses overriding constructors must forward the new linked-product collection factory dependency.
+- Honor website and store-view overrides for microdata, native price-schema suppression, Google Ads event enablement, and the optional destination ID. Existing scoped settings now take effect; review overrides and clear applicable caches. See the [frontend scope report](docs/reviews/2026-10-03-frontend-scope-fix.md).
+- Preserve an existing feed's effective generation currency when its saved currency is blank, so opening and saving the UI Component form does not substitute a different store default. New feeds still use the store default, and explicit selections remain unchanged. See the [currency correction](docs/reviews/2026-10-03-existing-feed-currency-fix.md).
+
+### Fixed: validation and security
+
+- Hardened legacy editor escaping, request ID validation, schedule/status/file grid output, malformed URL handling, and log-rotation configuration.
+- Corrected recursive promotion minimum-purchase condition handling and incomplete configuration handling; invalid legacy non-JSON rule conditions produce a recoverable error.
+- Pinned direct CI workflow/action references to full commit hashes. See [the September 30 fix verification](docs/reviews/2026-09-30-review-fixes.md) for reproduced defects, accepted limits, and installed-runtime checks. The subsequent editor repairs are recorded separately above.
+
+### Added: catalog presets
+
+- OpenAI / ChatGPT (Google-compatible, beta) TSV preset with required brand, explicit identifier exemptions, GTIN checksums, availability dates, configurable grouping, and sale validation. Includes the mobile-subscription zero-price exception, short expiration metadata, and onboarding guidance. OpenAI ingestion acceptance remains unverified.
+
+- Pinterest Catalog preset with quoted UTF-8 TSV, native availability values, configurable grouping checks, five-level product category paths, and field validation. Includes primary and supplemental feed setup guidance. Pinterest import acceptance remains a release check.
+- TikTok Catalog preset with quoted UTF-8 CSV, required `sku_id`, native availability values, configurable variants, comma-separated additional images, and field validation. TikTok import acceptance remains a release check.
+- Microsoft Merchant Center preset with UTF-8 tab-delimited TXT, native availability and sale-price formatting, configurable variants, identifier mappings, and field validation. The required ID is emitted last to avoid trailing tabs. Microsoft import acceptance remains a release check.
+- Meta Catalog (Facebook and Instagram) template with quoted UTF-8 TSV, currency prices, configurable variants, Google taxonomy, and editable identifier mappings.
+- A reusable value-map formatter with Meta product-feed availability defaults. Backorders and preorders export as `out of stock` until available.
+- Meta required-field (including brand), condition, availability, price-format, and URL validation in generation and Test Feed. Invalid rows are skipped with reasons; missing identifiers produce warnings.
+- Meta setup guidance in the Admin and a catalog feed guide. Commerce Manager acceptance remains a release check.
 
 ## 1.1.0 - 2026-09-28
 

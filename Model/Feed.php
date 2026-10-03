@@ -311,18 +311,6 @@ class Feed extends AbstractModel
             $this->setData('messages', $this->serializer->serialize($messages));
         }
 
-        // Clean up new line characters breaking the JS widget for column maps
-        $config = $this->getConfig();
-        $columns = $this->getConfig('columns_product_columns', []);
-        array_walk_recursive(
-            $columns, function (&$value, $key) {
-                if (!is_array($value)) {
-                    $value = strtr((string)$value, "\n\r\t", '   ');
-                }
-            }
-        );
-        $config->setData('columns_product_columns', $columns);
-
         return parent::beforeSave();
     }
 
@@ -491,7 +479,7 @@ class Feed extends AbstractModel
                     $scheduleObject->setData('batch_mode', $schedule['batch_mode']);
                 }
                 if (array_key_exists('batch_limit', $schedule)) {
-                    $scheduleObject->setData('batch_limit', $schedule['batch_limit']);
+                    $scheduleObject->setData('batch_limit', max(0, (int)$schedule['batch_limit']));
                 }
 
                 if (!$scheduleObject->hasData('processed_at')) {
@@ -555,7 +543,7 @@ class Feed extends AbstractModel
                     }
                 }
 
-                if ($uploadObject->getId() && $upload['delete']) {
+                if ($uploadObject->getId() && !empty($upload['delete'])) {
                     $uploadObject->delete();
                     continue;
                 }
@@ -588,6 +576,16 @@ class Feed extends AbstractModel
     protected function validate()
     {
         $this->outputPath->validateFeed($this);
+        foreach ((array)$this->getConfig('columns_product_columns', []) as $row) {
+            if (!is_array($row) || !isset($row['column']) || !is_scalar($row['column'])) {
+                throw new \Magento\Framework\Exception\LocalizedException(__('Invalid column name in Columns Map.'));
+            }
+            if (preg_match('/[\x00-\x1F\x7F]/', (string)$row['column'])) {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                    __('Column names must not contain control characters.')
+                );
+            }
+        }
         return $this;
     }
 

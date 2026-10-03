@@ -2,7 +2,7 @@
 
 Google Local Inventory output connects a product ID with store-level availability, quantity, and price. With Magento Multi-Source Inventory enabled, the module can produce source-specific rows for sources linked to the selected website stock.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ When default stock handling and MSI are active, the module:
 
 1. Resolves the stock for the selected website.
 2. Finds sources linked to that stock.
-3. Loads source items for the current SKU.
+3. Loads source items for the current SKU. In version 1.2.0, configurable parent rows use distinct linked sources from their children; the parent does not need its own source item.
 4. Produces source-specific values for store code, quantity, and availability.
 
 Sources outside the selected website stock should not produce rows.
@@ -56,7 +56,7 @@ Without source-level MSI context, the mapper falls back to a `default` or `custo
 
 Online backorders do not establish stock in a physical store. Source rows report `in_stock` only when the source item is enabled and its quantity after configured reservations is positive; otherwise they report `out_of_stock`. Online backorder settings and disabled stock management do not override an empty or disabled source. Without source context, an online `backorder` or `preorder` result becomes `out_of_stock`.
 
-Configurable and grouped parent rows continue to use associated-product quantities; an online parent backorder flag no longer overrides their local quantity. Test parent and child modes against your physical inventory before enabling uploads.
+Configurable and grouped parent rows continue to use associated-product quantities; an online parent backorder flag no longer overrides their local quantity. The configurable-parent correction in 1.2.0 also requires an enabled child source item at the same source before reporting the parent in stock. Test parent and child modes against your physical inventory before enabling uploads.
 
 Google also accepts `limited_availability` and `on_display_to_order`. The default mapper does not infer display-to-order eligibility. Google can classify an available quantity of one or two as limited availability when quantity is supplied. Use a deliberate custom mapping if your store needs another supported local status; do not send online `backorder` or `preorder` values. [Accepted availability values](https://support.google.com/merchants/answer/14819809?hl=en).
 
@@ -90,3 +90,5 @@ Use at least two enabled sources and one reservation. Confirm:
 * Product IDs match the primary Google Shopping feed.
 * A SKU/store-code pair is not duplicated.
 * Merchant Center accepts a non-serving test file.
+
+The earlier nine controlled simple-product scenarios are recorded in `docs/reviews/2026-10-02-docker-operations-acceptance.md`. Candidate `133af71` adds fifteen native configurable MSI scenarios per Magento Open Source 2.4.8/2.4.9 profile: parent-only, child-only, and combined modes across baseline, reservation, compensation, source-item disablement, and restoration. Native stock APIs and indexers establish the custom stock. Quantities, availability, source filtering, and duplicate protection pass. See `docs/reviews/2026-10-03-local-acceptance.md` for the exact data, corrections, and cleanup. Checkout-order placement, asynchronous consumers, and recipient ingestion remain separate checks.

@@ -99,4 +99,23 @@ class AdditionalImageLinkTest extends ModelFramework
         $expected = 'url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png';
         $this->assertEquals($expected, $cell);
     }
+    public function testConfiguredCommaSeparatorPreservesCsvImageList(): void
+    {
+        $this->productMock->method('getData')->willReturn('base.jpg');
+        $this->productMock->method('getMediaGalleryImages')->willReturn([
+            ['file' => 'one.jpg', 'disabled' => false],
+            ['file' => 'two.png', 'disabled' => false],
+        ]);
+        $this->adapterMock->method('getProduct')->willReturn($this->productMock);
+        $this->adapterMock->method('getData')->willReturn('https://example.com');
+        $this->adapterMock->method('getFeed')->willReturn($this->feedMock);
+        $this->feedMock->method('getConfig')->willReturnCallback(
+            static fn($key, $default = '') => $key === 'output_params_delimiter' ? ',' : $default
+        );
+        $this->model->addAdapter($this->adapterMock);
+        self::assertSame('https://example.com/one.jpg|https://example.com/two.png', $this->model->map());
+        $this->model->setConfiguration('separator', ',');
+        self::assertSame('https://example.com/one.jpg,https://example.com/two.png', $this->model->map());
+    }
+
 }

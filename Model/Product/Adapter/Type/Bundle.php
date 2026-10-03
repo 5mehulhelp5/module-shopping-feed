@@ -46,6 +46,7 @@ class Bundle extends Composite implements AdapterInterface
             $optionIds = $bundleTypeInstance->getOptionsIds($bundleProduct);
             if ($optionIds) {
                 $bundleSelections = $bundleTypeInstance->getSelectionsCollection($optionIds, $bundleProduct);
+                $bundleSelections->setFlag('has_stock_status_filter', true);
                 $bundleSelections = $bundleSelections->addAttributeToSelect('*');
 
                 $associatedProductAdapters = $this->prepareAssociatedProductAdapters($bundleSelections);

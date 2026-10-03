@@ -31,6 +31,18 @@ class Availability extends ConfigurableAvailability
         $sourceItem = $this->getAdapter()->getData('inventory_source_item');
 
         foreach ($associatedProductAdapters as $associatedProductAdapter) {
+            if ($sourceItem) {
+                $availableAtSource = false;
+                foreach ($this->sourceInventoryApi->getAllItems($associatedProductAdapter->getProduct()) as $item) {
+                    if ($item->getSourceCode() === $sourceItem->getSourceCode() && $item->getStatus()) {
+                        $availableAtSource = true;
+                        break;
+                    }
+                }
+                if (!$availableAtSource) {
+                    continue;
+                }
+            }
             $count[] = $associatedProductAdapter->getInventoryCount($sourceItem ? $sourceItem->getSourceCode(): null);
         }
         $qty = max($count);

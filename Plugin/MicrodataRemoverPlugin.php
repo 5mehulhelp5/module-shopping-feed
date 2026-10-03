@@ -75,7 +75,10 @@ class MicrodataRemoverPlugin
      */
     public function isEnabled()
     {
-        if (!(bool)$this->scopeConfig->getValue(self::XML_PATH_ENABLED)) {
+        if (!(bool)$this->scopeConfig->getValue(
+            self::XML_PATH_ENABLED,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        )) {
             return false;
         }
         $storeId = (int)$this->storeManager->getStore()->getId();
