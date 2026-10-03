@@ -2,9 +2,9 @@
 
 All notable changes to this project will be documented here.
 
-## 1.2.0 - Unreleased
+## 1.2.0 - 2026-10-03
 
-Release preparation: [1.2.0 notes and upgrade requirements](docs/releases/1.2.0.md). Version 1.1.0 remains the latest published release until 1.2.0 is approved and published.
+[Release 1.2.0 notes and upgrade requirements](docs/releases/1.2.0.md).
 
 ### Compatibility
 

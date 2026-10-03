@@ -2,9 +2,9 @@
 
 General Configuration defines the store context, output location, delimiter, price behavior, and stock behavior for one feed.
 
-> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
-The unreleased editor labels this section **General**. Its [Admin form guide](Admin-UI-Component-Forms) covers save controls, store-view reloads, and current acceptance results and limits.
+The 1.2.0 editor labels this section **General**. Its [Admin form guide](Admin-UI-Component-Forms) covers save controls, store-view reloads, and current acceptance results and limits.
 
 ## Feed settings
 
@@ -12,7 +12,7 @@ The unreleased editor labels this section **General**. Its [Admin form guide](Ad
 | --- | --- |
 | Name | The label shown in the Admin. It is not the output filename. |
 | Store View | The store context used for product attributes, URLs, prices, categories, and inventory. |
-| Feed Currency | The currency used when formatting price directives. Allowed currencies populate the choices; the unreleased editor also preserves an unavailable saved selection for review. |
+| Feed Currency | The currency used when formatting price directives. Allowed currencies populate the choices; the 1.2.0 editor also preserves an unavailable saved selection for review. |
 | Feed Path | The output directory. Output is restricted to `pub/media/mageos-shopping-feed` and safe subdirectories. |
 | File Name | The output filename; `%s` substitutes the feed ID. A literal name is retained when cloning, so review it before generating a clone. |
 | Delimiter | The field separator for generated rows. Google templates default to tabs. Generic comma output quotes CSV fields by default. |
@@ -22,7 +22,7 @@ The unreleased editor labels this section **General**. Its [Admin form guide](Ad
 
 Changing the store view can change the category tree and attribute values. Save the feed, then review Categories Map, currency, URLs, and representative product output again.
 
-In the unreleased editor, an existing feed with a blank saved currency displays its effective generation currency. An unchanged save makes that currency explicit, preserving prices even when the store default differs. New feeds use the store default. Explicit saved selections remain unchanged.
+In the 1.2.0 editor, an existing feed with a blank saved currency displays its effective generation currency. An unchanged save makes that currency explicit, preserving prices even when the store default differs. New feeds use the store default. Explicit saved selections remain unchanged.
 
 ## Public feed files
 

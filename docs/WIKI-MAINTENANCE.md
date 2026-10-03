@@ -63,8 +63,8 @@ Review the wiki for every release that changes:
 
 At minimum, recheck Google-owned links and terminology at release time. Keep Merchant Center navigation brief because its interface changes independently of this module.
 
-## 1.2.0 release preparation
+## 1.2.0 documentation baseline
 
-The 1.2.0 candidate, including the UI Component editor and five catalog presets, remains unreleased. Draft release notes live at `docs/releases/1.2.0.md`; publication gates and the documentation checklist live at `docs/reviews/2026-10-03-release-1.2.0-preparation.md`. The original `9f07e46` browser failures are repaired; the deployed local candidate is `133af71`. Current evidence starts with `docs/reviews/2026-10-03-local-acceptance.md`, followed by the dated form, permission, preview, and operational reports it links. Keep released 1.1 instructions identifiable. Preserve historical results and add a prominent link when later evidence changes their disposition.
+Release 1.2.0 includes the UI Component editor and five catalog presets. Release notes live at `docs/releases/1.2.0.md`; the historical preparation record and publication checklist live at `docs/reviews/2026-10-03-release-1.2.0-preparation.md`. The original `9f07e46` browser failures are repaired; the accepted local runtime is `133af71`. Current evidence starts with `docs/reviews/2026-10-03-local-acceptance.md`, followed by the dated form, permission, preview, and operational reports it links. Keep released 1.1 instructions identifiable. Preserve historical results and add a prominent link when later evidence changes their disposition.
 
 When preparing publication, update every linked candidate notice, the README, changelog, developer guide, and acceptance record together. Verify that the referenced commit and evidence are publicly available before copying pages into the wiki. Local documentation edits and local deployment do not publish the wiki or establish external recipient acceptance.

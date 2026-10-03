@@ -1,24 +1,24 @@
-# Admin UI Component forms (unreleased)
+# Admin UI Component forms
 
-The `feat/ui-component-editor` candidate replaces the default New/Edit Feed and Test Feed forms with Magento UI Components. Version 1.1.0 retains the previous editor. This guide describes the candidate's controls and upgrade implications.
+Version 1.2.0 replaces the default New/Edit Feed and Test Feed forms with Magento UI Components. Version 1.1.0 retains the previous editor. This guide describes the 1.2.0 controls and upgrade implications.
 
-> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
 Existing feeds with a blank saved currency display the currency currently used by generation. Saving makes that selection explicit without changing prices to a different store default. New feeds still start with the store default; explicit saved selections remain unchanged.
 
 ## Current acceptance status
 
-The committed candidate repairs the defects found in `9f07e46`. Disposable Mage-OS browser tests now pass new-category save-to-generation and all four promotion dates through two saves plus companion generation. Header/category validation, preview input handling, and hidden microdata defaults are also repaired. The repository's `docs/reviews/2026-10-02-ui-component-editor-fixes.md` records the evidence and limits.
+Version 1.2.0 repairs the defects found in `9f07e46`. Disposable Mage-OS browser tests now pass new-category save-to-generation and all four promotion dates through two saves plus companion generation. Header/category validation, preview input handling, and hidden microdata defaults are also repaired. The repository's `docs/reviews/2026-10-02-ui-component-editor-fixes.md` records the evidence and limits.
 
 The repaired PHP suite passes on the Mage-OS, Magento Open Source 2.4.8, and Magento Open Source 2.4.9 frameworks. Actual framework date conversion passed US, British, and German locale tests on all three. Production-mode Docker installations of both Magento versions now pass create/save/reopen for all eight presets, category and promotion output, dynamic rows, failed-save recovery, and malformed-request checks. These tests also found and repaired loss of null directive defaults. The repository's `docs/reviews/2026-10-02-magento-docker-acceptance.md` records the current evidence. The follow-up in `docs/reviews/2026-10-02-grid-permission-acceptance.md` verifies permission-filtered controls and server-side denials with six role profiles on both versions. Earlier automated results did not catch these defects, so they are preserved as historical evidence rather than substituted for the new regression checks.
 
-Candidate `133af71` is deployed on `mageos-latest`, including the preview, feed stock-selection, configurable Local Inventory, frontend store-scope, and currency corrections found during acceptance. Eight-preset save/reopen, unchanged-save, CLI preview, full generation, category mapping, promotion dates, cloning, and deletion checks passed on Mage-OS 3.5.0. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records the final candidate, preserved original data, extended tests, and remaining checks. The candidate remains unreleased. Updating code does not reconstruct promotion dates already erased by an earlier candidate.
+The release runtime `133af71` is deployed on `mageos-latest`, including the preview, feed stock-selection, configurable Local Inventory, frontend store-scope, and currency corrections found during acceptance. Eight-preset save/reopen, unchanged-save, CLI preview, full generation, category mapping, promotion dates, cloning, and deletion checks passed on Mage-OS 3.5.0. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records the final candidate, preserved original data, extended tests, and remaining checks. Updating code does not reconstruct promotion dates already erased by an earlier candidate.
 
 Column names must be single-line and contain no control characters. Invalid category rows and malformed preview requests now produce recoverable Admin errors. Custom configuration keys remain supported; see [Columns and directives](Columns-and-Directives) and [Development and CI](Development-and-CI).
 
 Magento Open Source 2.4.7-p10 uses the same UI Component forms on PHP 8.3. Eight-preset save/output comparisons, category and promotion editing, DynamicRows, preview recovery, and six-role checks pass without runtime changes. Its separate acceptance and upstream Flysystem dependency guidance are linked from [Status and compatibility](Status-and-Compatibility).
 
-## Using the candidate editor
+## Using the editor
 
 Open **Catalog > Mage-OS Shopping Feed > Feeds Management**. Use **Create New Feed** to select a preset, or **Configure** to edit a saved feed.
 
@@ -37,7 +37,7 @@ The editor uses collapsible sections:
 | Uploads | FTP/SFTP destinations and gzip |
 | Google Promotions | Included cart rules, titles, dates, and promotion counter for Google Shopping only |
 
-Google Local Inventory hides Product Options and Shipping and changes category/inventory fields. Google Promotions is a section of Google Shopping, not a ninth New Feed preset. The development candidate contains eight presets; see [Feed types and lifecycle](Feed-Types-and-Lifecycle).
+Google Local Inventory hides Product Options and Shipping and changes category/inventory fields. Google Promotions is a section of Google Shopping, not a ninth New Feed preset. Version 1.2.0 contains eight presets; see [Feed types and lifecycle](Feed-Types-and-Lifecycle).
 
 **Save** returns to the feed list. The adjacent dropdown provides **Save and Continue Edit**. After changing **Store View**, save and reload before editing category or attribute choices. **Back** leaves the editor. A saved feed also has **Test Feed** and **Delete Feed**, subject to the Admin role's permissions. Individual deletion asks for confirmation.
 

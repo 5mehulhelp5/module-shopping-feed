@@ -1,8 +1,8 @@
 # Pinterest Catalog
 
-> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
-When evaluating the unreleased UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the exact candidate, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
+When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the tested runtime, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
 
 The **Pinterest Catalog** preset produces quoted UTF-8 TSV for a primary retail catalog. It uses the module's generation, Test Feed, scheduling, and upload tools. Pinterest import acceptance has not been verified.
 

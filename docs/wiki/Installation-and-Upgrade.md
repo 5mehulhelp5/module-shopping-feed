@@ -2,24 +2,26 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
 
-## Upgrading from 1.1 to the 1.2.0 candidate
+<a id="upgrading-from-11-to-the-120-candidate"></a>
 
-The [1.2.0 candidate](Release-1-2-0) changes the default feed editor and adds five presets. It has no new schema change or Composer platform requirement relative to 1.1.0. Local acceptance covers Magento Open Source 2.4.8, 2.4.9, and Mage-OS 3.5.0. The candidate remains unreleased; stable installation commands below still select 1.1.
+## Upgrading from 1.1 to 1.2.0
 
-Before evaluating the exact reviewed source commit on staging:
+[Version 1.2.0](Release-1-2-0) changes the default feed editor and adds five presets. It has no new schema change or Composer platform requirement relative to 1.1.0. Local acceptance covers Magento Open Source 2.4.7-p10, 2.4.8, 2.4.9, and Mage-OS 3.5.0 within their recorded scopes.
+
+Before upgrading staging:
 
 1. Back up the matching code, database, Composer lock file, feed configuration, and output. Pause schedules and uploads during comparison.
 2. Audit custom PHP form observers, tab plugins, and directive parameter renderers. Migrate them to UI metadata or components using [Admin UI Component forms](Admin-UI-Component-Forms). The module's own integrations are already converted; this step applies to site-specific customizations.
 3. Update explicit constructor overrides for the feed-action column's added authorization dependency and the `Composite`/`Configurable` adapters' linked-product collection factory.
 4. Review existing website/store overrides for microdata and Google Ads settings, which now take effect. Clear applicable caches.
-5. Deploy the reviewed commit and rebuild DI and Admin static assets through the store's normal process. Run `setup:upgrade`, especially if also crossing the 1.0-to-1.1 schema change.
+5. Deploy the reviewed release and rebuild DI and Admin static assets through the store's normal process. Run `setup:upgrade`, especially if also crossing the 1.0-to-1.1 schema change.
 6. Save and reopen disabled copies, then compare preview and complete output. Check currency, null directive parameters, category IDs, promotion dates, stock, prices, restricted roles, and password masks. Test each actual recipient before resuming delivery.
 
-After 1.2.0 is published and indexed, use `composer require 'mage-os/module-shopping-feed:^1.2' --no-update` followed by `composer update mage-os/module-shopping-feed --with-dependencies` and the normal Magento deployment steps. A draft release is not a published Composer version. Source evaluation should record the full reviewed commit at `app/code/MageOS/ShoppingFeed`.
+Use `composer require 'mage-os/module-shopping-feed:^1.2' --no-update` followed by `composer update mage-os/module-shopping-feed --with-dependencies` and the normal Magento deployment steps. Source installations should use `v1.2.0` and record its resolved commit.
 
 There is no old/new editor switch. Restoring the previous package and rebuilding DI/static/cache restores the old editor, but does not undo later configuration saves or recover dates erased by an earlier development candidate. Restore matching configuration from the pre-upgrade backup where necessary. The earlier category/date defects are repaired; see [Release acceptance](Release-Acceptance) for current evidence and limits.
 
@@ -34,10 +36,10 @@ There is no old/new editor switch. Restoring the previous package and rebuilding
 
 ## Composer installation
 
-The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.1 line:
+The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.2 line:
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.1'
+composer require 'mage-os/module-shopping-feed:^1.2'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
@@ -53,7 +55,7 @@ Place or symlink the source at:
 app/code/MageOS/ShoppingFeed
 ```
 
-Use the `v1.1.0` tag for a reproducible 1.1 installation, and record its resolved commit. The `v1.0.0` tag remains available for historical installations.
+Use the `v1.2.0` tag for a reproducible installation, and record its resolved commit. The `v1.1.0` and `v1.0.0` tags remain available for historical installations.
 
 Then run:
 

@@ -2,7 +2,7 @@
 
 Configurable, grouped, and bundle products can produce parent rows, associated rows, or both. Decide the row model first, then configure inheritance, URLs, stock, price, and duplicate handling around it.
 
-> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
 ## Associated-product modes
 
@@ -56,7 +56,7 @@ Test fixed and dynamic price or weight bundles separately. Optional and required
 
 ## Complex Product Context Prioritization
 
-The **Complex Product Context Prioritization** setting in General Configuration (General in the candidate) can prioritize individually visible simple products in their complex-product context, including Search-only children. With it enabled, a child created before its parent retains the same parent grouping as a child created later. Enable it when standalone processing produces duplicate or contextually wrong rows, then measure the generation cost.
+The **Complex Product Context Prioritization** setting in General Configuration (General in 1.2.0) can prioritize individually visible simple products in their complex-product context, including Search-only children. With it enabled, a child created before its parent retains the same parent grouping as a child created later. Enable it when standalone processing produces duplicate or contextually wrong rows, then measure the generation cost.
 
 ## Verification matrix
 

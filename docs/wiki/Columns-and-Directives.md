@@ -2,7 +2,7 @@
 
 Columns Map controls the output schema. Each row gives the output column a name and maps it to a Magento product attribute or a module directive.
 
-> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
 ## How a column is built
 
@@ -15,7 +15,7 @@ A column has:
 
 Save the feed after changing Columns Map. Several filters and inheritance controls only list columns already present in the saved map.
 
-For the unreleased UI Component editor, use single-line output names without tabs or other control characters. The repaired candidate rejects those characters at model save and preserves literal values, structured parameters, and null defaults. The updated `mageos-latest` deployment also fixes null product-URL parameters under PHP 8.4 error handling. See [Admin UI Component forms](Admin-UI-Component-Forms) for deployment status and test limits.
+For the 1.2.0 UI Component editor, use single-line output names without tabs or other control characters. The editor rejects those characters at model save and preserves literal values, structured parameters, and null defaults. The updated `mageos-latest` deployment also fixes null product-URL parameters under PHP 8.4 error handling. See [Admin UI Component forms](Admin-UI-Component-Forms) for deployment status and test limits.
 
 ## Common directives
 

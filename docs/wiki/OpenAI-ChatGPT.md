@@ -1,8 +1,8 @@
 # OpenAI / ChatGPT (Google-compatible, beta)
 
-> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
-When evaluating the unreleased UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the exact candidate, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
+When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the tested runtime, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
 
 This preset generates quoted UTF-8 TSV for OpenAI's Google-compatible discovery profile. It is a beta integration: generated files have been checked locally, but OpenAI ingestion and ChatGPT display have not been verified. OpenAI must confirm this profile for the registered feed. It is separate from the native OpenAI schema and does not provide account access or checkout.
 

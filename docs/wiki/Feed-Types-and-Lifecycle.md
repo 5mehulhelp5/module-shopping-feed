@@ -2,11 +2,11 @@
 
 The feed type provides a starting column map and default behavior. All feeds then move through the same save, test, queue, generation, upload, and review lifecycle.
 
-> Documentation baseline: 1.2.0 release candidate, runtime `133af71` (unreleased); released 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
 
-The unreleased [UI Component editor](Admin-UI-Component-Forms) uses collapsible sections instead of the 1.1 tabs. Its category and promotion-date defects are repaired and verified locally. The linked guide records the deployed candidate, currency preservation, and remaining release boundaries.
+The [UI Component editor](Admin-UI-Component-Forms) uses collapsible sections instead of the 1.1 tabs. Its category and promotion-date defects are repaired and verified locally. The linked guide records the tested runtime, currency preservation, and remaining integration limits.
 
-The 1.2.0 candidate branch includes the four Tier 1 additions: [Meta Catalog](Meta-Catalog), [Microsoft Merchant Center](Microsoft-Merchant-Center), [TikTok Catalog](TikTok-Catalog), and [Pinterest Catalog](Pinterest-Catalog). The same branch adds the [OpenAI / ChatGPT Google-compatible beta](OpenAI-ChatGPT). All additions are unreleased and require destination validation before production use.
+Version 1.2.0 includes four additional catalog presets: [Meta Catalog](Meta-Catalog), [Microsoft Merchant Center](Microsoft-Merchant-Center), [TikTok Catalog](TikTok-Catalog), and [Pinterest Catalog](Pinterest-Catalog). Version 1.2.0 also adds the [OpenAI / ChatGPT Google-compatible beta](OpenAI-ChatGPT). All additions require destination validation before production use.
 
 ## Feed types
 
@@ -16,11 +16,11 @@ The 1.2.0 candidate branch includes the four Tier 1 additions: [Meta Catalog](Me
 | Google Shopping | Google product data, variants, taxonomy, shipping, and product-linked promotion IDs |
 | Google Local Inventory | Store-level availability, quantity, and price, optionally expanded by MSI source |
 | Google Promotions | A companion file configured and generated from a Google Shopping feed |
-| Meta Catalog (1.2.0 candidate) | Facebook and Instagram product catalogs using a scheduled TSV data feed |
-| Microsoft Merchant Center (1.2.0 candidate) | Microsoft Shopping product catalogs using tab-delimited TXT |
-| TikTok Catalog (1.2.0 candidate) | TikTok Ads Manager product catalogs using a scheduled CSV feed |
-| Pinterest Catalog (1.2.0 candidate) | Pinterest retail catalogs and product Pins using a scheduled TSV feed |
-| OpenAI / ChatGPT (Google-compatible, beta, 1.2.0 candidate) | TSV product discovery feed requiring confirmation during OpenAI onboarding |
+| Meta Catalog (1.2.0) | Facebook and Instagram product catalogs using a scheduled TSV data feed |
+| Microsoft Merchant Center (1.2.0) | Microsoft Shopping product catalogs using tab-delimited TXT |
+| TikTok Catalog (1.2.0) | TikTok Ads Manager product catalogs using a scheduled CSV feed |
+| Pinterest Catalog (1.2.0) | Pinterest retail catalogs and product Pins using a scheduled TSV feed |
+| OpenAI / ChatGPT (Google-compatible, beta, 1.2.0) | TSV product discovery feed requiring confirmation during OpenAI onboarding |
 
 See the individual feed guides before relying on their default columns.
 
