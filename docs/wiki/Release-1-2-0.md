@@ -6,7 +6,7 @@ Version 1.2.0 is being prepared. Version 1.1.0 remains the latest published rele
 
 Read the [draft release notes](https://github.com/mage-os-lab/module-shopping-feed/blob/feat/ui-component-editor/docs/releases/1.2.0.md), [changelog](https://github.com/mage-os-lab/module-shopping-feed/blob/feat/ui-component-editor/CHANGELOG.md), and [release preparation record](https://github.com/mage-os-lab/module-shopping-feed/blob/feat/ui-component-editor/docs/reviews/2026-10-03-release-1.2.0-preparation.md). These branch links are for candidate review; they are not a published release tag.
 
-Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
+Magento Open Source 2.4.7-p10 passes its separate unit/integration, eight-preset browser/output, and six-role compatibility checks. Its upstream Flysystem advisory remains visible. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
 
 ## Upgrade impact
 

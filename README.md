@@ -40,7 +40,7 @@ Run [ACCEPTANCE-TEST-PLAN.md](ACCEPTANCE-TEST-PLAN.md) against the exact release
 - Magento cron when scheduled feed generation is enabled
 - Magento Multi-Source Inventory APIs for source-level Local Inventory feeds
 
-Magento Open Source 2.4.7-p10 has a dedicated compatibility profile because its upstream Flysystem dependency is blocked by a security advisory. See the [2.4.7-p10 guidance](docs/compatibility/magento-2.4.7-p10.md) and [acceptance record](docs/reviews/2026-10-03-magento-247-acceptance.md) for test results, the scoped CI exception, and an optional tested backport. The module does not weaken a store's Composer security settings.
+Magento Open Source 2.4.7-p10 passes the dedicated compatibility profile and local eight-preset Admin/output acceptance. Its upstream Flysystem dependency remains affected by a security advisory. See the [2.4.7-p10 guidance](docs/compatibility/magento-2.4.7-p10.md) and [acceptance record](docs/reviews/2026-10-03-magento-247-acceptance.md) for the tested scope, scoped CI exception, and optional tested backport. The module does not weaken a store's Composer security settings.
 
 Mage-OS 3.4.0, based on Magento Open Source 2.4.9, is an explicit CI compatibility target. Its production checks install the package into a Mage-OS 3.4.0 project, then run the unit and integration suites, Magento coding standard, and dependency-injection compilation.
 

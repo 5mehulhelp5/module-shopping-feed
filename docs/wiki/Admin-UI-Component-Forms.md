@@ -16,7 +16,7 @@ Candidate `133af71` is deployed on `mageos-latest`, including the preview, feed 
 
 Column names must be single-line and contain no control characters. Invalid category rows and malformed preview requests now produce recoverable Admin errors. Custom configuration keys remain supported; see [Columns and directives](Columns-and-Directives) and [Development and CI](Development-and-CI).
 
-Magento Open Source 2.4.7-p10 uses the same UI Component forms on PHP 8.3. Its separate acceptance and upstream Flysystem dependency guidance are linked from [Status and compatibility](Status-and-Compatibility).
+Magento Open Source 2.4.7-p10 uses the same UI Component forms on PHP 8.3. Eight-preset save/output comparisons, category and promotion editing, DynamicRows, preview recovery, and six-role checks pass without runtime changes. Its separate acceptance and upstream Flysystem dependency guidance are linked from [Status and compatibility](Status-and-Compatibility).
 
 ## Using the candidate editor
 

@@ -2,6 +2,8 @@
 
 This profile uses PHP 8.3 and Magento's standard Admin. It does not require a different Shopping Feed editor or a change to the module's Composer requirements. See the [acceptance record](../reviews/2026-10-03-magento-247-acceptance.md) for the exact tested scope.
 
+Local acceptance passes 809 unit tests, 21 native integration tests, production compilation, all eight preset save/output comparisons, category and promotion editing, DynamicRows, preview recovery, and six Admin role profiles. The compatibility correction adds PHPUnit 9 data-provider annotations alongside the existing attributes; it does not change application runtime code. Extended catalog, transfer, and recurring-cron results from other platform profiles remain separate evidence.
+
 ## Dependency blocker
 
 As checked on October 3, 2026, Magento 2.4.7-p10 requires `league/flysystem ^2.4`. Its available 2.x releases are affected by `PKSA-w9tt-7782-78jx`, also identified as [GHSA-cxf4-7mrp-vvpr / CVE-2026-102601](https://github.com/thephpleague/flysystem/security/advisories/GHSA-cxf4-7mrp-vvpr). Composer 2.9.8 blocks dependency resolution before it reaches the extension's tests. The published fix is in Flysystem 3.35.3; forcing that major version into Magento's 2.x constraint is not a supported resolution.
