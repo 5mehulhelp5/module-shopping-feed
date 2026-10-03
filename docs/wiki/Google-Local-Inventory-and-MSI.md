@@ -2,7 +2,7 @@
 
 Google Local Inventory output connects a product ID with store-level availability, quantity, and price. With Magento Multi-Source Inventory enabled, the module can produce source-specific rows for sources linked to the selected website stock.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased candidate verification. Last reviewed: 2026-10-02.
 
 ## Prerequisites
 
@@ -90,3 +90,5 @@ Use at least two enabled sources and one reservation. Confirm:
 * Product IDs match the primary Google Shopping feed.
 * A SKU/store-code pair is not duplicated.
 * Merchant Center accepts a non-serving test file.
+
+The unreleased candidate passes nine controlled simple-product MSI scenarios on Magento Open Source 2.4.8 and 2.4.9: linked-source selection, reservations and compensation, source/item status, backorders, and unmanaged stock. The repository's `docs/reviews/2026-10-02-docker-operations-acceptance.md` records the source quantities, database rollback, and limits. Those fixtures use a temporary stock index; complex-product modes, asynchronous indexing, real order flows, and recipient ingestion remain separate checks.

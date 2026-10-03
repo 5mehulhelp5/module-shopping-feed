@@ -1,5 +1,7 @@
 # Committed preview fix verification
 
+> Follow-up: [Docker operational acceptance](2026-10-02-docker-operations-acceptance.md) adds scheduling, batch recovery, private FTP/SFTP delivery, and bounded simple-product MSI checks on both Magento versions.
+
 Candidate: `c07de812e8cb740073c213734bc54f029b8a31c1` on `feat/ui-component-editor`. Tested October 2, 2026. This continues the [Mage-OS deployment acceptance](2026-10-02-mageos-latest-deployment-acceptance.md) for the null URL parameter and Test Now button fixes.
 
 ## Server-side checks

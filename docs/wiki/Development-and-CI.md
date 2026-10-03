@@ -12,6 +12,8 @@ The current candidate passes **801 PHP unit tests** on Mage-OS 3.5.0 and Magento
 
 Nine frontend tests cover the active form in `admin-ui-form.test.cjs`; the other tests cover retained legacy behavior and the storefront. Five cases using each platform's actual UI framework cover localized dates and null initialization/value links. The prior Docker run passed 16 official Magento integration tests and four database tests per platform, plus production compilation and browser checks for six role profiles. The complete unit and 16-test integration suites were repeated for the committed preview fixes in `c07de81`, together with all eight CLI previews per platform. The six-role matrix remains the earlier result. The repository's `docs/reviews/2026-10-02-preview-followup-acceptance.md` records passing SKU preview, invalid-ID recovery, and valid-ID retry checks on both versions, including the browser automation limits. Historical counts and failures remain in `docs/reviews/2026-10-01-ui-component-editor-review.md`, `docs/reviews/2026-10-02-ui-component-editor-fixes.md`, `docs/reviews/2026-10-02-magento-docker-acceptance.md`, and `docs/reviews/2026-10-02-grid-permission-acceptance.md`.
 
+The operational follow-up in `docs/reviews/2026-10-02-docker-operations-acceptance.md` adds 10 scheduler checks, nine batch-recovery checks, 17 checks per FTP/SFTP transport, and nine simple-product MSI scenarios per Magento version. Original database rows and schema were preserved, allowing only consumed auto-increment counters. These runtime checks supplement the form acceptance; they do not establish unattended cron or external recipient acceptance.
+
 ## Local validation
 
 From the module repository root:

@@ -2,9 +2,9 @@
 
 Upload destinations run after a successful feed generation. Establish and validate the feed locally before enabling a transfer.
 
-> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased `9f07e46` editor notes. Last reviewed: 2026-10-01.
+> Documentation baseline: release `v1.1.0`, with explicitly marked unreleased UI Component editor notes. Last reviewed: 2026-10-02.
 
-The unreleased [UI Component editor](Admin-UI-Component-Forms) masks credentials before provider serialization. After a failed save, new or changed passwords must be re-entered; the previously saved password remains masked. Removing the final upload row and saving clears the destination list. Browser persistence checks did not attempt a remote connection or transfer.
+The unreleased [UI Component editor](Admin-UI-Component-Forms) masks credentials before provider serialization. After a failed save, new or changed passwords must be re-entered; the previously saved password remains masked. Removing the final upload row and saving clears the destination list. The separate runtime follow-up verifies FTP/SFTP plain and gzip delivery to private Docker test servers on Magento Open Source 2.4.8 and 2.4.9, including credentials, payload checksums, safe failures, and temporary-file cleanup. See the repository's `docs/reviews/2026-10-02-docker-operations-acceptance.md`. External recipient acceptance remains separate.
 
 ## Security boundary
 
