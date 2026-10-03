@@ -89,7 +89,7 @@ class ConfigurableTest extends ModelFramework
 
     public function testMap()
     {
-        $this->expectSelf($this->productMock, ['getTypeInstance', 'getUsedProductCollection']);
+        $this->expectSelf($this->productMock, ['getTypeInstance', 'getUsedProductCollection', 'setFlag']);
         $this->expectReturn($this->storeMock, 'getStoreId', 1);
 
         $this->expectAdvencedReturn(

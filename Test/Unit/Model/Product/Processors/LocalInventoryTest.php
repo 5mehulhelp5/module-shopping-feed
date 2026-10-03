@@ -24,7 +24,10 @@ class LocalInventoryTest extends CompatibilityTestCase
 {
     /** @dataProvider sourceStates */
     #[\PHPUnit\Framework\Attributes\DataProvider('sourceStates')]
-    public function testRemapsSourcesWithoutTestModeOrLosingAssociatedAdapters(bool $enabled): void
+    public function testRemapsSourcesWithoutTestModeOrLosingAssociatedAdapters(
+        bool $enabled,
+        bool $parentHasSourceItems
+    ): void
     {
         $sourceItem = new class extends DataObject {
             public function getSourceItemId(): int
@@ -32,8 +35,10 @@ class LocalInventoryTest extends CompatibilityTestCase
                 return 7;
             }
         };
+        $sourceItem->setData('source_code', 'default');
 
         $parentProduct = $this->createMock(Product::class);
+        $parentProduct->method('getTypeId')->willReturn('configurable');
         $associatedProduct = $this->createMock(Product::class);
         $associatedAdapter = $this->createCompatibleMock(
             Simple::class,
@@ -139,7 +144,10 @@ class LocalInventoryTest extends CompatibilityTestCase
         $processor->method('isMsiEnabled')->willReturn(true);
         $processor->expects($this->exactly($enabled ? 2 : 0))
             ->method('getSourceItems')
-            ->willReturn([$sourceItem]);
+            ->willReturnCallback(
+                static fn ($product) => $product === $parentProduct && !$parentHasSourceItems
+                    ? [] : [$sourceItem]
+            );
         $processor->setAdapter($adapter);
 
         $this->assertSame($enabled ? [['parent'], ['associated']] : [], $processor->execute([['original']]));
@@ -148,6 +156,10 @@ class LocalInventoryTest extends CompatibilityTestCase
 
     public static function sourceStates(): array
     {
-        return ['enabled source' => [true], 'disabled source has no fallback row' => [false]];
+        return [
+            'enabled source' => [true, true],
+            'disabled source has no fallback row' => [false, true],
+            'configurable has no parent source item' => [true, false],
+        ];
     }
 }

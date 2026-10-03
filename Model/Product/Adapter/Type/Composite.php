@@ -50,6 +50,9 @@ class Composite extends AdapterAbstract
      */
     protected $skippedData = [];
 
+    /** @var \Magento\Catalog\Model\ResourceModel\Product\Link\Product\CollectionFactory */
+    protected $linkedProductCollectionFactory;
+
 
     public function __construct(
         \Magento\Framework\Filesystem $filesystem,
@@ -79,9 +82,11 @@ class Composite extends AdapterAbstract
         \MageOS\ShoppingFeed\Model\Inventory\Api $sourceInventoryApi,
         \Magento\Framework\Serialize\SerializerInterface $jsonSerializer,
         \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate $concatenateMapper,
+        \Magento\Catalog\Model\ResourceModel\Product\Link\Product\CollectionFactory $linkedProductCollectionFactory,
         array $data = []
     ) {
         $this->concatenateMapper = $concatenateMapper;
+        $this->linkedProductCollectionFactory = $linkedProductCollectionFactory;
 
         parent::__construct(
             $filesystem, $feed, $product, $feedTypesConfig, $mapperFactory, $helper,

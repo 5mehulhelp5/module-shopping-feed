@@ -579,9 +579,10 @@ class ModelFramework extends CompatibilityTestCase
                 'getCategoryIds', 'getProductUrl', 'getStore', 'getCategoryCollection', 'getSku',
                 'getResource', 'getPrice', 'getSpecialPrice', 'getFinalPrice', 'getSpecialFromDate',
                 'getSpecialToDate', 'getQty', 'getTypeInstance', 'getUsedProductCollection',
-                'addAttributeToSelect', 'getConfigurableAttributes', 'getOptionsIds', 'getSelectionsCollection',
+                'addAttributeToSelect', 'setFlag', 'getConfigurableAttributes', 'getOptionsIds', 'getSelectionsCollection',
                 'getPriceModel', 'setData', 'setSpecialPrice', 'setFinalPrice', 'getTotalPrices',
-                'getAssociatedProductCollection', 'addFilterByRequiredOptions', 'setPositionOrder',
+                'getAssociatedProductCollection', 'getLinkInstance', 'setLinkModel', 'setIsStrongMode',
+                'setProduct', 'addFilterByRequiredOptions', 'setPositionOrder',
                 'addStoreFilter', 'getOptions', 'hasSpecialPrice', 'calculatePrice', 'setStoreId', 'getStoreId',
                 'getPriceInfo', 'getTierPrice', 'load']
         );

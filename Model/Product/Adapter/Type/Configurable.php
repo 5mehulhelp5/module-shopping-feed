@@ -60,6 +60,7 @@ class Configurable extends Composite implements AdapterInterface
         \MageOS\ShoppingFeed\Model\Inventory\Api $sourceInventoryApi,
         \Magento\Framework\Serialize\SerializerInterface $jsonSerializer,
         \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate $concatenateMapper,
+        \Magento\Catalog\Model\ResourceModel\Product\Link\Product\CollectionFactory $linkedProductCollectionFactory,
         array $data = []
     ) {
 
@@ -69,7 +70,7 @@ class Configurable extends Composite implements AdapterInterface
             $taxData, $catalogHelper, $catalogRuleCollectionFactory, $productTypePrice, $stockState, $filter,
             $localeResolver, $timezone, $date, $optionFactory, $processFactory, $processCollectionFactory, $logger,
             $cache, $adapterFactory, $formatterFactory, $categoryCollectionFactory, $sourceInventoryApi,
-            $jsonSerializer, $concatenateMapper, $data
+            $jsonSerializer, $concatenateMapper, $linkedProductCollectionFactory, $data
         );
     }
 
@@ -125,6 +126,7 @@ class Configurable extends Composite implements AdapterInterface
             $associatedProductCollection = $configurableProduct->getTypeInstance()
                 ->setStoreFilter($this->getStore(), $configurableProduct)
                 ->getUsedProductCollection($configurableProduct)
+                ->setFlag('has_stock_status_filter', true)
                 ->addAttributeToSelect('*');
 
             $associatedProductAdapters = $this->prepareAssociatedProductAdapters($associatedProductCollection);
