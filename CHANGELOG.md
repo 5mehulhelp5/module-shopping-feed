@@ -31,12 +31,13 @@ The [deployment report](docs/reviews/2026-10-02-mageos-latest-deployment-accepta
 - Apply feed stock settings independently of Magento's storefront out-of-stock visibility for simple, configurable, grouped, and bundle collections.
 - Derive configurable Local Inventory parent sources from their children, and require an enabled child source item at the same source before reporting the parent in stock. See the [stock regression report](docs/reviews/2026-10-02-stock-acceptance-fixes.md). Custom adapter subclasses overriding constructors must forward the new linked-product collection factory dependency.
 - Honor website and store-view overrides for microdata, native price-schema suppression, Google Ads event enablement, and the optional destination ID. Existing scoped settings now take effect; review overrides and clear applicable caches. See the [frontend scope report](docs/reviews/2026-10-03-frontend-scope-fix.md).
+- Preserve an existing feed's effective generation currency when its saved currency is blank, so opening and saving the UI Component form does not substitute a different store default. New feeds still use the store default, and explicit selections remain unchanged. See the [currency correction](docs/reviews/2026-10-03-existing-feed-currency-fix.md).
 
 ### Fixed before the editor migration
 
 - Hardened legacy editor escaping, request ID validation, schedule/status/file grid output, malformed URL handling, and log-rotation configuration.
 - Corrected recursive promotion minimum-purchase condition handling and incomplete configuration handling; invalid legacy non-JSON rule conditions produce a recoverable error.
-- Pinned direct CI workflow/action references to full commit hashes. See [the September 30 fix verification](docs/reviews/2026-09-30-review-fixes.md) for reproduced defects, accepted limits, and installed-runtime checks. Those fixes do not resolve the new editor blockers above.
+- Pinned direct CI workflow/action references to full commit hashes. See [the September 30 fix verification](docs/reviews/2026-09-30-review-fixes.md) for reproduced defects, accepted limits, and installed-runtime checks. The subsequent editor repairs are recorded separately above.
 
 ### Added for 1.2
 

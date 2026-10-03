@@ -53,7 +53,10 @@ class FormDataProvider extends AbstractDataProvider
         $feed = $this->getFeed();
         $data = $this->formData->project($feed, $this->metadata->configKeys($feed));
         if (empty($data['config']['general_currency'])) {
-            $data['config']['general_currency'] = $this->storeManager->getStore($feed->getStoreId())->getDefaultCurrencyCode();
+            // Preserve existing output when a legacy feed has no explicit currency.
+            $data['config']['general_currency'] = $feed->getId()
+                ? $feed->getStore()->getCurrentCurrencyCode()
+                : $this->storeManager->getStore($feed->getStoreId())->getDefaultCurrencyCode();
         }
         $recovery = $this->dataPersistor->get(FeedFormData::PERSISTOR_KEY);
         if (is_array($recovery) && (string)($recovery['id'] ?? '') === (string)$feed->getId()
