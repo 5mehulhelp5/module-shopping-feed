@@ -2,9 +2,13 @@
 
 Release acceptance proves the extension on representative Magento runtimes and proves each generated artifact at the boundary where it is consumed.
 
-> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
+
+## 1.2.1 verification
+
+Version 1.2.1 passes 846 local unit tests on both native frameworks and 47 JavaScript checks. The 32 new regression cases reproduce 22 assertion failures in v1.2.0 and pass with the fixes. The companion passes 63 unit/database tests per framework and 24 opt-in legacy runtime tests. Full store/browser/generated-output acceptance was not all repeated against 1.2.1; earlier results below retain their 1.2.0 scope. See [Release 1.2.1](Release-1-2-1).
 
 ## 1.2.0 acceptance record
 

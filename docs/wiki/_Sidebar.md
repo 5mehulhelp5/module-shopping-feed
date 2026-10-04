@@ -5,12 +5,14 @@
 **Start here**
 
 * [Status and compatibility](Status-and-Compatibility)
+* [Release 1.2.1](Release-1-2-1)
 * [Release 1.2.0](Release-1-2-0)
 * [Release 1.1.0](Release-1-1-0)
 * [Release 1.0.0 history](Release-1-0-0)
 * [Installation and upgrade](Installation-and-Upgrade)
 * [Quick start](Quick-Start)
 * [Migration and coexistence](Migration-and-Coexistence)
+* [Rocket Web migration companion](Rocket-Web-Migration)
 * [Feed types and lifecycle](Feed-Types-and-Lifecycle)
 * [Admin UI Component forms](Admin-UI-Component-Forms)
 

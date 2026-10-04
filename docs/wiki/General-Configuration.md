@@ -2,7 +2,7 @@
 
 General Configuration defines the store context, output location, delimiter, price behavior, and stock behavior for one feed.
 
-> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
 
 The 1.2.0 editor labels this section **General**. Its [Admin form guide](Admin-UI-Component-Forms) covers save controls, store-view reloads, and current acceptance results and limits.
 

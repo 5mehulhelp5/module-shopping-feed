@@ -2,7 +2,7 @@
 
 The safest first feed has one store view, no upload destination, no schedule, and a small set of known products. Generate it, inspect it, correct it, then add automation.
 
-> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
 
 Read [Admin UI Component forms](Admin-UI-Component-Forms) for the 1.2.0 editor. Its collapsible sections replace the old tabs; category generation and promotion-date preservation pass the recorded acceptance checks. Start with disabled test feeds before enabling delivery.
 

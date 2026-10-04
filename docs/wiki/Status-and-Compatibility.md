@@ -1,10 +1,12 @@
 # Status and compatibility
 
-Mage-OS Shopping Feed 1.2.0 is the current stable release. See [Release 1.2.0](Release-1-2-0) for changes and recorded acceptance. Existing Rocket Web installations are not upgraded or migrated automatically.
+Mage-OS Shopping Feed 1.2.1 is the current stable release. See [Release 1.2.1](Release-1-2-1) for changes and recorded acceptance. Existing Rocket Web installations are not upgraded or migrated automatically.
 
-> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
 
-The [UI Component editor](Admin-UI-Component-Forms) in 1.2.0 keeps the Composer requirements. The release runtime `133af71` is deployed on `mageos-latest` and matches both Magento Open Source 2.4.8/2.4.9 Docker installations. The final suite passes 809 unit tests on each framework and 21 official integration tests per Docker version, plus production compilation. Earlier eight-preset browser/output and six-role permission checks cover the unchanged controls; the final currency provider also passes an unchanged browser save/output comparison. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records current product, MSI, pricing, operations, frontend, and cleanup evidence. Native Nebula bridge rendering and external recipients remain separate acceptance targets.
+Version 1.2.1 fixes required-option pricing, inherited/configurable backorders, and Page Builder description cleanup, and adds optional Rocket Web migration discovery. Its local suite passes 846 tests on Mage-OS 3.5 and Magento 2.4.8, plus 47 JavaScript checks. The [1.2.1 release summary](Release-1-2-1) distinguishes these checks from the earlier store acceptance below.
+
+The [UI Component editor](Admin-UI-Component-Forms) in 1.2.0 keeps the Composer requirements. The 1.2.0 runtime `133af71` is deployed on `mageos-latest` and matches both Magento Open Source 2.4.8/2.4.9 Docker installations. The 1.2.0 suite passes 809 unit tests on each framework and 21 official integration tests per Docker version, plus production compilation. Earlier eight-preset browser/output and six-role permission checks cover the unchanged controls; the final currency provider also passes an unchanged browser save/output comparison. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records current product, MSI, pricing, operations, frontend, and cleanup evidence. Native Nebula bridge rendering and external recipients remain separate acceptance targets.
 
 For the 1.2.0 scope and upgrade requirements, see [Release 1.2.0](Release-1-2-0). Platform requirements remain unchanged; custom editor integrations and explicit constructor overrides require review.
 
@@ -62,7 +64,7 @@ A separate fresh Mage-OS 3.5.0 installation with no Nebula packages passed Compo
 | Google Promotions | Included as part of a Google Shopping feed |
 | FTP and SFTP upload | Included |
 | Gzip upload | Included |
-| Automatic migration from Rocket Web packages | Not included |
+| Rocket Web migration companion | Optional, separately installed; preview and explicit import/activation |
 
 ## Distribution status
 

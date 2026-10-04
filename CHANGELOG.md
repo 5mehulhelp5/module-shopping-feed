@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented here.
 
+## 1.2.1 - 2026-10-04
+
+[Release 1.2.1 notes and upgrade requirements](docs/releases/1.2.1.md).
+
+### Fixed
+
+- Keep free required option values in configurable-child minimum pricing, resolve percentage prices through Magento, and preserve explicitly selected defaults independently of value order (#9).
+- Honor inherited backorder settings. Aggregate configurable availability in the order in stock, backorder, preorder, then out of stock, while retaining an explicitly out-of-stock parent. A positive MSI source cannot be overridden by a later backordered source (#10).
+- Clean raw and escaped Page Builder markup, remove style/script content, decode double-encoded entities, and apply column length limits to the cleaned text. Preserve literal comparisons, quoted attributes, and delimiter safety (#11 and its follow-up).
+
+### Added
+
+- Optional Rocket Web migration companion discovery on the feed management screen, with an ACL-controlled link to the installed tool or its installation guide. Stores without legacy data see no notice.
+- Composer suggestion and migration guidance for `rocketweb/module-shopping-feed-migration-rocketweb`, prepared for its separate 1.0.0 launch. Installation, preview, import, and activation remain explicit operations.
+
 ## 1.2.0 - 2026-10-03
 
 [Release 1.2.0 notes and upgrade requirements](docs/releases/1.2.0.md).

@@ -2,7 +2,7 @@
 
 Version 1.2.0 replaces the default New/Edit Feed and Test Feed forms with Magento UI Components. Version 1.1.0 retains the previous editor. This guide describes the 1.2.0 controls and upgrade implications.
 
-> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
 
 Existing feeds with a blank saved currency display the currency currently used by generation. Saving makes that selection explicit without changing prices to a different store default. New feeds still start with the store default; explicit saved selections remain unchanged.
 

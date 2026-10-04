@@ -27,11 +27,8 @@ class Availability extends SimpleAvailability
         $parentCell = parent::map($params);
 
         if ($parentCell != self::OUT_OF_STOCK) {
-            $associatedProductAdapters = $this->getAdapter()->getData('associated_product_adapters');
+            $associatedProductAdapters = $this->getAdapter()->getData('associated_product_adapters') ?? [];
             $cell = self::OUT_OF_STOCK;
-            /**
- * @var \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $associatedProductAdapter
-*/
             foreach ($associatedProductAdapters as $associatedProductAdapter) {
                 $associatedCell = $this->getStockStatus($associatedProductAdapter);
 
@@ -39,13 +36,15 @@ class Availability extends SimpleAvailability
                     $cell = self::IN_STOCK;
                     break;
                 }
+                if ($associatedCell === self::BACKORDER) {
+                    $cell = self::BACKORDER;
+                } elseif ($associatedCell === self::PREORDER && $cell === self::OUT_OF_STOCK) {
+                    $cell = self::PREORDER;
+                }
             }
 
-            if ($cell == self::OUT_OF_STOCK
-                && is_array($associatedProductAdapters)
-                && count($associatedProductAdapters) > 0
-            ) {
-                $parentCell = self::OUT_OF_STOCK;
+            if (count($associatedProductAdapters) > 0) {
+                $parentCell = $cell;
             }
         }
 
