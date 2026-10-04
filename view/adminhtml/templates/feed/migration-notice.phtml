@@ -1,0 +1,22 @@
+<?php
+/** @var \MageOS\ShoppingFeed\Block\Adminhtml\Feed\MigrationNotice $block */
+$state = $block->getNoticeState();
+?>
+<?php if ($state): ?>
+<div class="message message-notice"
+     data-mage-init='{"MageOS_ShoppingFeed/js/migration-notice":{}}'
+     role="status">
+    <?php if ($state === 'installed'): ?>
+        <span><?= $block->escapeHtml(__('The Rocket Web feed migration tool is available.')) ?></span>
+        <a href="<?= $block->escapeUrl($block->getMigrationUrl()) ?>"><?= $block->escapeHtml(__('Review legacy feeds')) ?></a>
+    <?php else: ?>
+        <span><?= $block->escapeHtml($state === 'legacy_module'
+            ? __('Rocket Web Shopping Feeds is installed. Its configuration can be reviewed with the optional migration tool. Keep the legacy module enabled during setup.')
+            : __('Legacy Rocket Web feed tables were found. The original module and its feed definitions are also needed before migration.')) ?></span>
+        <a href="<?= $block->escapeUrl($block->getInstructionsUrl()) ?>" target="_blank" rel="noopener noreferrer"><?= $block->escapeHtml(__('Installation instructions')) ?></a>
+    <?php endif; ?>
+    <button type="button" class="action-tertiary" data-action="dismiss-migration-notice">
+        <?= $block->escapeHtml(__('Dismiss')) ?>
+    </button>
+</div>
+<?php endif; ?>

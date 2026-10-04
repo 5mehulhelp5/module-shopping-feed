@@ -11,6 +11,9 @@
     </head>
     <body>
         <referenceContainer name="content">
+            <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed\MigrationNotice"
+                   name="mageos_shopping_feed.migration_notice"
+                   template="MageOS_ShoppingFeed::feed/migration-notice.phtml" before="-"/>
             <uiComponent name="mageos_shopping_feed_grid"/>
             <block class="MageOS\ShoppingFeed\Block\Adminhtml\Feed" name="feed_list"/>
         </referenceContainer>

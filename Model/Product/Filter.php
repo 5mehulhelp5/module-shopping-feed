@@ -59,9 +59,8 @@ class Filter
      */
     public function cleanField($field, $params = null)
     {
-        if (!is_null($params) && array_key_exists('column', $params)) {
+        if ($params !== null && array_key_exists('column', $params)) {
             $this->findAndReplace($field, $params['column']);
-            $this->limitOutput($field, $params['column']);
         }
 
         $charset = $this->feed->getConfig('output_params_encoding', "UTF-8");
@@ -79,10 +78,6 @@ class Filter
         $delimiter = (string)$this->feed->getConfig('output_params_delimiter', "\t");
         $delimiter_other = (string)$this->feed->getConfig('output_params_delimiter_other', "\t");
         $replacements = [
-            "\"" => "&quot;",
-            "'" => "&#39;",
-            "’" => "&#8217;",
-            "‘" => "&#8216;",
             "\n" => " ",
             "\r" => " ",
         ];
@@ -94,10 +89,18 @@ class Filter
         }
         $field = strtr($field, $replacements);
 
-        $field = strip_tags($field, '>');
-        if (extension_loaded('mbstring')) {
-            $field = preg_replace_callback("/(&#?[a-z0-9]{2,8};)/i", [$this, 'htmlEntitiesToUtf8Callback'], $field);
+        // Page Builder HTML Code content can contain escaped tags and double-encoded entities.
+        for ($pass = 0; $pass < 2; $pass++) {
+            $field = $this->removeMarkup($field);
+            if (extension_loaded('mbstring')) {
+                $field = preg_replace_callback(
+                    "/(&#?[a-z0-9]{1,8};)/i",
+                    [$this, 'htmlEntitiesToUtf8Callback'],
+                    $field
+                );
+            }
         }
+        $field = $this->removeMarkup($field);
         /** Decoding can reintroduce separators that were absent from the source text. */
         $separators = ["\n" => ' ', "\r" => ' '];
         if ($activeDelimiter !== '' && !$hasEnclosure) {
@@ -107,8 +110,23 @@ class Filter
         $field = preg_replace('/\s\s+/', ' ', $field);
         $field = str_replace(PHP_EOL, "", $field);
         $field = trim($field);
+        if ($params !== null && array_key_exists('column', $params)) {
+            $this->limitOutput($field, $params['column']);
+        }
 
         return $field;
+    }
+
+    /**
+     * Remove markup and executable block contents while retaining literal comparisons.
+     */
+    private function removeMarkup(string $field): string
+    {
+        $field = preg_replace('~<(script|style)\b[^>]*>.*?(?:</\1\s*>|$)~is', ' ', $field);
+        $tags = <<<'REGEX'
+~<!--.*?(?:-->|$)|<![a-z][^>]*>|</?[a-z][a-z0-9:-]*(?=[\s/>])(?:[^>"']|"[^"]*"|'[^']*')*>~is
+REGEX;
+        return preg_replace($tags, ' ', $field);
     }
 
     /**

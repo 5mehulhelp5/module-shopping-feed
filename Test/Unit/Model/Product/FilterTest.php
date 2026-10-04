@@ -21,6 +21,7 @@ namespace MageOS\ShoppingFeed\Test\Unit\Model\Product;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 use MageOS\ShoppingFeed\Test\Unit\CompatibilityTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class FilterTest extends CompatibilityTestCase
@@ -182,4 +183,53 @@ class FilterTest extends CompatibilityTestCase
         }
     }
 
+    /** @dataProvider plainDescriptionCases */
+    #[DataProvider('plainDescriptionCases')]
+    public function testPageBuilderDescriptionCleaning(string $input, string $expected, ?int $limit): void
+    {
+        $settings = ['output_params_delimiter' => '\\t', 'filters_output_limit' => $limit === null
+            ? [] : [['column' => 'description', 'limit' => $limit]]];
+        $this->feedMock->method('getConfig')->willReturnCallback(
+            static fn($key, $default = null) => $settings[$key] ?? $default
+        );
+        $this->cacheMock->method('getCache')->willReturn([]);
+        $this->model->setFeed($this->feedMock);
+        $this->assertSame($expected, $this->model->cleanField($input, ['column' => 'description']));
+    }
+
+    public static function plainDescriptionCases(): array
+    {
+        return [
+            'escaped HTML code' => [
+                '<div>&lt;h2&gt;Oil Drain Flange&lt;/h2&gt;&lt;p&gt;Includes gasket&lt;/p&gt;</div>',
+                'Oil Drain Flange Includes gasket',
+                null,
+            ],
+            'raw style and script' => [
+                '<style>#html-body{color:red}</style><p>Useful text</p><script>alert(1)</script>',
+                'Useful text',
+                null,
+            ],
+            'escaped style and script' => [
+                '&lt;style&gt;.rule{color:red}&lt;/style&gt;&lt;p&gt;Useful text&lt;/p&gt;&lt;script&gt;alert(1)&lt;/script&gt;',
+                'Useful text',
+                null,
+            ],
+            'double entities' => [
+                '&lt;p&gt;Oil&amp;nbsp;Drain &amp;amp; Gasket&lt;/p&gt;',
+                "Oil\u{00a0}Drain & Gasket",
+                null,
+            ],
+            'limit after cleaning' => [
+                '<div data-content-type="html">&lt;p&gt;Oil Drain Flange&lt;/p&gt;</div>',
+                'Oil Drain',
+                9,
+            ],
+            'literal comparison' => ['1 &lt; 2 and 3 &gt; 2', '1 < 2 and 3 > 2', null],
+            'double comparison' => ['1 &amp;lt; 2', '1 < 2', null],
+            'double encoded separators' => ['before&amp;#9;after', 'before after', null],
+            'comments and doctype' => ['<!DOCTYPE html><!-- hidden --><p>Visible</p>', 'Visible', null],
+            'quoted greater-than attribute' => ['<p title="1 > 0">Useful text</p>', 'Useful text', null],
+        ];
+    }
 }

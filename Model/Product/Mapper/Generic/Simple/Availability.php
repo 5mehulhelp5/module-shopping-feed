@@ -75,7 +75,7 @@ class Availability extends MapperStock
 
         if ($this->usesDefaultStock()) {
             $stockItem = $this->stockRegistryProvider->getStockItem($product->getId(), $product->getStoreId());
-            $backOrdered = !is_null($stockItem) && (int)$stockItem->getData('backorders') > 0;
+            $backOrdered = $stockItem !== null && (int)$stockItem->getBackorders() > 0;
 
             if ($this->sourceInventoryApi->getAllItems($product)) {
                 $storeCode = $this->getAdapter()->getFeed()->getStore()->getWebsite()->getCode();
@@ -83,6 +83,7 @@ class Availability extends MapperStock
                 foreach ($sourceItems as $item) {
                     if ($item->getStatus() && $item->getQuantity() > 0) {
                         $cell = self::IN_STOCK;
+                        break;
                     } elseif ($item->getStatus() && $backOrdered) {
                         $cell = self::BACKORDER;
                     }

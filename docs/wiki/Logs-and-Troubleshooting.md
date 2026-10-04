@@ -2,7 +2,7 @@
 
 Start with the feed-specific log and the feed grid status. They distinguish queue problems, product skips, generation failures, and upload failures.
 
-> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
 
 The original `9f07e46` category and promotion-date defects are repaired in 1.2.0, with runtime acceptance at `133af71`. Consult [Admin UI Component forms](Admin-UI-Component-Forms) for the exact deployed revision and acceptance evidence. Code updates do not reconstruct dates already erased by an earlier save.
 

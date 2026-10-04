@@ -2,11 +2,21 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
 
 <a id="upgrading-from-11-to-the-120-candidate"></a>
+
+<a id="upgrading-from-120-to-121-candidate"></a>
+
+## Upgrading from 1.2.0 to 1.2.1
+
+The [1.2.1 release](Release-1-2-1) corrects required-option pricing, inherited/configurable backorders, and Page Builder description cleaning. It adds no schema change or required dependency relative to 1.2.0.
+
+Back up the matching code, database, Composer lock file, and generated output. On staging, compare free and percentage-based required options, backordered products and their availability dates, configurable parents/children, and markup-heavy descriptions with configured length limits. Regenerate feeds and check actual recipient output before resuming delivery. The 1.2.0 editor customization requirements below still apply when upgrading from 1.1.
+
+Select `mage-os/module-shopping-feed:^1.2.1` through the store's normal Composer and Magento deployment process. The optional [Rocket Web migration companion](Rocket-Web-Migration) has its own installation and release; upgrading the main module does not import legacy records.
 
 ## Upgrading from 1.1 to 1.2.0
 
@@ -55,7 +65,7 @@ Place or symlink the source at:
 app/code/MageOS/ShoppingFeed
 ```
 
-Use the `v1.2.0` tag for a reproducible installation, and record its resolved commit. The `v1.1.0` and `v1.0.0` tags remain available for historical installations.
+Use the `v1.2.1` tag for a reproducible installation, and record its resolved commit. The `v1.1.0` and `v1.0.0` tags remain available for historical installations.
 
 Then run:
 

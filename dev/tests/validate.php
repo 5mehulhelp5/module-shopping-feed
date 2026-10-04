@@ -16,6 +16,13 @@ $assert(($composer['name'] ?? null) === 'mage-os/module-shopping-feed', 'Unexpec
 $assert(($composer['type'] ?? null) === 'magento2-module', 'Unexpected Composer package type');
 $assert(($composer['autoload']['psr-4']['MageOS\\ShoppingFeed\\'] ?? null) === '', 'Unexpected PSR-4 mapping');
 $assert(($composer['license'] ?? null) === 'OSL-3.0', 'Composer license must use the SPDX OSL-3.0 identifier');
+$migrationPackage = 'rocketweb/module-shopping-feed-migration-rocketweb';
+foreach (['require', 'require-dev', 'replace', 'provide', 'conflict'] as $dependencySection) {
+    $assert(
+        !isset($composer[$dependencySection][$migrationPackage]),
+        'The Rocket Web migration companion must remain an optional Composer suggestion'
+    );
+}
 
 $ciWorkflow = (string) file_get_contents($root . '/.github/workflows/ci.yml');
 $assert(str_contains($ciWorkflow, 'check-magento:'), 'Magento Open Source CI job is missing');
@@ -312,6 +319,23 @@ foreach ($iterator as $file) {
     if (str_contains($contents, "\0")) {
         continue;
     }
+    // Discovery may name the original module/table, but must never load its PHP classes.
+    // Allow only complete discovery literals and the optional Composer suggestion key.
+    $discoveryLiterals = [
+        'composer.json' => ['"' . $migrationPackage . '"'],
+        'Block/Adminhtml/Feed/MigrationNotice.php' => [
+            "'RocketWeb_ShoppingFeeds'",
+            "'rw_shoppingfeeds_feed'",
+            "'https://github.com/rocketweb/module-shopping-feed-migration-rocketweb#installation'",
+        ],
+        'Test/Unit/Block/Adminhtml/MigrationNoticeTest.php' => [
+            "'RocketWeb_ShoppingFeeds'",
+            "'rw_shoppingfeeds_feed'",
+            "'store_prefix_rw_shoppingfeeds_feed'",
+        ],
+    ];
+    $relativePath = substr($path, strlen($root) + 1);
+    $contents = str_replace($discoveryLiterals[$relativePath] ?? [], '', $contents);
     foreach ($forbiddenRuntimeIdentifiers as $identifier) {
         $assert(
             !str_contains($contents, $identifier),

@@ -44,7 +44,8 @@
     },
     "suggest": {
         "magento/module-inventory-api": "Enables Multi-Source Inventory support and Google Local Inventory feeds.",
-        "magento/module-inventory-sales-api": "Enables stock resolution and reservation-aware quantities."
+        "magento/module-inventory-sales-api": "Enables stock resolution and reservation-aware quantities.",
+        "rocketweb/module-shopping-feed-migration-rocketweb": "Optional, explicitly reviewed migration of Rocket Web feed configuration."
     },
     "autoload": {
         "files": [

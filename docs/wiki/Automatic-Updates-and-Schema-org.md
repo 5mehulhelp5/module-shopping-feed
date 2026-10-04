@@ -2,7 +2,7 @@
 
 The module can add schema.org offer data to product pages using the same feed mapping used for Google Shopping. Google can use structured product data to reconcile selected price and availability differences.
 
-> Documentation baseline: release 1.2.0 (`v1.2.0`); historical 1.1 behavior is identified separately. Last reviewed: 2026-10-03.
+> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
 
 **Unreleased default repair:** only new Google Shopping feeds default to microdata. Other new presets default to zero, preserving existing selections and explicit choices. The repair is deployed on `mageos-latest`; its original microdata selections were verified unchanged. No existing store selections are migrated. Inspect the grid's `[microdata]` marker and storefront mapping when upgrading; see [Admin UI Component forms](Admin-UI-Component-Forms).
 

@@ -47,15 +47,23 @@ class Simple extends AdapterAbstract implements AdapterInterface
                 $price = $product->getPrice();
                 foreach ($parentProduct->getOptions() as $option) {
                     if ($option->getValues() && $option->getIsRequire()) {
-                        $val_price = 0;
+                        $minimumPrice = null;
+                        $defaultPrice = null;
+                        $pricingOption = clone $option;
+                        $pricingOption->setProduct($product);
                         foreach ($option->getValues() as $value) {
+                            $pricingValue = clone $value;
+                            $pricingValue->setOption($pricingOption);
+                            $pricingValue->setProduct($product);
+                            $optionPrice = (float)$pricingValue->getPrice(true);
+                            $minimumPrice = $minimumPrice === null
+                                ? $optionPrice : min($minimumPrice, $optionPrice);
                             if ($value->getIsDefault()) {
-                                $val_price = $value->getPrice();
-                            } else {
-                                $val_price = $val_price == 0 ? $value->getPrice() : min($val_price, $value->getPrice());
+                                $defaultPrice = $defaultPrice === null
+                                    ? $optionPrice : min($defaultPrice, $optionPrice);
                             }
                         }
-                        $price += $val_price;
+                        $price += $defaultPrice ?? $minimumPrice ?? 0;
                     }
                 }
                 $product->setPrice($price);
