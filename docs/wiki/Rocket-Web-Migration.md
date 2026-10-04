@@ -10,9 +10,11 @@ The 1.2.1 feed management screen detects legacy module registration or prefixed 
 
 Use staging and the store's normal deployment process. Back up the database, code, Composer lock file, generated output, configuration, and matching encryption key. Keep legacy modules installed and enabled through `setup:upgrade` to protect their declarative-schema tables. Pause individual legacy feeds and scheduled generation for cutover.
 
-Select the coordinated releases:
+Install the companion from its published GitHub tags by adding its public source repository to the store's root Composer configuration, then select the coordinated releases:
 
 ```sh
+composer config repositories.shopping-feed-migration-rocketweb vcs \
+  https://github.com/rocketweb/module-shopping-feed-migration-rocketweb.git
 composer require 'mage-os/module-shopping-feed:^1.2.1' \
   'rocketweb/module-shopping-feed-migration-rocketweb:^1.0' --no-update
 composer update mage-os/module-shopping-feed \
