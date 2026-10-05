@@ -230,6 +230,63 @@ class FilterTest extends CompatibilityTestCase
             'double encoded separators' => ['before&amp;#9;after', 'before after', null],
             'comments and doctype' => ['<!DOCTYPE html><!-- hidden --><p>Visible</p>', 'Visible', null],
             'quoted greater-than attribute' => ['<p title="1 > 0">Useful text</p>', 'Useful text', null],
+            'inch mark in media image attributes' => [
+                '<p>Shroud <img src="{{media url="wysiwyg/a.png"}}" alt="Radiator 12" " width="800" /> Fan</p>',
+                'Shroud Fan',
+                null,
+            ],
+            'doubled quote after media directive' => [
+                '<img src="{{media url=&quot;x.jpg&quot;}}"" alt="" />Text',
+                'Text',
+                null,
+            ],
+            'stray double quote before heading' => [
+                '<img alt="3.5" core" /></p><h3>3.5" Thick - "Hot Flow" Options</h3><ul><li>A</li>',
+                '3.5" Thick - "Hot Flow" Options A',
+                null,
+            ],
+            'stray single quote before heading' => [
+                "<img alt='3.5' core' /></p><h3>3.5' Thick - 'Hot Flow' Options</h3><ul><li>A</li>",
+                "3.5' Thick - 'Hot Flow' Options A",
+                null,
+            ],
+            'unclosed double quote in container tag' => [
+                '<p>Before <span title="broken>inside</span> After</p>',
+                'Before inside After',
+                null,
+            ],
+            'unclosed single quote in container tag' => [
+                "<p>Before <span title='broken>inside</span> After</p>",
+                'Before inside After',
+                null,
+            ],
+            'escaped malformed image tag' => [
+                '&lt;img src=&quot;{{media url=&quot;x.jpg&quot;}}&quot;&quot; alt=&quot;&quot; /&gt;Text',
+                'Text',
+                null,
+            ],
+            'double escaped malformed container tag' => [
+                '&amp;lt;span title=&amp;quot;broken&amp;gt;Visible&amp;lt;/span&amp;gt;',
+                'Visible',
+                null,
+            ],
+            'limit after malformed tag cleaning' => [
+                '<img alt="3.5" core" /></p><h3>3.5" Thick - "Hot Flow" Options</h3><ul><li>A</li>',
+                '3.5" Thick',
+                10,
+            ],
+            'literal comparisons beside inch marks' => [
+                '3 < 5 > 2; 3.5" Thick - "Hot Flow"',
+                '3 < 5 > 2; 3.5" Thick - "Hot Flow"',
+                null,
+            ],
+            'double quoted greater-than image attribute' => ['<img alt="a > b">Text', 'Text', null],
+            'single quoted greater-than image attribute' => ["<img alt='a > b'>Text", 'Text', null],
+            'double quoted less-than image attribute' => ['<img alt="a < b">Text', 'Text', null],
+            'single quoted less-than image attribute' => ["<img alt='a < b'>Text", 'Text', null],
+            'quoted comparisons in image attribute' => ['<img alt="1 < 2 > 0">Text', 'Text', null],
+            'double quoted unspaced comparison attribute' => ['<img alt="a<b">Text', 'Text', null],
+            'single quoted unspaced comparison attribute' => ["<img alt='a<b'>Text", 'Text', null],
         ];
     }
 }

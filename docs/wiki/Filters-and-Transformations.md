@@ -2,7 +2,7 @@
 
 Product Filters decides which products reach the output and how selected column values are changed. Rule order matters.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.2.1`, with the unreleased issue #14 correction identified below. Last reviewed: 2026-10-05.
 
 ## Catalog selection
 
@@ -30,9 +30,15 @@ Replacement rules can be ordered and nested. Test the first successful source an
 
 Applies string replacement at column output. Large rule sets add work to every applicable row, so measure their effect on large catalogs.
 
+### HTML cleanup
+
+Version 1.2.1 removes raw and escaped HTML tags, comments, and style/script content from column values. It also decodes double-encoded entities. Literal comparisons such as `3 < 5 > 2` remain text.
+
+The unreleased [issue #14 fix](https://github.com/mage-os-lab/module-shopping-feed/issues/14) also removes tags with stray attribute quotes while preserving the following description text. For example, `<img alt="3.5" core" /></p><h3>3.5" Thick - "Hot Flow" Options</h3>` becomes `3.5" Thick - "Hot Flow" Options`. Quoted comparisons such as `<img alt="a > b">` and `<img alt="a < b">` are removed with the image tag.
+
 ### Limit column output
 
-Truncates selected output columns to a character limit. In 1.1, limits count UTF-8 characters without splitting a multibyte character. Limits run before output encoding and HTML cleanup. If several limits target the same column, they run in order.
+Truncates selected output columns to a character limit without splitting a multibyte UTF-8 character. Since 1.2.1, limits run after output encoding, HTML cleanup, entity decoding, and whitespace cleanup. If several limits target the same column, they run in order.
 
 ### Skip Products with empty
 
@@ -53,11 +59,10 @@ The upper and lower price filters do nothing when left empty. Price buckets buil
 Think of the feed as a pipeline:
 
 1. Select eligible catalog products.
-2. Build mapped column values.
-3. Replace empty values.
-4. Apply find-and-replace rules.
-5. Apply output limits.
-6. Reject rows missing required output.
+2. Resolve each mapped column value. For text values, apply find-and-replace rules, output encoding, markup/entity cleanup, delimiter/whitespace cleanup, and then output limits.
+3. If a mapped value is empty, try its configured replacement sources.
+4. Apply feed-specific row filters and formatters.
+5. Reject rows missing required output.
 
 Test interacting rules together. A transformation that produces an empty value can affect a later required-field filter.
 

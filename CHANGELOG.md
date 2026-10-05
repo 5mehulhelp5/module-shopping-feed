@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented here.
 
+## Unreleased
+
+### Fixed
+
+- Remove HTML tags containing stray attribute quotes without losing the following description text. Preserve literal comparisons, quoted comparison attributes, escaped markup cleanup, and limits applied after cleaning (#14).
+
 ## 1.2.1 - 2026-10-04
 
 [Release 1.2.1 notes and upgrade requirements](docs/releases/1.2.1.md).
