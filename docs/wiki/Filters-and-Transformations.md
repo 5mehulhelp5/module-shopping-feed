@@ -2,7 +2,7 @@
 
 Product Filters decides which products reach the output and how selected column values are changed. Rule order matters.
 
-> Documentation baseline: release `v1.2.1`, with the unreleased issue #14 correction identified below. Last reviewed: 2026-10-05.
+> Documentation baseline: release `v1.2.2`. Last reviewed: 2026-10-05.
 
 ## Catalog selection
 
@@ -34,7 +34,7 @@ Applies string replacement at column output. Large rule sets add work to every a
 
 Version 1.2.1 removes raw and escaped HTML tags, comments, and style/script content from column values. It also decodes double-encoded entities. Literal comparisons such as `3 < 5 > 2` remain text.
 
-The unreleased [issue #14 fix](https://github.com/mage-os-lab/module-shopping-feed/issues/14) also removes tags with stray attribute quotes while preserving the following description text. For example, `<img alt="3.5" core" /></p><h3>3.5" Thick - "Hot Flow" Options</h3>` becomes `3.5" Thick - "Hot Flow" Options`. Quoted comparisons such as `<img alt="a > b">` and `<img alt="a < b">` are removed with the image tag.
+Version 1.2.2's [issue #14 fix](https://github.com/mage-os-lab/module-shopping-feed/issues/14) also removes tags with stray attribute quotes while preserving the following description text. For example, `<img alt="3.5" core" /></p><h3>3.5" Thick - "Hot Flow" Options</h3>` becomes `3.5" Thick - "Hot Flow" Options`. Quoted comparisons such as `<img alt="a > b">` and `<img alt="a < b">` are removed with the image tag.
 
 ### Limit column output
 

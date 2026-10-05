@@ -2,7 +2,11 @@
 
 The repository validates module identity, configuration integrity, PHP behavior, and supported Magento-family platforms. Run focused checks before requesting review.
 
-> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
+> Documentation baseline: release 1.2.2 (`v1.2.2`); earlier acceptance is identified by version. Last reviewed: 2026-10-05.
+
+## 1.2.2 patch verification
+
+The #14 description correction adds 17 cases. The core suite passes 863 tests on PHPUnit 9, 10, and 12, and 47 JavaScript checks pass. The merged runtime passed all 25 [post-merge CI jobs](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/37332361658). See [Release 1.2.2](Release-1-2-2) and the dated release preparation record in the repository. Earlier store/browser results below keep their original scope.
 
 ## Unreleased editor implementation and evidence
 

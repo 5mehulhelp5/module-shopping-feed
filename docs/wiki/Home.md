@@ -1,6 +1,8 @@
 # Mage-OS Shopping Feed
 
-**Version 1.2.1** fixes required-option prices, inherited/configurable backorders, and Page Builder descriptions. Read [Release 1.2.1](Release-1-2-1) and the [optional Rocket Web migration companion guide](Rocket-Web-Migration).
+**Version 1.2.2** fixes description cleanup for malformed attribute quotes, preserving the following text. It includes the required-option pricing, backorder, and Page Builder fixes from 1.2.1. Read [Release 1.2.2](Release-1-2-2).
+
+**Migrating from Rocket Shopping Feeds?** Use the separate [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb). See the [installation and migration guide](Rocket-Web-Migration) for preview, import, output comparison, activation, and rollback.
 
 [![CI on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml?query=branch%3Amain)
 
@@ -10,7 +12,7 @@ Mage-OS Shopping Feed generates product feeds from Mage-OS and Magento Open Sour
 
 The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) covers the required schema update and changes to saved Google and comma-delimited feeds. [Release 1.0.0](Release-1-0-0) remains available as a historical record.
 
-> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
+> Documentation baseline: release 1.2.2 (`v1.2.2`); earlier acceptance is identified by version. Last reviewed: 2026-10-05.
 
 The [Admin UI Component forms](Admin-UI-Component-Forms) in 1.2.0 change the editor and its customization hooks. The release runtime `133af71` is deployed on `mageos-latest`, with form, grid-permission, preview, stock-selection, Local Inventory, frontend-scope, and currency-preservation corrections. Magento Open Source 2.4.8 and 2.4.9 retain production-mode form/output and six-role acceptance. The repository's `docs/reviews/2026-10-03-local-acceptance.md` is the current evidence record, including extended operational checks and remaining limits. Historical version 1.1 continues to use the previous editor.
 
@@ -47,8 +49,8 @@ New installation:
 Existing Rocket Web installation:
 
 1. Read [Migration and coexistence](Migration-and-Coexistence) first.
-2. Evaluate the Mage-OS module on staging with schedules and uploads disabled.
-3. Recreate and compare one feed before planning any production cutover.
+2. Follow the [optional migration companion guide](Rocket-Web-Migration) on staging with schedules and uploads disabled.
+3. Preview and explicitly import one feed, or recreate it manually. Compare actual output before planning production cutover.
 
 ## Admin locations
 

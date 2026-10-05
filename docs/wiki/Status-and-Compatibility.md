@@ -1,8 +1,10 @@
 # Status and compatibility
 
-Mage-OS Shopping Feed 1.2.1 is the current stable release. See [Release 1.2.1](Release-1-2-1) for changes and recorded acceptance. Existing Rocket Web installations are not upgraded or migrated automatically.
+Mage-OS Shopping Feed 1.2.2 is the current stable release. See [Release 1.2.2](Release-1-2-2) for changes and recorded verification. Users migrating from Rocket Shopping Feeds can install the separate [Rocket Web migration companion](Rocket-Web-Migration); installation alone does not import data.
 
-> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
+> Documentation baseline: release 1.2.2 (`v1.2.2`); earlier acceptance is identified by version. Last reviewed: 2026-10-05.
+
+Version 1.2.2 removes tags with stray attribute quotes without losing following description text. Its local unit suite passes 863 tests on Mage-OS 3.5, Magento 2.4.8, and Magento 2.4.7-p10, plus 47 JavaScript checks. The merged runtime passed all 25 post-merge CI jobs. These results do not replace existing-store or recipient acceptance.
 
 Version 1.2.1 fixes required-option pricing, inherited/configurable backorders, and Page Builder description cleanup, and adds optional Rocket Web migration discovery. Its local suite passes 846 tests on Mage-OS 3.5 and Magento 2.4.8, plus 47 JavaScript checks. The [1.2.1 release summary](Release-1-2-1) distinguishes these checks from the earlier store acceptance below.
 
@@ -68,7 +70,7 @@ A separate fresh Mage-OS 3.5.0 installation with no Nebula packages passed Compo
 
 ## Distribution status
 
-The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.2 line with `composer require 'mage-os/module-shopping-feed:^1.2'`, or use the tagged source installation described in [Installation and upgrade](Installation-and-Upgrade).
+The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.2 line with `composer require 'mage-os/module-shopping-feed:^1.2.2'`, or use the tagged source installation described in [Installation and upgrade](Installation-and-Upgrade). The optional [migration companion](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb) has its own 1.0.0 release.
 
 Do not infer release availability from the presence of source code alone. Check the repository's releases and the configured Composer repository at the point of installation.
 
