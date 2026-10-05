@@ -4,6 +4,8 @@
 
 That boundary protects stores that paid for and currently depend on the original packages. Installing this module does not claim their Composer packages, register their Magento modules, read their configuration, or alter their tables.
 
+For users moving from Rocket Shopping Feeds, the separately installed [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb) provides an explicit configuration importer. Version 1.0.0 is available on [Packagist](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb). Follow the [installation and migration guide](docs/wiki/Rocket-Web-Migration.md); installing or upgrading the main module does not run it.
+
 ## Identity map
 
 | Surface | New identity |
@@ -23,7 +25,7 @@ Event names, layout handles, UI component names, JavaScript aliases, ACL resourc
 
 ## What is not migrated
 
-There is no automatic data migration in the first release. The module does not copy:
+The main module does not automatically copy:
 
 - Feed records and their serialized configuration
 - Schedules and upload destinations
@@ -37,7 +39,7 @@ This is deliberate. An implicit migration could modify a paid installation or pr
 
 1. Back up the database and `pub/media/feeds`.
 2. Install the Mage-OS module in a staging environment.
-3. Keep its schedules and uploads disabled while recreating one feed.
+3. Keep its schedules and uploads disabled while recreating one feed manually or previewing an import with the companion.
 4. Compare the generated columns, product count, prices, availability, URLs, and identifiers with the active feed.
 5. Test any FTP or SFTP destination with a distinct remote filename.
 6. Enable scheduling only after the output is accepted.
@@ -45,9 +47,13 @@ This is deliberate. An implicit migration could modify a paid installation or pr
 
 Both module identities can be installed for evaluation because their runtime resources are isolated. They still solve the same operational problem, so running both schedules or uploads without distinct destinations can create duplicate submissions.
 
-## Future importer
+## Optional Rocket Web migration companion
 
-A migration utility, if added, should be an explicit preview-and-confirm command. It must copy into the new tables, preserve the original data, report unsupported fields, and leave generation and uploads disabled until approved. No such importer is included today.
+The [companion extension](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb) previews one legacy feed at a time and imports supported configuration into a disabled Mage-OS feed. It preserves the source records and holds schedules and encrypted upload configuration until separately reviewed activation. Imports require a current preview token and a reference to the operator's completed backup.
+
+Keep the legacy modules installed and enabled through `setup:upgrade`; disabling a module that owns declarative schema can remove its tables. Pause individual feeds and their scheduled work for cutover. Source and destination must share one Magento installation and encryption key. The initial source baseline is Rocket Web base/Google Shopping/Promotions 2.3.4 and Local Inventory 2.3.2; validate other versions and customizations on staging.
+
+Compare actual generated output before activation. Custom PHP, shared global settings, external schedulers, and recipient URLs need manual review. Automatic rollback removes only unchanged inactive imports and retains the encrypted receipt. Edited or activated feeds require a reviewed reversal. See the [migration guide](docs/wiki/Rocket-Web-Migration.md) and [companion instructions](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb#installation).
 
 ## Upgrading existing Mage-OS editor customizations
 

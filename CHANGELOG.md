@@ -2,11 +2,17 @@
 
 All notable changes to this project will be documented here.
 
-## Unreleased
+## 1.2.2 - 2026-10-05
+
+[Release 1.2.2 notes and upgrade requirements](docs/releases/1.2.2.md).
 
 ### Fixed
 
 - Remove HTML tags containing stray attribute quotes without losing the following description text. Preserve literal comparisons, quoted comparison attributes, escaped markup cleanup, and limits applied after cleaning (#14).
+
+### Documentation
+
+- Make the separately installed [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb) prominent for users migrating from Rocket Shopping Feeds. Document direct Packagist installation, replace outdated future-importer guidance, and retain explicit preview, import, activation, and rollback requirements.
 
 ## 1.2.1 - 2026-10-04
 

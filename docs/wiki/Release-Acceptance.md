@@ -2,9 +2,15 @@
 
 Release acceptance proves the extension on representative Magento runtimes and proves each generated artifact at the boundary where it is consumed.
 
-> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
+> Documentation baseline: release 1.2.2 (`v1.2.2`); earlier acceptance is identified by version. Last reviewed: 2026-10-05.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
+
+## 1.2.2 verification
+
+The local core suite passes 863 tests on Mage-OS 3.5/PHPUnit 12, Magento 2.4.8/PHPUnit 10, and Magento 2.4.7-p10/PHPUnit 9; 47 JavaScript checks pass. Seventeen new description cases include the exact #14 report. Nine fail against the earlier runtime and pass with the correction. The merged runtime passed all 25 [post-merge CI jobs](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/37332361658). See [Release 1.2.2](Release-1-2-2) and the repository's `docs/reviews/2026-10-05-release-1.2.2-preparation.md` for exact baselines and publication boundaries.
+
+Users migrating from Rocket Shopping Feeds can install the optional [Rocket Web migration companion](Rocket-Web-Migration). Existing-store migration, recipient acceptance, and explicit activation remain separate checks.
 
 ## 1.2.1 verification
 

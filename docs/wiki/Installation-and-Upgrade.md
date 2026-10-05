@@ -2,11 +2,19 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
+> Documentation baseline: release 1.2.2 (`v1.2.2`); earlier acceptance is identified by version. Last reviewed: 2026-10-05.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
 
 <a id="upgrading-from-11-to-the-120-candidate"></a>
+
+## Upgrading from 1.2.1 to 1.2.2
+
+The [1.2.2 release](Release-1-2-2) fixes description cleanup for stray attribute quotes. It adds no schema change or required dependency relative to 1.2.1.
+
+Use `composer require 'mage-os/module-shopping-feed:^1.2.2' --no-update`, then `composer update mage-os/module-shopping-feed --with-dependencies` and the store's normal Magento deployment process. On staging, regenerate descriptions containing media directives, inch marks, escaped HTML, and configured length limits. Compare the complete recipient file before resuming delivery.
+
+Users moving from Rocket Shopping Feeds should also read the [separate migration companion guide](Rocket-Web-Migration). Main-module upgrades do not import legacy records.
 
 <a id="upgrading-from-120-to-121-candidate"></a>
 
@@ -49,7 +57,7 @@ There is no old/new editor switch. Restoring the previous package and rebuilding
 The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.2 line:
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.2'
+composer require 'mage-os/module-shopping-feed:^1.2.2'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
@@ -65,7 +73,7 @@ Place or symlink the source at:
 app/code/MageOS/ShoppingFeed
 ```
 
-Use the `v1.2.1` tag for a reproducible installation, and record its resolved commit. The `v1.1.0` and `v1.0.0` tags remain available for historical installations.
+Use the `v1.2.2` tag for a reproducible installation, and record its resolved commit. Earlier tags remain available for historical installations.
 
 Then run:
 

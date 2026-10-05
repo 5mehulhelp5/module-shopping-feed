@@ -4,7 +4,9 @@
 
 `MageOS_ShoppingFeed` generates product feeds for Mage-OS and Magento Open Source.
 
-**Version 1.2.1** fixes required-option prices, inherited/configurable backorders, and Page Builder description cleaning. It adds discovery and instructions for the separately installed [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb). Read the [1.2.1 release notes](docs/releases/1.2.1.md) and [migration guide](docs/wiki/Rocket-Web-Migration.md).
+**Version 1.2.2** fixes description cleanup when catalog HTML contains stray attribute quotes, preserving the text that follows. It includes the required-option pricing, backorder, and Page Builder fixes from 1.2.1. Read the [1.2.2 release notes](docs/releases/1.2.2.md).
+
+**Migrating from Rocket Shopping Feeds?** Use the separately installed [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb). It previews existing feed configuration and imports it into disabled Mage-OS feeds for review before activation. See [installation and migration steps](docs/wiki/Rocket-Web-Migration.md).
 
 Version 1.2.0 introduced Magento UI Component forms, five catalog presets, and corrections to stock selection, configurable Local Inventory, frontend configuration scope, and existing-feed currency. Read the [1.2.0 release notes](docs/releases/1.2.0.md), [upgrade checklist](docs/wiki/Installation-and-Upgrade.md#upgrading-from-11-to-120), and [compatibility results](docs/reviews/2026-10-03-magento-247-acceptance.md). Version [1.1.0](docs/releases/1.1.0.md) remains documented for existing installations.
 
@@ -23,7 +25,7 @@ The package has its own Composer name, PHP namespace, Magento module name, datab
 
 ## Status
 
-Version [1.2.1](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.1) is the current stable release. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) before evaluating it on a store that already uses a Rocket Web shopping feed module.
+Version [1.2.2](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.2) is the current stable release. Its [verification record](docs/reviews/2026-10-05-release-1.2.2-preparation.md) separates local checks, merged-runtime CI, and publication. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) and the [migration companion guide](docs/wiki/Rocket-Web-Migration.md) before evaluating it on a store that already uses Rocket Shopping Feeds.
 
 Version 1.2.0 makes Magento UI Component forms the default for New/Edit Feed and Test Feed. It retains the existing schema and save routes, but changes the editor customization API. See the [Admin form guide](docs/wiki/Admin-UI-Component-Forms.md) and [developer migration guide](docs/ui-component-editor.md).
 
@@ -57,13 +59,30 @@ A fresh Mage-OS 3.5.0 installation with no Nebula packages also passed Composer 
 Install the stable 1.2 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.2'
+composer require 'mage-os/module-shopping-feed:^1.2.2'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
 ```
 
 For a source checkout, place or symlink the repository at `app/code/MageOS/ShoppingFeed`, then run the Magento commands above without `composer require`.
+
+## Migrating from Rocket Shopping Feeds
+
+The optional [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb) is published separately as `rocketweb/module-shopping-feed-migration-rocketweb` 1.0.0 on [Packagist](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb). Stores without legacy feeds only need the main module.
+
+On staging, keep the legacy modules installed and enabled during schema upgrades, then install both packages:
+
+```sh
+composer require 'mage-os/module-shopping-feed:^1.2.2' \
+  'rocketweb/module-shopping-feed-migration-rocketweb:^1.0' --no-update
+composer update mage-os/module-shopping-feed \
+  rocketweb/module-shopping-feed-migration-rocketweb --with-dependencies
+bin/magento module:enable MageOS_ShoppingFeed RocketWeb_ShoppingFeedMigration
+bin/magento setup:upgrade
+```
+
+Use the [migration guide](docs/wiki/Rocket-Web-Migration.md) for backups, permissions, preview/import, output comparison, activation, and rollback. Installing the packages does not migrate data. Imports start disabled, with schedules and uploads held until explicit activation. Custom PHP, shared settings, and recipient URLs need manual review.
 
 ## Use
 

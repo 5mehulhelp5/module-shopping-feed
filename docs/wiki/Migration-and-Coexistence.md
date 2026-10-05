@@ -2,7 +2,9 @@
 
 `MageOS_ShoppingFeed` is a new module. It is not a renamed release of an installed Rocket Web package, and it does not copy Rocket Web data.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release `v1.2.2`. Last reviewed: 2026-10-05.
+
+Users migrating from Rocket Shopping Feeds can install the separate [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb), available as version 1.0.0 on [Packagist](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb). Follow the [companion guide](Rocket-Web-Migration) for installation, preview, import, activation, and rollback.
 
 ## Isolated identities
 
@@ -33,14 +35,14 @@ The module does not automatically copy:
 * Generated files
 * Logs
 
-There is no bundled importer. Do not expect `setup:upgrade` to create Mage-OS feeds from an older package.
+The optional companion copies reviewed configuration into disabled Mage-OS feeds, preserving source records and holding schedules/uploads until explicit activation. Shared global settings, custom PHP, generated files, logs, and recipient URLs still need manual handling. Do not expect `setup:upgrade` to import feeds.
 
 ## Safe evaluation
 
 1. Back up the database and both modules' output directories.
 2. Install `MageOS_ShoppingFeed` on staging.
 3. Keep its schedules and uploads disabled.
-4. Recreate one feed manually under the new module.
+4. Recreate one feed manually or preview and explicitly import it with the companion.
 5. Use a distinct local and remote filename.
 6. Compare columns, row counts, prices, availability, URLs, identifiers, and skipped products.
 7. Test one upload against a non-serving destination.
