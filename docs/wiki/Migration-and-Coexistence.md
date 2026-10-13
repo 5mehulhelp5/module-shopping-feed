@@ -2,7 +2,7 @@
 
 `MageOS_ShoppingFeed` is a new module. It is not a renamed release of an installed Rocket Web package, and it does not copy Rocket Web data.
 
-> Documentation baseline: release `v1.2.2`. Last reviewed: 2026-10-05.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
 
 Users migrating from Rocket Shopping Feeds can install the separate [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb), available as version 1.0.0 on [Packagist](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb). Follow the [companion guide](Rocket-Web-Migration) for installation, preview, import, activation, and rollback.
 

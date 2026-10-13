@@ -2,15 +2,19 @@
 
 The repository validates module identity, configuration integrity, PHP behavior, and supported Magento-family platforms. Run focused checks before requesting review.
 
-> Documentation baseline: release 1.2.2 (`v1.2.2`); earlier acceptance is identified by version. Last reviewed: 2026-10-05.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+
+## 1.2.3 hardening and compatibility
+
+The CI matrix explicitly targets Mage-OS 3.5.0 alongside supported Magento Open Source profiles. The combined release candidate passes 922 unit tests and 2481 assertions locally on the Mage-OS 3.5 framework. The [hardening candidate CI](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/37792760180) passed 911 unit tests and 27 integration tests per platform, 44 JavaScript checks, and all 25 jobs. The extra tests in the release candidate cover the already-merged package-version display fix. Review [release CI on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml?query=branch%3Amain) against the exact release SHA. See [Release 1.2.3](Release-1-2-3) for source and native-theme evidence.
 
 ## 1.2.2 patch verification
 
 The #14 description correction adds 17 cases. The core suite passes 863 tests on PHPUnit 9, 10, and 12, and 47 JavaScript checks pass. The merged runtime passed all 25 [post-merge CI jobs](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/37332361658). See [Release 1.2.2](Release-1-2-2) and the dated release preparation record in the repository. Earlier store/browser results below keep their original scope.
 
-## Unreleased editor implementation and evidence
+## 1.2.0 editor implementation and historical evidence
 
-The default forms in `9f07e46` live in `view/adminhtml/ui_component/mageos_shopping_feed_form.xml` and `mageos_shopping_feed_test_form.xml`, with providers under `Ui/DataProvider/Feed` and controls under `view/adminhtml/web/js/form`. Use `ShoppingFeedFormModifierPool` for custom metadata/data and the repository's `docs/ui-component-editor.md` for the contract. Previous form files remain for transition; their passing tests do not prove the replacement form. The legacy menu and category tree still have live callers, and renderer class names remain active configuration identifiers. Audit those dependencies and validator/test references before removing files.
+The UI Component forms introduced in 1.2.0 live in `view/adminhtml/ui_component/mageos_shopping_feed_form.xml` and `mageos_shopping_feed_test_form.xml`, with providers under `Ui/DataProvider/Feed` and controls under `view/adminhtml/web/js/form`. Use `ShoppingFeedFormModifierPool` for custom metadata/data and the repository's `docs/ui-component-editor.md` for the contract. Previous form files remain for transition; their passing tests do not prove the replacement form. The legacy menu and category tree still have live callers, and renderer class names remain active configuration identifiers. Audit those dependencies and validator/test references before removing files.
 
 Candidate `133af71` passes **809 PHP unit tests** on Mage-OS 3.5.0 and Magento Open Source 2.4.8/2.4.9. Assertions total 1,879 on Magento 2.4.8 and 2,158 on the other two frameworks. Both Docker platforms pass **21 official integration tests / 53 assertions** and production compilation. The stock, frontend scope, and currency regressions were observed failing before their corrections. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records the current deployment, runtime evidence, and remaining checks.
 
@@ -60,11 +64,11 @@ The GitHub Actions workflow runs:
 * Consolidated module and wiki validation
 * Hyva and Luma storefront auto-selection checks
 * Magento Open Source compatibility checks
-* Mage-OS 3.4.0 compatibility checks
+* Mage-OS 3.5.0 compatibility checks in the 1.2.3 release
 
 The exact supported PHP constraint remains authoritative in `composer.json`. The current [Status and compatibility](Status-and-Compatibility) page translates that metadata for users.
 
-The earlier Google/custom-feed acceptance profile on Mage-OS 3.5.0 passed 413 unit tests with 955 assertions, 10 application integration tests with 26 assertions, 14 frontend tests, and 33 generation checks. See [Release 1.1.0](Release-1-1-0) for the separate earlier Nebula, no-Nebula, and storefront runs. PHPUnit 9, 10, and 12 use the same data-provider coverage; compatibility fixtures explicitly configure optional arguments and date modification. The follow-up issue review passed 433 unit tests, 19 JavaScript tests, and 42 feed/stock checks and is recorded in the [issue acceptance report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.1.0/docs/reviews/2026-09-28-github-issues.md). These local results do not add Mage-OS 3.5.0 to the CI matrix or replace recipient acceptance. Use the [CI run history](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml) for the status of the exact release commit.
+The earlier Google/custom-feed acceptance profile on Mage-OS 3.5.0 passed 413 unit tests with 955 assertions, 10 application integration tests with 26 assertions, 14 frontend tests, and 33 generation checks. See [Release 1.1.0](Release-1-1-0) for the separate earlier Nebula, no-Nebula, and storefront runs. PHPUnit 9, 10, and 12 use the same data-provider coverage; compatibility fixtures explicitly configure optional arguments and date modification. The follow-up issue review passed 433 unit tests, 19 JavaScript tests, and 42 feed/stock checks and is recorded in the [issue acceptance report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.1.0/docs/reviews/2026-09-28-github-issues.md). Those historical local results do not establish CI or recipient acceptance for the current release. Use the [CI run history](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml) for the status of the exact release commit.
 
 ## Documentation changes
 

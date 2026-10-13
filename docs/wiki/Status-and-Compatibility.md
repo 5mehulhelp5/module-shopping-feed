@@ -1,8 +1,10 @@
 # Status and compatibility
 
-Mage-OS Shopping Feed 1.2.2 is the current stable release. See [Release 1.2.2](Release-1-2-2) for changes and recorded verification. Users migrating from Rocket Shopping Feeds can install the separate [Rocket Web migration companion](Rocket-Web-Migration); installation alone does not import data.
+Mage-OS Shopping Feed 1.2.3 is the current stable release. See [Release 1.2.3](Release-1-2-3) for changes and recorded verification. Users migrating from Rocket Shopping Feeds can install the separate [Rocket Web migration companion](Rocket-Web-Migration); installation alone does not import data.
 
-> Documentation baseline: release 1.2.2 (`v1.2.2`); earlier acceptance is identified by version. Last reviewed: 2026-10-05.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+
+Version 1.2.3 includes the Mage-OS 3.5 hardening and native Hyvä/Nebula checks, plus the installed-package version display correction. The combined local candidate passes 922 unit tests and 2481 assertions. The earlier hardening commit passed 27 integration tests per platform and all 25 CI jobs. Release CI is checked separately against the merged SHA; see [Release 1.2.3](Release-1-2-3). Native Nebula UI Bridge rendering and external recipient ingestion remain unverified.
 
 Version 1.2.2 removes tags with stray attribute quotes without losing following description text. Its local unit suite passes 863 tests on Mage-OS 3.5, Magento 2.4.8, and Magento 2.4.7-p10, plus 47 JavaScript checks. The merged runtime passed all 25 post-merge CI jobs. These results do not replace existing-store or recipient acceptance.
 
@@ -35,9 +37,9 @@ The package currently declares:
 * Magento cron for scheduled queue creation and processing
 * Magento Inventory APIs for source-level Local Inventory output
 
-Mage-OS 3.4.0 is an explicit CI target. CI also installs the module into supported Magento Open Source projects, runs unit and integration tests, checks Magento coding standards, and compiles dependency injection.
+Release 1.2.3 uses Mage-OS 3.5.0 as an explicit CI target. CI also installs the module into supported Magento Open Source projects, runs unit and integration tests, checks Magento coding standards, and compiles dependency injection. See the [CI and native theme record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.3/docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) and verify the workflow's exact head SHA when evaluating a candidate.
 
-Mage-OS 3.5.0 on PHP 8.4.24 was verified locally on Magebox with Hyva, including full-store Google Shopping generation, price and stock comparisons, and configurable deep links. See [Release 1.0.0](Release-1-0-0) for the exact scope and limits. Mage-OS 3.5.0 is a local acceptance profile, not an additional CI matrix entry.
+Mage-OS 3.5.0 on PHP 8.4.24 was also verified locally on Magebox with Hyva, including full-store Google Shopping generation, price and stock comparisons, and configurable deep links. See [Release 1.0.0](Release-1-0-0) for that historical scope and its limits. The October 8 hardening candidate has separate PHP 8.4.26, Hyvä 1.5.2, and Nebula 0.9.0 acceptance evidence.
 
 Compatibility in CI is not a production acceptance result. Test the exact module commit against a representative store, catalog, inventory setup, and external destination before enabling production schedules or uploads.
 
@@ -70,7 +72,7 @@ A separate fresh Mage-OS 3.5.0 installation with no Nebula packages passed Compo
 
 ## Distribution status
 
-The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.2 line with `composer require 'mage-os/module-shopping-feed:^1.2.2'`, or use the tagged source installation described in [Installation and upgrade](Installation-and-Upgrade). The optional [migration companion](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb) has its own 1.0.0 release.
+The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.2 line with `composer require 'mage-os/module-shopping-feed:^1.2.3'`, or use the tagged source installation described in [Installation and upgrade](Installation-and-Upgrade). The optional [migration companion](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb) has its own 1.0.0 release.
 
 Do not infer release availability from the presence of source code alone. Check the repository's releases and the configured Composer repository at the point of installation.
 

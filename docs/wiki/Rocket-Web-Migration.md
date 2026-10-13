@@ -1,6 +1,6 @@
 # Rocket Web migration companion
 
-> Documentation baseline: core 1.2.2 and companion 1.0.0. Last reviewed: 2026-10-05.
+> Documentation baseline: core 1.2.3 (`v1.2.3`) and companion 1.0.0. Last reviewed: 2026-10-13.
 
 `rocketweb/module-shopping-feed-migration-rocketweb` is an optional package for stores moving existing Rocket Web feed configuration to Mage-OS Shopping Feed. Stores with no legacy feeds do not need it. See its [repository and full instructions](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb).
 
@@ -13,7 +13,7 @@ Use staging and the store's normal deployment process. Back up the database, cod
 The companion's 1.0.0 release is available on [Packagist](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb). Install it with the current core release:
 
 ```sh
-composer require 'mage-os/module-shopping-feed:^1.2.2' \
+composer require 'mage-os/module-shopping-feed:^1.2.3' \
   'rocketweb/module-shopping-feed-migration-rocketweb:^1.0' --no-update
 composer update mage-os/module-shopping-feed \
   rocketweb/module-shopping-feed-migration-rocketweb --with-dependencies

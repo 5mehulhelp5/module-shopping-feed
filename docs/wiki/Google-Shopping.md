@@ -2,7 +2,7 @@
 
 The Google Shopping template supplies a product-data column map, Google taxonomy mapping, price filters, variant handling, shipping output, and optional promotion IDs. The merchant remains responsible for mapping those fields to the real catalog and meeting Google's current requirements.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
 
 ## Before configuration
 

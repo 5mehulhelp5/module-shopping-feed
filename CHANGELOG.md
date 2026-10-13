@@ -4,9 +4,25 @@ All notable changes to this project will be documented here.
 
 ## Unreleased
 
+## 1.2.3 - 2026-10-13
+
+[Release 1.2.3 notes and upgrade requirements](docs/releases/1.2.3.md).
+
 ### Fixed
 
 - Show the installed Composer package version in Admin's **Versions installed** field instead of the database schema version. Preserve the schema-version fallback for source installations and related modules (#17).
+- Apply MSI reservations once to the selected website stock, preserve fractional quantities, and exclude disabled sources. Local Inventory rows report physical-source stock without assigning website reservations to each store.
+- Preserve native title and SKU microdata when no replacement feed is selected, and HEX-encode configurable JSON embedded in scripts.
+- Select configurable URL options after Magento finishes initializing dropdowns or swatches, including query-string deep links.
+- Checkpoint manual feeds without schedules when switching automatically to batch mode, retain every skipped product ID, and reject unknown inheritance modes with a clear error.
+- Recover from malformed Generate/View Log identities and hide Nebula actions without an ACL resource.
+- Preserve active Nebula column filters when paging or sorting; explicit filter clearing still works.
+- Persist new promotion configuration through its model, buffer promotion cache writes per generation batch, respect excluded rules, and normalize promotion titles for TSV output.
+- Initialize feed configuration when a feed type is passed to the constructor, restore configuration and timestamp saving after status/message updates, remove unfinished markup fragments, and remove a redundant empty-column check.
+
+### Compatibility
+
+- Target Mage-OS 3.5.0 explicitly in CI and retain PHPUnit 9 data-provider compatibility. The [hardening review](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) and [native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) record the tested source and acceptance limits.
 
 ## 1.2.2 - 2026-10-05
 

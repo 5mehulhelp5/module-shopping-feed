@@ -2,9 +2,15 @@
 
 Release acceptance proves the extension on representative Magento runtimes and proves each generated artifact at the boundary where it is consumed.
 
-> Documentation baseline: release 1.2.2 (`v1.2.2`); earlier acceptance is identified by version. Last reviewed: 2026-10-05.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
+
+## 1.2.3 verification
+
+The [hardening report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.3/docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) records native MSI, all eight presets, promotions, manual queue recovery, malformed Admin identities, and Luma/storefront checks. The [native-theme follow-up](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.3/docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) records Hyvä 1.5.2 and Nebula 0.9.0 listing, actions, and supported editor fallback. The combined release candidate adds the package-version display correction already on main and passes 922 local unit tests with 2481 assertions. [Release 1.2.3](Release-1-2-3) links the release record and exact-commit CI verification.
+
+The October 8 browser run uses the supported Magento backend fallback for Nebula editors, previews, and logs. Native UI Bridge rendering, strict Hyvä CSP themes, external provider ingestion, and production-catalog capacity remain separate checks. Historical scheduling, transport, volume, and rollback results below retain their original revisions.
 
 ## 1.2.2 verification
 

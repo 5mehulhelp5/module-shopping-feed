@@ -1,8 +1,6 @@
 # TikTok Catalog
 
-> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
-
-When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the tested runtime, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
 
 The **TikTok Catalog** preset produces a quoted UTF-8 CSV file for product catalogs in TikTok Ads Manager. It shares the module's generation, Test Feed, scheduling, and upload tools. An actual TikTok catalog import has not been verified.
 

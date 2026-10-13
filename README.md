@@ -4,7 +4,7 @@
 
 `MageOS_ShoppingFeed` generates product feeds for Mage-OS and Magento Open Source.
 
-**Version 1.2.2** fixes description cleanup when catalog HTML contains stray attribute quotes, preserving the text that follows. It includes the required-option pricing, backorder, and Page Builder fixes from 1.2.1. Read the [1.2.2 release notes](docs/releases/1.2.2.md).
+**Version 1.2.3** corrects website-stock reservations, physical-source Local Inventory quantities, promotion persistence and caching, and Nebula filter navigation. It also fixes Admin package-version reporting and several storefront and generation edge cases. Read the [1.2.3 release notes](docs/releases/1.2.3.md).
 
 **Migrating from Rocket Shopping Feeds?** Use the separately installed [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb). It previews existing feed configuration and imports it into disabled Mage-OS feeds for review before activation. See [installation and migration steps](docs/wiki/Rocket-Web-Migration.md).
 
@@ -25,11 +25,13 @@ The package has its own Composer name, PHP namespace, Magento module name, datab
 
 ## Status
 
-Version [1.2.2](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.2) is the current stable release. Its [verification record](docs/reviews/2026-10-05-release-1.2.2-preparation.md) separates local checks, merged-runtime CI, and publication. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) and the [migration companion guide](docs/wiki/Rocket-Web-Migration.md) before evaluating it on a store that already uses Rocket Shopping Feeds.
+Version [1.2.3](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.3) is the current stable release. Its [release preparation record](docs/reviews/2026-10-13-release-1.2.3-preparation.md) identifies the combined source and validation scope. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) and the [migration companion guide](docs/wiki/Rocket-Web-Migration.md) before evaluating it on a store that already uses Rocket Shopping Feeds.
+
+The [Mage-OS 3.5.0 hardening review](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) records inventory, all eight presets, promotions, queue recovery, and Luma/Admin checks. The [CI and native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) covers Hyvä, the Nebula grid and supported editor fallback, and the filter-preservation fix. These changes are included in 1.2.3. The combined release candidate passes 922 unit tests and 2481 assertions on the Mage-OS 3.5 framework; each dated report retains its original test scope.
 
 Version 1.2.0 makes Magento UI Component forms the default for New/Edit Feed and Test Feed. It retains the existing schema and save routes, but changes the editor customization API. See the [Admin form guide](docs/wiki/Admin-UI-Component-Forms.md) and [developer migration guide](docs/ui-component-editor.md).
 
-The 1.2.0 runtime was accepted at `133af71` on `mageos-latest`. It includes the UI Component forms, permission-filtered grid, preview repairs, feed-controlled stock selection, configurable Local Inventory corrections, store-scoped frontend settings, and preservation of existing feeds' effective currency. The [extended local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) is the current source for results and remaining checks. All eight presets passed save/reopen and unchanged-save/output comparisons in the [earlier Mage-OS deployment](docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md) and [Magento 2.4.8/2.4.9 Docker run](docs/reviews/2026-10-02-magento-docker-acceptance.md). The final PHP suite passes 809 tests on all three frameworks; both Docker versions pass 21 official integration tests and production compilation. Nebula remains disabled on `mageos-latest`.
+The 1.2.0 runtime was accepted at `133af71` on `mageos-latest`. It includes the UI Component forms, permission-filtered grid, preview repairs, feed-controlled stock selection, configurable Local Inventory corrections, store-scoped frontend settings, and preservation of existing feeds' effective currency. The [extended local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) records those historical results and remaining checks. All eight presets passed save/reopen and unchanged-save/output comparisons in the [earlier Mage-OS deployment](docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md) and [Magento 2.4.8/2.4.9 Docker run](docs/reviews/2026-10-02-magento-docker-acceptance.md). That 1.2.0 PHP suite passed 809 tests on all three frameworks; both Docker versions pass 21 official integration tests and production compilation. Nebula remains disabled on `mageos-latest`.
 
 Operational coverage includes scheduling edge cases, interrupted-worker recovery, private FTP/SFTP delivery, 26 semantic catalog scenarios, 15 native configurable MSI scenarios, pricing, store-scoped microdata, and eight 5,000-product preset generations per Magento version. Two real hourly cron cycles also pass with stable output and empty queues; the [current record](docs/reviews/2026-10-03-local-acceptance.md) records final cleanup and exact scope. External recipient and native Nebula bridge acceptance remain separate.
 
@@ -46,7 +48,7 @@ Run [ACCEPTANCE-TEST-PLAN.md](ACCEPTANCE-TEST-PLAN.md) against the exact release
 
 Magento Open Source 2.4.7-p10 passes the dedicated compatibility profile and local eight-preset Admin/output acceptance. Its upstream Flysystem dependency remains affected by a security advisory. See the [2.4.7-p10 guidance](docs/compatibility/magento-2.4.7-p10.md) and [acceptance record](docs/reviews/2026-10-03-magento-247-acceptance.md) for the tested scope, scoped CI exception, and optional tested backport. The module does not weaken a store's Composer security settings.
 
-Mage-OS 3.4.0, based on Magento Open Source 2.4.9, is an explicit CI compatibility target. Its production checks install the package into a Mage-OS 3.4.0 project, then run the unit and integration suites, Magento coding standard, and dependency-injection compilation.
+Release 1.2.3 targets Mage-OS 3.5.0, based on Magento Open Source 2.4.9, in CI. Its checks install the package into a Mage-OS 3.5.0 project, then run the unit and integration suites, Magento coding standard, and dependency-injection compilation. The [CI and native theme record](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) separates completed CI from each follow-up candidate; check the workflow's exact head SHA when evaluating a commit.
 
 Mage-OS 3.5.0 on PHP 8.4.24 was also verified locally on Magebox with Hyva: a complete 160-row storefront feed, all exported prices and stock values, and all 38 available configurable deep links passed the recorded checks. This local evidence is separate from CI and Merchant Center acceptance.
 
@@ -59,7 +61,7 @@ A fresh Mage-OS 3.5.0 installation with no Nebula packages also passed Composer 
 Install the stable 1.2 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.2.2'
+composer require 'mage-os/module-shopping-feed:^1.2.3'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
@@ -74,7 +76,7 @@ The optional [Rocket Web migration companion](https://github.com/rocketweb/modul
 On staging, keep the legacy modules installed and enabled during schema upgrades, then install both packages:
 
 ```sh
-composer require 'mage-os/module-shopping-feed:^1.2.2' \
+composer require 'mage-os/module-shopping-feed:^1.2.3' \
   'rocketweb/module-shopping-feed-migration-rocketweb:^1.0' --no-update
 composer update mage-os/module-shopping-feed \
   rocketweb/module-shopping-feed-migration-rocketweb --with-dependencies
@@ -137,7 +139,7 @@ Run the imported and modernized unit suite with the PHPUnit installation from th
 MAGENTO_ROOT=/path/to/magento /path/to/magento/vendor/bin/phpunit -c phpunit.xml.dist
 ```
 
-The unit-test bootstrap loads Magento's test framework and the module directly, so the module does not need to be installed in the validation checkout. CI also installs the package into currently supported Magento Open Source releases and explicitly into Mage-OS 3.4.0, runs the unit and integration suites, checks the Magento coding standard, and compiles dependency injection.
+The unit-test bootstrap loads Magento's test framework and the module directly, so the module does not need to be installed in the validation checkout. CI also installs the package into currently supported Magento Open Source releases and explicitly into Mage-OS 3.5.0, runs the unit and integration suites, checks the Magento coding standard, and compiles dependency injection.
 
 ## Provenance and license
 

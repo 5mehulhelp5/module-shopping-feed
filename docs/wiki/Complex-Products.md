@@ -2,7 +2,7 @@
 
 Configurable, grouped, and bundle products can produce parent rows, associated rows, or both. Decide the row model first, then configure inheritance, URLs, stock, price, and duplicate handling around it.
 
-> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
 
 ## Associated-product modes
 
@@ -14,7 +14,7 @@ Each complex product type offers these modes:
 
 The correct choice depends on the recipient and the catalog. Test row counts and identifiers before applying one model to every product type.
 
-**Unreleased stock correction:** feed collections now apply the feed stock settings independently of the storefront setting that hides out-of-stock products. This includes simple, configurable, grouped, and bundle collections. All three complex-product modes and explicit stock inclusion/exclusion pass on Magento Open Source 2.4.8 and 2.4.9; see the repository's `docs/reviews/2026-10-03-local-acceptance.md`. Recipient validation still applies: a mode that adds a non-purchasable parent can produce rejected rows even when its children are valid.
+**Feed stock selection in 1.2.0:** feed collections now apply the feed stock settings independently of the storefront setting that hides out-of-stock products. This includes simple, configurable, grouped, and bundle collections. All three complex-product modes and explicit stock inclusion/exclusion pass on Magento Open Source 2.4.8 and 2.4.9; see the repository's `docs/reviews/2026-10-03-local-acceptance.md`. Recipient validation still applies: a mode that adds a non-purchasable parent can produce rejected rows even when its children are valid.
 
 ## Configurable products
 

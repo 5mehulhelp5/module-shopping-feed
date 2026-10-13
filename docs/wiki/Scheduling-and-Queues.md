@@ -2,7 +2,7 @@
 
 Schedules decide when work enters the queue. A separate worker consumes queued work and generates feed files.
 
-> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
 
 ## Enable module cron processing
 
@@ -30,6 +30,8 @@ New feeds can start with a default daily schedule. Remove all schedule rows and 
 Version 1.2.0 also passes controlled scheduler and interrupted-batch checks on Magento Open Source 2.4.8 and 2.4.9. Due/future/disabled feeds, same-day edits, duplicate prevention, the cron switch, restart after a killed worker, and competing writers were verified. The repository's `docs/reviews/2026-10-02-docker-operations-acceptance.md` records the exact scope. Two real hourly schedule cycles also pass on each version, producing identical per-platform files and clearing their queues. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records the timestamps, complete observation window, and cleanup.
 
 Allow enough time between schedules for the earlier generation and any uploads to finish. The first schedule row's batch settings are also used by **Run Now**.
+
+Version 1.2.3 also checkpoints and resumes manual feeds with no saved schedules when generation switches automatically to batch mode. Removing the final schedule no longer prevents queue state from being saved. The [hardening verification](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.3/docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) records the native zero-schedule recovery check.
 
 ## Queue behavior
 

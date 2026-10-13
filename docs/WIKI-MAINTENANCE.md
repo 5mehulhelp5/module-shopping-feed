@@ -63,7 +63,11 @@ Review the wiki for every release that changes:
 
 At minimum, recheck Google-owned links and terminology at release time. Keep Merchant Center navigation brief because its interface changes independently of this module.
 
-## 1.2.0 documentation baseline
+## 1.2.3 documentation baseline
+
+The current pages name `v1.2.3` as their baseline. Release notes and upgrade requirements are in `docs/releases/1.2.3.md` and `Release-1-2-3`; historical release pages retain their versions. Native inventory, promotion, manual batching, Hyvä, and Nebula grid/fallback results are in the October 8 reports. The October 13 release preparation record combines those changes with the package-version display fix from main. Publish this source set only after the release is available, and verify its separate wiki commit and rendered pages.
+
+## 1.2.0 historical documentation baseline
 
 Release 1.2.0 includes the UI Component editor and five catalog presets. Release notes live at `docs/releases/1.2.0.md`; the historical preparation record and publication checklist live at `docs/reviews/2026-10-03-release-1.2.0-preparation.md`. The original `9f07e46` browser failures are repaired; the accepted local runtime is `133af71`. Current evidence starts with `docs/reviews/2026-10-03-local-acceptance.md`, followed by the dated form, permission, preview, and operational reports it links. Keep released 1.1 instructions identifiable. Preserve historical results and add a prominent link when later evidence changes their disposition.
 

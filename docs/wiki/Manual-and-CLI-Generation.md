@@ -2,7 +2,7 @@
 
 Use manual generation while building or diagnosing a feed. The Admin queue action and the direct CLI command have different execution behavior.
 
-> Documentation baseline: release `v1.1.0`. Last reviewed: 2026-09-28.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
 
 ## Admin actions
 
