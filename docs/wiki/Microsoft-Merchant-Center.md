@@ -1,6 +1,6 @@
 # Microsoft Merchant Center
 
-> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
 
 When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the tested runtime, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
 

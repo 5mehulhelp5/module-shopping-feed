@@ -8,7 +8,7 @@ Version 1.2.2 fixes [#14](https://github.com/mage-os-lab/module-shopping-feed/is
 
 Install the separate [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb), published as `rocketweb/module-shopping-feed-migration-rocketweb` 1.0.0 on [Packagist](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb). Follow the [installation and migration guide](Rocket-Web-Migration).
 
-The companion previews and explicitly imports reviewed configuration into disabled Mage-OS feeds. Schedules and uploads remain held until separately reviewed activation. Keep legacy modules enabled through schema upgrades, compare actual output, and review custom PHP, shared settings, and recipient URLs. Installing or upgrading the main module does not run a migration.
+The companion previews and explicitly imports reviewed configuration into disabled Mage-OS feeds. Schedules and uploads remain held until separately reviewed activation.
 
 ## Upgrade and validation
 

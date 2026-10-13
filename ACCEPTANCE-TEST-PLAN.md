@@ -4,9 +4,9 @@
 
 Use this plan to decide whether a `MageOS_ShoppingFeed` release candidate is ready for production. Run it against the exact candidate commit on representative store copies before enabling live schedules or uploads.
 
-The [current local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) covers candidate `133af71` on Magento Open Source 2.4.8/2.4.9 and `mageos-latest`, including completed local checks and the remaining external/target-store boundaries. The original `9f07e46` category-generation and promotion-date defects are repaired; the record links the failing and passing evidence. Local operational tests supplement the form checks. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
+The [1.2.3 release notes](docs/releases/1.2.3.md), [Mage-OS 3.5 hardening record](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md), and [native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) identify the current patch scope. The [October 3 local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) retains its `133af71` browser/operational scope. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
 
-The minimum platform acceptance target is Mage-OS 3.4.0. Add another currently supported Magento Open Source store when available. A store with Multi-Source Inventory is required for Local Inventory acceptance.
+The minimum platform acceptance target is Mage-OS 3.5.0. Add another currently supported Magento Open Source store when available. A store with Multi-Source Inventory is required for Local Inventory acceptance.
 
 ## Release record
 
@@ -37,7 +37,7 @@ Keep command output, screenshots, generated files, checksums, remote delivery ev
 
 | Profile | Required purpose | Assigned store |
 | --- | --- | --- |
-| A | Mage-OS 3.4.0, PHP 8.4, clean module install | |
+| A | Mage-OS 3.5.0, PHP 8.4, clean module install | |
 | B | Currently supported Magento Open Source release | |
 | C | MSI store with at least two enabled sources linked to one stock | |
 | D | Store with an original Rocket Web feed package installed, if coexistence is part of release acceptance | |
@@ -376,7 +376,7 @@ No open High or Medium defect may be accepted for the first production release w
 ## Final release gates
 
 - [ ] The exact candidate passes all automated checks and required GitHub jobs.
-- [ ] Mage-OS 3.4.0 installation, compilation, and full functional acceptance pass.
+- [ ] Mage-OS 3.5.0 installation, compilation, and full functional acceptance pass.
 - [ ] Generic, Google Shopping, Local Inventory, and Promotions outputs pass where configured.
 - [ ] Local Inventory parent and associated quantities pass on real MSI data.
 - [ ] Same-day schedule edits and duplicate prevention pass in the store timezone.

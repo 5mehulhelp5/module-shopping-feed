@@ -6,6 +6,8 @@ Baseline: release 1.2.0 (`v1.2.0`), with runtime acceptance at `133af71`. Review
 
 The default New/Edit Feed screen and Test Feed screen use Magento UI Component forms. The editor keeps the existing routes, feed types, configuration keys, database schema, generators, and save permissions. General settings, mappings, categories, filters, product options, product relationships, shipping, schedules, uploads, and Google promotions have corresponding form sections, with the existing type-specific differences. See the [operating guide](wiki/Admin-UI-Component-Forms.md) for controls and current limitations.
 
+Version [1.2.3](releases/1.2.3.md) retains this editor contract and includes subsequent inventory, promotion persistence, state-saving, and Nebula filter corrections. The [native-theme acceptance](reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) covers the Nebula 0.9.0 listing, permissions, and supported Magento backend editor fallback. Native Nebula UI Bridge rendering remains unverified.
+
 ## Platform and customization compatibility
 
 The [Magento 2.4.7-p10 profile](compatibility/magento-2.4.7-p10.md) uses the same UI Component forms on PHP 8.3. Its [acceptance record](reviews/2026-10-03-magento-247-acceptance.md) is separate from the broader 2.4.8/2.4.9 operational runs. Its upstream Flysystem advisory requires a platform mitigation decision; no editor downgrade or module dependency change is required.
@@ -69,6 +71,8 @@ The grid uses `Ui/Component/Listing/MassAction`, which filters each action's `co
 This is one shared Magento form implementation and has no required Nebula dependency. It removes the default editor's reliance on the old PHP form renderer, Prototype-era row widgets, global editor scripts, and the custom PHP dependency element. Future theme support can use the same form metadata and persistence contract.
 
 The existing `FeedEditorTheme` fallback and menu cache handling remain. The inspected Nebula 0.9.0 installation does not include UI Bridge, and translating the custom parameter/category controls through a bridge has not been accepted. Nebula installations therefore continue using Magento/backend for the editor, preview, and log routes. The separate Nebula grid integration is unchanged. The scope review counted approximately 575 integration lines, roughly 495 of them for the grid. These counts include comments and whitespace. The migration removes the active editor's need for legacy dependency/rendering workarounds; it does not delete most of that integration. Retiring the remaining editor fallback requires separate native Nebula acceptance. See the [original scope and counts](plans/2026-10-01-ui-component-editor-scope.md#reduction-in-nebula-specific-customization).
+
+The [October 8 native theme acceptance](reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) rechecks the Nebula 0.9.0 grid and this supported fallback on Mage-OS 3.5.0. It covers create/save/reopen, literal mapper parameters, the twelve Google sections, preview, logs, native bulk actions, queued generation, and a read-only role. Native UI Bridge form rendering remains unverified.
 
 Existing users with custom observers, tab plugins, or parameter renderers should migrate those editor integrations before upgrading. This is an extension customization API change, independent of Magento platform compatibility.
 

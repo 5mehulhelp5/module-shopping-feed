@@ -2,9 +2,9 @@
 
 Categories Map filters the catalog and maps Magento categories to marketplace taxonomy or product-type values.
 
-> Documentation baseline: release 1.2.1 (`v1.2.1`); earlier acceptance is identified by version. Last reviewed: 2026-10-04.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
 
-**Unreleased editor repair:** `9f07e46` omitted IDs needed during category generation. The repair includes those IDs on save and recovers missing IDs from existing map keys before sorting. New-mapping preview and full generation pass in disposable Mage-OS, both Magento Docker versions, and the updated `mageos-latest` deployment. Zero priority persists; invalid priority values produce a recoverable validation error. See [Admin UI Component forms](Admin-UI-Component-Forms).
+**Category persistence in 1.2.0:** `9f07e46` omitted IDs needed during category generation. The repair includes those IDs on save and recovers missing IDs from existing map keys before sorting. New-mapping preview and full generation pass in disposable Mage-OS, both Magento Docker versions, and the updated `mageos-latest` deployment. Zero priority persists; invalid priority values produce a recoverable validation error. See [Admin UI Component forms](Admin-UI-Component-Forms).
 
 ## Feed Localization
 

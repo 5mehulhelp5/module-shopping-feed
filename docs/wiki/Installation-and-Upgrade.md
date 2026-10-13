@@ -2,11 +2,19 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: release 1.2.2 (`v1.2.2`); earlier acceptance is identified by version. Last reviewed: 2026-10-05.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
 
 <a id="upgrading-from-11-to-the-120-candidate"></a>
+
+## Upgrading from 1.2.2 to 1.2.3
+
+The [1.2.3 release](Release-1-2-3) changes reservation-aware aggregate quantities and physical-source Local Inventory output, repairs promotion settings/cache writes and queue checkpoints, and preserves Nebula column filters through paging and sorting. It adds no schema change or required Composer dependency.
+
+Back up code, database, Composer lock file, and accepted feed files. On staging, run `composer require 'mage-os/module-shopping-feed:^1.2.3' --no-update`, then `composer update mage-os/module-shopping-feed --with-dependencies` and the store's normal Magento deployment process. Regenerate representative aggregate and Local Inventory feeds across linked stocks/sources and reservations. Compare promotion settings, product IDs, TSV rows, manual batching, and storefront microdata before resuming schedules or uploads.
+
+Composer installations display their package version in Admin. Source installations can still show the schema version as a fallback. The 1.2.0 editor customization requirements below continue to apply.
 
 ## Upgrading from 1.2.1 to 1.2.2
 
@@ -57,7 +65,7 @@ There is no old/new editor switch. Restoring the previous package and rebuilding
 The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.2 line:
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.2.2'
+composer require 'mage-os/module-shopping-feed:^1.2.3'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
@@ -73,7 +81,7 @@ Place or symlink the source at:
 app/code/MageOS/ShoppingFeed
 ```
 
-Use the `v1.2.2` tag for a reproducible installation, and record its resolved commit. Earlier tags remain available for historical installations.
+Use the `v1.2.3` tag for a reproducible installation, and record its resolved commit. Earlier tags remain available for historical installations.
 
 Then run:
 
