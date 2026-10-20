@@ -2,14 +2,14 @@
 
 Use manual generation while building or diagnosing a feed. The Admin queue action and the direct CLI command have different execution behavior.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 ## Admin actions
 
 Go to **Catalog > Mage-OS Shopping Feed > Feeds Management**.
 
 * **Run Now** adds an unread item to the generation queue and changes the feed status to **Pending**. A queue worker must process it.
-* **Test Feed** renders one product for inspection. It does not replace the normal feed file.
+* **Test Feed** requires **Generate Feed** permission in 1.2.4 and renders one product for inspection. It does not replace the normal feed file.
 * **View Log** opens the feed-specific log.
 
 If the feed already has unread queued work, **Run Now** does not add a duplicate queue item.

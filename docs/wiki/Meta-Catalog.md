@@ -1,8 +1,8 @@
 # Meta Catalog
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
-When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the tested runtime, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
+When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The guide separates historical 1.2.0 browser checks from 1.2.4 Mage-OS 3.6 verification and records the remaining limits. Template generation checks do not establish provider ingestion acceptance.
 
 The **Meta Catalog (Facebook and Instagram)** template produces a quoted UTF-8 TSV file for a product catalog in Meta Commerce Manager. It uses the existing generation queue, Test Feed, scheduling, and upload tools. A local Mage-OS 3.5.0 demo passed generated-file, Admin preview, inventory, and storefront variant checks on 2026-09-29. Commerce Manager acceptance has not been verified for this template yet.
 
@@ -47,6 +47,8 @@ Google-only fields such as `identifier_exists`, `availability_date`, and `promot
 Generation and Test Feed reject rows with missing or repeated required values in `id`, `title`, `description`, `availability`, `condition`, `price`, `link`, `image_link`, or `brand`. Condition and availability must use the supported values. Prices must be positive amounts with two decimal places and an uppercase currency suffix; product and primary-image links must be absolute HTTP or HTTPS URLs.
 
 The generator logs each rejection and increments the skipped count. It warns when GTIN and MPN are both empty. This warning leaves the row in the output because Meta lists these identifiers as optional. Brand is required. Sale prices equal to or greater than the regular price are omitted along with their effective dates.
+
+The built-in row validator does not check title or description length. Preset output limits are not applied automatically in 1.2.4; add explicit [Limit column output](Filters-and-Transformations#limit-column-output) rows based on the current recipient requirements. Unlike the other catalog validators, Meta can export overlong text without a local rejection.
 
 The built-in row validator does not verify real ISO currency membership, image dimensions or fetchability, GTIN validity, every category-specific field, account eligibility, policy compliance, or landing-page parity. The demo acceptance run separately checked USD, image dimensions, local HTTP responses, and landing-page prices for its fixtures. Review your generated file and Commerce Manager diagnostics before enabling a production schedule.
 

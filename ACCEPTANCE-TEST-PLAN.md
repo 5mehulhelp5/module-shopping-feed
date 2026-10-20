@@ -87,11 +87,15 @@ For MSI, record the expected source code, Google store code, physical quantity, 
 - [ ] Confirm the repository contains no conflicting license identifier.
 - [ ] Run `composer validate --strict --no-check-publish`.
 - [ ] Run `php dev/tests/validate.php`.
+- [ ] Run `php dev/tests/validate-wiki.php` and verify the release page, navigation, links, and documentation baselines.
+- [ ] Run `node --test dev/tests/frontend/*.test.cjs dev/tests/ci/*.test.cjs` and the actual-framework form checks for the intended runtime.
 - [ ] Run PHP syntax checks for every PHP and PHTML file.
 - [ ] Run `php dev/tests/validate-magento-xml.php <magento-root>`.
 - [ ] Run the unit suite with the candidate checkout and the target platform's PHPUnit installation.
 - [ ] Confirm the PHPUnit 12 run reports no PHPUnit notices.
 - [ ] Run Magento coding-standard checks used by CI.
+- [ ] Run `vendor/bin/phpcs` without errors or warnings and `vendor/bin/phpstan analyse --memory-limit=-1` at level 8. Compare the baseline with the PR base using `php dev/tests/check-phpstan-baseline.php --git-ref=<base-sha> phpstan-baseline.neon`; do not absorb new findings into it.
+- [ ] Audit the locked platform, extension, and development-tool dependencies using the policies in `.github/workflows/check-extension.yaml`. Keep the known legacy Flysystem finding visible only in its documented compatibility profiles; additional or hidden advisories fail acceptance.
 - [ ] Run the module integration suite used by CI.
 - [ ] Run `bin/magento setup:di:compile` in production mode.
 - [ ] Confirm every required GitHub check is green for the exact candidate commit.
@@ -106,6 +110,7 @@ Run on Profile A first.
 - [ ] Install the candidate through the same Composer or source path intended for release testing.
 - [ ] Run `bin/magento module:enable MageOS_ShoppingFeed`.
 - [ ] Run `bin/magento setup:upgrade`.
+- [ ] When upgrading to 1.2.4, confirm the nullable SFTP fingerprint column is added and existing destinations remain present. Missing fingerprints must prevent SFTP authentication until trusted keys are configured.
 - [ ] Run `bin/magento cache:clean`.
 - [ ] In production mode, deploy static content for the store locales.
 - [ ] Confirm `bin/magento module:status MageOS_ShoppingFeed` reports enabled.
@@ -150,6 +155,7 @@ Acceptance: the modules can be evaluated together without migration, overwrite, 
 - [ ] Try an output path outside `pub/media/mageos-shopping-feed`. Confirm it is rejected or safely contained.
 - [ ] Create a restricted Admin role with view access only. Confirm mutation routes and controls are unavailable.
 - [ ] Test save-only, generate-only, and delete-only roles separately. Verify the rendered row/bulk menus, new-feed button, permitted page access, and HTTP 403 for forbidden routes; confirm an empty Actions menu is omitted.
+- [ ] Test Feed requires `MageOS_ShoppingFeed::generate` in 1.2.4. Confirm denial for grid-only/save-only roles and hidden current/legacy editor preview buttons. The standard and Nebula grids can still show the link to a read-only user; record that visibility separately from controller authorization.
 - [ ] Use a role without module access. Confirm direct Admin URLs are denied.
 - [ ] Confirm state-changing requests enforce the Admin form key.
 - [ ] Verify custom data-provider modifiers and parameter editors, including unknown stored values and failure recovery. Preserve passwords in storage while excluding decrypted or newly typed values from recovered browser data.
@@ -259,6 +265,7 @@ Acceptance: source rows, store codes, quantities, availability, and parent or ch
 - [ ] Use **Submit as new promotion** and confirm the intended ID changes exactly once.
 - [ ] Confirm special-character and duplicate-word validation works in Admin.
 - [ ] Confirm store, product, coupon, date, and redemption restrictions match the source rule.
+- [ ] Test promotion date output when the store timezone is absent; 1.2.4 must use UTC rather than fail during generation.
 - [ ] Upload to a non-serving Promotions data source and record diagnostics.
 
 Acceptance: the promotion file and product promotion IDs agree, saved settings persist, and no inactive or ineligible rule is exported.
@@ -272,7 +279,7 @@ Acceptance: the promotion file and product promotion IDs agree, saved settings p
 - [ ] Run the schedule command again. Confirm the edited schedule is eligible today and creates exactly one new queue entry.
 - [ ] Run the schedule command again without another edit. Confirm it does not create a duplicate queue entry.
 - [ ] Confirm a future schedule is not queued early.
-- [ ] Confirm a disabled feed or disabled global cron setting is not queued.
+- [ ] Confirm Magento cron skips disabled feeds and stops both module jobs when **Cron Enabled** is No. Test direct CLI commands separately: they use detached mode and still operate when module cron is disabled.
 - [ ] Run `bin/magento mage-os:shopping-feed:generate` and confirm it processes the queue successfully.
 - [ ] Enable batch mode with a small limit. Confirm offsets advance, the final file contains every expected row once, and completion status is correct.
 - [ ] Interrupt a batch between chunks. Restart processing and confirm it resumes or restarts safely without a truncated accepted file.
@@ -286,6 +293,10 @@ Acceptance: timezone handling, same-day edits, de-duplication, batch completion,
 Use isolated remote directories and filenames.
 
 - [ ] Configure two upload rows with different credentials or destinations. Save and reload them.
+- [ ] Obtain each SFTP server's SHA256 host-key fingerprint through a trusted channel. Save it in **SFTP Host Key Fingerprint** and confirm it survives reopen, unchanged save, and cloning.
+- [ ] With a disposable SFTP fixture, test absent, malformed, and mismatched fingerprints. Confirm every case fails before a username or password is sent and makes no remote write; a confirmed matching key must permit delivery.
+- [ ] Verify loaded/saved upload model data and database rows contain ciphertext, unchanged password masks retain it, and provider HTML/JSON exclude plaintext. A successful clone must preserve ciphertext and fingerprint; a forced clone-copy failure must roll back the new feed and child records.
+- [ ] Confirm **FTP (unencrypted)** requires explicit selection and unknown upload modes fail without creating an FTP connection. Confirm connections close after success and failure.
 - [ ] Confirm each row uses only its own credentials and remote path.
 - [ ] Upload an uncompressed feed over FTP if FTP support is part of the release environment.
 - [ ] Upload an uncompressed feed over SFTP.
@@ -311,6 +322,7 @@ Acceptance: every enabled transport delivers the exact accepted payload, setting
 - [ ] Confirm no direct `gtag` call occurs when the feature is disabled. The local custom event remains available to consent and tag-manager integrations.
 - [ ] Confirm an empty destination omits `send_to` and lets the existing tag integration route the event; verify an explicit destination is isolated to its configured store view.
 - [ ] Check the browser console, CSP report, page source, and structured-data validator for errors.
+- [ ] Test Luma configurable and custom-option selection under the store's enforced CSP with the 1.2.4 secure-renderer templates. Record strict Hyvä CSP results separately; do not infer them from Luma or helper registration.
 - [ ] Confirm full-page cache and Varnish do not leak one store view's currency, price, or feature state into another.
 
 Acceptance: frontend output is store-scoped, valid, cache-safe, and absent when disabled.
@@ -326,6 +338,7 @@ Run with a catalog and configuration representative of the intended first produc
 - [ ] Confirm memory remains below the configured limit with operational headroom.
 - [ ] Confirm database connections, temporary storage, and disk space return to normal after completion.
 - [ ] Confirm logs do not grow without rotation and do not contain repeated unexplained warnings.
+- [ ] Rotate a pre-existing log larger than the configured threshold. Compare its decompressed gzip archive with the complete original by byte count and SHA256 before accepting truncation. Simulate archive creation/write/verification failure and confirm the original remains intact.
 - [ ] Confirm generation does not materially degrade storefront response time, indexing, checkout, or other cron groups.
 - [ ] Repeat an unchanged generation and confirm stable row count and stable identifiers.
 
@@ -376,7 +389,7 @@ No open High or Medium defect may be accepted for the first production release w
 ## Final release gates
 
 - [ ] The exact candidate passes all automated checks and required GitHub jobs.
-- [ ] Mage-OS 3.5.0 installation, compilation, and full functional acceptance pass.
+- [ ] Mage-OS 3.6.0 installation, compilation, and full functional acceptance pass. Record Mage-OS 3.5.0 CI coverage separately from any store acceptance repeated on that version.
 - [ ] Generic, Google Shopping, Local Inventory, and Promotions outputs pass where configured.
 - [ ] Local Inventory parent and associated quantities pass on real MSI data.
 - [ ] Same-day schedule edits and duplicate prevention pass in the store timezone.

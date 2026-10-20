@@ -12,7 +12,7 @@ Version 1.2.2 removes tags with stray attribute quotes without losing following 
 
 Version 1.2.1 fixes required-option pricing, inherited/configurable backorders, and Page Builder description cleanup, and adds optional Rocket Web migration discovery. Its local suite passes 846 tests on Mage-OS 3.5 and Magento 2.4.8, plus 47 JavaScript checks. The [1.2.1 release summary](Release-1-2-1) distinguishes these checks from the earlier store acceptance below.
 
-The [UI Component editor](Admin-UI-Component-Forms) in 1.2.0 keeps the Composer requirements. The 1.2.0 runtime `133af71` is deployed on `mageos-latest` and matches both Magento Open Source 2.4.8/2.4.9 Docker installations. The 1.2.0 suite passes 809 unit tests on each framework and 21 official integration tests per Docker version, plus production compilation. Earlier eight-preset browser/output and six-role permission checks cover the unchanged controls; the final currency provider also passes an unchanged browser save/output comparison. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records current product, MSI, pricing, operations, frontend, and cleanup evidence. Native Nebula bridge rendering and external recipients remain separate acceptance targets.
+The [UI Component editor](Admin-UI-Component-Forms) in 1.2.0 keeps the Composer requirements. The historical 1.2.0 runtime `133af71` was verified on `mageos-latest` and both Magento Open Source 2.4.8/2.4.9 Docker installations. The 1.2.0 suite passes 809 unit tests on each framework and 21 official integration tests per Docker version, plus production compilation. Earlier eight-preset browser/output and six-role permission checks cover the unchanged controls; the final currency provider also passes an unchanged browser save/output comparison. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records that historical product, MSI, pricing, operations, frontend, and cleanup evidence. Native Nebula bridge rendering and external recipients remain separate acceptance targets.
 
 For the 1.2.0 scope and upgrade requirements, see [Release 1.2.0](Release-1-2-0). Platform requirements remain unchanged; custom editor integrations and explicit constructor overrides require review.
 
@@ -38,18 +38,19 @@ The package currently declares:
 * A PHP version supported by the selected Mage-OS or Magento Open Source release
 * Magento cron for scheduled queue creation and processing
 * Magento Inventory APIs for source-level Local Inventory output
+* `phpseclib/phpseclib:^3.0` for the module-scoped SFTP transport
 
-Release 1.2.4 uses Mage-OS 3.5.0 and 3.6.0 as explicit CI targets. CI also installs the module into supported Magento Open Source projects, runs unit and integration tests, checks Magento coding standards, and compiles dependency injection. See the [CI and native theme record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.3/docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) and verify the workflow's exact head SHA when evaluating a candidate.
+Release 1.2.4 passed all 37 [post-merge CI jobs](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/39372608509) at `75dd335f930aef78ae693f62c3039e469c2d26f6`. The platform profiles cover Mage-OS 3.5.0/3.6.0 and Magento Open Source 2.4.7-p10, 2.4.8-p5, and 2.4.9. Checks include installation, unit and integration tests, DI compilation, coding standards, PHPStan level 8 with baseline-growth enforcement, and locked dependency audits. The declared Magento 2.4.6-p15 floor has dependency/syntax checks, not installed-store acceptance; the PHP 8.1 development graph resolves the exact legacy 2.4.7-p10/Flysystem set described below.
 
 Mage-OS 3.5.0 on PHP 8.4.24 was also verified locally on Magebox with Hyva, including full-store Google Shopping generation, price and stock comparisons, and configurable deep links. See [Release 1.0.0](Release-1-0-0) for that historical scope and its limits. The October 8 hardening candidate has separate PHP 8.4.26, Hyvä 1.5.2, and Nebula 0.9.0 acceptance evidence.
 
 Compatibility in CI is not a production acceptance result. Test the exact module commit against a representative store, catalog, inventory setup, and external destination before enabling production schedules or uploads.
 
-Magento Open Source 2.4.7-p10 uses a dedicated PHP 8.3 CI profile with a single visible upstream Flysystem advisory exception. Local acceptance passes 809 unit tests, 21 native integration tests, production compilation, all eight preset save/output comparisons, and six Admin role profiles. No runtime correction was needed. Other platform jobs retain their normal security policy. The repository's [2.4.7-p10 guidance](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.0/docs/compatibility/magento-2.4.7-p10.md) covers the scope and optional tested backport; its [acceptance record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.0/docs/reviews/2026-10-03-magento-247-acceptance.md) distinguishes compatibility from platform security approval. Extended catalog, transfer, and recurring-cron checks on 2.4.8/2.4.9 were not repeated on this profile.
+Magento Open Source 2.4.7-p10 uses a dedicated PHP 8.3 CI profile with a single visible upstream Flysystem advisory exception. Local acceptance passes 809 unit tests, 21 native integration tests, production compilation, all eight preset save/output comparisons, and six Admin role profiles. No runtime correction was needed. Other platform jobs retain their normal security policy. The repository's [2.4.7-p10 guidance](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.4/docs/compatibility/magento-2.4.7-p10.md) covers the scope and optional tested backport; its [acceptance record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.0/docs/reviews/2026-10-03-magento-247-acceptance.md) distinguishes compatibility from platform security approval. Extended catalog, transfer, and recurring-cron checks on 2.4.8/2.4.9 were not repeated on this profile.
 
 ## Admin theme compatibility
 
-Released version 1.1.0 retains Magento's standard Admin grid and provides an optional native grid for Nebula Admin. Nebula installations use its native filtering, sorting, selection, and pagination controls. Feed editing, product previews, and logs open in Magento's standard Admin layout, with the existing configuration tabs and widgets. Back and Save return to the Nebula list. This is a native grid integration with the standard editor, not a replacement editor built with Nebula forms.
+The module retains Magento's standard Admin grid and provides an optional native grid for Nebula Admin. This integration was introduced before the 1.2.0 UI Component editor. Nebula installations use its native filtering, sorting, selection, and pagination controls. Feed editing, product previews, and logs open in Magento's standard Admin layout, with the existing configuration tabs and widgets. Back and Save return to the Nebula list. This is a native grid integration with the standard editor, not a replacement editor built with Nebula forms.
 
 The integration activates automatically when the Nebula modules and theme are active. It adds no required Nebula package and does not change unrelated Admin screens. Mass actions retain the module's existing POST, form-key, and ACL checks. The grid excludes feed configuration and upload credentials.
 
@@ -62,19 +63,19 @@ A separate fresh Mage-OS 3.5.0 installation with no Nebula packages passed Compo
 | Capability | Status |
 | --- | --- |
 | Meta, Microsoft, TikTok, Pinterest | New in the 1.2.0; external ingestion unverified |
-| OpenAI Google-compatible | New in the 1.2.0, beta; onboarding confirmation required |
+| OpenAI Google-compatible | Historical beta; differs from the current public OpenAI format. See [format gaps](OpenAI-ChatGPT) and obtain explicit sample acceptance |
 | Generic feeds | Included |
 | Google Shopping | Included |
 | Google Local Inventory | Included |
 | Multi-Source Inventory | Optional, required for source-level rows |
 | Google Promotions | Included as part of a Google Shopping feed |
-| FTP and SFTP upload | Included |
+| FTP and SFTP upload | FTP is unencrypted; SFTP requires a trusted SHA256 host-key fingerprint in 1.2.4 |
 | Gzip upload | Included |
 | Rocket Web migration companion | Optional, separately installed; preview and explicit import/activation |
 
 ## Distribution status
 
-The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.2 line with `composer require 'mage-os/module-shopping-feed:^1.2.4'`, or use the tagged source installation described in [Installation and upgrade](Installation-and-Upgrade). The optional [migration companion](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb) has its own 1.0.0 release.
+Version 1.2.4 is available on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed), with source and dist references matching the published commit above. Install the stable 1.2 line with `composer require 'mage-os/module-shopping-feed:^1.2.4'`, or use the tagged source installation described in [Installation and upgrade](Installation-and-Upgrade). The optional [migration companion](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb) has its own 1.0.0 release.
 
 Do not infer release availability from the presence of source code alone. Check the repository's releases and the configured Composer repository at the point of installation.
 

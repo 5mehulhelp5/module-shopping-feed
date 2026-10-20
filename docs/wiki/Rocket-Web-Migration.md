@@ -1,6 +1,6 @@
 # Rocket Web migration companion
 
-> Documentation baseline: core 1.2.3 (`v1.2.3`) and companion 1.0.0. Last reviewed: 2026-10-13.
+> Documentation baseline: core 1.2.4 (`v1.2.4`) and companion 1.0.0. Last reviewed: 2026-10-20.
 
 `rocketweb/module-shopping-feed-migration-rocketweb` is an optional package for stores moving existing Rocket Web feed configuration to Mage-OS Shopping Feed. Stores with no legacy feeds do not need it. See its [repository and full instructions](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb).
 
@@ -13,7 +13,7 @@ Use staging and the store's normal deployment process. Back up the database, cod
 The companion's 1.0.0 release is available on [Packagist](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb). Install it with the current core release:
 
 ```sh
-composer require 'mage-os/module-shopping-feed:^1.2.3' \
+composer require 'mage-os/module-shopping-feed:^1.2.4' \
   'rocketweb/module-shopping-feed-migration-rocketweb:^1.0' --no-update
 composer update mage-os/module-shopping-feed \
   rocketweb/module-shopping-feed-migration-rocketweb --with-dependencies
@@ -28,6 +28,8 @@ Complete DI/static/cache deployment as required by the store. Grant **Migrate Ro
 The initial supported source baseline is base/Google Shopping/Promotions 2.3.4 and Local Inventory 2.3.2. Source and destination must share one installation and encryption key. Retained tables alone cannot recover inherited defaults without the original module code and definitions.
 
 Preview each feed, review diagnostics, and explicitly apply the import with its current token and backup reference. The replacement stays disabled, with schedules and uploads held. Generate test output and compare row counts, prices, stock, variants, identifiers, descriptions, category maps, promotions, encoding, and actual recipient requirements.
+
+For core 1.2.4, review every held SFTP destination and enter a trusted SHA256 host-key fingerprint before transfers are activated. Legacy destinations do not establish that trust automatically. See [Uploads](Uploads); a missing or mismatched fingerprint prevents authentication.
 
 Before activation, disable the original feed, drain its queued work, and stop external commands that can restart it. Review a fresh activation preview and apply it explicitly. Shared global settings, custom PHP, recipient accounts, and public fetch URLs need manual review. Imports use a separate destination subdirectory; recipient URLs do not change automatically.
 

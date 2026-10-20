@@ -207,7 +207,9 @@ jobs:
 
   check-magento-247:
     name: Magento 2.4.7-p10 compatibility
-    runs-on: ubuntu-latest
+    # Preserve the release-tested environment for the legacy integration suite.
+    # ubuntu-latest advanced to Ubuntu 26 independently of this platform profile.
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     services:
       mysql:
@@ -290,4 +292,4 @@ jobs:
         run: mysql -h127.0.0.1 -uroot -e 'SET GLOBAL log_bin_trust_function_creators = 1'
       - name: Run extension integration tests
         working-directory: ${{ steps.magento.outputs.path }}/dev/tests/integration
-        run: ../../../vendor/bin/phpunit -c phpunit.xml --testsuite ShoppingFeed
+        run: ../../../vendor/bin/phpunit -c phpunit.xml --testsuite ShoppingFeed --stop-on-error --stop-on-failure

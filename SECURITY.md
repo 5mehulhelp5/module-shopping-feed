@@ -4,6 +4,8 @@
 
 Security fixes are provided for the latest stable tagged release, starting with 1.0.0. Install the latest available patch release in that line.
 
+The current stable release is [1.2.4](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.4). Its [upgrade requirements](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Installation-and-Upgrade.md#upgrading-from-123-to-124) include `setup:upgrade` and a trusted SFTP host-key fingerprint for each destination. Earlier patch releases lack this server-verification requirement.
+
 ## Reporting a vulnerability
 
 Please do not open a public issue for a suspected vulnerability.

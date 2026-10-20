@@ -2,7 +2,7 @@
 
 Product Filters decides which products reach the output and how selected column values are changed. Rule order matters.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 ## Catalog selection
 
@@ -42,7 +42,7 @@ Version 1.2.2's [issue #14 fix](https://github.com/mage-os-lab/module-shopping-f
 
 Truncates selected output columns to a character limit without splitting a multibyte UTF-8 character. Since 1.2.1, limits run after output encoding, HTML cleanup, entity decoding, and whitespace cleanup. If several limits target the same column, they run in order.
 
-New feeds start with no limit rows. The presets declare title and description limits, but releases up to and including 1.2.3 store those defaults under a key the editor and generator do not read, so they are never applied. Add the limits you need here. Rows that still exceed a provider's limits are skipped by the Meta, Pinterest, TikTok, Microsoft and OpenAI validators and listed in the feed log.
+New feeds start with no limit rows. The presets declare title and description limits, but releases up to and including 1.2.4 store those defaults under a key the editor and generator do not read, so they are never applied. Add the limits you need here. Pinterest, TikTok, Microsoft and OpenAI validators skip rows exceeding their local limits and list them in the feed log. Meta does not check title or description length locally, so its output also needs explicit limits and recipient review.
 
 ### Skip Products with empty
 

@@ -2,7 +2,7 @@
 
 Product Options controls how Magento custom options affect row count and option output.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 ## Output modes
 
@@ -24,7 +24,7 @@ Add a column mapped to the **Product Option** directive when the recipient needs
 
 ## Storefront deep links
 
-Simple-product option links use fragments such as `#optionId=valueId`. Luma initializes the existing RequireJS widget. Hyva selects a native JavaScript template through its layout handle, waits for Alpine initialization, and dispatches the option's change event so selection, price, and validation update together.
+Simple-product option links use fragments such as `#optionId=valueId`. Luma initializes the existing RequireJS widget; in 1.2.4, its inline initializer uses Magento's secure renderer for CSP support. Hyva selects a native JavaScript template through its layout handle, waits for Alpine initialization, and dispatches the option's change event so selection, price, and validation update together.
 
 Dropdown, multiselect, radio, and checkbox options are supported. Unknown, empty, or malformed values leave existing selections unchanged. Hyva requires `hyva.alpineInitialized`; see [Status and compatibility](Status-and-Compatibility) for the helper's minimum versions and CSP handling.
 

@@ -2,7 +2,7 @@
 
 Use a Generic feed when the recipient accepts a delimited product file but does not match one of the bundled Google templates.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 ## Starting schema
 

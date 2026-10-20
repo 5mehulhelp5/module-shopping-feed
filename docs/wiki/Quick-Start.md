@@ -2,7 +2,7 @@
 
 The safest first feed has one store view, no upload destination, no schedule, and a small set of known products. Generate it, inspect it, correct it, then add automation.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 Read [Admin UI Component forms](Admin-UI-Component-Forms) for the 1.2.0 editor. Its collapsible sections replace the old tabs; category generation and promotion-date preservation pass the recorded acceptance checks. Start with disabled test feeds before enabling delivery.
 
@@ -48,7 +48,7 @@ Use a known SKU that represents the catalog behavior you need to prove. Good fix
 * A configurable product with at least two variants
 * An MSI product assigned to more than one source, for Local Inventory
 
-Use **Test Feed** from the feed grid, or run:
+Use **Test Feed** from the feed grid with **Generate Feed** permission (required in 1.2.4), or run:
 
 ```bash
 bin/magento mage-os:shopping-feed:generate <feed_id> <sku>

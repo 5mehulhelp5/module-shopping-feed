@@ -2,7 +2,7 @@
 
 General Configuration defines the store context, output location, delimiter, price behavior, and stock behavior for one feed.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 The 1.2.0 editor labels this section **General**. Its [Admin form guide](Admin-UI-Component-Forms) covers save controls, store-view reloads, and current acceptance results and limits.
 
@@ -71,8 +71,8 @@ Open **Stores > Configuration > Mage-OS > Mage-OS Shopping Feed**.
 
 ### Log Settings
 
-* **Logging Level** sets the minimum log severity.
-* **Log rotate (Kb)** controls when a feed log is archived based on size.
+* **Logging Level** sets the minimum log severity. Configure it at Default Config scope: generation reads only that value despite the field also appearing at website/store scope.
+* **Log rotate (Kb)** controls when a feed log is archived based on size (default 512). In 1.2.4, the active log is emptied only after the gzip archive matches its size and SHA256; failed archiving preserves the original.
 
 ### Google
 

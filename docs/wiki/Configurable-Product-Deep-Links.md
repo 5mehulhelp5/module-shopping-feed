@@ -2,7 +2,7 @@
 
 Associated configurable rows can link to the parent product with the child's option selections encoded in the URL fragment. The storefront script reads those values and selects matching swatches or dropdowns.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 ## Enable unique links
 
@@ -30,7 +30,7 @@ On Luma, the configurable selection script:
 
 The Luma integration compares option IDs and values literally. Malformed URL encoding is ignored, and fragment values cannot become jQuery selectors.
 
-The deep-link selection works independently of the Google Ads event setting.
+The deep-link selection works independently of the Google Ads event setting. In 1.2.4, Luma selection scripts use Magento's `SecureHtmlRenderer`; verify the effective CSP and any theme overrides. Strict Hyvä CSP theme acceptance remains separate from Luma script registration.
 
 ## Theme compatibility
 

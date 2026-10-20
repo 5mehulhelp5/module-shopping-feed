@@ -1,18 +1,20 @@
 # Admin UI Component forms
 
-Version 1.2.0 replaces the default New/Edit Feed and Test Feed forms with Magento UI Components. Version 1.1.0 retains the previous editor. This guide describes the 1.2.0 controls and upgrade implications.
+Version 1.2.0 replaces the default New/Edit Feed and Test Feed forms with Magento UI Components. Version 1.1.0 retains the previous editor. This guide describes the current 1.2.4 controls and the customization change introduced in 1.2.0.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 Existing feeds with a blank saved currency display the currency currently used by generation. Saving makes that selection explicit without changing prices to a different store default. New feeds still start with the store default; explicit saved selections remain unchanged.
 
 ## Current acceptance status
 
+Version 1.2.4 adds a required trusted SFTP host-key fingerprint, keeps upload model passwords encrypted, and requires **Generate Feed** for Test Feed. Its [Mage-OS 3.6 verification](Release-1-2-4) covers standard Admin save/reopen and credential/fingerprint persistence. The older browser and theme results below retain their original versions; they do not establish a new six-role or native Nebula run for 1.2.4.
+
 Version 1.2.0 repairs the defects found in `9f07e46`. Disposable Mage-OS browser tests now pass new-category save-to-generation and all four promotion dates through two saves plus companion generation. Header/category validation, preview input handling, and hidden microdata defaults are also repaired. The repository's `docs/reviews/2026-10-02-ui-component-editor-fixes.md` records the evidence and limits.
 
 The repaired PHP suite passes on the Mage-OS, Magento Open Source 2.4.8, and Magento Open Source 2.4.9 frameworks. Actual framework date conversion passed US, British, and German locale tests on all three. Production-mode Docker installations of both Magento versions now pass create/save/reopen for all eight presets, category and promotion output, dynamic rows, failed-save recovery, and malformed-request checks. These tests also found and repaired loss of null directive defaults. The repository's `docs/reviews/2026-10-02-magento-docker-acceptance.md` records the current evidence. The follow-up in `docs/reviews/2026-10-02-grid-permission-acceptance.md` verifies permission-filtered controls and server-side denials with six role profiles on both versions. Earlier automated results did not catch these defects, so they are preserved as historical evidence rather than substituted for the new regression checks.
 
-The release runtime `133af71` is deployed on `mageos-latest`, including the preview, feed stock-selection, configurable Local Inventory, frontend store-scope, and currency corrections found during acceptance. Eight-preset save/reopen, unchanged-save, CLI preview, full generation, category mapping, promotion dates, cloning, and deletion checks passed on Mage-OS 3.5.0. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records the final candidate, preserved original data, extended tests, and remaining checks. Updating code does not reconstruct promotion dates already erased by an earlier candidate.
+The historical 1.2.0 runtime `133af71` was deployed on `mageos-latest`, including the preview, feed stock-selection, configurable Local Inventory, frontend store-scope, and currency corrections found during acceptance. Eight-preset save/reopen, unchanged-save, CLI preview, full generation, category mapping, promotion dates, cloning, and deletion checks passed on Mage-OS 3.5.0. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records the final candidate, preserved original data, extended tests, and remaining checks. Updating code does not reconstruct promotion dates already erased by an earlier candidate.
 
 Column names must be single-line and contain no control characters. Invalid category rows and malformed preview requests now produce recoverable Admin errors. Custom configuration keys remain supported; see [Columns and directives](Columns-and-Directives) and [Development and CI](Development-and-CI).
 
@@ -34,7 +36,7 @@ The editor uses collapsible sections:
 | Configurable Products, Grouped Products, Bundle Products | Parent/child handling and applicable value inheritance |
 | Shipping | Shipping directive configuration |
 | Schedule | Generation times and batch settings |
-| Uploads | FTP/SFTP destinations and gzip |
+| Uploads | SFTP with a trusted host-key fingerprint, FTP (unencrypted), and gzip |
 | Google Promotions | Included cart rules, titles, dates, and promotion counter for Google Shopping only |
 
 Google Local Inventory hides Product Options and Shipping and changes category/inventory fields. Google Promotions is a section of Google Shopping, not a ninth New Feed preset. Version 1.2.0 contains eight presets; see [Feed types and lifecycle](Feed-Types-and-Lifecycle).
@@ -49,7 +51,7 @@ Saved upload passwords display a mask. Leave it unchanged to retain the existing
 
 **Test Feed** accepts a SKU or product ID and runs through **Test Now**. A preview is not a full-file check or a Promotions companion-file test. **Run Now** queues generation; cron or an explicit CLI generation command must process it. **View Log** opens existing generation history. See [Testing one product](Testing-One-Product) and [Manual and CLI generation](Manual-and-CLI-Generation).
 
-Create New Feed, Configure, Enable, Disable, and Clone require the save permission. Run Now requires generate permission; bulk Delete requires delete permission. Read-only users retain Test Feed, View Log, and Export. The Actions menu is hidden when no permitted bulk action remains.
+Create New Feed, Configure, Enable, Disable, and Clone require the save permission. Run Now and Test Feed require generate permission; bulk Delete requires delete permission. Read-only users retain View Log and Export. The grid can still show the Test Feed link, but its controller denies access without generate permission. Editor preview buttons are hidden for that role. The Actions menu is hidden when no permitted bulk action remains.
 
 Bulk **Delete** executes immediately for the selected feeds in the standard grid, without a confirmation dialog. Verify the selected count and names first. Clone creates a disabled feed and copies configuration, schedules, and upload destinations. A literal filename is copied unchanged, so review the output destination before enabling the clone. A filename containing `%s` substitutes the new feed ID. These behaviors predate the form migration.
 
@@ -77,6 +79,6 @@ Switching Admin themes does not switch Shopping Feed editors. The inspected Nebu
 
 Test the exact repaired revision with a disposable feed through save, reopen, unchanged save, preview, full generation, and file parsing. Category tests must create a new mapping and then generate a product that uses it. Promotion tests must compare all four dates after each save and in the companion output. Repeat on Magento Open Source 2.4.8, 2.4.9, and the intended Mage-OS environment.
 
-Also test site-specific modifiers, restricted Admin roles, failed saves, password retention, deletion of final rows, cloning, and the Admin theme actually used by the store. Private receiver tests and a 5,000-product synthetic envelope supplement the form checks. Use the current record for hourly cron and cleanup results; external recipient acceptance and a representative production-catalog test remain separate requirements.
+Also test site-specific modifiers, restricted Admin roles, failed saves, password retention, deletion of final rows, cloning, and the Admin theme actually used by the store. The historical 1.2.0 private receiver tests and 5000-product synthetic envelope supplement that release's form checks. Use its dated record for hourly cron and cleanup results; external recipient acceptance and a representative production-catalog test remain separate requirements.
 
 Restoring the previous package and rebuilding DI/static assets restores the old editor. There is no per-feed configuration switch. A code rollback does not recover erased promotion dates or repair malformed category data; compare with the pre-upgrade backup and restore affected configuration through a reviewed recovery. See [Installation and upgrade](Installation-and-Upgrade) and [Release acceptance](Release-Acceptance).

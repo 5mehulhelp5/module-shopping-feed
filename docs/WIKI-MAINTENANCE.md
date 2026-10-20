@@ -16,7 +16,7 @@ Resolve documentation claims in this order:
 Every user-facing page should contain:
 
 * One clear purpose
-* A documentation baseline and review date
+* A documentation baseline and review date. Use the released runtime tag for code behavior and preserve the original scope of older acceptance results; the documentation commit itself is recorded separately at publication
 * Prerequisites or safety boundaries where relevant
 * Exact Admin paths, commands, and setting names
 * A verification step
@@ -61,15 +61,17 @@ Review the wiki for every release that changes:
 * Google data specifications or storefront event formats
 * Migration behavior
 
+Before publication, scan all operating guides and the README, migration/developer guides, acceptance plan, sidebar, and footer for stale install constraints, permissions, workflow names, release status, branch-only wording, and deployment claims. Keep old workflow links only when they identify historical runs. Reconcile repository links and anchors as well as wiki navigation. Verify the published tag, release, CI SHA, and Composer metadata independently.
+
 At minimum, recheck Google-owned links and terminology at release time. Keep Merchant Center navigation brief because its interface changes independently of this module.
 
 ## 1.2.4 documentation baseline
 
-Release-focused pages, upload instructions, and troubleshooting name `v1.2.4` as their baseline. The new release page and upgrade checklist cover the required SFTP fingerprint and schema update. Unchanged guides and historical release pages retain their earlier review baselines. The October 20 security verification record covers the local Mage-OS 3.6 candidate. This release prepares the wiki source only; public wiki publication remains a separate action under the workflow above.
+All current operating guides were reviewed against `v1.2.4` on October 20, 2026. Historical release pages and dated acceptance reports retain their original versions and test scope. Release 1.2.4 is published at `75dd335f930aef78ae693f62c3039e469c2d26f6`; its 37 post-merge CI jobs pass. The release page and upgrade checklist cover the required SFTP fingerprint, schema update, encrypted upload model data, and Test Feed permission. The October 20 security record covers the local Mage-OS 3.6 acceptance. The [documentation review](reviews/2026-10-20-documentation-review.md) records source/public-wiki drift and remaining limitations. Public wiki publication remains a separate action under the workflow above.
 
-## 1.2.3 documentation baseline
+## 1.2.3 historical documentation baseline
 
-The current pages name `v1.2.3` as their baseline. Release notes and upgrade requirements are in `docs/releases/1.2.3.md` and `Release-1-2-3`; historical release pages retain their versions. Native inventory, promotion, manual batching, Hyvä, and Nebula grid/fallback results are in the October 8 reports. The October 13 release preparation record combines those changes with the package-version display fix from main. Publish this source set only after the release is available, and verify its separate wiki commit and rendered pages.
+The previous source set named `v1.2.3` as its baseline. Release notes and upgrade requirements are in `docs/releases/1.2.3.md` and `Release-1-2-3`; historical release pages retain their versions. Native inventory, promotion, manual batching, Hyvä, and Nebula grid/fallback results are in the October 8 reports. The October 13 release preparation record combines those changes with the package-version display fix from main. That source set was published separately to the wiki; it does not include the later 1.2.4 release changes.
 
 ## 1.2.0 historical documentation baseline
 

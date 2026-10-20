@@ -2,7 +2,9 @@
 
 The Shipping section configures the output produced by a column mapped to the **Shipping** directive. It does nothing unless that directive is present in Columns Map.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+
+Version 1.2.4 handles configurable products without a minimum-price product list and fixes the catalog tax helper used when the including-tax flag is omitted. Regenerate representative configurable weights and taxed shipping after upgrading; see [Release 1.2.4](Release-1-2-4).
 
 ## Settings
 

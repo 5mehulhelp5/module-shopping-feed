@@ -10,8 +10,8 @@ The original `9f07e46` category and promotion-date defects are repaired in 1.2.0
 
 Configure logging at **Stores > Configuration > Mage-OS > Mage-OS Shopping Feed > Log Settings**.
 
-* **Logging Level** can be Debug, Info, Notice, Warning, or Error.
-* **Log rotate (Kb)** archives a feed log after it exceeds the configured size.
+* **Logging Level** can be Debug, Info, Notice, Warning, or Error. Set it at Default Config scope; generation reads the default value even though the field is also displayed at website/store scope.
+* **Log rotate (Kb)** defaults to 512. Before a run, a larger log is archived with a timestamp and unique suffix. Version 1.2.4 verifies the decompressed archive's size and SHA256 before truncating the active log; failure preserves the original.
 
 Feed logs are restricted to `var/log` and use a safe name based on the feed ID, normally:
 
@@ -36,7 +36,9 @@ Use **View Log** from the Feeds Management grid, or inspect the file as the Mage
 | No final file appears | Confirm the configured directory and filename, filesystem permissions, disk space, and whether a `.tmp` generation is still active. |
 | Product is absent | Test the SKU, then check enablement, catalog visibility, stock settings, filters, category rules, and complex-product configuration. |
 | Row columns do not align | Review delimiter choice, mapped directives, source values containing delimiters or line breaks, and row counts across representative products. |
-| Upload fails | Confirm mode, hostname, port, credentials, remote path, permissions, DNS, and firewall access from the Magento host. On the standards branch, SFTP also requires the trusted SHA256 server-key fingerprint. Confirm any changed key with the recipient before replacing it. |
+| Upload fails | Confirm mode, hostname, port, credentials, remote path, permissions, DNS, and firewall access from the Magento host. In 1.2.4, SFTP requires `setup:upgrade` and the trusted SHA256 server-key fingerprint. Confirm any changed key with the recipient before replacing it. |
+| Test Feed is denied for a read-only role | Version 1.2.4 requires **Generate Feed** permission. The grid can still show its link; editor preview buttons are hidden without the permission. |
+| Log rotation fails | Check free space and permissions in `var/log`. Version 1.2.4 preserves the active log until a complete gzip archive matches its size and SHA256; retain the source and failed archive for diagnosis. |
 | `require is not defined` on a Hyva simple-product page | Confirm 1.0.0 or later is installed, the `hyva_` layout override is active, and stale theme overrides or full-page caches do not retain the Luma template. |
 | Configurable link does not select a Hyva variant | Regenerate the feed and confirm its fragment includes numeric attribute IDs. Inspect selected options, price updates, and browser errors. |
 | Available configurable variants appear out of stock | Confirm the parent is salable and 1.0.0 or later is installed. Check child stock, parent inheritance, and the selected website stock independently. |

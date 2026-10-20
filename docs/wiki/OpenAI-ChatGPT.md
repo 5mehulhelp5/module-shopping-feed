@@ -1,45 +1,53 @@
 # OpenAI / ChatGPT (Google-compatible, beta)
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
-When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the tested runtime, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
+**Confirm the format before use.** The bundled preset retains its historical Google-compatible name and validator. OpenAI's public [product specification](https://developers.openai.com/commerce/specs/file-upload/products), checked October 20, 2026, now documents an OpenAI-format contract and no longer contains the previously linked Google-compatible section. This preset has not been updated to that contract. A locally valid file does not prove current OpenAI compatibility, ingestion, or ChatGPT display.
 
-This preset generates quoted UTF-8 TSV for OpenAI's Google-compatible discovery profile. It is a beta integration: generated files have been checked locally, but OpenAI ingestion and ChatGPT display have not been verified. OpenAI must confirm this profile for the registered feed. It is separate from the native OpenAI schema and does not provide account access or checkout.
+The differences include:
 
-## Configure
+| Area | Bundled 1.2.4 preset | Current public OpenAI format |
+| --- | --- | --- |
+| Seller | No `seller_name` column; the historical guide relied on registration | `seller_name` is required per row; registration does not supply it |
+| URLs | `link`, `image_link`, `additional_image_link` | `url`, `image_url`, `additional_image_urls` |
+| Variants | `item_group_id` plus Google-style variant columns | Variant grouping needs `group_id`, `listing_has_variations=true`, and `variant_dict`. `item_group_id` is an accepted ID alias, but does not supply the other fields |
+| Preorders | Local validator accepts `preorder` | The public format uses `pre_order` |
+| Eligibility and removal | No native search opt-out mapping; expiration defaults to tomorrow | The current guide uses `is_eligible_search=false` for search opt-out and says date fields do not schedule removal |
 
-Choose **OpenAI / ChatGPT (Google-compatible, beta)** in **Catalog > Mage-OS Shopping Feed > Feeds Management**. Select the store view and agreed currency, then review **Columns Map**. The default file is `mageos_openai_google_compatible_<feed_id>.tsv` in `pub/media/mageos-shopping-feed`.
+This is a format gap requiring separate implementation and acceptance. Do not rename a few headers and assume the validator or variant mapping now meets the current contract. Use this beta only if OpenAI explicitly confirms acceptance of the exact exported sample and agreed transfer format.
 
-The default map has 29 columns. IDs use Magento product IDs. Configurable children share their parent's SKU as `item_group_id`, retain selected attributes, and link to the parent with option fragments. Keep IDs and option combinations unique and stable. Product links include `utm_source=openai_google_compatible`.
+## Existing preset behavior
 
-Brand uses Manufacturer and is required. Map real GTIN or MPN attributes; both start empty. `identifier_exists` starts empty, meaning identifiers are required. For products that truly have none, map an explicit `no` or `false` per product. Do not blanket-exempt an incomplete catalog or substitute SKU for MPN. Brand remains required for exempt products. The validator checks GTIN length and checksum; restricted prefixes cannot satisfy the identifier requirement.
+Choose **OpenAI / ChatGPT (Google-compatible, beta)** in **Catalog > Mage-OS Shopping Feed > Feeds Management**. It produces quoted UTF-8 TSV at `pub/media/mageos-shopping-feed/mageos_openai_google_compatible_<feed_id>.tsv` and uses the shared UI Component editor, generation queue, Test Feed, schedules, and uploads. Test Feed requires **Generate Feed** permission in 1.2.4.
 
-Map real `availability_date` values for preorders and backorders. Use a date or ISO timestamp with timezone. The preset leaves this column empty until mapped, so those rows are skipped by default. It preserves `in_stock`, `out_of_stock`, `preorder`, and `backorder`.
+The default map has 29 columns. IDs use Magento product IDs. Configurable children share their parent's SKU in `item_group_id`, retain mapped attributes, and link to the parent with option fragments. Product links include `utm_source=openai_google_compatible`. Keep IDs and option combinations stable and unique.
 
-Condition defaults to `new`; map actual used or refurbished condition. Optional sizing, subscription, and taxonomy fields must describe the actual offer. Use **Filters** to restrict the export to products intended for discovery. Search opt-out columns do not exclude products in this profile.
+Brand uses Manufacturer and is required by the local validator. Map real GTIN or MPN attributes; both start empty. `identifier_exists` starts empty, so the local validator requires identifiers. For products that truly have none, map an explicit `no` or `false` per product; brand remains required. The validator checks GTIN length and checksum and rejects restricted prefixes as identifiers.
 
-## Validation and freshness
+The local validator also requires a mapped `availability_date` for its `preorder` and `backorder` states. It leaves that column empty by default, so those rows are skipped until mapped. These are the bundled validator's rules, not confirmation of current destination behavior.
 
-Generation and **Test Feed** use the same row validator. It checks required cells, plain-text title and description limits, stock and condition values, credential-free HTTP(S) links, variant group IDs, identifiers, prices, and dates. Invalid rows are skipped with reasons in the feed log. The preset declares 150-character title and 5,000-character description limits, but they are not applied automatically; add them under [Limit column output](Filters-and-Transformations#limit-column-output) so long values are shortened instead of skipped.
+Condition defaults to `new`. Map real used/refurbished condition where applicable. Optional sizing, subscription, and taxonomy fields must describe the actual offer. Restrict the exported products with **Product Filters**; the preset does not implement native search opt-out semantics.
 
-Sale prices must be positive, below the regular price, and in the same currency. Invalid sale relationships reject the row. Sale intervals require a sale price; date-only boundaries include the full UTC day. The normal Magento sale mapper supplies current offers.
+## Local validation and freshness
 
-The price formatter preserves zero only for validation. Zero-price rows need a mobile category ID (`267` or `4745`) and a valid same-currency `subscription_cost`. Other free products are skipped. Additional images use comma-separated URLs even if the delimiter is changed to CSV. Encode commas inside URLs.
+Generation and **Test Feed** use the same row validator. It checks required cells, plain-text title and description limits, its stock and condition values, credential-free HTTP(S) links, variant group IDs, identifiers, prices, and dates. Invalid rows are skipped with reasons in the feed log. Add explicit [Limit column output](Filters-and-Transformations#limit-column-output) rows for the local 150-character title and 5000-character description limits; preset limits are not applied automatically in 1.2.4.
 
-The default expiration mapper emits a timestamp for tomorrow. Expiration and sale dates are metadata: they do not schedule stock changes, sales, or removal. Refresh full snapshots at least daily and whenever prices or availability change. Removal can take time; agree on removal handling with OpenAI before relying on omission.
+The local validator requires a positive sale price below the regular price in the same currency; invalid sale relationships reject the row. Sale intervals require a sale price, and date-only boundaries cover the full UTC day. It allows zero regular price only with mobile category `267` or `4745` and a valid same-currency `subscription_cost`. This historical exception does not establish acceptance under the current public format, which calls for positive regular discovery prices.
 
-Local validation cannot confirm public accessibility, assigned identifier authenticity, approved currencies or markets, unique IDs across rows, landing-page prices, merchant eligibility, or destination acceptance. Review these against the exported file and OpenAI diagnostics. Credentials must never appear in product or image URLs.
+Additional images use comma-separated URLs even if the file delimiter changes. Encode commas inside URLs. The default expiration mapper emits tomorrow's timestamp. Expiration, sale, and availability dates do not schedule stock changes, prices, or removal. Publish current full snapshots at least daily and whenever prices or stock change; agree on removal behavior with OpenAI before relying on omission.
+
+Local validation cannot prove public URL access, identifier authenticity, agreed currencies/markets, unique IDs across rows, landing-page prices, merchant eligibility, or destination acceptance. Never include credentials in product or image URLs.
 
 ## Delivery and acceptance
 
-1. Complete OpenAI onboarding and confirm the Google-compatible format, merchant display name, markets, currency, and destination. The merchant name comes from registration, not an uploaded seller column.
-2. Generate with uploads disabled. Test ordinary products, variants, discounted items, missing identifiers, and unavailable stock.
-3. Review a small sample with OpenAI before sending the full catalog. Use TSV, CSV, or the corresponding supported gzip format; XML is not supported on this path.
-4. Configure the agreed SFTP destination in **Uploads**, using the assigned credentials and a stable filename. Gzip is supported by the module. Keep the same filename on each refresh.
-5. Check ingestion diagnostics, row counts, rejected products, and actual discovery behavior before enabling scheduled transfers.
+1. Complete [OpenAI onboarding](https://developers.openai.com/commerce/guides/get-started). Confirm whether the historical Google-compatible sample is accepted for this integration, including seller identity, variants, availability, eligibility, markets, currency, and exact file/compression requirements.
+2. Keep uploads disabled while generating a small sample. Include ordinary products, variants, discounts, missing identifiers, preorders/backorders, and unavailable stock.
+3. Obtain sample acceptance before sending a full catalog. The current [file upload guide](https://developers.openai.com/commerce/specs/file-upload/overview) describes SFTP delivery and supported compressed formats; the module's gzip option does not establish schema acceptance.
+4. Configure the agreed destination in [Uploads](Uploads), with assigned credentials, a stable filename, and a trusted SHA256 host-key fingerprint confirmed with the transfer operator. Save and reopen before testing delivery.
+5. Check ingestion diagnostics, counts, rejected rows, displayed seller/variant data, and actual discovery behavior before enabling schedules.
 
-Accepted compatibility rows are search eligible with checkout disabled. Uploaded native eligibility flags, return-policy fields, and seller fields do not enable those capabilities. Ads eligibility and any additional markets depend on the registered integration. This preset does not send API requests, configure Ads, or synchronize orders.
+The module does not provide account access, native checkout, Ads setup, or order synchronization. Search or checkout eligibility is determined by the agreed integration and destination processing.
 
 ## References
 
-Verified against the stable [Google-compatible product specification](https://developers.openai.com/commerce/specs/file-upload/products#google-compatible-product-data-feeds), [file upload guide](https://developers.openai.com/commerce/specs/file-upload/overview), and [onboarding guide](https://developers.openai.com/commerce/guides/get-started). These current primary sources take precedence over earlier template recommendations.
+The [product specification](https://developers.openai.com/commerce/specs/file-upload/products), [file upload guide](https://developers.openai.com/commerce/specs/file-upload/overview), and [onboarding guide](https://developers.openai.com/commerce/guides/get-started) were retrieved on October 20, 2026. The former `#google-compatible-product-data-feeds` anchor is absent. Earlier specification checks describe the historical beta; current provider documentation and explicit sample acceptance take precedence.
