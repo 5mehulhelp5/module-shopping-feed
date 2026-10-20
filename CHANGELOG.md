@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented here.
 
-## Unreleased
+## 1.2.4 - 2026-10-20
+
+[Release 1.2.4 notes and upgrade requirements](docs/releases/1.2.4.md).
 
 ### Fixed
 

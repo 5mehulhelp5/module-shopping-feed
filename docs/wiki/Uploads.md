@@ -2,7 +2,7 @@
 
 Upload destinations run after a successful feed generation. Establish and validate the feed locally before enabling a transfer.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 The [UI Component editor](Admin-UI-Component-Forms) masks credentials before provider serialization. After a failed save, new or changed passwords must be re-entered; the previously saved password remains masked. Removing the final upload row and saving clears the destination list. The separate runtime follow-up verifies FTP/SFTP plain and gzip delivery to private Docker test servers on Magento Open Source 2.4.8 and 2.4.9, including credentials, payload checksums, safe failures, and temporary-file cleanup. See the repository's `docs/reviews/2026-10-02-docker-operations-acceptance.md`. External recipient acceptance remains separate.
 
@@ -10,7 +10,7 @@ The [UI Component editor](Admin-UI-Component-Forms) masks credentials before pro
 
 Prefer SFTP. FTP sends credentials and data without transport encryption and should only be used when the recipient requires it and the network risk is accepted.
 
-**Unreleased standards branch:** SFTP now requires a trusted server host-key fingerprint for each destination. The module checks that key before sending the username or password. Existing SFTP destinations without a fingerprint fail closed until it is entered. Run `setup:upgrade` to add the fingerprint column. FTP remains available as **FTP (unencrypted)**; an unknown transfer mode is rejected.
+**Version 1.2.4:** SFTP now requires a trusted server host-key fingerprint for each destination. The module checks that key before sending the username or password. Existing SFTP destinations without a fingerprint fail closed until it is entered. Run `setup:upgrade` to add the fingerprint column. FTP remains available as **FTP (unencrypted)**; an unknown transfer mode is rejected.
 
 The generated local feed remains publicly downloadable under `pub/media/mageos-shopping-feed`, including after a successful upload. SFTP protects the transfer; it does not make the local file private. See [General configuration](General-Configuration).
 

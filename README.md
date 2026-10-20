@@ -24,14 +24,16 @@ The [Check Extension workflow](https://github.com/mage-os-lab/module-shopping-fe
 
 ## Installation
 
-Install the stable 1.2 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
+Install the stable 1.2 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). See the [1.2.4 release notes](docs/releases/1.2.4.md) for changes and upgrade requirements:
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.2.3'
+composer require 'mage-os/module-shopping-feed:^1.2.4'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
 ```
+
+**Upgrading to 1.2.4:** run `setup:upgrade` and enter a trusted SHA256 host-key fingerprint for every SFTP destination. Destinations without a matching fingerprint cannot authenticate or upload. See [Uploads](docs/wiki/Uploads.md).
 
 In production mode, also run `bin/magento setup:di:compile` and `bin/magento setup:static-content:deploy`. For a source checkout, place the repository at `app/code/MageOS/ShoppingFeed` and run the Magento commands without `composer require`.
 
@@ -218,7 +220,7 @@ Installing this module does not read or change Rocket Web feeds, tables or confi
 On staging, keep the legacy modules installed and enabled during schema upgrades, then install both packages:
 
 ```sh
-composer require 'mage-os/module-shopping-feed:^1.2.3' \
+composer require 'mage-os/module-shopping-feed:^1.2.4' \
   'rocketweb/module-shopping-feed-migration-rocketweb:^1.0' --no-update
 composer update mage-os/module-shopping-feed \
   rocketweb/module-shopping-feed-migration-rocketweb --with-dependencies

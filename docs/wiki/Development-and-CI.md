@@ -2,7 +2,11 @@
 
 The repository validates module identity, configuration integrity, PHP behavior, and supported Magento-family platforms. Run focused checks before requesting review.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`) plus the unreleased module-standards changes listed under Unreleased in CHANGELOG.md; earlier acceptance is identified by version. Last reviewed: 2026-10-19.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+
+## 1.2.4 standards and security
+
+The workflow now targets Mage-OS 3.5.0 and 3.6.0, uses pinned actions and development tools, runs locked dependency audits, and enforces PHPStan level 8 against a baseline that may only shrink. The local Mage-OS 3.6 candidate passes 939 unit tests and 66 JavaScript checks; integration and transfer evidence is linked from [Release 1.2.4](Release-1-2-4). Check the [workflow results](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml) against the exact release commit.
 
 ## 1.2.3 hardening and compatibility
 

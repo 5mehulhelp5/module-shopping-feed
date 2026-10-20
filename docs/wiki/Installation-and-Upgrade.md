@@ -2,9 +2,21 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
+
+## Upgrading from 1.2.3 to 1.2.4
+
+The [1.2.4 release](Release-1-2-4) adds a required SFTP host-key fingerprint and a nullable database column for it. It also adds an explicit `phpseclib/phpseclib:^3.0` dependency and declares `magento/framework:^103.0.6-p15`. Check those requirements against the target store before updating Composer.
+
+1. Back up matching code, database, Composer lock file, configuration, and accepted feed files. Pause scheduled uploads while reviewing destinations.
+2. On staging, run `composer require 'mage-os/module-shopping-feed:^1.2.4' --no-update`, then `composer update mage-os/module-shopping-feed --with-dependencies` and `bin/magento setup:upgrade`. Follow the store's normal compilation, static-content deployment, and cache process.
+3. Obtain each SFTP server's trusted `SHA256:...` host-key fingerprint from its administrator. Enter it in **Uploads > SFTP Host Key Fingerprint**, save, and reopen. A missing or mismatched fingerprint prevents authentication. See [Uploads](Uploads).
+4. Verify a masked password survives an unchanged save, clone destinations where used, and compare complete generated and delivered files with the accepted output. FTP is explicitly unencrypted; unknown transfer modes are rejected.
+5. Verify Test Feed access with a role that has feed-generation permission. Compare inventory, configurable shipping weights, and promotion output before resuming schedules or uploads.
+
+Restore the matching database, code, lock file, and configuration for rollback. An older release does not provide SFTP host-key verification.
 
 <a id="upgrading-from-11-to-the-120-candidate"></a>
 
@@ -65,7 +77,7 @@ There is no old/new editor switch. Restoring the previous package and rebuilding
 The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.2 line:
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.2.3'
+composer require 'mage-os/module-shopping-feed:^1.2.4'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
@@ -81,7 +93,7 @@ Place or symlink the source at:
 app/code/MageOS/ShoppingFeed
 ```
 
-Use the `v1.2.3` tag for a reproducible installation, and record its resolved commit. Earlier tags remain available for historical installations.
+Use the `v1.2.4` tag for a reproducible installation, and record its resolved commit. Earlier tags remain available for historical installations.
 
 Then run:
 

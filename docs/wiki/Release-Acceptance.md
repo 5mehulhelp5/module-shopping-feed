@@ -2,9 +2,15 @@
 
 Release acceptance proves the extension on representative Magento runtimes and proves each generated artifact at the boundary where it is consumed.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
+
+## 1.2.4 verification
+
+The [Mage-OS 3.6 verification record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.4/docs/reviews/2026-10-20-standards-security-mageos36.md) covers 939 unit tests, 30 integration tests, four database persistence tests, 66 JavaScript checks, DI compilation, and standard Admin save/reopen. Real local FTP/SFTP transfers verify plain and gzip payloads, fingerprint rejection before authentication, temporary-file cleanup, and complete archived logs. Static checks and dependency audits pass for the recorded local candidate. [Release 1.2.4](Release-1-2-4) links exact-commit CI and upgrade requirements.
+
+External recipient ingestion, native Nebula acceptance, other target-store behavior, and production volume were not repeated in this local run. The preset output-limit key mismatch remains a known issue.
 
 ## 1.2.3 verification
 

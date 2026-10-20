@@ -1,6 +1,6 @@
 # Mage-OS Shopping Feed
 
-**Version 1.2.3** corrects website-stock reservations, physical-source Local Inventory quantities, promotion persistence and caching, Nebula filter navigation, and Admin package-version reporting. Read [Release 1.2.3](Release-1-2-3) and its [upgrade checklist](Installation-and-Upgrade#upgrading-from-122-to-123).
+**Version 1.2.4** verifies SFTP server keys before authentication, keeps upload credentials encrypted, preserves logs if archiving fails, and tightens Test Feed permissions. It also completes module standards work and fixes inventory, shipping, and promotion edge cases. Read [Release 1.2.4](Release-1-2-4) and its [upgrade checklist](Installation-and-Upgrade#upgrading-from-123-to-124).
 
 **Migrating from Rocket Shopping Feeds?** Use the separate [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb). See the [installation and migration guide](Rocket-Web-Migration) for preview, import, output comparison, activation, and rollback.
 
@@ -12,7 +12,7 @@ Mage-OS Shopping Feed generates product feeds from Mage-OS and Magento Open Sour
 
 The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) covers the required schema update and changes to saved Google and comma-delimited feeds. [Release 1.0.0](Release-1-0-0) remains available as a historical record.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 The [Admin UI Component forms](Admin-UI-Component-Forms) in 1.2.0 change the editor and its customization hooks. The release runtime `133af71` is deployed on `mageos-latest`, with form, grid-permission, preview, stock-selection, Local Inventory, frontend-scope, and currency-preservation corrections. Magento Open Source 2.4.8 and 2.4.9 retain production-mode form/output and six-role acceptance. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records that historical acceptance, including extended operational checks and remaining limits. Historical version 1.1 continues to use the previous editor.
 
