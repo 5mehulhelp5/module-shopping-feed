@@ -19,6 +19,44 @@ use PHPUnit\Framework\TestCase;
 class StockVisibilityTest extends TestCase
 {
     /**
+     * @magentoDataFixture Magento/Catalog/_files/product_simple.php
+     */
+    public function testMsiSourceItemsExcludeDisabledAndUnlinkedSources(): void
+    {
+        $om = Bootstrap::getObjectManager();
+        $db = $om->get(ResourceConnection::class)->getConnection();
+        $db->insert($db->getTableName('inventory_stock'), ['name' => 'Shopping Feed MSI regression']);
+        $stockId = (int)$db->lastInsertId();
+        $db->insert($db->getTableName('inventory_stock_sales_channel'), [
+            'type' => 'website', 'code' => 'shopping_feed_msi_test', 'stock_id' => $stockId,
+        ]);
+        foreach (['enabled', 'disabled', 'unlinked'] as $suffix) {
+            $code = 'shopping_feed_' . $suffix;
+            $source = $om->create(\Magento\InventoryApi\Api\Data\SourceInterface::class);
+            $source->setSourceCode($code);
+            $source->setName($code);
+            $source->setEnabled($suffix !== 'disabled');
+            $source->setCountryId('US');
+            $source->setPostcode('46201');
+            $om->get(\Magento\InventoryApi\Api\SourceRepositoryInterface::class)->save($source);
+            if ($suffix !== 'unlinked') {
+                $db->insert($db->getTableName('inventory_source_stock_link'), [
+                    'stock_id' => $stockId, 'source_code' => $code, 'priority' => 1,
+                ]);
+            }
+            $db->insert($db->getTableName('inventory_source_item'), [
+                'source_code' => $code, 'sku' => 'simple', 'quantity' => 5, 'status' => 1,
+            ]);
+        }
+        $product = $om->get(ProductRepositoryInterface::class)->get('simple');
+        $actual = $om->create(\MageOS\ShoppingFeed\Model\Inventory\Api::class)
+            ->getItems($product, 'shopping_feed_msi_test');
+        self::assertCount(1, $actual);
+        self::assertSame('shopping_feed_enabled', $actual[0]->getSourceCode());
+        self::assertEquals(5, $actual[0]->getQuantity());
+    }
+
+    /**
      * @magentoDataFixture Magento/GroupedProduct/_files/product_grouped.php
      * @magentoConfigFixture current_store cataloginventory/options/show_out_of_stock 0
      */

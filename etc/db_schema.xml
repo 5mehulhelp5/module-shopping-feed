@@ -86,6 +86,7 @@
     <column xsi:type="varchar" name="username" length="255" comment="Upload username"/>
     <column xsi:type="text" name="password" comment="Encrypted upload password"/>
     <column xsi:type="varchar" name="host" comment="Upload host"/>
+    <column xsi:type="varchar" name="host_key_fingerprint" length="100" nullable="true" comment="Trusted SFTP host key SHA256 fingerprint"/>
     <column xsi:type="int" name="port" padding="10" unsigned="true" nullable="false" comment="Upload port"/>
     <column xsi:type="varchar" name="path" comment="Upload path"/>
     <column xsi:type="varchar" name="mode" length="255" default="null" comment="Mode - FTP or SFTP"/>

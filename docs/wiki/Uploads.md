@@ -10,6 +10,8 @@ The [UI Component editor](Admin-UI-Component-Forms) masks credentials before pro
 
 Prefer SFTP. FTP sends credentials and data without transport encryption and should only be used when the recipient requires it and the network risk is accepted.
 
+**Unreleased standards branch:** SFTP now requires a trusted server host-key fingerprint for each destination. The module checks that key before sending the username or password. Existing SFTP destinations without a fingerprint fail closed until it is entered. Run `setup:upgrade` to add the fingerprint column. FTP remains available as **FTP (unencrypted)**; an unknown transfer mode is rejected.
+
 The generated local feed remains publicly downloadable under `pub/media/mageos-shopping-feed`, including after a successful upload. SFTP protects the transfer; it does not make the local file private. See [General configuration](General-Configuration).
 
 Use a dedicated remote account restricted to the intended directory. Start with a non-serving or quarantine destination so a test cannot replace an accepted production feed.
@@ -22,6 +24,7 @@ Open the feed, select **Uploads**, then add a row:
 | --- | --- |
 | Mode | SFTP or FTP |
 | Host | Hostname only, without a URL scheme |
+| SFTP Host Key Fingerprint | Trusted `SHA256:...` fingerprint supplied by the recipient's server administrator; required for SFTP |
 | Port | Remote service port |
 | Username | Dedicated remote user |
 | Password | Remote password |
@@ -31,6 +34,14 @@ Open the feed, select **Uploads**, then add a row:
 The uploaded remote filename is the basename of the local file. **Path** selects the remote directory, not a replacement filename.
 
 Passwords are encrypted with Magento's encryption service before database storage. The Admin shows `******` for a saved password. Leave that placeholder unchanged to retain the existing secret; enter a new value only when rotating it.
+
+The standards branch also keeps stored passwords encrypted in loaded and saved model data. It decrypts a password when opening the transport connection. Cloned destinations retain the encrypted password and pinned host key.
+
+## Confirm the SFTP server key
+
+Ask the recipient's server administrator for the SHA256 fingerprint of the SSH host key used by the SFTP endpoint. Confirm it through an existing trusted support channel. An administrator with access to that server can use `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub -E sha256` for an Ed25519 key; use the public key file for the algorithm offered by that endpoint.
+
+Enter only the `SHA256:...` value in **SFTP Host Key Fingerprint**. A scanned key alone does not establish trust. If the recipient rotates its host key, uploads stop until you confirm and save the replacement fingerprint. The module follows phpseclib's [host key verification guidance](https://phpseclib.com/docs/3.0/ssh2/connect#host-key-verification).
 
 **Credential handling in 1.1:** masked saves explicitly retain the loaded ciphertext, repeated saves avoid double encryption, and the password column uses `text` to hold encryption overhead. Installation requires the normal `setup:upgrade` schema step. If a previously stored password cannot be decrypted, enter it again; the module does not infer a secret from damaged or plaintext data.
 

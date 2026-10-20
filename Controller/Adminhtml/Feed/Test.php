@@ -22,7 +22,7 @@ use Magento\Framework\Exception\LocalizedException;
 
 class Test extends \Magento\Backend\App\Action
 {
-    public const ADMIN_RESOURCE = 'MageOS_ShoppingFeed::grid';
+    public const ADMIN_RESOURCE = 'MageOS_ShoppingFeed::generate';
 
     /**
      * @var \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Builder

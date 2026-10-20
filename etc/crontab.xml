@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ * Copyright © 2016 Rocket Web Inc. (https://rocketweb.com/)
+ * Licensed under the Open Software License version 3.0. See LICENSE.txt.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">

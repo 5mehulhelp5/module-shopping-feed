@@ -47,8 +47,12 @@ class ApiTest extends TestCase
             [\Magento\InventoryApi\Api\GetStockSourceLinksInterface::class, [], $stockLinks],
             [\Magento\InventoryApi\Api\SourceRepositoryInterface::class, [], $sources],
         ]);
-        $items = [new \Magento\Framework\DataObject(['source_code' => 'enabled']),
-            new \Magento\Framework\DataObject(['source_code' => 'disabled'])];
+        $items = [];
+        foreach (['enabled', 'disabled', 'unlinked'] as $code) {
+            $item = $this->createMock(\Magento\InventoryApi\Api\Data\SourceItemInterface::class);
+            $item->method('getSourceCode')->willReturn($code);
+            $items[] = $item;
+        }
         $api = $this->getMockBuilder(Api::class)->disableOriginalConstructor()
             ->onlyMethods(['isMsiEnabled', 'getAllItems'])->getMock();
         $api->method('isMsiEnabled')->willReturn(true);

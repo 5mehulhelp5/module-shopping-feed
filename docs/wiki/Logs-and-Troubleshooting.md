@@ -36,7 +36,7 @@ Use **View Log** from the Feeds Management grid, or inspect the file as the Mage
 | No final file appears | Confirm the configured directory and filename, filesystem permissions, disk space, and whether a `.tmp` generation is still active. |
 | Product is absent | Test the SKU, then check enablement, catalog visibility, stock settings, filters, category rules, and complex-product configuration. |
 | Row columns do not align | Review delimiter choice, mapped directives, source values containing delimiters or line breaks, and row counts across representative products. |
-| Upload fails | Confirm mode, hostname, port, credentials, remote path, permissions, DNS, and firewall access from the Magento host. |
+| Upload fails | Confirm mode, hostname, port, credentials, remote path, permissions, DNS, and firewall access from the Magento host. On the standards branch, SFTP also requires the trusted SHA256 server-key fingerprint. Confirm any changed key with the recipient before replacing it. |
 | `require is not defined` on a Hyva simple-product page | Confirm 1.0.0 or later is installed, the `hyva_` layout override is active, and stale theme overrides or full-page caches do not retain the Luma template. |
 | Configurable link does not select a Hyva variant | Regenerate the feed and confirm its fragment includes numeric attribute IDs. Inspect selected options, price updates, and browser errors. |
 | Available configurable variants appear out of stock | Confirm the parent is salable and 1.0.0 or later is installed. Check child stock, parent inheritance, and the selected website stock independently. |

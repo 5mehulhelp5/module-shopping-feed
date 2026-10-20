@@ -61,7 +61,7 @@ class ShippingWeight extends MapperAbstract
             // Use the weight of the product used when pulling the price.
             if (in_array(
                 $associatedProductAdapter->getProduct()->getId(),
-                $this->getAdapter()->getData('min_price_product_ids')
+                (array)$this->getAdapter()->getData('min_price_product_ids')
             )) {
                 array_push($selected_weights, end($weights));
             }

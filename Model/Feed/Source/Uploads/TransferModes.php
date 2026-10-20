@@ -34,7 +34,7 @@ class TransferModes implements OptionSourceInterface
     {
         return [
             self::MODE_SFTP => __('SFTP'),
-            self::MODE_FTP  => __('FTP'),
+            self::MODE_FTP  => __('FTP (unencrypted)'),
         ];
     }
 

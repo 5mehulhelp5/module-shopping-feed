@@ -184,6 +184,9 @@ class Generator extends DataObject
      */
     protected $outputPath;
 
+    /** @var Logger\Rotator */
+    private $logRotator;
+
     /**
      * Generator constructor.
      *
@@ -211,6 +214,7 @@ class Generator extends DataObject
      * @param Feed\Validation\TikTokCatalog $tikTokCatalogValidator
      * @param Feed\Validation\PinterestCatalog $pinterestCatalogValidator
      * @param Feed\Validation\OpenAiGoogleCompatible $openAiGoogleCompatibleValidator
+     * @param Logger\Rotator $logRotator
      * @param Generator\Queue|null $queue
      * @param string|null $testSku
      * @param array $data
@@ -240,6 +244,7 @@ class Generator extends DataObject
         \MageOS\ShoppingFeed\Model\Feed\Validation\TikTokCatalog $tikTokCatalogValidator,
         \MageOS\ShoppingFeed\Model\Feed\Validation\PinterestCatalog $pinterestCatalogValidator,
         \MageOS\ShoppingFeed\Model\Feed\Validation\OpenAiGoogleCompatible $openAiGoogleCompatibleValidator,
+        \MageOS\ShoppingFeed\Model\Logger\Rotator $logRotator,
         ?\MageOS\ShoppingFeed\Model\Generator\Queue $queue = null,
         $testSku = null,
         $data = []
@@ -277,6 +282,7 @@ class Generator extends DataObject
         $this->scheduleFactory = $scheduleFactory;
         $this->scopeConfig = $scopeConfig;
         $this->outputPath = $outputPath;
+        $this->logRotator = $logRotator;
         $this->metaCatalogValidator = $metaCatalogValidator;
         $this->microsoftMerchantCenterValidator = $microsoftMerchantCenterValidator;
         $this->tikTokCatalogValidator = $tikTokCatalogValidator;
@@ -320,11 +326,11 @@ class Generator extends DataObject
             ? (float)$rotateKb : 512;
         // phpcs:ignore Magento2.Functions.DiscouragedFunction -- log rotation keeps native false-on-error semantics; the driver throws
         if (is_file($logFile) && filesize($logFile) > 1024 * $rotateKb) {
-            $archiveFile = $logFile . '.' . date('Y-m-d-H-i-s') . '.gz';
-            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- compress.zlib:// stream write with native false-on-error semantics
-            file_put_contents('compress.zlib://' . $archiveFile, file_get_contents($logFile));
-            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- log rotation keeps native false-on-error semantics; the driver throws
-            file_put_contents($logFile, '');
+            try {
+                $this->logRotator->rotate($logFile);
+            } catch (\RuntimeException $exception) {
+                $logger->warning('Feed log rotation failed; the original log was retained.');
+            }
         }
 
         $logger->notice(sprintf('START %s FEED #%s', strtoupper($this->feed->getType()), $this->feed->getId()));

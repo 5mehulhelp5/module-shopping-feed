@@ -59,12 +59,13 @@ class UploaderFactory
         $singleton = true
     ) {
         $mode = $feedUpload->getMode();
+        $classes = ['ftp' => Mode\Ftp::class, 'sftp' => Mode\Sftp::class];
+        if (!is_string($mode) || !isset($classes[$mode])) {
+            throw new \Magento\Framework\Exception\LocalizedException(__('Choose FTP or SFTP for the upload mode.'));
+        }
 
         if (!isset($this->instances[$mode]) || !$singleton) {
-            $className = sprintf('MageOS\ShoppingFeed\Model\Uploader\Mode\%s', ucfirst($mode));
-            if (!class_exists($className)) {
-                $className = \MageOS\ShoppingFeed\Model\Uploader\Mode\Ftp::class;
-            }
+            $className = $classes[$mode];
             $object = $this->objectManager->create(
                 $className,
                 [

@@ -17,7 +17,9 @@ class FeedFormData
         'filters_output_limit', 'filters_adwords_price_buckets', 'configurable_map_inherit', 'grouped_map_inherit'
     ];
     private const SCHEDULE_FIELDS = ['id', 'start_at', 'batch_mode', 'batch_limit', 'delete'];
-    private const UPLOAD_FIELDS = ['id', 'mode', 'host', 'port', 'username', 'password', 'path', 'gzip', 'delete'];
+    private const UPLOAD_FIELDS = [
+        'id', 'mode', 'host', 'port', 'username', 'password', 'path', 'gzip', 'host_key_fingerprint', 'delete'
+    ];
 
     /**
      * Project a saved feed into the editor's form data, with credentials redacted.

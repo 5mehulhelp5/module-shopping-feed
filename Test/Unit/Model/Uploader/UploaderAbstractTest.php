@@ -55,17 +55,21 @@ class UploaderAbstractTest extends TestCase
     public function testSuccessfulDirectoryChangeAllowsUpload(): void
     {
         $config = $this->createMock(\MageOS\ShoppingFeed\Model\Feed\Upload::class);
+        $config->expects(self::once())->method('getDecryptedPassword')->willReturn('decrypted at transport');
         $config->method('getData')->willReturn([
             'host' => 'example.invalid',
             'port' => 22,
             'username' => 'test',
-            'password' => 'dummy',
+            'password' => 'ciphertext',
             'path' => '/feeds',
         ]);
         $connection = $this->createMock(\Magento\Framework\Filesystem\Io\Sftp::class);
-        $connection->method('open')->willReturn(true);
+        $connection->expects(self::once())->method('open')->with(self::callback(
+            static fn($options) => $options['password'] === 'decrypted at transport'
+        ))->willReturn(true);
         $connection->method('cd')->with('/feeds')->willReturn(true);
         $connection->expects($this->once())->method('write')->with('feed.txt', '/tmp/feed.txt')->willReturn(true);
+        $connection->expects(self::once())->method('close');
         $subject = new \MageOS\ShoppingFeed\Model\Uploader\Mode\Sftp($config, $connection);
         $this->assertTrue($subject->upload('/tmp/feed.txt'));
     }

@@ -58,10 +58,12 @@ class Sftp extends UploaderAbstract implements UploaderInterface
     public function getConnectionConfiguration($config)
     {
         return [
-            'host'     => sprintf('%s:%s', $config['host'], $config['port']),
+            'host'     => $config['host'],
+            'port'     => $config['port'],
             'username' => $config['username'],
             'password' => $config['password'],
             'timeout'  => self::DEFAULT_TIMEOUT,
+            'host_key_fingerprint' => $config['host_key_fingerprint'] ?? '',
         ];
     }
 }

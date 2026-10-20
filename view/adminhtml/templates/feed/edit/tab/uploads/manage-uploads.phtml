@@ -21,6 +21,7 @@ $element = $block->getElement();
                 <tr>
                     <th class="data-grid-th col-mode required"><?= $escaper->escapeHtml(__('Mode')) ?></th>
                     <th class="data-grid-th col-host required"><?= $escaper->escapeHtml(__('Host')) ?></th>
+                    <th class="data-grid-th"><?= $escaper->escapeHtml(__('SFTP Host Key Fingerprint')) ?></th>
                     <th class="data-grid-th col-port required"><?= $escaper->escapeHtml(__('Port')) ?></th>
                     <th class="data-grid-th col-username required"><?= $escaper->escapeHtml(__('Username')) ?></th>
                     <th class="data-grid-th col-password required"><?= $escaper->escapeHtml(__('Password')) ?></th>
@@ -32,7 +33,7 @@ $element = $block->getElement();
             <tbody id="<?= $escaper->escapeHtml($htmlId) ?>_container"></tbody>
             <tfoot>
                 <tr>
-                    <td colspan="8" class="col-actions-add"><?= /* @noEscape */ $block->getAddButtonHtml() ?></td>
+                    <td colspan="9" class="col-actions-add"><?= /* @noEscape */ $block->getAddButtonHtml() ?></td>
                 </tr>
             </tfoot>
         </table>
@@ -61,6 +62,10 @@ var manageUploadsRowTemplate = '<tr>'
     + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> host required-entry" type="text" name="<?=
         $escaper->escapeHtml($htmlName)
     ?>[<%- data.index %>][host]" value="<%- data.host %>" id="manage_uploads_row_<%- data.index %>_host" />'
+    + '</td>'
+    + '<td class="col-port">'
+    + '<input type="text" name="<?= $escaper->escapeHtml($htmlName) ?>[<%- data.index %>][host_key_fingerprint]"'
+    + ' value="<%- data.hostKeyFingerprint %>" id="manage_uploads_row_<%- data.index %>_host_key_fingerprint" />'
     + '</td>'
     + '<td class="col-port">'
     + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> port required-entry" type="text" name="<?=
@@ -118,6 +123,7 @@ var manageUploadsControl = {
             id: '',
             mode: '<?= $escaper->escapeHtml($block->getDefaultTransferMode()) ?>',
             host: '',
+            hostKeyFingerprint: '',
             port: '',
             username: '',
             password: '',
@@ -127,7 +133,7 @@ var manageUploadsControl = {
             index: this.itemsCount++
         };
 
-        if(arguments.length == 9) {
+        if(arguments.length >= 9) {
             data.id       = arguments[0];
             data.mode     = arguments[1];
             data.host     = arguments[2];
@@ -137,6 +143,7 @@ var manageUploadsControl = {
             data.path     = arguments[6];
             data.gzip     = arguments[7];
             data.readOnly = arguments[8];
+            data.hostKeyFingerprint = arguments[9] || '';
         }
 
         Element.insert($('<?= $escaper->escapeHtml($htmlId) ?>_container'), {
@@ -147,6 +154,7 @@ var manageUploadsControl = {
 
         $('manage_uploads_row_' + data.index + '_mode').value = data.mode;
         $('manage_uploads_row_' + data.index + '_host').value = data.host;
+        $('manage_uploads_row_' + data.index + '_host_key_fingerprint').value = data.hostKeyFingerprint;
         $('manage_uploads_row_' + data.index + '_port').value = data.port;
         $('manage_uploads_row_' + data.index + '_username').value = data.username;
         $('manage_uploads_row_' + data.index + '_password').value = data.password;
@@ -155,7 +163,8 @@ var manageUploadsControl = {
         $('manage_uploads_row_' + data.index + '_id').value = data.id;
 
         if (data.readOnly == '1') {
-            ['mode', 'host', 'port', 'username', 'password', 'path', 'gzip', 'delete'].each(function(idx){
+            ['mode', 'host', 'port', 'username', 'password', 'path', 'gzip', 'delete', 'host_key_fingerprint']
+                .each(function(idx){
                 $('manage_uploads_row_'+data.index+'_'+idx).disabled = true;
             });
             $('manage_uploads_row_'+data.index+'_delete_button').hide();
@@ -195,7 +204,8 @@ var manageUploadsControl = {
         '<?= $escaper->escapeHtml(\MageOS\ShoppingFeed\Model\Feed\Upload::OBSCURED_VALUE) ?>',
         '<?= $escaper->escapeHtml($item['path']) ?>',
         '<?= (int) $item['gzip'] ?>',
-        <?= (int) !empty($item['readonly']) ?>
+        <?= (int) !empty($item['readonly']) ?>,
+        '<?= $escaper->escapeJs($item['host_key_fingerprint'] ?? '') ?>'
     );
 <?php endforeach; ?>
 <?php if ($readonly): ?>

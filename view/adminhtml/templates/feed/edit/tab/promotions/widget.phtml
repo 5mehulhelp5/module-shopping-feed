@@ -183,10 +183,9 @@ $couponRequiredTitle = __('Shipping without coupon is not allowed');
                             });
                         </script>
                     </td>
-                    <?php $code = $escaper->escapeHtml($rule->getCode()); ?>
-                    <td <?=
-                        $escaper->escapeHtml(empty($code) ? 'class="no-cupon"' : '')
-                    ?>><?= $escaper->escapeHtml($code) ?></td>
+                    <?php $code = $rule->getCode(); ?>
+                    <td class="<?= $escaper->escapeHtmlAttr(empty($code) ? 'no-cupon' : '') ?>"
+                    ><?= $escaper->escapeHtml($code) ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

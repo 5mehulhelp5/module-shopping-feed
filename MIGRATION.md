@@ -2,7 +2,7 @@
 
 `MageOS_ShoppingFeed` is intentionally a new module, not a renamed release of an installed Rocket Web package.
 
-That boundary protects stores that paid for and currently depend on the original packages. Installing this module does not claim their Composer packages, register their Magento modules, read their configuration, or alter their tables.
+That boundary protects stores that currently depend on the original Rocket Web modules. Installing this module does not claim their Composer packages, register their Magento modules, read their configuration, or alter their tables.
 
 For users moving from Rocket Shopping Feeds, the separately installed [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb) provides an explicit configuration importer. Version 1.0.0 is available on [Packagist](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb). Follow the [installation and migration guide](docs/wiki/Rocket-Web-Migration.md); installing or upgrading the main module does not run it.
 
@@ -33,7 +33,7 @@ The main module does not automatically copy:
 - System configuration
 - Generated feed files or logs
 
-This is deliberate. An implicit migration could modify a paid installation or produce a second live feed without review.
+This is deliberate. An implicit migration could modify an existing installation or produce a second live feed without review.
 
 ## Safe evaluation on an existing store
 

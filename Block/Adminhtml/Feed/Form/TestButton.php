@@ -9,10 +9,12 @@ class TestButton implements \Magento\Framework\View\Element\UiComponent\Control\
     /**
      * @param \Magento\Backend\Model\UrlInterface $url
      * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\AuthorizationInterface $authorization
      */
     public function __construct(
         private \Magento\Backend\Model\UrlInterface $url,
-        private \Magento\Framework\Registry $registry
+        private \Magento\Framework\Registry $registry,
+        private \Magento\Framework\AuthorizationInterface $authorization
     ) {
     }
 
@@ -24,7 +26,7 @@ class TestButton implements \Magento\Framework\View\Element\UiComponent\Control\
     public function getButtonData(): array
     {
         $feed = $this->registry->registry('feed');
-        if (!$feed || !$feed->getId()) {
+        if (!$feed || !$feed->getId() || !$this->authorization->isAllowed('MageOS_ShoppingFeed::generate')) {
             return [];
         }
         return ['label' => __('Test Feed'), 'sort_order' => 20,

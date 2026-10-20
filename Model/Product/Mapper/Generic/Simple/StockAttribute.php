@@ -55,7 +55,7 @@ class StockAttribute extends MapperAbstract
         /** @var \Magento\CatalogInventory\Model\Stock\Item $stockItem DI preference for StockItemInterface */
         $stockItem = $this->stockRegistryProvider->getStockItem($product->getId(), $product->getStoreId());
         // phpcs:ignore Magento2.Functions.DiscouragedFunction -- $stockItem is typed Stock\Item: !== null adds a PHPStan finding
-        $value =!is_null($stockItem) ? $stockItem->getData($attr_code) : '';
+        $value = !is_null($stockItem) ? $stockItem->getData($attr_code) : '';
         if ($value === null) {
             $value = '';
         }

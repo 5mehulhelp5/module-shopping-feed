@@ -64,7 +64,9 @@ class PersistenceTest extends TestCase
             'selectFactory' => $selectFactory,
             'serializer' => new \Magento\Framework\Serialize\Serializer\Json(),
             'config' => ['host' => '127.0.0.1:' . (int)getenv('SHOPPING_FEED_TEST_DB_PORT'),
-                'dbname' => 'shopping_feed_test', 'username' => 'root', 'password' => '', 'charset' => 'utf8mb4'],
+                'dbname' => getenv('SHOPPING_FEED_TEST_DB_NAME') ?: 'shopping_feed_test',
+                'username' => 'root', 'password' => getenv('SHOPPING_FEED_TEST_DB_PASSWORD') ?: '',
+                'charset' => 'utf8mb4'],
         ]);
         $resources = $this->createMock(ResourceConnection::class);
         $resources->method('getConnection')->willReturn($this->db);
@@ -87,7 +89,8 @@ class PersistenceTest extends TestCase
         $type .= isset($column['length']) ? '(' . (int)$column['length'] . ')' : '';
         $this->db->query('CREATE TEMPORARY TABLE mageos_shopping_feed_feed_upload (
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, feed_id INT, host VARCHAR(255), username VARCHAR(255),
-            password ' . $type . ', port INT, mode VARCHAR(255), gzip INT, path VARCHAR(255))');
+            password ' . $type . ', port INT, mode VARCHAR(255), gzip INT, path VARCHAR(255),
+            host_key_fingerprint VARCHAR(100))');
         $this->db->query('CREATE TEMPORARY TABLE mageos_shopping_feed_feed (id INT PRIMARY KEY)');
         $this->db->query('CREATE TEMPORARY TABLE mageos_shopping_feed_feed_queue (
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, feed_id INT, schedule_id INT NULL,
@@ -129,7 +132,7 @@ class PersistenceTest extends TestCase
         $raw = $this->db->fetchRow('SELECT * FROM mageos_shopping_feed_feed_upload WHERE id = ?', $id);
         $this->assertSame('changed.example', $raw['host']);
         $this->assertSame($stored, $raw['password']);
-        $this->assertSame($password, $this->upload()->load($id)->getPassword());
+        $this->assertSame($password, $this->upload()->load($id)->getDecryptedPassword());
     }
 
     public function testRepeatedSaveDoesNotDoubleEncryptThePassword(): void
@@ -143,7 +146,7 @@ class PersistenceTest extends TestCase
             $upload->getId()
         );
         $this->assertSame($password, $this->encryptor->decrypt($raw));
-        $this->assertSame($password, $this->upload()->load($upload->getId())->getPassword());
+        $this->assertSame($password, $this->upload()->load($upload->getId())->getDecryptedPassword());
     }
 
     public function testLongPasswordExceedsTheOldColumnLimitAndRoundTrips(): void
@@ -155,7 +158,7 @@ class PersistenceTest extends TestCase
         $raw = $this->db->fetchOne('SELECT password FROM mageos_shopping_feed_feed_upload WHERE id = ?', $id);
         $this->assertGreaterThan(255, strlen($raw));
         $this->assertSame($password, $this->encryptor->decrypt($raw));
-        $this->assertSame($password, $this->upload()->load($id)->getPassword());
+        $this->assertSame($password, $this->upload()->load($id)->getDecryptedPassword());
     }
 
     public function testTodaysInterruptedQueueIsImmediatelyEligibleAndResetsItsBatch(): void

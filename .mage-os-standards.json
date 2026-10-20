@@ -4,7 +4,7 @@
   "skill_revision": "ac6f4f8a184b9796949e229e056074edf1491faf",
   "areas": {
     "identity": "pass",
-    "license": "partial",
+    "license": "pass",
     "integrity": "pass",
     "admin_ux": "pass",
     "ci": "pass",
@@ -15,7 +15,7 @@
     "hygiene": "pass"
   },
   "notes": [
-    "License: OSL-3.0 throughout, but 19 imported files still carry Rocket Web 'All rights reserved' lines. Left unchanged pending a maintainer decision; attribution is preserved.",
+    "License reviewed 2026-10-20: OSL-3.0 throughout with Rocket Web attribution and https://rocketweb.com/. Updated 19 imported headers as requested; original copyright and author attribution is preserved.",
     "CI: check-extension.yaml pinned to Graycore v8.12.0 (4de1565d1732187111b6d2eeb23c0ee3a9fc23b7) with PHPStan, locked composer audits and Dependabot. Not yet run on GitHub. The declared floor (magento/framework 103.0.6-p15, PHP 8.1) is linted and dependency-resolved but not runtime-tested; a lowest-version job is proposed, not added.",
     "Static analysis: PHPStan 2.3.1 at level 8 with bitexpert/phpstan-magento 0.44.0. Without the baseline, level 2 is the highest level whose only findings are the 60 architecture-rule and final-class findings; level 3 adds 24. Baseline: 1716 entries, 2405 errors (775 in runtime code, 1603 in tests, 27 in dev and CI scripts). CI fails if it grows. PHPCS (magento-coding-standard 41): 0 errors, 0 warnings, one narrow exclusion for $this->helper() in retained legacy templates.",
     "Tests: 930 unit tests pass on PHP 8.5; the Shopping Feed integration suite (27 tests) passes on a disposable Mage-OS 3.6.0 store. Four runtime defects were fixed with regression tests shown failing first.",

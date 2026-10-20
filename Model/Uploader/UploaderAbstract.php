@@ -75,7 +75,11 @@ abstract class UploaderAbstract extends \Magento\Framework\DataObject
         $fileName = basename($filePath);
 
         $connection  = $this->getConnection();
-        return $connection->write($fileName, $filePath);
+        try {
+            return $connection->write($fileName, $filePath);
+        } finally {
+            $connection->close();
+        }
     }
 
     /**
@@ -88,6 +92,7 @@ abstract class UploaderAbstract extends \Magento\Framework\DataObject
     {
         try {
             $connection  = $this->getConnection();
+            $connection->close();
             return true;
         } catch (\Exception $e) {
             throw new \Magento\Framework\Exception\LocalizedException(
@@ -119,6 +124,7 @@ abstract class UploaderAbstract extends \Magento\Framework\DataObject
         }
 
         $config['user'] = $config['username'];
+        $config['password'] = $this->feedUpload->getDecryptedPassword();
         $config['passive'] = true;
 
         $this->connection->open($this->getConnectionConfiguration($config));

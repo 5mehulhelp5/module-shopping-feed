@@ -162,7 +162,7 @@ See [Shipping](docs/wiki/Shipping.md).
 
 **Schedule**: rows of Start At (hour), Batch Mode and Batch Limit (0 means 1000). A new feed starts with one 01:00 row; remove it before saving if you do not want scheduled runs. See [Scheduling and queues](docs/wiki/Scheduling-and-Queues.md).
 
-**Uploads**: rows of Mode (SFTP or FTP), Host, Port (22), Username, Password, Path and Gzip. Passwords are stored encrypted and are never sent back to the browser. See [Uploads](docs/wiki/Uploads.md).
+**Uploads**: rows of Mode (SFTP or unencrypted FTP), Host, SFTP Host Key Fingerprint, Port (22), Username, Password, Path and Gzip. SFTP requires a trusted SHA256 server-key fingerprint before authentication. Passwords stay encrypted in saved model data and are never sent back to the browser. Existing SFTP destinations need a fingerprint after `setup:upgrade`. See [Uploads](docs/wiki/Uploads.md).
 
 **Google Promotions** (Google Shopping only): Enable feed, then per active cart price rule for the NOT LOGGED IN group: Include, Promotion Title (60 characters), Effective from/to and Display from/to. See [Google Promotions](docs/wiki/Google-Promotions.md).
 
@@ -239,6 +239,6 @@ Follow [MIGRATION.md](MIGRATION.md) and the [migration guide](docs/wiki/Rocket-W
 
 ## Provenance and license
 
-The consolidated source and exact import revisions are documented in [PROVENANCE.md](PROVENANCE.md). Original Rocket Web copyright and author notices are retained in source files.
+The original code was developed by [Rocket Web](https://rocketweb.com/). The consolidated source and exact import revisions are documented in [PROVENANCE.md](PROVENANCE.md). Original copyright and author attribution is retained in source files.
 
 The package uses the [Open Software License 3.0](LICENSE.txt). Composer metadata, source notices and the bundled license are aligned on OSL-3.0. See [LICENSING.md](LICENSING.md).

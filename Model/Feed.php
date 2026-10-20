@@ -579,6 +579,7 @@ class Feed extends AbstractModel
 
                 $uploadObject->setData('mode', $upload['mode']);
                 $uploadObject->setData('host', $upload['host']);
+                $uploadObject->setData('host_key_fingerprint', trim((string)($upload['host_key_fingerprint'] ?? '')));
                 $uploadObject->setData('port', $upload['port']);
                 $uploadObject->setData('username', $upload['username']);
                 $uploadObject->setData('password', $upload['password']);

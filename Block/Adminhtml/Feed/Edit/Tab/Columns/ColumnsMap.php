@@ -58,11 +58,6 @@ class ColumnsMap extends AbstractArrayElement implements RendererInterface
     /**
      * @var \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\OptionsRendererFactory
      */
-    protected $optionRendererFactory;
-
-    /**
-     * @var \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\OptionsRendererFactory
-     */
     protected $optionsRendererFactory;
 
     /**

@@ -217,6 +217,10 @@ class Metadata
         $meta['uploads']['children']['uploads'] = $this->rows(__('Upload Destinations'), '', [
             'id' => ['visible' => false], 'mode' => $this->select(__('Mode'), 'TransferModes') + ['default' => 'sftp'],
             'host' => ['label' => __('Host'), 'required' => true],
+            'host_key_fingerprint' => [
+                'label' => __('SFTP Host Key Fingerprint'),
+                'notice' => __('Required for SFTP. Enter the SHA256 fingerprint confirmed with your provider.')
+            ],
             'port' => [
                 'label' => __('Port'), 'default' => 22, 'required' => true,
                 'validation' => ['validate-digits' => true]

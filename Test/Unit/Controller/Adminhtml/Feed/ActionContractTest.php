@@ -75,7 +75,7 @@ class ActionContractTest extends TestCase
                 \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\SuggestCategories::class,
                 'MageOS_ShoppingFeed::save',
             ],
-            'test' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Test::class, 'MageOS_ShoppingFeed::grid'],
+            'test' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Test::class, 'MageOS_ShoppingFeed::generate'],
             'view log' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Viewlog::class, 'MageOS_ShoppingFeed::grid'],
         ];
     }

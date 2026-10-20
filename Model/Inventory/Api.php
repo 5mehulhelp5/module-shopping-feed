@@ -101,7 +101,7 @@ class Api
         $items = [];
         $sourceItems = $this->getAllItems($product);
         foreach ($sourceItems as $item) {
-            if (in_array($item['source_code'], $sourceCodes)) {
+            if (in_array($item->getSourceCode(), $sourceCodes, true)) {
                 $items[] = $item;
             }
         }

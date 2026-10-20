@@ -1441,12 +1441,6 @@ parameters:
 			path: Model/Feed/Upload.php
 
 		-
-			message: '#^Parameter \#1 \$data of method Magento\\Framework\\Encryption\\EncryptorInterface\:\:decrypt\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: Model/Feed/Upload.php
-
-		-
 			message: '#^Method MageOS\\ShoppingFeed\\Model\\Feed\\Validation\\MetaCatalog\:\:validate\(\) has parameter \$row with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1

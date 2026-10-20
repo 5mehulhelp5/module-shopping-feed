@@ -25,7 +25,8 @@ class FeedFormDataTest extends TestCase
             ])]);
         $feed->method('getSchedules')->willReturn([['id' => 8, 'feed_id' => 7, 'processed_at' => 'private']]);
         $feed->method('getUploads')->willReturn([
-            ['id' => 9, 'password' => 'decrypted-secret', 'host' => 'example.invalid', 'internal_secret' => 'hidden'],
+            ['id' => 9, 'password' => 'decrypted-secret', 'host' => 'example.invalid', 'internal_secret' => 'hidden',
+                'host_key_fingerprint' => 'SHA256:' . str_repeat('A', 43)],
             ['id' => null, 'password' => 'new-secret']
         ]);
         $data = (new FeedFormData())->project($feed, [
@@ -35,6 +36,7 @@ class FeedFormDataTest extends TestCase
         self::assertFalse($data['config']['custom_boolean']);
         self::assertSame('0', $data['config']['general_use_default_stock']);
         self::assertSame(Upload::OBSCURED_VALUE, $data['uploads'][0]['password']);
+        self::assertSame('SHA256:' . str_repeat('A', 43), $data['uploads'][0]['host_key_fingerprint']);
         self::assertSame('', $data['uploads'][1]['password']);
         self::assertSame([['id' => 8]], $data['schedules']);
         self::assertSame(
