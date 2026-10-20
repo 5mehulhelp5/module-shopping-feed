@@ -4,7 +4,7 @@ Upload destinations run after a successful feed generation. Establish and valida
 
 > Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
-The [UI Component editor](Admin-UI-Component-Forms) masks credentials before provider serialization. After a failed save, new or changed passwords must be re-entered; the previously saved password remains masked. Removing the final upload row and saving clears the destination list. The separate runtime follow-up verifies FTP/SFTP plain and gzip delivery to private Docker test servers on Magento Open Source 2.4.8 and 2.4.9, including credentials, payload checksums, safe failures, and temporary-file cleanup. See the repository's `docs/reviews/2026-10-02-docker-operations-acceptance.md`. External recipient acceptance remains separate.
+The [UI Component editor](Admin-UI-Component-Forms) masks credentials before provider serialization. After a failed save, new or changed passwords must be re-entered; the previously saved password remains masked. Removing the final upload row and saving clears the destination list. The historical 1.2.0 runtime follow-up verified FTP/SFTP plain and gzip delivery to private Docker test servers on Magento Open Source 2.4.8 and 2.4.9, including credentials, payload checksums, safe failures, and temporary-file cleanup. See the repository's `docs/reviews/2026-10-02-docker-operations-acceptance.md`. The [1.2.4 verification](Release-1-2-4) adds real local plain/gzip transfers and rejection of missing or mismatched SFTP fingerprints before authentication. External recipient acceptance remains separate.
 
 ## Security boundary
 
@@ -22,7 +22,7 @@ Open the feed, select **Uploads**, then add a row:
 
 | Field | Purpose |
 | --- | --- |
-| Mode | SFTP or FTP |
+| Mode | SFTP (default) or FTP (unencrypted) |
 | Host | Hostname only, without a URL scheme |
 | SFTP Host Key Fingerprint | Trusted `SHA256:...` fingerprint supplied by the recipient's server administrator; required for SFTP |
 | Port | Remote service port |
@@ -35,7 +35,7 @@ The uploaded remote filename is the basename of the local file. **Path** selects
 
 Passwords are encrypted with Magento's encryption service before database storage. The Admin shows `******` for a saved password. Leave that placeholder unchanged to retain the existing secret; enter a new value only when rotating it.
 
-The standards branch also keeps stored passwords encrypted in loaded and saved model data. It decrypts a password when opening the transport connection. Cloned destinations retain the encrypted password and pinned host key.
+Version 1.2.4 also keeps stored passwords encrypted in loaded and saved model data. It decrypts a password when opening the transport connection. Cloned destinations retain the encrypted password and pinned host key. A failed clone rolls back the new feed and its copied records. Custom integrations that need a plaintext password must call `Upload::getDecryptedPassword()` only at the transport boundary; `getPassword()` now returns ciphertext.
 
 ## Confirm the SFTP server key
 
@@ -56,7 +56,7 @@ When **Gzip** is enabled, the module streams the feed into a temporary `.gz` fil
 ## Validate a destination
 
 1. Generate the feed without uploads and record its checksum and size.
-2. Add one quarantine destination.
+2. Add one quarantine destination. For SFTP, enter the fingerprint confirmed through a trusted channel, then save and reopen to verify it persists.
 3. Generate the feed manually.
 4. Confirm the log records a successful upload to the expected host and path.
 5. Download the remote object through an independent client.

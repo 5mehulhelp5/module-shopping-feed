@@ -8,7 +8,7 @@ Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream 
 
 ## 1.2.4 verification
 
-The [Mage-OS 3.6 verification record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.4/docs/reviews/2026-10-20-standards-security-mageos36.md) covers 939 unit tests, 30 integration tests, four database persistence tests, 84 JavaScript checks, DI compilation, and standard Admin save/reopen. Real local FTP/SFTP transfers verify plain and gzip payloads, fingerprint rejection before authentication, temporary-file cleanup, and complete archived logs. Static checks and dependency audits pass for the recorded local candidate. [Release 1.2.4](Release-1-2-4) links exact-commit CI and upgrade requirements.
+The [Mage-OS 3.6 verification record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.4/docs/reviews/2026-10-20-standards-security-mageos36.md) covers 939 unit tests, 30 integration tests, four database persistence tests, 84 JavaScript checks, DI compilation, and standard Admin save/reopen. Real local FTP/SFTP transfers verify plain and gzip payloads, fingerprint rejection before authentication, temporary-file cleanup, and complete archived logs. Static checks and dependency audits pass for the recorded local candidate. All 37 [post-merge CI jobs](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/39372608509) passed for tagged commit `75dd335f930aef78ae693f62c3039e469c2d26f6`, including the exact-version legacy advisory policy. [Release 1.2.4](Release-1-2-4) links exact-commit CI and upgrade requirements.
 
 External recipient ingestion, native Nebula acceptance, other target-store behavior, and production volume were not repeated in this local run. The preset output-limit key mismatch remains a known issue.
 
@@ -30,7 +30,7 @@ Version 1.2.1 passes 846 local unit tests on both native frameworks and 47 JavaS
 
 ## 1.2.0 acceptance record
 
-The release runtime `133af71` is deployed on `mageos-latest` and installed on the Magento Open Source 2.4.8/2.4.9 Docker profiles. The original category-generation and promotion-date failures are repaired. Form persistence/output, permissions, previews, stock selection, native configurable MSI, pricing, frontend scope, 5,000-product generation, private receiver delivery, and rollback have recorded local evidence. See [Admin UI Component forms](Admin-UI-Component-Forms) and the repository's `docs/reviews/2026-10-03-local-acceptance.md` for the hourly soak, cleanup state, exact scope, and linked historical results.
+The historical 1.2.0 runtime `133af71` was verified on `mageos-latest` and the Magento Open Source 2.4.8/2.4.9 Docker profiles. The original category-generation and promotion-date failures are repaired. Form persistence/output, permissions, previews, stock selection, native configurable MSI, pricing, frontend scope, 5,000-product generation, private receiver delivery, and rollback have recorded local evidence. See [Admin UI Component forms](Admin-UI-Component-Forms) and the repository's `docs/reviews/2026-10-03-local-acceptance.md` for the hourly soak, cleanup state, exact scope, and linked historical results.
 
 The [1.2.0 release summary](Release-1-2-0) links the release notes and upgrade checklist. Release publication does not establish external provider ingestion, a customer's transfer destination, native Nebula UI Bridge behavior, consent-managed tag delivery, Varnish behavior, or production-catalog capacity. Test the exact release on each intended target and preserve those boundaries in the release record.
 
@@ -45,7 +45,9 @@ Test the release candidate against the supported Mage-OS and Magento Open Source
 Features that need additional fixtures should be tested with them:
 
 * Standard Admin with Nebula absent, plus Nebula Admin when supported
-* Upgrade from 1.0 with existing uploads, schedules, and column maps
+* Upgrade from the prior patch, including existing SFTP destinations without fingerprints, plus older schema/editor transitions when applicable
+* Generate Feed permission for Test Feed, including denial of read-only roles
+* Log-archive equality before truncation and preservation on archive failure
 * Google identifier/date edge cases and CSV parser round trips
 * MSI sources, website stocks, and reservations for Local Inventory
 * Active cart price rules for Promotions

@@ -2,7 +2,7 @@
 
 Treat feed performance as a measured workload. Product count alone does not explain cost because field directives and complex-product expansion can dominate generation time.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 ## Start with a baseline
 

@@ -1,5 +1,7 @@
 # Standards security fixes and Mage-OS 3.6 verification
 
+> Release disposition, checked October 20, 2026: this work is included in published `v1.2.4`, commit `75dd335f930aef78ae693f62c3039e469c2d26f6`. All 37 [post-merge CI jobs](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/39372608509) passed. See [release notes](../releases/1.2.4.md) for the final verification scope and exact-version PHP 8.1 advisory policy. The report below preserves the original pre-release local snapshot, including its then-uncommitted state and test totals.
+
 Verified locally on October 20, 2026. The changes are uncommitted on `chore/module-standards-compliance`, based on `61094c5`. No push, merge, release, or production deployment was performed.
 
 The supplied findings are addressed, with two corrections to their descriptions below. The additional review found and fixed a silent fallback from an unknown upload mode to unencrypted FTP. One previously documented preset-limit issue remains deferred because fixing it changes existing feed output.

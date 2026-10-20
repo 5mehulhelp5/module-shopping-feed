@@ -2,13 +2,13 @@
 
 Test mode renders feed values for a chosen product without replacing the normal feed file, changing normal feed status, uploading files, or generating a Promotions companion file.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 The [UI Component Test Feed form](Admin-UI-Component-Forms) uses the same saved-feed route and output renderer. The original deployed candidate failed previews using new category mappings. Local repairs now pass that workflow and reject malformed lookup inputs before product loading. Numeric SKUs remain strings; Product ID mode requires a positive integer.
 
 ## Test in the Admin
 
-From **Catalog > Mage-OS Shopping Feed > Feeds Management**, select **Test Feed** for the saved feed.
+Use a role with **Generate Feed** (`MageOS_ShoppingFeed::generate`), then select **Test Feed** for the saved feed in **Catalog > Mage-OS Shopping Feed > Feeds Management**. In 1.2.4, grid access alone does not permit previews. A read-only grid may still show the link, but the controller denies access and editor preview buttons are hidden.
 
 Choose whether the input is a SKU or product ID, enter the value, and select **Test Now**. The product must be enabled and visible in the catalog. To test a child of a complex product through the Admin, enter the parent SKU, then inspect the rendered child rows.
 

@@ -14,11 +14,17 @@ The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) co
 
 > Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
-The [Admin UI Component forms](Admin-UI-Component-Forms) in 1.2.0 change the editor and its customization hooks. The release runtime `133af71` is deployed on `mageos-latest`, with form, grid-permission, preview, stock-selection, Local Inventory, frontend-scope, and currency-preservation corrections. Magento Open Source 2.4.8 and 2.4.9 retain production-mode form/output and six-role acceptance. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records that historical acceptance, including extended operational checks and remaining limits. Historical version 1.1 continues to use the previous editor.
+The [Admin UI Component forms](Admin-UI-Component-Forms) in 1.2.0 change the editor and its customization hooks. The historical 1.2.0 runtime `133af71` was verified on `mageos-latest`, with form, grid-permission, preview, stock-selection, Local Inventory, frontend-scope, and currency-preservation corrections. Magento Open Source 2.4.8 and 2.4.9 retain production-mode form/output and six-role acceptance. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records that historical acceptance, including extended operational checks and remaining limits. Historical version 1.1 continues to use the previous editor.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
 
 The 1.2.3 hardening and native-theme reports cover all eight presets, reservation-aware aggregate stock, promotion output, manual queue recovery, Hyvä selections/cart, and Nebula filters, actions, and permissions. Editor, preview, and log pages use the supported Magento backend fallback. See [Release acceptance](Release-Acceptance) for the evidence and remaining limits.
+
+Version 1.2.4 is [published](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.4) at `75dd335f930aef78ae693f62c3039e469c2d26f6`. All 37 [post-merge CI jobs](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/39372608509) passed for that commit. Its Mage-OS 3.6 local acceptance is separate from the older theme checks below; see [Release acceptance](Release-Acceptance).
+
+**Upgrading:** run `setup:upgrade` and enter a trusted fingerprint for every SFTP destination before resuming transfers. Test Feed now requires **Generate Feed** permission.
+
+**OpenAI beta:** the bundled Google-compatible preset differs from the current public OpenAI product-feed contract. Confirm acceptance of an actual sample before use; see [the documented format gaps](OpenAI-ChatGPT).
 
 ## What the module does
 
@@ -27,6 +33,7 @@ The module gives a merchant control over which products enter a feed, how Magent
 Current capabilities include:
 
 * Generic delimited product feeds
+* Meta, Microsoft, TikTok, and Pinterest catalog presets, plus an OpenAI Google-compatible beta with onboarding confirmation
 * A Google Shopping template with current item-group and variant columns
 * Google Local Inventory output with optional Multi-Source Inventory support
 * Google Promotions generated alongside a Google Shopping feed
@@ -34,7 +41,7 @@ Current capabilities include:
 * Column mapping, static values, transformations, and output limits
 * Configurable, grouped, bundle, and custom-option handling
 * Scheduled and manual generation through a dedicated queue
-* FTP or SFTP delivery, with optional streaming gzip compression
+* FTP (unencrypted) or SFTP delivery with a required trusted SHA256 host-key fingerprint, plus optional streaming gzip compression
 * Storefront schema.org offer data for automatic product updates
 * Configurable-product deep links and Google Ads `view_item` events
 
@@ -70,7 +77,7 @@ These pages are maintained in the module repository under `docs/wiki` and copied
 
 ## Getting help
 
-For setup and troubleshooting, use the [Shopping Feed support bot on Rocket Web](https://rocketweb.com/rocket-shopping-feeds). Select **Open support chat** on the product page.
+For setup and troubleshooting, use the [Shopping Feed support bot on Rocket Web](https://rocketweb.com/mage-os-shopping-feeds). Select **Open support chat** on the product page.
 
 Use [GitHub Issues](https://github.com/mage-os-lab/module-shopping-feed/issues) for reproducible defects and feature requests. Do not post credentials, private feed files, customer data, or internal paths.
 

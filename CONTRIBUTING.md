@@ -31,11 +31,11 @@ MAGENTO_ROOT=/path/to/magento php /path/to/magento/vendor/bin/phpunit -c phpunit
 MAGENTO_ROOT=/path/to/magento node --test dev/tests/magento-ui-form.test.cjs
 ```
 
-Make new user-visible text translatable: `__()` with `%1` placeholders in PHP, `$t()` from `mage/translate` in JavaScript, `i18n` bindings in Knockout templates, and `translate` attributes in XML. Add the phrases to `i18n/en_US.csv`. Storefront scripts go through `$secureRenderer->renderTag()` on Luma or `$hyvaCsp->registerInlineScript()` on Hyvä so they work with a strict Content Security Policy.
+Make new user-visible text translatable: `__()` with `%1` placeholders in PHP, `$t()` from `mage/translate` in JavaScript, `i18n` bindings in Knockout templates, and `translate` attributes in XML. Add the phrases to `i18n/en_US.csv`. Storefront scripts go through `$secureRenderer->renderTag()` on Luma or `$hyvaCsp->registerInlineScript()` on Hyvä. Test the actual theme under its enforced Content Security Policy; registration alone does not prove full strict-CSP compatibility.
 
 Do not add an implicit migration from legacy tables or configuration. A migration feature must preview its work, preserve the source data, and require explicit confirmation before activating schedules or uploads.
 
-Admin editor changes must target the active UI Component forms and providers, not the retained legacy tab templates. Read [the implementation guide](docs/ui-component-editor.md), [current browser acceptance](docs/reviews/2026-10-01-ui-component-chrome-acceptance.md), and [release acceptance plan](ACCEPTANCE-TEST-PLAN.md). Passing tests for old templates do not establish new-form coverage. Verify saved values through reload and generation, including category IDs and all promotion dates.
+Admin editor changes must target the active UI Component forms and providers, not the retained legacy tab templates. Read [the implementation guide](docs/ui-component-editor.md), [release acceptance and dated evidence](docs/wiki/Release-Acceptance.md), and [release acceptance plan](ACCEPTANCE-TEST-PLAN.md). Passing tests for old templates do not establish new-form coverage. Verify saved values through reload and generation, including category IDs and all promotion dates.
 
 Update the relevant wiki source, README/changelog, and acceptance record when behavior or release status changes. Follow [wiki maintenance](docs/WIKI-MAINTENANCE.md); the public wiki is published separately. Preserve historical results and link them to newer evidence rather than turning them into an unsupported current acceptance claim.
 

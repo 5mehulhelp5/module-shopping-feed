@@ -2,7 +2,7 @@
 
 Configurable, grouped, and bundle products can produce parent rows, associated rows, or both. Decide the row model first, then configure inheritance, URLs, stock, price, and duplicate handling around it.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 ## Associated-product modes
 
@@ -57,6 +57,8 @@ Test fixed and dynamic price or weight bundles separately. Optional and required
 ## Complex Product Context Prioritization
 
 The **Complex Product Context Prioritization** setting in General Configuration (General in 1.2.0) can prioritize individually visible simple products in their complex-product context, including Search-only children. With it enabled, a child created before its parent retains the same parent grouping as a child created later. Enable it when standalone processing produces duplicate or contextually wrong rows, then measure the generation cost.
+
+Version 1.2.4 resolves complex-parent lookup tables through Magento's resource connection, including an installation's table prefix, and handles configurable shipping weight when minimum-price product IDs are absent. Include both cases when validating customized or prefixed stores.
 
 ## Verification matrix
 

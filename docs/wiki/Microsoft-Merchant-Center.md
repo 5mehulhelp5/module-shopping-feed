@@ -1,8 +1,8 @@
 # Microsoft Merchant Center
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
-When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the tested runtime, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
+When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The guide separates historical 1.2.0 browser checks from 1.2.4 Mage-OS 3.6 verification and records the remaining limits. Template generation checks do not establish provider ingestion acceptance.
 
 The **Microsoft Merchant Center (TSV)** preset produces a UTF-8 tab-delimited `.txt` file. It shares the module's generation, Test Feed, scheduling, and upload tools. Microsoft import acceptance has not been verified.
 

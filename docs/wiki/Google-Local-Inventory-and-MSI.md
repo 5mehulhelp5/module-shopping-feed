@@ -2,9 +2,11 @@
 
 Google Local Inventory output connects a product ID with store-level availability, quantity, and price. With Magento Multi-Source Inventory enabled, the module can produce source-specific rows for sources linked to the selected website stock.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 Version 1.2.3 includes the source and reservation corrections below. The [Mage-OS 3.5.0 hardening report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.3/docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) records native quantities, website-stock isolation, compensation, disabled sources, and generated Local Inventory rows. Versions through 1.2.2 deducted reservations per source; review changed quantities after upgrading.
+
+Version 1.2.4 additionally reads source codes through `SourceItemInterface::getSourceCode()`, so interface-only source-item implementations work without array access. The [Mage-OS 3.6 verification](Release-1-2-4) includes enabled, disabled, and unlinked physical-source coverage.
 
 ## Prerequisites
 

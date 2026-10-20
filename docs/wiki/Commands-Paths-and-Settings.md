@@ -2,7 +2,7 @@
 
 This is the compact operational reference for the current Mage-OS module identity.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 ## Identity
 
@@ -47,11 +47,15 @@ Feed output is restricted to `pub/media/mageos-shopping-feed` and safe subdirect
 | Group | Setting | Purpose |
 | --- | --- | --- |
 | General Info | Cron Enabled | Allows the module's Magento cron jobs to schedule and process feeds |
-| Log Settings | Logging Level | Minimum Debug, Info, Notice, Warning, or Error level written |
+| Log Settings | Logging Level | Minimum Debug, Info, Notice, Warning, or Error level written; generation reads Default Config scope |
 | Log Settings | Log rotate (Kb) | Archives a log after the configured size |
 | Google | Enable Automatic Updates (Microdata) | Adds supported schema.org product data to selected Google Shopping product pages |
 | Google | Enable Google Ads Dynamic Remarketing Events | Calls `gtag` with a `view_item` event after a complete configurable selection |
 | Google | Google Ads Destination ID | Optional `send_to` value such as `AW-123456789` |
+
+## Upload requirements
+
+In 1.2.4, each SFTP destination requires a trusted **SFTP Host Key Fingerprint** (`SHA256:...`) after `bin/magento setup:upgrade`. Missing or mismatched pins prevent authentication. FTP is explicitly unencrypted. See [Uploads](Uploads) for credential retention and verification. Admin Test Feed requires **Generate Feed** permission; View Log uses the grid permission.
 
 ## Built-in cron schedule
 

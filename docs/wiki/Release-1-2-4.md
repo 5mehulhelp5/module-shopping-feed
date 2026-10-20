@@ -4,6 +4,8 @@
 
 Version 1.2.4 verifies SFTP server keys before authentication, keeps upload credentials encrypted, preserves logs if archiving fails, and tightens Test Feed permissions. It fixes inventory, configurable shipping, promotion timezone, table-prefix, and tax-helper edge cases, and completes the module standards work. Read the [full release notes](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.4/docs/releases/1.2.4.md).
 
+Release commit: `75dd335f930aef78ae693f62c3039e469c2d26f6`. [Version 1.2.4 is published](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.4), and [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed) source/dist references match that commit. All 37 [post-merge CI jobs](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/39372608509) passed. Publication and CI are separate from external recipient or production-store acceptance.
+
 ## Upgrade
 
 **Existing SFTP destinations need a trusted SHA256 host-key fingerprint.** Run `setup:upgrade` to add its column, obtain each fingerprint through a trusted channel, enter it in the feed's Uploads section, and verify save/reopen and delivery on staging. Missing or mismatched fingerprints prevent authentication. FTP remains available as explicitly unencrypted; unknown transfer modes are rejected.
@@ -15,3 +17,5 @@ The package adds an explicit `phpseclib/phpseclib:^3.0` dependency and declares 
 The local Mage-OS 3.6.0 run passes 939 unit tests with 2565 assertions, 30 integration tests with 88 assertions, four database persistence tests, and 84 JavaScript checks. Standard Admin save/reopen, DI compilation, real local FTP/SFTP delivery, gzip cleanup, failed host-key rejection before authentication, and complete log archival are recorded in the [verification report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.4/docs/reviews/2026-10-20-standards-security-mageos36.md).
 
 Check the [CI workflow](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml) for the exact tagged commit and supported platform matrix. Native Nebula acceptance, external recipient ingestion, and production volume were not repeated in this local run. The known preset output-limit key mismatch remains deferred; configure explicit **Limit column output** rows where needed.
+
+The documentation follow-up found that the bundled [OpenAI Google-compatible beta](OpenAI-ChatGPT) differs from the current public OpenAI product-feed contract. Its implementation has not been updated to that contract; confirm acceptance of the exact exported sample before enabling transfers.

@@ -2,7 +2,7 @@
 
 Schedules decide when work enters the queue. A separate worker consumes queued work and generates feed files.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
 ## Enable module cron processing
 
@@ -59,7 +59,7 @@ Use the correct PHP binary, Magento filesystem user, and absolute application pa
 
 ## Verify scheduling
 
-1. Save a schedule a few minutes ahead in the store timezone.
+1. Choose an upcoming **Start At** hour in the store timezone and save before the schedule job runs at minute 10 of that hour. The editor selects an hour, not an arbitrary minute.
 2. Confirm the schedule runner creates a **Pending** item.
 3. Confirm the process runner changes the feed to **Processing**, then **Completed**.
 4. Check the final file timestamp and feed log.
