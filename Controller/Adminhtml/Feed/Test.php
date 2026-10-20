@@ -22,7 +22,7 @@ use Magento\Framework\Exception\LocalizedException;
 
 class Test extends \Magento\Backend\App\Action
 {
-    public const ADMIN_RESOURCE = 'MageOS_ShoppingFeed::grid';
+    public const ADMIN_RESOURCE = 'MageOS_ShoppingFeed::generate';
 
     /**
      * @var \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Builder
@@ -35,12 +35,12 @@ class Test extends \Magento\Backend\App\Action
     protected $resultPageFactory;
 
     /**
-     * @var \Magento\Backend\Model\View\Result\Forward
+     * @var \Magento\Backend\Model\View\Result\ForwardFactory
      */
     protected $resultForwardFactory;
 
     /**
-     * \@var Magento\Catalog\Model\ProductFactory
+     * @var \Magento\Catalog\Model\ProductFactory
      */
     protected $productFactory;
 
@@ -83,7 +83,9 @@ class Test extends \Magento\Backend\App\Action
      */
     protected function _initAction()
     {
-        return $this->resultPageFactory->create();
+        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
+        $resultPage = $this->resultPageFactory->create();
+        return $resultPage;
     }
 
     /**
@@ -118,29 +120,29 @@ class Test extends \Magento\Backend\App\Action
             $product = $this->productFactory->create();
 
             switch ($type) {
-            case 'id':
-                $product->load($sku);
-                break;
-            case 'sku':
-            default:
-                $product->load($product->getIdBySku($sku));
-                break;
+                case 'id':
+                    $product->load($sku);
+                    break;
+                case 'sku':
+                default:
+                    $product->load($product->getIdBySku($sku));
+                    break;
             }
 
             if (!$product->getId()) {
                 $this->messageManager->addError(
-                    __('Could not find any product with this %1.', ucfirst($type))
+                    $type === 'id'
+                        ? __('Could not find any product with this ID.')
+                        : __('Could not find any product with this SKU.')
                 );
             } else {
                 $this->registry->register('current_test_product', $product);
             }
         }
 
-        /**
- * @var \Magento\Backend\Model\View\Result\Page $resultPage
-*/
+        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(sprintf(__('Test Feed #%s [%s]'), $feed->getId(), $feed->getName()));
+        $resultPage->getConfig()->getTitle()->prepend(__('Test Feed #%1 [%2]', $feed->getId(), $feed->getName()));
 
         return $resultPage;
     }
@@ -157,8 +159,11 @@ class Test extends \Magento\Backend\App\Action
         }
         $sku = (string)$sku;
         if ($type === 'id' && $sku !== '') {
-            $id = ctype_digit($sku) ? filter_var(ltrim($sku, '0') ?: '0', FILTER_VALIDATE_INT,
-                ['options' => ['min_range' => 1]]) : false;
+            $id = ctype_digit($sku) ? filter_var(
+                ltrim($sku, '0') ?: '0',
+                FILTER_VALIDATE_INT,
+                ['options' => ['min_range' => 1]]
+            ) : false;
             if ($id === false) {
                 throw new LocalizedException(__('Product ID must be a positive integer.'));
             }

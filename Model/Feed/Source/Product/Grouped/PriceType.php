@@ -25,8 +25,8 @@ use Magento\Framework\Data\OptionSourceInterface;
  */
 class PriceType implements OptionSourceInterface
 {
-    const PRICE_START_AT = 0;
-    const PRICE_SUM_DEFAULT_QTY = 1;
+    public const PRICE_START_AT = 0;
+    public const PRICE_SUM_DEFAULT_QTY = 1;
 
     /**
      * Retrieve option array

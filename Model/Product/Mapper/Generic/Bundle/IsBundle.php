@@ -22,6 +22,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\IsBundle as SimpleI
 
 class IsBundle extends SimpleIsBundle
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $cell = self::IS_BUNDLE;

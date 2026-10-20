@@ -32,7 +32,8 @@ class RatesUpdate implements ObserverInterface
     protected $scopeConfig;
 
     /**
-     * @param Shipping $shipping
+     * @param \MageOS\ShoppingFeed\Model\Shipping                $shipping
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Shipping $shipping,

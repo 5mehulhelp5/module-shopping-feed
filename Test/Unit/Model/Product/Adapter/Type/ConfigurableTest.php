@@ -165,7 +165,6 @@ class ConfigurableTest extends ModelFramework
         $this->assertEquals($expected, $result);
     }
 
-
     public function testGetConfigurableUrlOptions()
     {
         $this->expectSelf($this->productMock, 'getTypeInstance');

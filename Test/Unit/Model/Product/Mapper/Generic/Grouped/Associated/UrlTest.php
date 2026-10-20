@@ -87,11 +87,13 @@ class UrlTest extends ModelFramework
         $parent = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Grouped::class);
         $parent->method('getProduct')->willReturn($product);
         $parent->method('getFilter')->willReturn($this->createMock(\MageOS\ShoppingFeed\Model\Product\Filter::class));
-        $child = $this->createCompatibleMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class, ['getParentAdapter', 'getProduct']);
+        $child = $this->createCompatibleMock(
+            \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class,
+            ['getParentAdapter', 'getProduct']
+        );
         $child->method('getParentAdapter')->willReturn($parent);
         $child->method('getProduct')->willReturn($product);
         $this->model->addAdapter($child);
         $this->assertSame('http://store.example:8080/group.html?prod_id=2', $this->model->map(['column' => 'link']));
     }
-
 }

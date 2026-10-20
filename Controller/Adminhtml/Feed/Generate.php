@@ -100,7 +100,7 @@ class Generate extends \Magento\Backend\App\Action implements HttpPostActionInte
         if (count($schedules)) {
             $queue->getBatch()
                 ->setOffset(0)
-                ->setLimit(intval($schedules[0]['batch_limit']))
+                ->setLimit((int) $schedules[0]['batch_limit'])
                 ->setEnabled(boolval($schedules[0]['batch_mode']));
         }
         $queue->add($feed);

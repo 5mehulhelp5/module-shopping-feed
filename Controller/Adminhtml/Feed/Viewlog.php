@@ -33,15 +33,15 @@ class Viewlog extends \Magento\Backend\App\Action
     protected $resultPageFactory;
 
     /**
-     * @var \Magento\Backend\Model\View\Result\Forward
+     * @var \Magento\Backend\Model\View\Result\ForwardFactory
      */
     protected $resultForwardFactory;
 
     /**
-     * @param \Magento\Backend\App\Action\Context                        $context
+     * @param \Magento\Backend\App\Action\Context $context
      * @param \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Builder $feedBuilder
-     * @param \Magento\Framework\View\Result\PageFactory                 $resultPageFactory
-     * @param \Magento\Backend\Model\View\Result\ForwardFactory          $resultForwardFactory
+     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
+     * @param \Magento\Backend\Model\View\Result\ForwardFactory $resultForwardFactory
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
@@ -63,7 +63,9 @@ class Viewlog extends \Magento\Backend\App\Action
      */
     protected function _initAction()
     {
-        return $this->resultPageFactory->create();
+        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
+        $resultPage = $this->resultPageFactory->create();
+        return $resultPage;
     }
 
     /**
@@ -86,11 +88,9 @@ class Viewlog extends \Magento\Backend\App\Action
             return $resultForward->forward('index');
         }
 
-        /**
- * @var \Magento\Backend\Model\View\Result\Page $resultPage
-*/
+        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(sprintf(__('Logs for feed #%s [%s]'), $feed->getId(), $feed->getName()));
+        $resultPage->getConfig()->getTitle()->prepend(__('Logs for feed #%1 [%2]', $feed->getId(), $feed->getName()));
 
         return $resultPage;
     }

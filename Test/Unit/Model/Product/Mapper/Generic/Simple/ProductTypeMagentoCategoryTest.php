@@ -33,7 +33,6 @@ class ProductTypeMagentoCategoryTest extends ModelFramework
      */
     protected $model;
 
-
     /**
      * @inheritdoc
      */
@@ -102,8 +101,11 @@ class ProductTypeMagentoCategoryTest extends ModelFramework
         $this->expectReturn($this->adapterMock, 'getStore', $this->storeMock);
         $this->expectReturn($this->adapterMock, 'getFeed', $this->feedMock);
         $this->expectReturn($this->productMock, 'getCategoryCollection', $this->categoryCollectionProvider);
-        $this->expectReturn($this->feedMock, 'getConfig', [['p' => 5, 'id' => 2, 'ty' => 'value'], ['p' => 10, 'id' => 1, 'ty' => 'value 2']]);
-
+        $this->expectReturn(
+            $this->feedMock,
+            'getConfig',
+            [['p' => 5, 'id' => 2, 'ty' => 'value'], ['p' => 10, 'id' => 1, 'ty' => 'value 2']]
+        );
 
         $this->expectAdvencedReturn(
             $this->cacheMock,
@@ -117,7 +119,6 @@ class ProductTypeMagentoCategoryTest extends ModelFramework
                     default:
                         return $key;
                 }
-                return $default;
             })
         );
 

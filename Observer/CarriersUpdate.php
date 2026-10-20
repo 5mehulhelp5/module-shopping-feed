@@ -37,8 +37,8 @@ class CarriersUpdate implements ObserverInterface
     protected $scopeConfig;
 
     /**
-     * @param \MageOS\ShoppingFeed\Model\Shipping            $shipping
-     * @param \Magento\Store\Model\Website                       $website
+     * @param \MageOS\ShoppingFeed\Model\Shipping $shipping
+     * @param \Magento\Store\Model\Website $website
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      */
     public function __construct(

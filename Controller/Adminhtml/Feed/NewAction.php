@@ -23,7 +23,7 @@ class NewAction extends \Magento\Backend\App\Action
     public const ADMIN_RESOURCE = 'MageOS_ShoppingFeed::save';
 
     /**
-     * @var \Magento\Backend\Model\View\Result\Forward
+     * @var \Magento\Backend\Model\View\Result\ForwardFactory
      */
     protected $resultForwardFactory;
 
@@ -40,7 +40,7 @@ class NewAction extends \Magento\Backend\App\Action
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function _isAllowed()
     {
@@ -54,9 +54,7 @@ class NewAction extends \Magento\Backend\App\Action
      */
     public function execute()
     {
-        /**
- * @var \Magento\Backend\Model\View\Result\Forward $resultForward
-*/
+        /** @var \Magento\Backend\Model\View\Result\Forward $resultForward */
         $resultForward = $this->resultForwardFactory->create();
         return $resultForward->forward('edit');
     }

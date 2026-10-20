@@ -94,5 +94,4 @@ class DatabaseContractTest extends TestCase
             $this->assertSame(['ups', 'usps'], $feed->getConfig('shipping_carrier_realtime'));
         }
     }
-
 }

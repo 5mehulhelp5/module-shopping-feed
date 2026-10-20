@@ -25,10 +25,10 @@ use MageOS\ShoppingFeed\Model\Product\CollectionProvider;
 
 class Generator extends DataObject
 {
-    const XML_LOG_LEVEL = 'mageos_shopping_feed/log/level';
-    const XML_LOG_ROTATE = 'mageos_shopping_feed/log/rotate';
-    const XML_LOG_PROGRESS = 'mageos_shopping_feed/log/progress_every';
-    const UTF8_BOM = "\xEF\xBB\xBF";
+    public const XML_LOG_LEVEL = 'mageos_shopping_feed/log/level';
+    public const XML_LOG_ROTATE = 'mageos_shopping_feed/log/rotate';
+    public const XML_LOG_PROGRESS = 'mageos_shopping_feed/log/progress_every';
+    public const UTF8_BOM = "\xEF\xBB\xBF";
 
     /**
      * @var AdapterFactory
@@ -36,7 +36,7 @@ class Generator extends DataObject
     protected $adapterFactory;
 
     /**
-     * @var Generator\Batch
+     * @var Generator\Batch|null
      */
     protected $batch;
 
@@ -45,13 +45,32 @@ class Generator extends DataObject
      */
     protected $cache;
 
+    /**
+     * @var int
+     */
     protected $countProductsExported = 0;
+
+    /**
+     * @var int
+     */
     protected $countProductsSkipped = 0;
+
+    /**
+     * Number of products processed, including earlier batches
+     *
+     * @var int
+     */
     protected $currentIteration = 0;
+
+    /**
+     * Skipped product ids keyed by skip reason, logged with the next progress line
+     *
+     * @var array<string,array<int,int|string|null>>
+     */
     protected $skippedData = [];
 
     /**
-     * @var \Magento\Catalog\Model\ResourceModel\Product\Collection
+     * @var \Magento\Catalog\Model\ResourceModel\Product\Collection|null
      */
     protected $collection;
 
@@ -126,7 +145,7 @@ class Generator extends DataObject
     protected $processCollectionFactory;
 
     /**
-     * @var null
+     * @var string|null
      */
     protected $testSku = null;
 
@@ -136,12 +155,12 @@ class Generator extends DataObject
     protected $testOutput = [];
 
     /**
-     * @var Generator\Queue
+     * @var Generator\Queue|null
      */
     protected $queue;
 
     /**
-     * @var Feed\Schedule
+     * @var Feed\ScheduleFactory
      */
     protected $scheduleFactory;
 
@@ -165,24 +184,40 @@ class Generator extends DataObject
      */
     protected $outputPath;
 
+    /** @var Logger\Rotator */
+    private $logRotator;
+
     /**
      * Generator constructor.
      *
-     * @param \Magento\Catalog\Model\ProductFactory                   $productFactory
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param \Magento\Catalog\Model\ProductFactory $productFactory
      * @param \MageOS\ShoppingFeed\Model\Uploader\UploaderFactory $uploaderFactory
-     * @param \Magento\Framework\Filesystem\Driver\File               $fileDriver
-     * @param \Magento\Framework\Model\ResourceModel\Iterator         $iterator
-     * @param Generator\Cache                                         $cache
-     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface    $dateTime
-     * @param CollectionProvider                                      $collectionProvider
-     * @param Logger                                                  $logger
-     * @param AdapterFactory                                          $adapterFactory
-     * @param Generator\Batch                                         $batch
-     * @param Generator\Memory                                        $memory
-     * @param Feed                                                    $feed
-     * @param Generator\Queue|null                                    $queue
-     * @param null                                                    $testSku
-     * @param array                                                   $data
+     * @param \Magento\Framework\Filesystem\Driver\File $fileDriver
+     * @param \Magento\Framework\Model\ResourceModel\Iterator $iterator
+     * @param Generator\Cache $cache
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $dateTime
+     * @param CollectionProvider $collectionProvider
+     * @param Logger $logger
+     * @param AdapterFactory $adapterFactory
+     * @param Generator\Batch $batch
+     * @param Generator\Memory $memory
+     * @param \MageOS\ShoppingFeed\Model\Uploader\GzipCompressor $gzipCompressor
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process\CollectionFactory $processCollectionFactory
+     * @param Feed $feed
+     * @param Feed\ScheduleFactory $scheduleFactory
+     * @param \Magento\Framework\App\Filesystem\DirectoryList $directoryList
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param Feed\OutputPath $outputPath
+     * @param Feed\Validation\MetaCatalog $metaCatalogValidator
+     * @param Feed\Validation\MicrosoftMerchantCenter $microsoftMerchantCenterValidator
+     * @param Feed\Validation\TikTokCatalog $tikTokCatalogValidator
+     * @param Feed\Validation\PinterestCatalog $pinterestCatalogValidator
+     * @param Feed\Validation\OpenAiGoogleCompatible $openAiGoogleCompatibleValidator
+     * @param Logger\Rotator $logRotator
+     * @param Generator\Queue|null $queue
+     * @param string|null $testSku
+     * @param array $data
      */
     public function __construct(
         \Magento\Framework\Event\ManagerInterface $eventManager,
@@ -209,6 +244,7 @@ class Generator extends DataObject
         \MageOS\ShoppingFeed\Model\Feed\Validation\TikTokCatalog $tikTokCatalogValidator,
         \MageOS\ShoppingFeed\Model\Feed\Validation\PinterestCatalog $pinterestCatalogValidator,
         \MageOS\ShoppingFeed\Model\Feed\Validation\OpenAiGoogleCompatible $openAiGoogleCompatibleValidator,
+        \MageOS\ShoppingFeed\Model\Logger\Rotator $logRotator,
         ?\MageOS\ShoppingFeed\Model\Generator\Queue $queue = null,
         $testSku = null,
         $data = []
@@ -232,7 +268,8 @@ class Generator extends DataObject
         $this->setTestSku($testSku);
         $this->queue = $queue;
         $this->directoryList = $directoryList;
-        if (!is_null($queue) && !is_null($queue->getBatch())) {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- is_null() kept: "=== null" changes the baselined PHPStan always-false finding
+        if ($queue !== null && !is_null($queue->getBatch())) {
             $this->batch = $queue->getBatch();
             $this->currentIteration = $this->batch->getOffset();
             if ($this->batch->isEnabled() && $this->batch->getOffset() > 0) {
@@ -245,6 +282,7 @@ class Generator extends DataObject
         $this->scheduleFactory = $scheduleFactory;
         $this->scopeConfig = $scopeConfig;
         $this->outputPath = $outputPath;
+        $this->logRotator = $logRotator;
         $this->metaCatalogValidator = $metaCatalogValidator;
         $this->microsoftMerchantCenterValidator = $microsoftMerchantCenterValidator;
         $this->tikTokCatalogValidator = $tikTokCatalogValidator;
@@ -255,12 +293,12 @@ class Generator extends DataObject
     }
 
     /**
+     * Generate the feed file (or test output) for the feed, or the current batch of it.
+     *
      * @return $this
      */
     public function run()
     {
-        //ini_set('memory_limit','83M');
-
         if (!$this->feed->getId()) {
             throw new FeedException(
                 new \Magento\Framework\Phrase('Generator must be created using existing feed - no Feed Id found!')
@@ -268,7 +306,8 @@ class Generator extends DataObject
         }
 
         $this->eventManager->dispatch(
-            sprintf('mageos_shopping_feed_before_generate_%s', $this->feed->getData('type')), [
+            sprintf('mageos_shopping_feed_before_generate_%s', $this->feed->getData('type')),
+            [
             'generator' => $this,
             'feed' => $this->feed
             ]
@@ -279,24 +318,25 @@ class Generator extends DataObject
         $this->memory->setStartUsage();
         $this->updateStatus(\MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_PROCESSING);
 
-
         // Log rotate
         $logger = $this->getLogger();
         $logFile = $this->directoryList->getRoot(). $this->getData('feed_log_file');
         $rotateKb = $this->scopeConfig->getValue(self::XML_LOG_ROTATE);
         $rotateKb = is_numeric($rotateKb) && (float)$rotateKb > 0 && is_finite((float)$rotateKb)
             ? (float)$rotateKb : 512;
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- log rotation keeps native false-on-error semantics; the driver throws
         if (is_file($logFile) && filesize($logFile) > 1024 * $rotateKb) {
-            $archiveFile = $logFile . '.' . date('Y-m-d-H-i-s') . '.gz';
-            file_put_contents('compress.zlib://' . $archiveFile, file_get_contents($logFile));
-            file_put_contents($logFile, '');
+            try {
+                $this->logRotator->rotate($logFile);
+            } catch (\RuntimeException $exception) {
+                $logger->warning('Feed log rotation failed; the original log was retained.');
+            }
         }
 
         $logger->notice(sprintf('START %s FEED #%s', strtoupper($this->feed->getType()), $this->feed->getId()));
 
         // Run any custom pre-generation processes
         //$this->runPreHook();
-
 
         /**
  * @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection
@@ -354,6 +394,12 @@ class Generator extends DataObject
         return $this;
     }
 
+    /**
+     * Iterator callback: add one product row to the feed; switches to batch mode near PHP limits.
+     *
+     * @param array<string,mixed> $args iterator arguments; "row" holds the product row
+     * @throws FeedException when PHP time or memory limits are close
+     */
     public function processProductCallback($args)
     {
         $row = $args['row'];
@@ -401,8 +447,6 @@ class Generator extends DataObject
         $this->currentIteration++;
         $this->logProgress();
 
-
-
         if ($this->memory->isCloseToPhpLimit($this->getData('started_at'))) {
             // Automatically swicth to batch mode
             $newLimit = $this->currentIteration - $this->batch->getOffset();
@@ -440,11 +484,13 @@ class Generator extends DataObject
     }
 
     /**
+     * Product collection for the feed (or test SKU), limited to the current batch.
+     *
      * @return \Magento\Catalog\Model\ResourceModel\Product\Collection
      */
     public function getCollection()
     {
-        if (is_null($this->collection)) {
+        if ($this->collection === null) {
             if ($this->isTestMode()) {
                 $this->collectionProvider->setTestSku($this->testSku);
             }
@@ -461,6 +507,8 @@ class Generator extends DataObject
     }
 
     /**
+     * Total number of products in the feed collection, ignoring batch limits.
+     *
      * @return int
      */
     public function getTotalItems()
@@ -477,7 +525,9 @@ class Generator extends DataObject
     }
 
     /**
-     * @param  \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface|\MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $productAdapter
+     * Map the product through its adapter and write each resulting row.
+     *
+     * @param Product\Adapter\AdapterInterface|Product\Adapter\AdapterAbstract $productAdapter
      * @return $this
      */
     protected function addProductToFeed($productAdapter)
@@ -492,18 +542,25 @@ class Generator extends DataObject
         }
 
         foreach ($rows as $row) {
-            $requiresItemGroupId = in_array($this->feed->getData('type'), ['pinterest_catalog', 'openai_google_compatible'], true)
+            $requiresItemGroupId = in_array(
+                $this->feed->getData('type'),
+                ['pinterest_catalog', 'openai_google_compatible'],
+                true
+            )
                 && ($productAdapter instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable
-                    || $productAdapter->getParentAdapter() instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable);
+                    || $productAdapter->getParentAdapter()
+                        instanceof \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable);
             $this->writeFeed($row, true, $requiresItemGroupId);
         }
         return $this;
     }
 
     /**
-     * @param  $fields
-     * @param  bool|true $addNewLine
-     * @param  bool $requiresItemGroupId
+     * Validate a mapped row for the feed type and write it (or the header) to the temporary feed file.
+     *
+     * @param array<mixed> $fields row values keyed by column, or the header
+     * @param bool $addNewLine false for the header row
+     * @param bool $requiresItemGroupId
      * @return Generator
      */
     protected function writeFeed($fields, $addNewLine = true, bool $requiresItemGroupId = false)
@@ -514,6 +571,7 @@ class Generator extends DataObject
             if ($requiresDate && $date === null) {
                 $this->updateCountSkip();
                 $this->getLogger()->warning(sprintf(
+                    // phpcs:ignore Generic.Files.LineLength.TooLong -- single log message literal kept whole
                     'Skipped Google Shopping row %s: %s requires a valid future availability_date within one year. Map the expected shipping date in Columns Map.',
                     $fields['id'] ?? '(no id)',
                     $fields['availability']
@@ -578,13 +636,10 @@ class Generator extends DataObject
         }
 
         $params = $this->getWriteFeedParams();
-        /**
-         * @var $defaultValue
-         * @var $delimiter
-         * @var $encloseCell
-         * @var $encloseEscape
-         */
-        extract($params);
+        $defaultValue = $params['defaultValue'];
+        $delimiter = $params['delimiter'];
+        $encloseCell = $params['encloseCell'];
+        $encloseEscape = $params['encloseEscape'];
         $row = [];
 
         foreach ($this->getOutputColumns($isGoogleFeed || $isMicrosoftFeed) as $arr) {
@@ -595,7 +650,7 @@ class Generator extends DataObject
             }
 
             foreach ($values as $value) {
-                if (is_null($value) || $value == "") {
+                if ($value === null || $value == "") {
                     $value = $defaultValue;
                 }
                 if (!$this->isTestMode()) {
@@ -611,7 +666,10 @@ class Generator extends DataObject
         }
 
         if (!$this->isTestMode()) {
-            $this->fileDriver->fileWrite($this->getTemporaryHandle(), ($addNewLine ? PHP_EOL : '') . implode($delimiter, $row));
+            $this->fileDriver->fileWrite(
+                $this->getTemporaryHandle(),
+                ($addNewLine ? PHP_EOL : '') . implode($delimiter, $row)
+            );
         } else {
             $this->testOutput[] = $row;
         }
@@ -622,7 +680,12 @@ class Generator extends DataObject
         return $this;
     }
 
-    /** Normalize mapped ISO dates or Magento datetime attributes (UTC), without guessing dates. */
+    /**
+     * Normalize mapped ISO dates or Magento datetime attributes (UTC), without guessing dates.
+     *
+     * @param mixed $value
+     * @return string|null ISO 8601 date within the next year, or null
+     */
     private function normalizeAvailabilityDate($value): ?string
     {
         if (!is_string($value)
@@ -645,6 +708,12 @@ class Generator extends DataObject
         }
     }
 
+    /**
+     * Columns map in output order, optionally with the id column moved last.
+     *
+     * @param bool $putIdLast
+     * @return array
+     */
     private function getOutputColumns(bool $putIdLast): array
     {
         $columns = $this->feed->getColumnsMap();
@@ -664,6 +733,8 @@ class Generator extends DataObject
     }
 
     /**
+     * Close the temporary feed file handle when one is open.
+     *
      * @return Generator
      */
     protected function closeTemporaryHandle()
@@ -677,8 +748,9 @@ class Generator extends DataObject
     }
 
     /**
-     * Only transfer data from temporary feed file if in
-     * batch mode and this is the last batch, or if not in batch mode.
+     * Publish the temporary feed file after the last batch, or after a non-batch run.
+     *
+     * Otherwise the batch queue is updated for the next run.
      *
      * @return $this
      */
@@ -703,6 +775,8 @@ class Generator extends DataObject
     }
 
     /**
+     * Open (or reuse) the temporary feed file; a new file starts with the UTF-8 BOM except for Microsoft.
+     *
      * @return mixed
      * @throws \Exception
      */
@@ -710,7 +784,7 @@ class Generator extends DataObject
     {
         if (!$this->hasData('temporary_handle') || $this->getData('temporary_handle') === null) {
             $mode = "a";
-            if (!$this->batch->isEnabled() || ($this->batch->isEnabled() && $this->batch->isNew())) {
+            if (!$this->batch->isEnabled() || $this->batch->isNew()) {
                 $mode = "w";
             }
             $handle = $this->fileDriver->fileOpen($this->getFeedFile() . '.tmp', $mode);
@@ -723,13 +797,12 @@ class Generator extends DataObject
             $this->setData('temporary_handle', $handle);
         }
 
-
-
         return $this->getData('temporary_handle');
     }
 
     /**
      * Moves the feed file to it's final location after being generated in a temporary location.
+     *
      * Removes queue since we are done with generation
      *
      * @return Generator
@@ -738,7 +811,9 @@ class Generator extends DataObject
     {
         $this->fileDriver->rename($this->getFeedFile() . '.tmp', $this->getFeedFile());
         $this->removeQueue();
-        $this->getLogger()->debug(sprintf('Moved %s to %s, queue removed', $this->getFeedFile() . '.tmp', $this->getFeedFile()));
+        $this->getLogger()->debug(
+            sprintf('Moved %s to %s, queue removed', $this->getFeedFile() . '.tmp', $this->getFeedFile())
+        );
         $this->updateStatus(\MageOS\ShoppingFeed\Model\Feed\Source\Status::STATUS_COMPLETED);
 
         return $this;
@@ -772,7 +847,8 @@ class Generator extends DataObject
                     $result = $uploader->upload($file);
 
                     $this->eventManager->dispatch(
-                        'mageos_shopping_feed_upload_after', [
+                        'mageos_shopping_feed_upload_after',
+                        [
                         'generator' => $this,
                         'uploader' => $uploader,
                         'upload' => $upload,
@@ -780,7 +856,9 @@ class Generator extends DataObject
                         ]
                     );
                     if ($result) {
-                        $this->getLogger()->info(sprintf("File %s uploaded to %s:%s", $file, $upload->getHost(), $upload->getPath()));
+                        $this->getLogger()->info(
+                            sprintf("File %s uploaded to %s:%s", $file, $upload->getHost(), $upload->getPath())
+                        );
                     } else {
                         $this->getLogger()->warning(sprintf('Failed to upload %s', $file));
                     }
@@ -798,6 +876,8 @@ class Generator extends DataObject
     }
 
     /**
+     * Header row keyed by column; repeated column names collect into an array.
+     *
      * @return array
      */
     protected function getHeader()
@@ -819,6 +899,8 @@ class Generator extends DataObject
     }
 
     /**
+     * Output parameters: default cell value, delimiter, cell enclosure and its escape.
+     *
      * @return array
      */
     protected function getWriteFeedParams()
@@ -835,27 +917,31 @@ class Generator extends DataObject
             'defaultValue' => $this->feed->getConfig('output_params_default_value', ''),
             'delimiter' => $delimiter,
             'encloseCell' => $encloseCell,
-            'encloseEscape' => $encloseCell !== '' ? ($cellEncloseEscape !== '' ? $cellEncloseEscape : $encloseCell) : ''
+            'encloseEscape' => $encloseCell !== ''
+                ? ($cellEncloseEscape !== '' ? $cellEncloseEscape : $encloseCell)
+                : ''
         ];
         return $params;
     }
 
     /**
+     * Log skipped products and progress, and save progress messages, at the configured interval.
+     *
      * @return $this
      */
     protected function logProgress()
     {
         $time = $this->dateTime->date()->getTimestamp();
 
-        if ($time - $this->getProgressTiming() > intval($this->scopeConfig->getValue(self::XML_LOG_PROGRESS))
+        if ($time - $this->getProgressTiming() > (int) $this->scopeConfig->getValue(self::XML_LOG_PROGRESS)
             || $this->currentIteration <= 1
             || $this->currentIteration == $this->getTotalItems()
-            || (!is_null($this->batch) && ($this->batch->isEnabled()
+            || ($this->batch !== null && ($this->batch->isEnabled()
             && ($this->currentIteration % $this->batch->getLimit() == 0
             || $this->memory->isCloseToPhpLimit($this->getData('started_at'), false)            )))
         ) {
             // Log skipped products
-            foreach($this->skippedData as $message => $ids) {
+            foreach ($this->skippedData as $message => $ids) {
                 $this->logger->warning(
                     sprintf("Skipped product(s) [%s] - %s", implode(', ', $ids), $message)
                 );
@@ -879,7 +965,9 @@ class Generator extends DataObject
                 );
             }
 
-            $this->getLogger()->info(sprintf("Processed %s of %s (%s%%)", $this->currentIteration, $this->getTotalItems(), $percent));
+            $this->getLogger()->info(
+                sprintf("Processed %s of %s (%s%%)", $this->currentIteration, $this->getTotalItems(), $percent)
+            );
             $this->setProgressTiming($time);
         }
         return $this;
@@ -888,7 +976,7 @@ class Generator extends DataObject
     /**
      * Could take negative value to decrease count
      *
-     * @param  $val
+     * @param int $val
      * @return Generator
      */
     public function updateCountSkip($val = 1)
@@ -897,6 +985,13 @@ class Generator extends DataObject
         return $this;
     }
 
+    /**
+     * Collect a skipped product id under its skip reason for the next progress log.
+     *
+     * @param string $reason
+     * @param int|string|null $productId
+     * @return void
+     */
     public function addSkippedProduct($reason, $productId)
     {
         if (array_key_exists($reason, $this->skippedData)) {
@@ -907,6 +1002,8 @@ class Generator extends DataObject
     }
 
     /**
+     * Number of rows written, including earlier batches.
+     *
      * @return int
      */
     public function getCountProductsExported()
@@ -915,6 +1012,8 @@ class Generator extends DataObject
     }
 
     /**
+     * Number of rows skipped, including earlier batches.
+     *
      * @return int
      */
     public function getCountProductsSkipped()
@@ -922,17 +1021,31 @@ class Generator extends DataObject
         return $this->countProductsSkipped;
     }
 
+    /**
+     * Whether the generator runs for a single test SKU instead of writing the feed.
+     *
+     * @return bool
+     */
     public function isTestMode()
     {
-        return !is_null($this->testSku);
+        return $this->testSku !== null;
     }
 
+    /**
+     * Set the SKU to test; null generates the full feed.
+     *
+     * @param string|null $testSku
+     * @return $this
+     */
     public function setTestSku($testSku)
     {
         $this->testSku = $testSku;
         return $this;
     }
 
+    /**
+     * Rows produced in test mode (an array of rows of label/value cells).
+     */
     public function getTestOutput()
     {
         return $this->testOutput;
@@ -956,6 +1069,7 @@ class Generator extends DataObject
     /**
      * Sets the feed file path and returns the data
      *
+     * @param bool $absolute
      * @return string
      */
     public function getFeedFile($absolute = true)
@@ -979,7 +1093,7 @@ class Generator extends DataObject
         $this->closeTemporaryHandle();
         $this->batch->setOffset($this->currentIteration);
 
-        if (!is_null($this->queue) && $this->queue->getId()) {
+        if ($this->queue !== null && $this->queue->getId()) {
             $this->queue->setBatch($this->batch);
             $this->queue->setData('is_read', 0);
             $this->queue->save();
@@ -989,6 +1103,12 @@ class Generator extends DataObject
         return false;
     }
 
+    /**
+     * Save the feed status unless running in test mode.
+     *
+     * @param int $status one of Feed\Source\Status::STATUS_*
+     * @return void
+     */
     public function updateStatus($status)
     {
         if (!$this->isTestMode()) {
@@ -996,9 +1116,14 @@ class Generator extends DataObject
         }
     }
 
+    /**
+     * Delete the queue item once generation is complete.
+     *
+     * @return bool whether a queue item was removed
+     */
     protected function removeQueue()
     {
-        if (!is_null($this->queue)) {
+        if ($this->queue !== null) {
             $this->queue->delete();
             // We unset this so queue is not recreated
             $this->queue = null;

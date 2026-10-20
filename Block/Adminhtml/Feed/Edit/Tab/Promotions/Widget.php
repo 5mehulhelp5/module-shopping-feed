@@ -59,6 +59,9 @@ class Widget extends AbstractArrayElement implements RendererInterface
     /**
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Config\Model\Config\Source\Yesno $sourceYesno
+     * @param \Magento\Framework\Registry $coreRegistry
+     * @param \MageOS\ShoppingFeed\Model\Promotions\Provider $provider
+     * @param \MageOS\ShoppingFeed\Model\Promotions\Provider\Collection $promotionsCollection
      * @param array $data
      */
     public function __construct(
@@ -88,7 +91,7 @@ class Widget extends AbstractArrayElement implements RendererInterface
      * @param array $a
      * @param array $b
      * @return int
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function sortValuesCallback($a, $b)
     {
@@ -100,6 +103,7 @@ class Widget extends AbstractArrayElement implements RendererInterface
 
     /**
      * Retrieve Yes/No options
+     *
      * @return array
      */
     public function getYesnoOptions()
@@ -108,8 +112,9 @@ class Widget extends AbstractArrayElement implements RendererInterface
     }
 
     /**
-     * Retrieve form element instance
-     * @return bool
+     * Retrieve control name
+     *
+     * @return string
      */
     public function getControlName()
     {
@@ -117,6 +122,8 @@ class Widget extends AbstractArrayElement implements RendererInterface
     }
 
     /**
+     * Get the date format used for promotion dates
+     *
      * @return string
      */
     public function getDateFormat()
@@ -125,6 +132,8 @@ class Widget extends AbstractArrayElement implements RendererInterface
     }
 
     /**
+     * Get the cart price rules that can be listed as promotions for the feed
+     *
      * @return \Magento\SalesRule\Model\ResourceModel\Rule\Quote\Collection
      */
     public function getMagentoCartRules()
@@ -133,7 +142,9 @@ class Widget extends AbstractArrayElement implements RendererInterface
     }
 
     /**
-     * @param $key
+     * Get a saved promotions widget value, or the default when it is empty
+     *
+     * @param string $key
      * @param string $default
      * @return string
      */
@@ -147,6 +158,7 @@ class Widget extends AbstractArrayElement implements RendererInterface
 
     /**
      * Merges the saved data with default data
+     *
      * Handles dates from timestamp/date to LOCALE date format
      *
      * @param \Magento\SalesRule\Model\Rule $rule

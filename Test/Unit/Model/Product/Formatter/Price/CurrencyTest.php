@@ -38,7 +38,6 @@ class CurrencyTest extends ModelFramework
      */
     protected $objectManagerHelper;
 
-
     /**
      * @inheritdoc
      */

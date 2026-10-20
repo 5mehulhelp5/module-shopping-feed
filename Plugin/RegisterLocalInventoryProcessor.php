@@ -25,13 +25,26 @@ class RegisterLocalInventoryProcessor
      */
     protected $processorFactory;
 
+    /**
+     * @param \MageOS\ShoppingFeed\Model\Product\Processors\LocalInventoryFactory $processorFactory
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Product\Processors\LocalInventoryFactory $processorFactory
     ) {
         $this->processorFactory = $processorFactory;
     }
 
-    public function afterGetAdditionalProcessors(\MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $subject, $result) {
+    /**
+     * Add the local inventory row processor for local inventory feeds
+     *
+     * @param \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $subject
+     * @param array<mixed> $result
+     * @return array<mixed>
+     */
+    public function afterGetAdditionalProcessors(
+        \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $subject,
+        $result
+    ) {
         if ($subject->getFeed()->getType() == 'google_local_inventory') {
             array_push($result, $this->processorFactory->create());
         }

@@ -36,7 +36,8 @@ class MetaCatalogTest extends ModelFramework
             'brand', 'gtin', 'mpn', 'item_group_id', 'color', 'size', 'google_product_category'] as $column) {
             self::assertArrayHasKey($column, $columns);
         }
-        foreach (['promotion_id', 'identifier_exists', 'availability_date', 'item_group_title', 'variant_option'] as $column) {
+        $absent = ['promotion_id', 'identifier_exists', 'availability_date', 'item_group_title', 'variant_option'];
+        foreach ($absent as $column) {
             self::assertArrayNotHasKey($column, $columns);
         }
         self::assertSame('new', $columns['condition']['param']);
@@ -65,6 +66,7 @@ class MetaCatalogTest extends ModelFramework
         $xpath = new \DOMXPath($document);
         $values = [];
         foreach ($xpath->query('/config/virtualType[@name="' . $formatter . '"]/arguments/argument/item') as $item) {
+            self::assertInstanceOf(\DOMElement::class, $item);
             $values[$item->getAttribute('name')] = $item->textContent;
         }
         $mapper = new ValueMap($values);
@@ -109,20 +111,35 @@ class MetaCatalogTest extends ModelFramework
     public static function invalidRows(): array
     {
         $cases = [];
-        foreach (['id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand'] as $field) {
+        $required = [
+            'id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand',
+        ];
+        foreach ($required as $field) {
             $row = self::validRow();
             unset($row[$field]);
             $cases['missing ' . $field] = [$row, $field];
         }
-        foreach (['condition' => 'damaged', 'availability' => 'in_stock', 'price' => '29,99 USD',
-            'sale_price' => 'USD 20', 'link' => 'javascript:alert(1)', 'image_link' => '/image.jpg'] as $field => $value) {
+        $invalidValues = [
+            'condition' => 'damaged', 'availability' => 'in_stock', 'price' => '29,99 USD',
+            'sale_price' => 'USD 20', 'link' => 'javascript:alert(1)', 'image_link' => '/image.jpg',
+        ];
+        foreach ($invalidValues as $field => $value) {
             $cases['invalid ' . $field] = [array_replace(self::validRow(), [$field => $value]), $field];
         }
         $cases['whitespace title'] = [array_replace(self::validRow(), ['title' => '  ']), 'title'];
         $cases['repeated required field'] = [array_replace(self::validRow(), ['price' => ['29.99 USD']]), 'price'];
-        $cases['API-only availability'] = [array_replace(self::validRow(), ['availability' => 'available for order']), 'availability'];
-        $cases['preorder availability'] = [array_replace(self::validRow(), ['availability' => 'preorder']), 'availability'];
-        $cases['sale currency mismatch'] = [array_replace(self::validRow(), ['sale_price' => '20.00 EUR']), 'sale_price'];
+        $cases['API-only availability'] = [
+            array_replace(self::validRow(), ['availability' => 'available for order']),
+            'availability',
+        ];
+        $cases['preorder availability'] = [
+            array_replace(self::validRow(), ['availability' => 'preorder']),
+            'availability',
+        ];
+        $cases['sale currency mismatch'] = [
+            array_replace(self::validRow(), ['sale_price' => '20.00 EUR']),
+            'sale_price',
+        ];
         return $cases;
     }
 
@@ -138,9 +155,11 @@ class MetaCatalogTest extends ModelFramework
                 $settings[$group . '_' . $key] = $value;
             }
         }
-        $this->feedMock->method('getData')->willReturnCallback(static fn($key) => $key === 'type' ? 'meta_catalog' : null);
+        $this->feedMock->method('getData')
+            ->willReturnCallback(static fn($key) => $key === 'type' ? 'meta_catalog' : null);
         $this->feedMock->method('getColumnsMap')->willReturn($columns);
-        $this->feedMock->method('getConfig')->willReturnCallback(static fn($key, $default = '') => $settings[$key] ?? $default);
+        $this->feedMock->method('getConfig')
+            ->willReturnCallback(static fn($key, $default = '') => $settings[$key] ?? $default);
         $written = '';
         $this->fileDriverMock->method('fileWrite')->willReturnCallback(
             static function ($handle, $data) use (&$written) {
@@ -174,7 +193,8 @@ class MetaCatalogTest extends ModelFramework
 
     public function testTestFeedRejectsInvalidConditionAndLogsWhy(): void
     {
-        $this->feedMock->method('getData')->willReturnCallback(static fn($key) => $key === 'type' ? 'meta_catalog' : null);
+        $this->feedMock->method('getData')
+            ->willReturnCallback(static fn($key) => $key === 'type' ? 'meta_catalog' : null);
         $this->fileDriverMock->expects(self::never())->method('fileWrite');
         $this->loggerMock->expects(self::once())->method('warning')->with(self::stringContains('condition'));
         $generator = (new ObjectManager($this))->getObject(Generator::class, [
@@ -182,7 +202,8 @@ class MetaCatalogTest extends ModelFramework
             'metaCatalogValidator' => new MetaCatalog(), 'testSku' => 'sku-001',
         ]);
         (new \ReflectionMethod($generator, 'writeFeed'))->invoke(
-            $generator, array_replace(self::validRow(), ['condition' => 'damaged'])
+            $generator,
+            array_replace(self::validRow(), ['condition' => 'damaged'])
         );
         self::assertSame(1, (new \ReflectionProperty($generator, 'countProductsSkipped'))->getValue($generator));
         self::assertSame(0, (new \ReflectionProperty($generator, 'countProductsExported'))->getValue($generator));
@@ -192,7 +213,8 @@ class MetaCatalogTest extends ModelFramework
     {
         $meta = $this->feedTypes()['meta_catalog'];
         $directive = $meta['directives']['directive_availability'];
-        $this->feedMock->method('getData')->willReturnCallback(static fn($key) => $key === 'type' ? 'meta_catalog' : null);
+        $this->feedMock->method('getData')
+            ->willReturnCallback(static fn($key) => $key === 'type' ? 'meta_catalog' : null);
         $this->feedMock->method('getColumnsMap')->willReturn([
             ['column' => 'availability', 'attribute' => 'directive_availability'],
         ]);
@@ -210,8 +232,11 @@ class MetaCatalogTest extends ModelFramework
         $formatterFactory = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Formatter\FormatterFactory::class);
         $formatterFactory->method('getFormatterData')->willReturn($directive['formatters']['default']);
         $formatterFactory->method('create')->willReturn(new ValueMap(['in_stock' => 'in stock']));
-        foreach (['feed' => $this->feedMock, 'feedTypesConfig' => $this->feedTypesConfigMock,
-            'mapperFactory' => $this->mapperFactoryMock, 'formatterFactory' => $formatterFactory] as $property => $value) {
+        $dependencies = [
+            'feed' => $this->feedMock, 'feedTypesConfig' => $this->feedTypesConfigMock,
+            'mapperFactory' => $this->mapperFactoryMock, 'formatterFactory' => $formatterFactory,
+        ];
+        foreach ($dependencies as $property => $value) {
             (new \ReflectionProperty($adapter, $property))->setValue($adapter, $value);
         }
         $adapter->expects(self::once())->method('setSkipProduct')->with('filtered by column "availability"');

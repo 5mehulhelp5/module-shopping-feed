@@ -1,0 +1,293 @@
+name: Check Extension
+
+on:
+  push:
+    branches:
+      - main
+      - feat/**
+  pull_request:
+
+concurrency:
+  group: check-extension-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Storefront auto-selection checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.3'
+          coverage: none
+      - name: Test Hyva and Luma auto-selection
+        run: node --test dev/tests/frontend/*.test.cjs dev/tests/ci/*.test.cjs
+
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['8.1', '8.2', '8.3', '8.4', '8.5']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+      - name: Validate Composer metadata
+        run: composer validate --strict --no-check-publish
+      - name: Validate PHP syntax
+        run: find . -path './.git' -prune -o -type f \( -name '*.php' -o -name '*.phtml' \) -print0 | xargs -0 -n1 php -l
+      - name: Validate consolidated module
+        run: php dev/tests/validate.php
+      - name: Validate wiki documentation
+        run: php dev/tests/validate-wiki.php
+
+  # The reusable workflow's coding-standard job installs the newest Magento
+  # standard. This job runs the version pinned in composer.json and enforces
+  # that the reviewed PHPStan baseline only shrinks.
+  static-analysis:
+    name: Pinned coding standard and PHPStan baseline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          tools: composer:v2
+          coverage: none
+      - name: Install pinned development tools
+        run: composer update --no-interaction --no-progress
+      - name: Magento coding standard
+        run: vendor/bin/phpcs
+      - name: PHPStan level 8 with the reviewed baseline
+        run: vendor/bin/phpstan analyse --memory-limit=-1 --no-progress --error-format=github
+      - name: Reject PHPStan baseline growth
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: php dev/tests/check-phpstan-baseline.php --git-ref="$BASE_SHA" phpstan-baseline.neon
+
+  compute-platform-matrix:
+    name: Compute supported platform matrix
+    runs-on: ubuntu-latest
+    outputs:
+      magento_matrix: ${{ steps.partition.outputs.matrix }}
+      mageos_matrix: ${{ steps.mageos.outputs.matrix }}
+      audit_matrix: ${{ steps.audit.outputs.matrix }}
+    steps:
+      - uses: graycoreio/github-actions-magento2/supported-version@4de1565d1732187111b6d2eeb23c0ee3a9fc23b7 # v8.12.0
+        id: magento
+        with:
+          project: magento-open-source
+          kind: currently-supported
+      # Keep 2.4.7-p10 covered by its dedicated job below, where its one upstream
+      # advisory can be reported without weakening the other platform jobs.
+      - name: Separate Magento 2.4.7-p10 compatibility profile
+        id: partition
+        env:
+          PLATFORM_MATRIX: ${{ steps.magento.outputs.matrix }}
+        run: |
+          matrix=$(jq -c 'del(.magento[] | select(. == "magento/project-community-edition:2.4.7-p10")) | del(.include[] | select(.magento == "magento/project-community-edition:2.4.7-p10"))' <<< "$PLATFORM_MATRIX")
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+      # Keep the previous Mage-OS release next to the current one.
+      - uses: graycoreio/github-actions-magento2/supported-version@4de1565d1732187111b6d2eeb23c0ee3a9fc23b7 # v8.12.0
+        id: mageos
+        with:
+          project: mage-os
+          kind: custom
+          custom_versions: 'mage-os/project-community-edition:3.5.0,mage-os/project-community-edition:3.6.0'
+      - name: Combine audit profiles
+        id: audit
+        env:
+          MAGENTO_MATRIX: ${{ steps.partition.outputs.matrix }}
+          MAGEOS_MATRIX: ${{ steps.mageos.outputs.matrix }}
+        run: |
+          matrix=$(jq -n -c --argjson magento "$MAGENTO_MATRIX" --argjson mageos "$MAGEOS_MATRIX" '{include: ([$magento.include[] | {magento, php, composer, repository: "https://mirror.mage-os.org/"}] + [$mageos.include[] | {magento, php, composer, repository: "https://repo.mage-os.org/"}])}')
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  check-magento:
+    name: Magento Open Source production checks
+    needs: compute-platform-matrix
+    uses: graycoreio/github-actions-magento2/.github/workflows/check-extension.yaml@4de1565d1732187111b6d2eeb23c0ee3a9fc23b7 # v8.12.0
+    with:
+      magento_repository: https://mirror.mage-os.org/
+      matrix: ${{ needs.compute-platform-matrix.outputs.magento_matrix }}
+      fail-fast: false
+    secrets:
+      composer_auth: ${{ secrets.COMPOSER_AUTH }}
+
+  check-mageos:
+    name: Mage-OS production checks
+    needs: compute-platform-matrix
+    uses: graycoreio/github-actions-magento2/.github/workflows/check-extension.yaml@4de1565d1732187111b6d2eeb23c0ee3a9fc23b7 # v8.12.0
+    with:
+      magento_repository: https://repo.mage-os.org/
+      matrix: ${{ needs.compute-platform-matrix.outputs.mageos_matrix }}
+      fail-fast: false
+    secrets:
+      composer_auth: ${{ secrets.COMPOSER_AUTH }}
+
+  # Resolves the extension inside each normal platform project and audits the
+  # whole lock file, including the platform's development tools. Resolution
+  # does not stop at the first advisory, so the audit step reports every
+  # finding and then fails on any of them.
+  dependency-audit:
+    name: Locked dependency audit (${{ matrix.magento }})
+    needs: compute-platform-matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.compute-platform-matrix.outputs.audit_matrix) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: graycoreio/github-actions-magento2/setup-magento@4de1565d1732187111b6d2eeb23c0ee3a9fc23b7 # v8.12.0
+        id: magento
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v${{ matrix.composer }}
+          mode: extension
+          magento_version: ${{ matrix.magento }}
+          magento_repository: ${{ matrix.repository }}
+          composer_auth: ${{ secrets.COMPOSER_AUTH }}
+      - name: Resolve the extension in the disposable project
+        working-directory: ${{ steps.magento.outputs.path }}
+        env:
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+          COMPOSER_NO_SECURITY_BLOCKING: 1
+          EXTENSION_ROOT: ${{ github.workspace }}
+        run: |
+          composer config repositories.local path "$EXTENSION_ROOT"
+          composer require 'mage-os/module-shopping-feed:@dev' --no-install --no-interaction
+      - name: Audit the locked platform and extension dependencies
+        working-directory: ${{ steps.magento.outputs.path }}
+        env:
+          EXTENSION_ROOT: ${{ github.workspace }}
+          PROFILE: ${{ matrix.magento }}
+        run: |
+          composer audit --locked --format=json --abandoned=report > dependency-audit.json || true
+          cat dependency-audit.json
+          php "$EXTENSION_ROOT/.github/scripts/check-audit-report.php" dependency-audit.json "$PROFILE"
+
+  # Audits the module's own resolved graph, including the pinned analysis
+  # tools in require-dev, at the lowest and highest supported PHP versions.
+  development-tool-audit:
+    name: Locked extension and tool audit (PHP ${{ matrix.php-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['8.1', '8.5']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
+          coverage: none
+      - name: Resolve runtime and development dependencies
+        env:
+          COMPOSER_NO_SECURITY_BLOCKING: 1
+        run: composer update --no-install --no-interaction --no-progress
+      - name: Audit the locked dependencies
+        env:
+          PHP_PROFILE: ${{ matrix.php-version }}
+        run: |
+          composer audit --locked --format=json --abandoned=report > dependency-audit.json || true
+          cat dependency-audit.json
+          php .github/scripts/check-development-audit.php dependency-audit.json composer.lock "$PHP_PROFILE"
+
+  check-magento-247:
+    name: Magento 2.4.7-p10 compatibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: magento_integration_tests
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: rootpassword
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=10
+      opensearch:
+        image: opensearchproject/opensearch:2.19.6
+        env:
+          discovery.type: single-node
+          DISABLE_INSTALL_DEMO_CONFIG: 'true'
+          DISABLE_SECURITY_PLUGIN: 'true'
+          OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
+        ports:
+          - 9200:9200
+        options: --health-cmd="curl --fail http://localhost:9200/_cluster/health" --health-interval=10s --health-timeout=5s --health-retries=30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: graycoreio/github-actions-magento2/setup-magento@4de1565d1732187111b6d2eeb23c0ee3a9fc23b7 # v8.12.0
+        id: magento
+        with:
+          php-version: '8.3'
+          tools: composer:v2.9.8
+          mode: extension
+          magento_version: magento/project-community-edition:2.4.7-p10
+          magento_repository: https://mirror.mage-os.org/
+          composer_auth: ${{ secrets.COMPOSER_AUTH }}
+      - name: Configure the one platform advisory exception
+        env:
+          MAGENTO_ROOT: ${{ steps.magento.outputs.path }}
+        run: php .github/scripts/configure-magento-247-compat.php "$MAGENTO_ROOT/composer.json"
+      - name: Install the extension in the disposable project
+        working-directory: ${{ steps.magento.outputs.path }}
+        env:
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+          COMPOSER_MIRROR_PATH_REPOS: 1
+          EXTENSION_ROOT: ${{ github.workspace }}
+        run: |
+          composer config repositories.local path "$EXTENSION_ROOT"
+          composer require 'mage-os/module-shopping-feed:@dev' --no-interaction
+      - name: Report and check platform advisories
+        working-directory: ${{ steps.magento.outputs.path }}
+        env:
+          EXTENSION_ROOT: ${{ github.workspace }}
+        run: |
+          status=0
+          composer audit --locked --format=json --abandoned=report > platform-audit.json || status=$?
+          cat platform-audit.json
+          test "$status" -eq 1
+          php "$EXTENSION_ROOT/.github/scripts/check-magento-247-audit.php" platform-audit.json
+      - name: Run extension unit tests
+        env:
+          MAGENTO_ROOT: ${{ steps.magento.outputs.path }}
+        run: php "$MAGENTO_ROOT/vendor/bin/phpunit" -c phpunit.xml.dist
+      - name: Verify the optional Flysystem backport in an isolated copy
+        env:
+          MAGENTO_ROOT: ${{ steps.magento.outputs.path }}
+        run: |
+          source="$RUNNER_TEMP/flysystem-backport"
+          cp -R "$MAGENTO_ROOT/vendor/league/flysystem" "$source"
+          patch --batch --fuzz=0 -d "$source" -p1 < dev/patches/league-flysystem-2.5.0-malformed-utf8.patch
+          php dev/tests/security/flysystem-path-normalizer.php "$MAGENTO_ROOT" "$source/src"
+      - name: Compile the installed extension
+        uses: graycoreio/github-actions-magento2/setup-di-compile@4de1565d1732187111b6d2eeb23c0ee3a9fc23b7 # v8.12.0
+        with:
+          path: ${{ steps.magento.outputs.path }}
+      - name: Configure isolated integration tests
+        env:
+          MAGENTO_ROOT: ${{ steps.magento.outputs.path }}
+        run: php .github/scripts/configure-magento-247-integration.php "$MAGENTO_ROOT"
+      - name: Allow integration database routines
+        env:
+          MYSQL_PWD: rootpassword
+        run: mysql -h127.0.0.1 -uroot -e 'SET GLOBAL log_bin_trust_function_creators = 1'
+      - name: Run extension integration tests
+        working-directory: ${{ steps.magento.outputs.path }}/dev/tests/integration
+        run: ../../../vendor/bin/phpunit -c phpunit.xml --testsuite ShoppingFeed

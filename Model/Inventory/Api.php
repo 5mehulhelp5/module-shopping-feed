@@ -18,14 +18,36 @@
 
 namespace MageOS\ShoppingFeed\Model\Inventory;
 
-
 class Api
 {
+    /**
+     * @var \Magento\Framework\Module\Manager
+     */
     protected $moduleManager;
+
+    /**
+     * Creates MSI services only when MSI is enabled
+     *
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
     protected $objectManager;
+
+    /**
+     * @var \Magento\Framework\Api\SearchCriteriaBuilder
+     */
     protected $searchCriteriaBuilder;
+
+    /**
+     * @var \Magento\Framework\App\ResourceConnection
+     */
     protected $resourceConnection;
 
+    /**
+     * @param \Magento\Framework\Module\Manager $moduleManager
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param \Magento\Framework\App\ResourceConnection $resourceConnection
+     */
     public function __construct(
         \Magento\Framework\Module\Manager $moduleManager,
         \Magento\Framework\ObjectManagerInterface $objectManager,
@@ -39,6 +61,8 @@ class Api
     }
 
     /**
+     * Whether Magento MSI (Magento_InventoryApi) is enabled.
+     *
      * @return bool
      */
     public function isMsiEnabled()
@@ -47,8 +71,10 @@ class Api
     }
 
     /**
-     * @param  $product
-     * @param  $websiteCode
+     * Source items of the product whose enabled sources are linked to the website's stock.
+     *
+     * @param mixed $product catalog product
+     * @param string $websiteCode
      * @return array
      */
     public function getItems($product, $websiteCode)
@@ -58,14 +84,14 @@ class Api
             return [];
         }
 
-        $stockResolver = $this->objectManager->create('Magento\InventorySalesApi\Api\StockResolverInterface');
+        $stockResolver = $this->objectManager->create(\Magento\InventorySalesApi\Api\StockResolverInterface::class);
         $stock = $stockResolver->execute("website", $websiteCode);
         $stockId = (int)$stock->getStockId();
 
         $sourceCodes = [];
         $searchCriteria = $this->searchCriteriaBuilder->addFilter('stock_id', $stockId)->create();
-        $stockLinks = $this->objectManager->create('Magento\InventoryApi\Api\GetStockSourceLinksInterface');
-        $sourceRepository = $this->objectManager->create('Magento\InventoryApi\Api\SourceRepositoryInterface');
+        $stockLinks = $this->objectManager->create(\Magento\InventoryApi\Api\GetStockSourceLinksInterface::class);
+        $sourceRepository = $this->objectManager->create(\Magento\InventoryApi\Api\SourceRepositoryInterface::class);
         foreach ($stockLinks->execute($searchCriteria)->getItems() as $link) {
             if ($sourceRepository->get($link->getSourceCode())->isEnabled()) {
                 $sourceCodes[] = $link->getSourceCode();
@@ -75,7 +101,7 @@ class Api
         $items = [];
         $sourceItems = $this->getAllItems($product);
         foreach ($sourceItems as $item) {
-            if (in_array($item['source_code'], $sourceCodes)) {
+            if (in_array($item->getSourceCode(), $sourceCodes, true)) {
                 $items[] = $item;
             }
         }
@@ -84,7 +110,9 @@ class Api
     }
 
     /**
-     * @param  $product
+     * All MSI source items of the product, or an empty array without MSI.
+     *
+     * @param mixed $product catalog product
      * @return array
      */
     public function getAllItems($product)
@@ -94,14 +122,16 @@ class Api
             return [];
         }
 
-        $sourceItems = $this->objectManager->create('Magento\InventoryApi\Api\GetSourceItemsBySkuInterface');
+        $sourceItems = $this->objectManager->create(\Magento\InventoryApi\Api\GetSourceItemsBySkuInterface::class);
         return $sourceItems->execute($product->getSku());
     }
 
     /**
-     * @param  string $sku
-     * @param  string $sourceCode
-     * @param  string|null $websiteCode Resolve reservations for the feed's website stock.
+     * Sum of reservation quantities for the SKU in the website's stock or the source's stock.
+     *
+     * @param string $sku
+     * @param string|null $sourceCode
+     * @param string|null $websiteCode Resolve reservations for the feed's website stock.
      * @return float|int
      */
     public function getReservations(string $sku, ?string $sourceCode = null, ?string $websiteCode = null)
@@ -116,7 +146,7 @@ class Api
             ->where('sku = ?', $sku);
 
         if ($websiteCode !== null) {
-            $resolver = $this->objectManager->create('Magento\InventorySalesApi\Api\StockResolverInterface');
+            $resolver = $this->objectManager->create(\Magento\InventorySalesApi\Api\StockResolverInterface::class);
             $stockId = (int)$resolver->execute('website', $websiteCode)->getStockId();
             $select->where('stock_id = ?', $stockId);
         } elseif ($sourceCode !== null) {

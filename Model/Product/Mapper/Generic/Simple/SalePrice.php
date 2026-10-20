@@ -23,13 +23,14 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple;
  *
  * Class SalePrice
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
  */
 class SalePrice extends Price
 {
     /**
+     * Sale price when the product has one, else 0.
+     *
      * @param  array $params
-     * @return string
+     * @return float|int 0 when the product has no sale price
      */
     public function map(array $params = [])
     {
@@ -43,8 +44,11 @@ class SalePrice extends Price
         return $price;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function filter($cell)
     {
-        return intval($cell) > 0 ? parent::filter($cell) : false;
+        return (int) $cell > 0 ? parent::filter($cell) : false;
     }
 }

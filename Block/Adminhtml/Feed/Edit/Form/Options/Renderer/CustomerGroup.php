@@ -38,9 +38,9 @@ class CustomerGroup extends Template
     /**
      * ProductPrice constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context   $context
-     * @param \Magento\Config\Model\Config\Source\Yesno $sourceYesno
-     * @param array                                     $data
+     * @param \Magento\Backend\Block\Template\Context                $context
+     * @param \Magento\Customer\Model\ResourceModel\Group\Collection $customerGroup
+     * @param array                                                  $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -51,6 +51,11 @@ class CustomerGroup extends Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get the customer group options
+     *
+     * @return array<mixed>
+     */
     public function getOptions()
     {
         return $this->customerGroup->toOptionArray();

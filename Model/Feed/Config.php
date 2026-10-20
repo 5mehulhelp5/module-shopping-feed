@@ -26,25 +26,23 @@ class Config extends AbstractModel
     private const STRING_PREFIX = '__mageos_shopping_feed_string__:';
 
     /**
-     * @var null|\Magento\Framework\Json\Encoder
+     * @var null|\Magento\Framework\Json\EncoderInterface
      */
     protected $jsonEncoder = null;
 
     /**
-     * @var null|\Magento\Framework\Json\Decoder
+     * @var null|\Magento\Framework\Json\DecoderInterface
      */
     protected $jsonDecoder = null;
 
-
-
     /**
-     * @param \Magento\Framework\Model\Context                        $context
-     * @param \Magento\Framework\Registry                             $registry
-     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb           $resourceCollection
-     * @param \Magento\Framework\Json\EncoderInterface                $jsonEncoder
-     * @param \Magento\Framework\Json\DecoderInterface                $jsonDecoder
-     * @param array                                                   $data
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
+     * @param \Magento\Framework\Json\DecoderInterface $jsonDecoder
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
      */
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -68,7 +66,7 @@ class Config extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config');
+        $this->_init(\MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config::class);
     }
 
     /**
@@ -101,7 +99,9 @@ class Config extends AbstractModel
         $encodedString = is_string($value) && str_starts_with($value, self::STRING_PREFIX);
         if (is_string($value) && $value !== '' && ($encodedString || in_array($value[0], ['[', '{'], true))) {
             try {
-                $newValue = $this->jsonDecoder->decode($encodedString ? substr($value, strlen(self::STRING_PREFIX)) : $value);
+                $newValue = $this->jsonDecoder->decode(
+                    $encodedString ? substr($value, strlen(self::STRING_PREFIX)) : $value
+                );
             } catch (\Exception $exception) {
                 return parent::_afterLoad();
             }

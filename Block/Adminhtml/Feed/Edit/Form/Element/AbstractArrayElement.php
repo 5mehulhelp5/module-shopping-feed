@@ -27,6 +27,13 @@ use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
 abstract class AbstractArrayElement extends Widget implements RendererInterface
 {
     /**
+     * Form element being rendered
+     *
+     * @var \Magento\Framework\Data\Form\Element\AbstractElement|null
+     */
+    protected $_element;
+
+    /**
      * Render HTML
      *
      * @param  \Magento\Framework\Data\Form\Element\AbstractElement $element
@@ -42,7 +49,7 @@ abstract class AbstractArrayElement extends Widget implements RendererInterface
      * Set form element instance
      *
      * @param  \Magento\Framework\Data\Form\Element\AbstractElement $element
-     * @return \MageOS\ShoppingFeed\Block\Adminhtml\Feed\EditForm\Element\ArrayElement
+     * @return $this
      */
     public function setElement(\Magento\Framework\Data\Form\Element\AbstractElement $element)
     {
@@ -95,7 +102,7 @@ abstract class AbstractArrayElement extends Widget implements RendererInterface
      * @param                                   array $a
      * @param                                   array $b
      * @return                                  int
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     abstract protected function sortValuesCallback($a, $b);
 }

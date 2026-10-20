@@ -32,11 +32,16 @@ class Generic extends \Magento\Backend\Block\Widget\Form\Generic
     protected $_template = 'feed/edit/tab.phtml';
 
     /**
-     * @param \Magento\Backend\Block\Template\Context       $context
-     * @param \Magento\Framework\Registry                   $registry
-     * @param \Magento\Framework\Data\FormFactory           $formFactory
+     * @var \MageOS\ShoppingFeed\Model\Feed\Converter
+     */
+    protected $feedConverter;
+
+    /**
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
      * @param \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter
-     * @param array                                         $data
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -50,7 +55,9 @@ class Generic extends \Magento\Backend\Block\Widget\Form\Generic
     }
 
     /**
-     * {@inheritdoc}
+     * Check whether the tab can be shown
+     *
+     * @return bool
      */
     public function canShowTab()
     {
@@ -58,7 +65,9 @@ class Generic extends \Magento\Backend\Block\Widget\Form\Generic
     }
 
     /**
-     * {@inheritdoc}
+     * Check whether the tab is hidden
+     *
+     * @return bool
      */
     public function isHidden()
     {
@@ -76,6 +85,12 @@ class Generic extends \Magento\Backend\Block\Widget\Form\Generic
         return $this->_authorization->isAllowed($resourceId);
     }
 
+    /**
+     * Get the form values: posted data kept after a failed save, else the feed's saved values
+     *
+     * @param \MageOS\ShoppingFeed\Model\Feed $model
+     * @return mixed
+     */
     protected function prepareValues($model)
     {
         $currentFeedData = $this->_coreRegistry->registry('current_feed');

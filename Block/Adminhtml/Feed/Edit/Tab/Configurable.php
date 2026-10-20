@@ -24,7 +24,8 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab;
 /**
  * Feed edit form Configurable Products tab
  */
-class Configurable extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class Configurable extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements
+    \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
      * @var \MageOS\ShoppingFeed\Model\Feed\Source\Product\AssociatedMode
@@ -37,14 +38,13 @@ class Configurable extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Ge
     protected $sourceYesno;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context                           $context
-     * @param \Magento\Framework\Registry                                       $registry
-     * @param \Magento\Framework\Data\FormFactory                               $formFactory
-     * @param \MageOS\ShoppingFeed\Model\Feed\Converter                     $feedConverter
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
+     * @param \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\AssociatedMode $sourceAssociatedMode
-     * @param \Magento\Config\Model\Config\Source\Yesno                         $sourceYesno
-     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns        $sourceProductColumns
-     * @param array                                                             $data
+     * @param \Magento\Config\Model\Config\Source\Yesno $sourceYesno
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -64,7 +64,7 @@ class Configurable extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Ge
      * Prepare form
      *
      * @return                                        $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function _prepareForm()
     {
@@ -98,6 +98,7 @@ class Configurable extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Ge
                 'required' => true,
                 'values' => $this->sourceAssociatedMode->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Associated products can be added in the feed as separate items even if they are not visible in catalog.'),
             ]
         );
@@ -140,6 +141,7 @@ class Configurable extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Ge
                 'required' => true,
                 'values' => $this->sourceYesno->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('The new unique url will be formed from configurable product url and the option ids as parameters. e.g http://example.com/configurable.html?option_1=x&option2=y'),
             ]
         );
@@ -153,6 +155,7 @@ class Configurable extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Ge
                 'title' => __('Associated Product Attribute Value Separator'),
                 'required' => false,
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Variant attributes values like color and size, defined above, are been merged together for each item using the separator defined here.'),
             ]
         );
@@ -171,12 +174,13 @@ class Configurable extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Ge
         );
 
         $renderer = $this->getLayout()->createBlock(
-            'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Complex\Inherit'
+            \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Complex\Inherit::class
         );
         $field->setRenderer($renderer);
 
         $this->_eventManager->dispatch(
-            sprintf('mageos_shopping_feed_feed_edit_tab_configurable_prepare_form_%s', $model->getType()), [
+            sprintf('mageos_shopping_feed_feed_edit_tab_configurable_prepare_form_%s', $model->getType()),
+            [
             'form' => $form,
             'feed' => $model,
             'is_element_disabled' => $isElementDisabled,
@@ -216,6 +220,7 @@ class Configurable extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Ge
      */
     public function getTabNotice()
     {
+        // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
         return __('This section applies to all configurable and their associated products in your catalog. Configurable type should be enabled under <a href="#feed_tabs_filters">Filters</a> section.');
     }
 }

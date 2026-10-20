@@ -27,7 +27,16 @@ class MetadataTest extends TestCase
         $taxonomy = $this->createMock(\MageOS\ShoppingFeed\Model\Taxonomy\ProviderFactory::class);
         $promotions = $this->createMock(\MageOS\ShoppingFeed\Ui\DataProvider\Feed\Form\Promotions::class);
         $promotions->method('rules')->willReturn([new \Magento\Framework\DataObject(['id' => 12, 'name' => 'Sale'])]);
-        $metadata = new Metadata($fields, $options, $parameters, $stores, $authorization, $categories, $taxonomy, $promotions);
+        $metadata = new Metadata(
+            $fields,
+            $options,
+            $parameters,
+            $stores,
+            $authorization,
+            $categories,
+            $taxonomy,
+            $promotions
+        );
         $feed = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Feed::class)
             ->disableOriginalConstructor()->onlyMethods([])->getMock();
         $feed->setData('type', 'google_shopping');

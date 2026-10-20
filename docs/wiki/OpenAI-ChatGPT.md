@@ -1,6 +1,6 @@
 # OpenAI / ChatGPT (Google-compatible, beta)
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
 
 When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the tested runtime, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
 
@@ -20,7 +20,7 @@ Condition defaults to `new`; map actual used or refurbished condition. Optional 
 
 ## Validation and freshness
 
-Generation and **Test Feed** use the same row validator. It checks required cells, plain-text title and description limits, stock and condition values, credential-free HTTP(S) links, variant group IDs, identifiers, prices, and dates. Invalid rows are skipped with reasons in the feed log. Default output limits are 150 characters for title and 5,000 for description.
+Generation and **Test Feed** use the same row validator. It checks required cells, plain-text title and description limits, stock and condition values, credential-free HTTP(S) links, variant group IDs, identifiers, prices, and dates. Invalid rows are skipped with reasons in the feed log. The preset declares 150-character title and 5,000-character description limits, but they are not applied automatically; add them under [Limit column output](Filters-and-Transformations#limit-column-output) so long values are shortened instead of skipped.
 
 Sale prices must be positive, below the regular price, and in the same currency. Invalid sale relationships reject the row. Sale intervals require a sale price; date-only boundaries include the full UTC day. The normal Magento sale mapper supplies current offers.
 

@@ -20,11 +20,6 @@ namespace MageOS\ShoppingFeed\Model;
 
 use Magento\Framework\Model\AbstractModel;
 
-/**
- * Class Shipping
- *
- * @package MageOS\ShoppingFeed\Model
- */
 class Shipping extends AbstractModel
 {
     /**
@@ -34,6 +29,6 @@ class Shipping extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('MageOS\ShoppingFeed\Model\ResourceModel\Shipping');
+        $this->_init(\MageOS\ShoppingFeed\Model\ResourceModel\Shipping::class);
     }
 }

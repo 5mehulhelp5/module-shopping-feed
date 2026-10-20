@@ -26,12 +26,12 @@ use PHPUnit\Framework\Attributes\DataProvider;
 class ConfigTest extends ModelFramework
 {
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $readerMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $cacheMock;
 
@@ -40,6 +40,9 @@ class ConfigTest extends ModelFramework
      */
     protected $model;
 
+    /**
+     * @var \Magento\Framework\Serialize\SerializerInterface&\PHPUnit\Framework\MockObject\MockObject
+     */
     protected $serializerMock;
 
     /**
@@ -48,7 +51,7 @@ class ConfigTest extends ModelFramework
     protected $objectManagerHelper;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Serializer
+     * @var \Magento\Framework\Serialize\SerializerInterface
      */
     protected $serializer;
 
@@ -106,7 +109,8 @@ class ConfigTest extends ModelFramework
                 $this->serializer->serialize(['feed' => $expected])
             )
         );
-        $this->serializerMock->expects($this->any())->method('unserialize')->will($this->returnValue(['feed' => $expected]));
+        $this->serializerMock->expects($this->any())->method('unserialize')
+            ->will($this->returnValue(['feed' => $expected]));
 
         $this->model = $this->objectManagerHelper->getObject(
             'MageOS\ShoppingFeed\Model\FeedTypes\Config',
@@ -154,8 +158,14 @@ class ConfigTest extends ModelFramework
     public static function getIsAllowedDirectiveProvider()
     {
         return [
-            'is_allowed' => [['feed' => ['generic' => ['directives' => ['some_directive' => ['Expected Data']]]]], true],
-            'is_not_allowed' => [['feed' => ['generic' => ['directives' => ['some_other_directive' => ['Expected Data']]]]], false],
+            'is_allowed' => [
+                ['feed' => ['generic' => ['directives' => ['some_directive' => ['Expected Data']]]]],
+                true,
+            ],
+            'is_not_allowed' => [
+                ['feed' => ['generic' => ['directives' => ['some_other_directive' => ['Expected Data']]]]],
+                false,
+            ],
         ];
     }
 
@@ -191,7 +201,10 @@ class ConfigTest extends ModelFramework
     public static function getDirectiveProvider()
     {
         return [
-            'is_allowed' => [['feed' => ['generic' => ['directives' => ['some_directive' => ['Expected Data']]]]], ['Expected Data']]
+            'is_allowed' => [
+                ['feed' => ['generic' => ['directives' => ['some_directive' => ['Expected Data']]]]],
+                ['Expected Data'],
+            ]
         ];
     }
 }

@@ -50,6 +50,7 @@ class Index extends \Magento\Backend\App\Action
      */
     public function execute()
     {
+        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
         $resultPage = $this->resultPageFactory->create();
         $resultPage->setActiveMenu('MageOS_ShoppingFeed::mageos_shopping_feed');
         $resultPage->getConfig()->getTitle()->prepend(__('Feeds Management'));

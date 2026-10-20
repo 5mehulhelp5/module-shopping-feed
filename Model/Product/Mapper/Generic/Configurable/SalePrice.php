@@ -23,13 +23,14 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable;
  *
  * Class SalePrice
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable
  */
 class SalePrice extends Price
 {
     /**
+     * Lowest sale price among the associated products, 0 without a special price.
+     *
      * @param  array $params
-     * @return string
+     * @return float|int 0 when the product has no sale price
      */
     public function map(array $params = [])
     {
@@ -42,8 +43,11 @@ class SalePrice extends Price
         return $this->getPrice($key);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function filter($cell)
     {
-        return intval($cell) > 0 ? parent::filter($cell) : false;
+        return (int) $cell > 0 ? parent::filter($cell) : false;
     }
 }

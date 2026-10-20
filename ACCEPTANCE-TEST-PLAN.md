@@ -4,9 +4,9 @@
 
 Use this plan to decide whether a `MageOS_ShoppingFeed` release candidate is ready for production. Run it against the exact candidate commit on representative store copies before enabling live schedules or uploads.
 
-The [1.2.3 release notes](docs/releases/1.2.3.md), [Mage-OS 3.5 hardening record](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md), and [native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) identify the current patch scope. The [October 3 local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) retains its `133af71` browser/operational scope. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
+The [1.2.4 release notes](docs/releases/1.2.4.md) and [Mage-OS 3.6 security verification](docs/reviews/2026-10-20-standards-security-mageos36.md) identify the current patch scope. The earlier [Mage-OS 3.5 hardening record](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) and [native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) retain their recorded scope. The [October 3 local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) retains its `133af71` browser/operational scope. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
 
-The minimum platform acceptance target is Mage-OS 3.5.0. Add another currently supported Magento Open Source store when available. A store with Multi-Source Inventory is required for Local Inventory acceptance.
+The current platform acceptance target is Mage-OS 3.6.0; Mage-OS 3.5.0 remains in CI coverage. Add another currently supported Magento Open Source store when available. A store with Multi-Source Inventory is required for Local Inventory acceptance.
 
 ## Release record
 
@@ -37,7 +37,7 @@ Keep command output, screenshots, generated files, checksums, remote delivery ev
 
 | Profile | Required purpose | Assigned store |
 | --- | --- | --- |
-| A | Mage-OS 3.5.0, PHP 8.4, clean module install | |
+| A | Mage-OS 3.6.0, PHP 8.4, clean module install | |
 | B | Currently supported Magento Open Source release | |
 | C | MSI store with at least two enabled sources linked to one stock | |
 | D | Store with an original Rocket Web feed package installed, if coexistence is part of release acceptance | |

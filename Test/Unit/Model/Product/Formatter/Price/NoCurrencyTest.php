@@ -29,7 +29,7 @@ use MageOS\ShoppingFeed\Test\Unit\Model\ModelFramework;
 class NoCurrencyTest extends ModelFramework
 {
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Formatter\Price\Currency
+     * @var \MageOS\ShoppingFeed\Model\Product\Formatter\Price\NoCurrency
      */
     protected $model;
 
@@ -37,7 +37,6 @@ class NoCurrencyTest extends ModelFramework
      * @var ObjectManagerHelper
      */
     protected $objectManagerHelper;
-
 
     /**
      * @inheritdoc

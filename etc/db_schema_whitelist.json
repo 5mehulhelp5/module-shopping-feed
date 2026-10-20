@@ -78,6 +78,7 @@
             "username": true,
             "password": true,
             "host": true,
+            "host_key_fingerprint": true,
             "port": true,
             "path": true,
             "mode": true,

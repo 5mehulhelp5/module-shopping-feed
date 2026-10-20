@@ -20,9 +20,6 @@ namespace MageOS\ShoppingFeed\Model\Feed\Source;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * Class Locale
- */
 class Locale implements OptionSourceInterface
 {
     /**

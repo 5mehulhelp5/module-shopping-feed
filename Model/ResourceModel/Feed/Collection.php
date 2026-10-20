@@ -21,6 +21,9 @@ namespace MageOS\ShoppingFeed\Model\ResourceModel\Feed;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
+/**
+ * @method \MageOS\ShoppingFeed\Model\Feed getFirstItem()
+ */
 class Collection extends AbstractCollection
 {
     /**
@@ -35,7 +38,7 @@ class Collection extends AbstractCollection
      */
     protected function _construct()
     {
-        $this->_init('MageOS\ShoppingFeed\Model\Feed', 'MageOS\ShoppingFeed\Model\ResourceModel\Feed');
+        $this->_init(\MageOS\ShoppingFeed\Model\Feed::class, \MageOS\ShoppingFeed\Model\ResourceModel\Feed::class);
     }
 
     /**

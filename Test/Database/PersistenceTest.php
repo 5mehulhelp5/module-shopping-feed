@@ -17,9 +17,24 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class PersistenceTest extends TestCase
 {
+    /**
+     * @var Mysql
+     */
     private Mysql $db;
+
+    /**
+     * @var ObjectManager
+     */
     private ObjectManager $helper;
+
+    /**
+     * @var Context
+     */
     private Context $resourceContext;
+
+    /**
+     * @var \Magento\Framework\Encryption\Encryptor
+     */
     private \Magento\Framework\Encryption\Encryptor $encryptor;
 
     protected function setUp(): void
@@ -30,33 +45,42 @@ class PersistenceTest extends TestCase
         $this->helper = new ObjectManager($this);
         $renderers = [];
         $quote = new \Magento\Framework\DB\Platform\Quote();
-        foreach (['Distinct', 'Columns', 'Union', 'From', 'Where', 'Group', 'Having', 'Order', 'Limit', 'ForUpdate'] as $i => $name) {
-            $class = 'Magento\\Framework\\DB\\Select\\' . $name . 'Renderer';
+        $parts = ['Distinct', 'Columns', 'Union', 'From', 'Where', 'Group', 'Having', 'Order', 'Limit', 'ForUpdate'];
+        foreach ($parts as $i => $name) {
+            // Only some framework renderers take the quote helper, and that varies by version.
+            $class = new \ReflectionClass('Magento\\Framework\\DB\\Select\\' . $name . 'Renderer');
             $renderers[] = [
-                'sort' => $i, 'part' => ['Limit' => 'limitcount', 'ForUpdate' => 'forupdate'][$name] ?? strtolower($name),
-                'renderer' => new $class($quote),
+                'sort' => $i,
+                'part' => ['Limit' => 'limitcount', 'ForUpdate' => 'forupdate'][$name] ?? strtolower($name),
+                'renderer' => $class->newInstanceArgs($class->getConstructor() === null ? [] : [$quote]),
             ];
         }
-        $selectFactory = new \Magento\Framework\DB\SelectFactory(new \Magento\Framework\DB\Select\SelectRenderer($renderers));
+        $selectFactory = new \Magento\Framework\DB\SelectFactory(
+            new \Magento\Framework\DB\Select\SelectRenderer($renderers)
+        );
         $this->db = $this->helper->getObject(Mysql::class, [
             'string' => new \Magento\Framework\Stdlib\StringUtils(),
             'dateTime' => new \Magento\Framework\Stdlib\DateTime(),
             'selectFactory' => $selectFactory,
             'serializer' => new \Magento\Framework\Serialize\Serializer\Json(),
             'config' => ['host' => '127.0.0.1:' . (int)getenv('SHOPPING_FEED_TEST_DB_PORT'),
-                'dbname' => 'shopping_feed_test', 'username' => 'root', 'password' => '', 'charset' => 'utf8mb4'],
+                'dbname' => getenv('SHOPPING_FEED_TEST_DB_NAME') ?: 'shopping_feed_test',
+                'username' => 'root', 'password' => getenv('SHOPPING_FEED_TEST_DB_PASSWORD') ?: '',
+                'charset' => 'utf8mb4'],
         ]);
         $resources = $this->createMock(ResourceConnection::class);
         $resources->method('getConnection')->willReturn($this->db);
         $resources->method('getTableName')->willReturnArgument(0);
-        $this->resourceContext = new Context($resources,
+        $this->resourceContext = new Context(
+            $resources,
             new \Magento\Framework\Model\ResourceModel\Db\TransactionManager(),
             $this->createMock(\Magento\Framework\Model\ResourceModel\Db\ObjectRelationProcessor::class)
         );
         $deployment = $this->createMock(\Magento\Framework\App\DeploymentConfig::class);
         $deployment->method('get')->with('crypt/key')->willReturn(str_repeat('a', 32));
         $this->encryptor = new \Magento\Framework\Encryption\Encryptor(
-            new \Magento\Framework\Math\Random(), $deployment,
+            new \Magento\Framework\Math\Random(),
+            $deployment,
             $this->createMock(\Magento\Framework\Encryption\KeyValidator::class)
         );
         $schema = simplexml_load_file(dirname(__DIR__, 2) . '/etc/db_schema.xml');
@@ -65,7 +89,8 @@ class PersistenceTest extends TestCase
         $type .= isset($column['length']) ? '(' . (int)$column['length'] . ')' : '';
         $this->db->query('CREATE TEMPORARY TABLE mageos_shopping_feed_feed_upload (
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, feed_id INT, host VARCHAR(255), username VARCHAR(255),
-            password ' . $type . ', port INT, mode VARCHAR(255), gzip INT, path VARCHAR(255))');
+            password ' . $type . ', port INT, mode VARCHAR(255), gzip INT, path VARCHAR(255),
+            host_key_fingerprint VARCHAR(100))');
         $this->db->query('CREATE TEMPORARY TABLE mageos_shopping_feed_feed (id INT PRIMARY KEY)');
         $this->db->query('CREATE TEMPORARY TABLE mageos_shopping_feed_feed_queue (
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, feed_id INT, schedule_id INT NULL,
@@ -107,8 +132,7 @@ class PersistenceTest extends TestCase
         $raw = $this->db->fetchRow('SELECT * FROM mageos_shopping_feed_feed_upload WHERE id = ?', $id);
         $this->assertSame('changed.example', $raw['host']);
         $this->assertSame($stored, $raw['password']);
-        $this->assertSame($password, $this->upload()->load($id)->getPassword());
-
+        $this->assertSame($password, $this->upload()->load($id)->getDecryptedPassword());
     }
 
     public function testRepeatedSaveDoesNotDoubleEncryptThePassword(): void
@@ -117,9 +141,12 @@ class PersistenceTest extends TestCase
         $upload = $this->upload()->setData(['feed_id' => 1, 'password' => $password]);
         $upload->save();
         $upload->setData('host', 'changed.example')->save();
-        $raw = $this->db->fetchOne('SELECT password FROM mageos_shopping_feed_feed_upload WHERE id = ?', $upload->getId());
+        $raw = $this->db->fetchOne(
+            'SELECT password FROM mageos_shopping_feed_feed_upload WHERE id = ?',
+            $upload->getId()
+        );
         $this->assertSame($password, $this->encryptor->decrypt($raw));
-        $this->assertSame($password, $this->upload()->load($upload->getId())->getPassword());
+        $this->assertSame($password, $this->upload()->load($upload->getId())->getDecryptedPassword());
     }
 
     public function testLongPasswordExceedsTheOldColumnLimitAndRoundTrips(): void
@@ -131,7 +158,7 @@ class PersistenceTest extends TestCase
         $raw = $this->db->fetchOne('SELECT password FROM mageos_shopping_feed_feed_upload WHERE id = ?', $id);
         $this->assertGreaterThan(255, strlen($raw));
         $this->assertSame($password, $this->encryptor->decrypt($raw));
-        $this->assertSame($password, $this->upload()->load($id)->getPassword());
+        $this->assertSame($password, $this->upload()->load($id)->getDecryptedPassword());
     }
 
     public function testTodaysInterruptedQueueIsImmediatelyEligibleAndResetsItsBatch(): void
@@ -151,10 +178,12 @@ class PersistenceTest extends TestCase
         $lookup = $this->helper->getObject(Collection::class, [
             'entityFactory' => $entityFactory, 'date' => $date,
             'connection' => $this->db, 'resource' => $resource,
-            'fetchStrategy' => new \Magento\Framework\Data\Collection\Db\FetchStrategy\Query(new \Psr\Log\NullLogger()),
+            'fetchStrategy' => new \Magento\Framework\Data\Collection\Db\FetchStrategy\Query(),
         ]);
         $this->db->insert('mageos_shopping_feed_feed_queue', [
-            'feed_id' => 1, 'is_read' => 1, 'message' => json_encode(['enabled' => true, 'offset' => 500, 'limit' => 100]),
+            'feed_id' => 1,
+            'is_read' => 1,
+            'message' => json_encode(['enabled' => true, 'offset' => 500, 'limit' => 100]),
         ]);
         $queue = $lookup->getQueue(1);
         $this->assertNotNull($queue->getId());

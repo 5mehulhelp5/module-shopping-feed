@@ -73,8 +73,11 @@ class MicrosoftMerchantCenter
             if (!preg_match($pattern, $value)
                 || (float)$value <= 0 || (float)$value > 10000000
             ) {
-                $errors[] = sprintf('%s must be a positive amount up to 10000000.00 with two decimals%s',
-                    $field, $field === 'price' ? ' and a currency code' : '');
+                $errors[] = sprintf(
+                    '%s must be a positive amount up to 10000000.00 with two decimals%s',
+                    $field,
+                    $field === 'price' ? ' and a currency code' : ''
+                );
             }
         }
         if (($row['sale_price'] ?? '') !== '' && (float)$row['sale_price'] < (float)($row['price'] ?? 0)) {
@@ -108,7 +111,8 @@ class MicrosoftMerchantCenter
         ) {
             $errors[] = 'Map real identifiers or explicitly confirm identifier_exists=FALSE for unassigned identifiers';
         } elseif ($hasIdentifiers && ($brand === '' || ($gtin === '' && $mpn === ''))) {
-            $warnings[] = 'Identifier data is incomplete; supply brand, gtin, and mpn when assigned by the manufacturer';
+            $warnings[] =
+                'Identifier data is incomplete; supply brand, gtin, and mpn when assigned by the manufacturer';
         }
         return ['errors' => $errors, 'warnings' => $warnings];
     }

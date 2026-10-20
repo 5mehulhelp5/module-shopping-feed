@@ -33,7 +33,6 @@ class Delimiter implements OptionSourceInterface
     public function getOptionArray()
     {
         return ["\t" => __('Tab'), ',' => __('Comma'), 'other' => __('Other')];
-
     }
 
     /**

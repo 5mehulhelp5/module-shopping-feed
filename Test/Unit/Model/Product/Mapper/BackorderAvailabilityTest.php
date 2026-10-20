@@ -56,7 +56,10 @@ class BackorderAvailabilityTest extends TestCase
         ];
     }
 
-    /** @dataProvider configurableCases */
+    /**
+     * @dataProvider configurableCases
+     * @param list<string> $children
+     */
     #[DataProvider('configurableCases')]
     public function testConfigurableAggregatesSalableChildren(string $parent, array $children, string $expected): void
     {

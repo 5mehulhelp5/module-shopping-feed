@@ -43,12 +43,13 @@ class SalePriceEffectiveDateTest extends ModelFramework
         $this->objectManagerHelper = new ObjectManagerHelper($this);
         $this->parentAdapterMock = clone $this->adapterMock;
 
-
         $dateMock = new \DateTime('@1451649600');
         $dateMock->setTimezone(new \DateTimeZone('America/Chicago'));
 
         $this->expectReturn(
-            $this->adapterMock, 'getSalePriceEffectiveDates', [
+            $this->adapterMock,
+            'getSalePriceEffectiveDates',
+            [
                 'start' => $dateMock,
                 'end'   => $dateMock
             ]

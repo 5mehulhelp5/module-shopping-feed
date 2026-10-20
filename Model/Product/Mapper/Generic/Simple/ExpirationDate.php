@@ -22,9 +22,12 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class ExpirationDate extends MapperAbstract
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
-        $days = intval($params['param']) - 1;
+        $days = (int) $params['param'] - 1;
         $days = $days < 0 ? 0 : $days;
         $date = $this->getAdapter()->getTimezone()->date();
         $date->add(new \DateInterval(sprintf('P%sD', $days)));

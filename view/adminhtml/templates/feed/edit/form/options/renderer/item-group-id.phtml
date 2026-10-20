@@ -3,11 +3,14 @@
 ?>
 
 <div>
-    <span><?php echo $block->escapeHtml(__('Base on parent attribute:')) ?></span>
+    <span><?= $escaper->escapeHtml(__('Base on parent attribute:')) ?></span>
     <select name="#{htmlName}[#{index}][param]" class="select">
         <?php foreach ($block->getAttributeOptions() as $option): ?>
-            <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>
+            <option value="<?=
+                $escaper->escapeHtml($option['value'])
+            ?>"><?= $escaper->escapeHtml($option['label']) ?></option>
         <?php endforeach; ?>
     </select>
 </div>
-<p class="note"><?php echo $block->escapeHtml(__('Will output the same value for all associated items, and empty for the complex product. The value is computed using the parent product attribute specified, and sufix of variant attributes not mapped in the columns.')) ?></p>
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase ?>
+<p class="note"><?= $escaper->escapeHtml(__('Will output the same value for all associated items, and empty for the complex product. The value is computed using the parent product attribute specified, and sufix of variant attributes not mapped in the columns.')) ?></p>

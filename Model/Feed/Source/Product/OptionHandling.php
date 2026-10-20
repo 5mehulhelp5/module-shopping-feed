@@ -20,13 +20,10 @@ namespace MageOS\ShoppingFeed\Model\Feed\Source\Product;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * Class OptionHandling
- */
 class OptionHandling implements OptionSourceInterface
 {
-    const ONE_ROW = 0;
-    const MULTIPLE_ROWS = 1;
+    public const ONE_ROW = 0;
+    public const MULTIPLE_ROWS = 1;
 
     /**
      * Retrieve option array

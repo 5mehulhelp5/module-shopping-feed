@@ -2,7 +2,7 @@
 
 The feed type provides a starting column map and default behavior. All feeds then move through the same save, test, queue, generation, upload, and review lifecycle.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
 
 The [UI Component editor](Admin-UI-Component-Forms) uses collapsible sections instead of the 1.1 tabs. Its category and promotion-date defects are repaired and verified locally. The linked guide records the tested runtime, currency preservation, and remaining integration limits.
 
@@ -42,7 +42,7 @@ The grid also supports mass enable, disable, clone, and delete operations when t
 | Status | Meaning |
 | --- | --- |
 | Disabled | The feed is not active for normal operation. |
-| Scheduled | The feed has saved schedule configuration. |
+| Scheduled | The feed is enabled and idle. New feeds and feeds enabled from the grid start here, whether or not they have schedule rows; cron skips only disabled feeds. |
 | Pending | Work is waiting in the generation queue. |
 | Processing | A worker is generating the feed. |
 | Completed | The last generation completed. Review the file and counts. |

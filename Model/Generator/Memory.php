@@ -14,8 +14,18 @@ class Memory extends \Magento\Framework\DataObject
      */
     private $dateTime;
 
+    /**
+     * Memory usage in bytes when the run started
+     *
+     * @var int|null
+     */
     private $usage;
 
+    /**
+     * @param \Magento\Framework\Stdlib\DateTime\DateTime $dateTime
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\Stdlib\DateTime\DateTime $dateTime,
         \MageOS\ShoppingFeed\Model\Logger $logger,
@@ -27,16 +37,31 @@ class Memory extends \Magento\Framework\DataObject
         parent::__construct($data);
     }
 
+    /**
+     * Record the current memory usage as the starting point.
+     *
+     * @return void
+     */
     public function setStartUsage()
     {
         $this->usage = $this->getUsage();
     }
 
+    /**
+     * Memory allocated to PHP, in bytes.
+     *
+     * @return int
+     */
     public function getUsage()
     {
         return memory_get_usage(true);
     }
 
+    /**
+     * Memory allocated since the starting point, in bytes.
+     *
+     * @return int
+     */
     public function getTotalUsage()
     {
         return $this->getUsage() - $this->usage;
@@ -45,6 +70,8 @@ class Memory extends \Magento\Framework\DataObject
     /**
      * Check if we are using too much memory and the script should stop
      *
+     * @param int $startedAt run start timestamp
+     * @param bool $log
      * @return bool
      */
     public function isCloseToPhpLimit($startedAt, $log = true)
@@ -68,7 +95,9 @@ class Memory extends \Magento\Framework\DataObject
     }
 
     /**
-     * @param  $totalUsage boolean
+     * Current (or since-start) memory usage and the memory limit as "used unit/limit unit".
+     *
+     * @param bool $totalUsage
      * @return string
      */
     public function format($totalUsage = false)
@@ -82,8 +111,9 @@ class Memory extends \Magento\Framework\DataObject
 
         $memoryLimit = $this->getMemoryLimit();
         $units = ['b', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Eb'];
-        $m = round($memory / pow(1024, ($i = floor(log($memory, 1024)))), 2);
-        $limit = round($memoryLimit / pow(1024, ($j = floor(log($memoryLimit, 1024)))), 2);
+        // Both values are at least 1, so the unit exponents are whole, non-negative numbers.
+        $m = round($memory / pow(1024, ($i = (int) floor(log($memory, 1024)))), 2);
+        $limit = round($memoryLimit / pow(1024, ($j = (int) floor(log($memoryLimit, 1024)))), 2);
         return sprintf('%4.2f %s/%4.2f %s', $m, $units[$i], $limit, $units[$j]);
     }
 
@@ -108,24 +138,24 @@ class Memory extends \Magento\Framework\DataObject
                 }
                 $num = (float)$matches[1];
                 switch (strtoupper($matches[2])) {
-                case 'E':
-                    $num = $num * 1024;
-                    // move forward
-                case 'P':
-                    $num = $num * 1024;
-                    // move forward
-                case 'T':
-                    $num = $num * 1024;
-                    // move forward
-                case 'G':
-                    $num = $num * 1024;
-                    // move forward
-                case 'M':
-                    $num = $num * 1024;
-                    // move forward
-                case 'K':
-                    $num = $num * 1024;
-                    break;
+                    case 'E':
+                        $num = $num * 1024;
+                        // move forward
+                    case 'P':
+                        $num = $num * 1024;
+                        // move forward
+                    case 'T':
+                        $num = $num * 1024;
+                        // move forward
+                    case 'G':
+                        $num = $num * 1024;
+                        // move forward
+                    case 'M':
+                        $num = $num * 1024;
+                        // move forward
+                    case 'K':
+                        $num = $num * 1024;
+                        break;
                 }
                 $memory = $num;
             }

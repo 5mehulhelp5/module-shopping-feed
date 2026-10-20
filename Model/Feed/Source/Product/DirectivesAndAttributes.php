@@ -21,9 +21,6 @@ namespace MageOS\ShoppingFeed\Model\Feed\Source\Product;
 use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Catalog\Model\Product\Type as ProductType;
 
-/**
- * Class DirectivesAndAttributes
- */
 class DirectivesAndAttributes implements OptionSourceInterface
 {
     /**
@@ -34,7 +31,7 @@ class DirectivesAndAttributes implements OptionSourceInterface
     protected $directivesAndAttributes;
 
     /**
-     * Core registry
+     * Registry holding the feed being edited
      *
      * @var \Magento\Framework\Registry
      */
@@ -58,9 +55,9 @@ class DirectivesAndAttributes implements OptionSourceInterface
     /**
      * Types constructor.
      *
-     * @param \Magento\Framework\Registry                                   $coreRegistry
-     * @param \Magento\Eav\Model\Config                                     $eavConfig
-     * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config               $feedTypesConfig
+     * @param \Magento\Framework\Registry $coreRegistry
+     * @param \Magento\Eav\Model\Config $eavConfig
+     * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config $feedTypesConfig
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Attributes $sourceAttributes
      */
     public function __construct(
@@ -89,7 +86,8 @@ class DirectivesAndAttributes implements OptionSourceInterface
         $directiveOptions = [];
         foreach ($this->getDirectives() as $code => $directive) {
             $directiveOptions[] = [
-                'label' => $directive['label'],
+                // Directive labels are collected from the feed definition XML (translate="label").
+                'label' => __($directive['label']),
                 'value' => $code,
             ];
         }
@@ -106,11 +104,11 @@ class DirectivesAndAttributes implements OptionSourceInterface
 
         return $this->directivesAndAttributes = [
             [
-                'label' => 'Directives',
+                'label' => __('Directives'),
                 'value' => $directiveOptions
             ],
             [
-                'label' => 'Attributes',
+                'label' => __('Attributes'),
                 'value' => $attributeOptions
             ]
         ];
@@ -145,7 +143,8 @@ class DirectivesAndAttributes implements OptionSourceInterface
         $excludeAttributes = $feed->getConfig('columns_exclude_attributes', []);
 
         $attributes = array_filter(
-            $attributes, function ($attribute) use ($excludeAttributes) {
+            $attributes,
+            function ($attribute) use ($excludeAttributes) {
                 return !in_array($attribute['code'], $excludeAttributes);
             }
         );

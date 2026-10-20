@@ -38,6 +38,9 @@ class QueueTest extends ModelFramework
      */
     protected $objectManagerHelper;
 
+    /**
+     * @var \MageOS\ShoppingFeed\Model\Generator|\PHPUnit\Framework\MockObject\MockObject
+     */
     protected $generatorMock;
 
     public function setUp(): void
@@ -101,5 +104,4 @@ class QueueTest extends ModelFramework
             $this->assertTrue($queue->getIsRead());
         }
     }
-
 }

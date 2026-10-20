@@ -33,14 +33,14 @@ class Converter
     protected $feedBuilder;
 
     /**
-     * @var \Magento\Framework\Json\Decoder
+     * @var \Magento\Framework\Json\DecoderInterface
      */
     protected $jsonDecoder;
 
     /**
-     * @param \Magento\Framework\App\RequestInterface                    $request
+     * @param \Magento\Framework\App\RequestInterface $request
      * @param \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Builder $feedBuilder
-     * @param \Magento\Framework\Json\DecoderInterface                   $jsonDecoder
+     * @param \Magento\Framework\Json\DecoderInterface $jsonDecoder
      */
     public function __construct(
         \Magento\Framework\App\RequestInterface $request,
@@ -55,7 +55,7 @@ class Converter
     /**
      * Convert an array to a feed data object for form save purposes
      *
-     * @param  \MageOS\ShoppingFeed\Model\Feed $feed
+     * @param  array $formData
      * @return \MageOS\ShoppingFeed\Model\Feed
      */
     public function populateFeedData($formData)
@@ -118,7 +118,7 @@ class Converter
     /**
      * Remove config values based on delete flags
      *
-     * @param  $data
+     * @param mixed $data
      * @return mixed
      */
     protected function _configDeleteKeys(&$data)
@@ -143,8 +143,9 @@ class Converter
     /**
      * Remove default values, only keep ones that have been configured
      *
-     * @param  $data
+     * @param mixed $data
      * @return mixed
+     * @throws LocalizedException
      */
     protected function _configTaxonomyDeleteDefaults($data)
     {
@@ -203,7 +204,13 @@ class Converter
         return $feedFormData;
     }
 
-    /** Match the mapper's legacy SKU default to the editor's explicit option. */
+    /**
+     * Match the mapper's legacy SKU default to the editor's explicit option.
+     *
+     * @param int|string $path
+     * @param mixed $value
+     * @return mixed
+     */
     private function normalizeColumnParameters($path, $value)
     {
         if (in_array($path, ['columns_product_columns', 'filters_map_replace_empty_columns'], true)

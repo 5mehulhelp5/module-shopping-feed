@@ -2,7 +2,47 @@
 
 All notable changes to this project will be documented here.
 
-## Unreleased
+## 1.2.4 - 2026-10-20
+
+[Release 1.2.4 notes and upgrade requirements](docs/releases/1.2.4.md).
+
+### Fixed
+
+- Use the MSI source-item interface when filtering website sources, and handle configurable shipping weights when no minimum-price product IDs are available.
+- Keep saved upload passwords encrypted in loaded model data and preserve ciphertext when cloning destinations. Roll back a failed clone as one operation.
+- Verify a complete, uniquely named gzip log archive before truncating the active log. Retain the original log if archiving fails.
+- Require feed generation permission for Test Feed and its editor buttons. Remove a redundant coupon escape and the unused column-options renderer property, and correct stock-field assignment spacing.
+- Show the store view name in the "To set microdata for ..." Admin message instead of a literal `{store}` placeholder, and keep the message on one line.
+- Resolve table names through Magento's resource connection, including the store's table prefix, when checking whether a simple product belongs to an enabled configurable, bundle or grouped parent (**Complex Product Context Prioritization**). Stores with a table prefix previously queried unprefixed tables.
+- Fall back to UTC for promotion dates when the store has no configured timezone instead of failing with "Unknown or bad timezone".
+- Import Magento's tax configuration class in the catalog price helper, so `getTaxPriceIncludingTax()` no longer fails when called without an explicit "including tax" flag.
+
+### Security
+
+- Require a trusted SHA256 SFTP host-key fingerprint before authentication. Existing SFTP destinations need a fingerprint after `setup:upgrade` adds the new column.
+- Reject unknown upload modes instead of falling back to unencrypted FTP, label FTP as unencrypted in Admin, and close transfer connections after use.
+
+### Changed
+
+- Translate the remaining Admin text: system configuration comments, menu and ACL titles, feed editor section and field labels, parameter labels and help texts, directive names, the grid's microdata badge, page titles and messages, the admin form scripts, and the retained legacy category and promotion templates. Add `i18n/en_US.csv`.
+- Join Admin phrases that spanned several source lines into single-line phrases, so translation files can match them. Their source text changes slightly (whitespace, and "don;t" becomes "don't" in the concatenate help); a translation keyed on the old multi-line text needs the new key.
+- Render the Luma configurable-selection and custom-option auto-selection scripts through Magento's `SecureHtmlRenderer`, so they run under a strict Content Security Policy.
+- Rename the CI workflow to `.github/workflows/check-extension.yaml` and run it for pull requests against every branch. Pin Graycore's check-extension workflow to v8.12.0, add Mage-OS 3.6.0 beside 3.5.0, enable its PHPStan job, update the pinned GitHub actions, and add locked `composer audit` jobs for every normal platform profile and for the module's own runtime and development dependencies.
+- Make Magento coding-standard warnings fail the build and resolve the existing warnings. One sniff is excluded for the retained legacy editor templates, and remaining inline exceptions name their reason.
+- Add PHPStan level 8 with bitexpert/phpstan-magento and a reviewed baseline of existing debt, which CI only lets shrink.
+- Add `security@mage-os.org` as the primary vulnerability reporting address.
+- Exclude repository-only files (`.github`, `docs`, `dev`, contributor documents) from Composer dist archives.
+- Add Dependabot updates for Composer and GitHub Actions.
+
+### Documentation
+
+- Credit [Rocket Web](https://rocketweb.com/) under OSL-3.0, clarify imported source notices, and remove wording that suggests separate commercial terms.
+- Restructure the README around compatibility, installation, every setting with its default and scope, getting started, where the module shows up, and troubleshooting, with Admin screenshots.
+- Correct the Wiki where it disagreed with the code: preset title and description limits are not applied automatically (see Known issues below), the progress log interval is 30 seconds rather than 30 products, "Scheduled" means enabled and idle, default file names differ per preset, the editor checks only promotion title length, and Local Inventory hides more controls than listed.
+
+### Known issues
+
+- The per-preset title and description limits in `etc/mageos_shopping_feed.xml` are stored under `filters_filters_output_limit`, a key nothing reads, so new feeds get no **Limit column output** rows. Fixing the key would also apply those limits to existing feeds whose saved list is empty, which changes their output; it is left for a separate decision.
 
 ## 1.2.3 - 2026-10-13
 

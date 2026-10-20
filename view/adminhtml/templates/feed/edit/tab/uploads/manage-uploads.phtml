@@ -8,9 +8,10 @@ $element = $block->getElement();
 <?php $htmlName    = $block->getElement()->getName() ?>
 <?php $readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled() ?>
 
-<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
-     data-apply-to="<?php echo $block->escapeHtml(
-         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+<div class="field" id="attribute-<?= $escaper->escapeHtml($htmlId) ?>-container"
+     data-attribute-code="<?= $escaper->escapeHtml($htmlId) ?>"
+     data-apply-to="<?= $escaper->escapeHtml(
+         $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode(
              $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
          )
      )?>">
@@ -18,20 +19,21 @@ $element = $block->getElement();
         <table class="admin__control-table manage_uploads_table data-grid" id="manage_uploads_table">
             <thead>
                 <tr>
-                    <th class="data-grid-th col-mode required"><?php echo $block->escapeHtml(__('Mode')) ?></th>
-                    <th class="data-grid-th col-host required"><?php echo $block->escapeHtml(__('Host')) ?></th>
-                    <th class="data-grid-th col-port required"><?php echo $block->escapeHtml(__('Port')) ?></th>
-                    <th class="data-grid-th col-username required"><?php echo $block->escapeHtml(__('Username')) ?></th>
-                    <th class="data-grid-th col-password required"><?php echo $block->escapeHtml(__('Password')) ?></th>
-                    <th class="data-grid-th col-path"><?php echo $block->escapeHtml(__('Path')) ?></th>
-                    <th class="data-grid-th col-gzip"><?php echo $block->escapeHtml(__('Gzip')) ?></th>
-                    <th class="data-grid-th col-delete"><?php echo $block->escapeHtml(__('Action')) ?></th>
+                    <th class="data-grid-th col-mode required"><?= $escaper->escapeHtml(__('Mode')) ?></th>
+                    <th class="data-grid-th col-host required"><?= $escaper->escapeHtml(__('Host')) ?></th>
+                    <th class="data-grid-th"><?= $escaper->escapeHtml(__('SFTP Host Key Fingerprint')) ?></th>
+                    <th class="data-grid-th col-port required"><?= $escaper->escapeHtml(__('Port')) ?></th>
+                    <th class="data-grid-th col-username required"><?= $escaper->escapeHtml(__('Username')) ?></th>
+                    <th class="data-grid-th col-password required"><?= $escaper->escapeHtml(__('Password')) ?></th>
+                    <th class="data-grid-th col-path"><?= $escaper->escapeHtml(__('Path')) ?></th>
+                    <th class="data-grid-th col-gzip"><?= $escaper->escapeHtml(__('Gzip')) ?></th>
+                    <th class="data-grid-th col-delete"><?= $escaper->escapeHtml(__('Action')) ?></th>
                 </tr>
             </thead>
-            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container"></tbody>
+            <tbody id="<?= $escaper->escapeHtml($htmlId) ?>_container"></tbody>
             <tfoot>
                 <tr>
-                    <td colspan="8" class="col-actions-add"><?php echo $block->getAddButtonHtml() ?></td>
+                    <td colspan="9" class="col-actions-add"><?= /* @noEscape */ $block->getAddButtonHtml() ?></td>
                 </tr>
             </tfoot>
         </table>
@@ -46,39 +48,66 @@ require([
 //<![CDATA[
 var manageUploadsRowTemplate = '<tr>'
     + '<td class="col-mode">'
-    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?> mode required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][mode]" id="manage_uploads_row_<%- data.index %>_mode">'
+    + '<select class="<?= $escaper->escapeHtml($htmlClass) ?> mode required-entry" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][mode]" id="manage_uploads_row_<%- data.index %>_mode">'
     <?php foreach ($block->getTransferModes() as $option): ?>
-    + '<option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeJsQuote($block->escapeHtml($option['label'])) ?></option>'
+    + '<option value="<?= $escaper->escapeHtml($option['value']) ?>"><?=
+        $escaper->escapeJsQuote($escaper->escapeHtml($option['label']))
+    ?></option>'
     <?php endforeach ?>
     + '</select>'
     + '</td>'
     + '<td class="col-host">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> host required-entry" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][host]" value="<%- data.host %>" id="manage_uploads_row_<%- data.index %>_host" />'
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> host required-entry" type="text" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][host]" value="<%- data.host %>" id="manage_uploads_row_<%- data.index %>_host" />'
     + '</td>'
     + '<td class="col-port">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> port required-entry" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][port]" value="<%- data.port %>" id="manage_uploads_row_<%- data.index %>_port" />'
+    + '<input type="text" name="<?= $escaper->escapeHtml($htmlName) ?>[<%- data.index %>][host_key_fingerprint]"'
+    + ' value="<%- data.hostKeyFingerprint %>" id="manage_uploads_row_<%- data.index %>_host_key_fingerprint" />'
+    + '</td>'
+    + '<td class="col-port">'
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> port required-entry" type="text" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][port]" value="<%- data.port %>" id="manage_uploads_row_<%- data.index %>_port" />'
     + '</td>'
     + '<td class="col-username">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> username required-entry" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][username]" value="<%- data.username %>" id="manage_uploads_row_<%- data.index %>_username" />'
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> username required-entry" type="text" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][username]" value="<%- data.username %>" id="manage_uploads_row_<%- data.index %>_username" />'
     + '</td>'
     + '<td class="col-password">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> password required-entry" type="password" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][password]" value="<%- data.password %>" id="manage_uploads_row_<%- data.index %>_password" />'
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> password required-entry" type="password" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][password]" value="<%- data.password %>" id="manage_uploads_row_<%- data.index %>_password" />'
     + '</td>'
     + '<td class="col-path">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> path" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][path]" value="<%- data.path %>" id="manage_uploads_row_<%- data.index %>_path" />'
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> path" type="text" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][path]" value="<%- data.path %>" id="manage_uploads_row_<%- data.index %>_path" />'
     + '</td>'
     + '<td class="col-gzip">'
-    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?>" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][gzip]" id="manage_uploads_row_<%- data.index %>_gzip">'
+    + '<select class="<?= $escaper->escapeHtml($htmlClass) ?>" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][gzip]" id="manage_uploads_row_<%- data.index %>_gzip">'
     <?php foreach ($block->getYesnoOptions() as $option): ?>
-    + '<option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeJsQuote($block->escapeHtml($option['label'])) ?></option>'
+    + '<option value="<?= $escaper->escapeHtml($option['value']) ?>"><?=
+        $escaper->escapeJsQuote($escaper->escapeHtml($option['label']))
+    ?></option>'
     <?php endforeach ?>
     + '</select>'
     + '</td>'
     + '<td class="col-delete">'
-    + '<input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][id]" value="" id="manage_uploads_row_<%- data.index %>_id" />'
-    + '<input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][delete]" class="delete" value="" id="manage_uploads_row_<%- data.index %>_delete" />'
-    + '<button title="<?php echo $block->escapeHtml(__('Delete')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="manage_uploads_row_<%- data.index %>_delete_button" onclick="return manageUploadsControl.deleteItem(event);">'
-    + '<span><?php echo $block->escapeHtml(__("Delete")) ?></span></button></td>'
+    + '<input type="hidden" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][id]" value="" id="manage_uploads_row_<%- data.index %>_id" />'
+    + '<input type="hidden" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][delete]" class="delete" value="" id="manage_uploads_row_<%- data.index %>_delete" />'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<button title="<?= $escaper->escapeHtml(__('Delete')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="manage_uploads_row_<%- data.index %>_delete_button" onclick="return manageUploadsControl.deleteItem(event);">'
+    + '<span><?= $escaper->escapeHtml(__("Delete")) ?></span></button></td>'
     + '</tr>';
 
 var manageUploadsControl = {
@@ -92,18 +121,19 @@ var manageUploadsControl = {
         <?php endif; ?>
         var data = {
             id: '',
-            mode: '<?php echo $block->escapeHtml($block->getDefaultTransferMode()) ?>',
+            mode: '<?= $escaper->escapeHtml($block->getDefaultTransferMode()) ?>',
             host: '',
+            hostKeyFingerprint: '',
             port: '',
             username: '',
             password: '',
             path: '',
-            gzip: '<?php echo $block->escapeHtml($block->getDefaultGzip()) ?>',
+            gzip: '<?= $escaper->escapeHtml($block->getDefaultGzip()) ?>',
             readOnly: false,
             index: this.itemsCount++
         };
 
-        if(arguments.length == 9) {
+        if(arguments.length >= 9) {
             data.id       = arguments[0];
             data.mode     = arguments[1];
             data.host     = arguments[2];
@@ -113,9 +143,10 @@ var manageUploadsControl = {
             data.path     = arguments[6];
             data.gzip     = arguments[7];
             data.readOnly = arguments[8];
+            data.hostKeyFingerprint = arguments[9] || '';
         }
 
-        Element.insert($('<?php echo $block->escapeHtml($htmlId) ?>_container'), {
+        Element.insert($('<?= $escaper->escapeHtml($htmlId) ?>_container'), {
             bottom : this.template({
                 data: data
             })
@@ -123,6 +154,7 @@ var manageUploadsControl = {
 
         $('manage_uploads_row_' + data.index + '_mode').value = data.mode;
         $('manage_uploads_row_' + data.index + '_host').value = data.host;
+        $('manage_uploads_row_' + data.index + '_host_key_fingerprint').value = data.hostKeyFingerprint;
         $('manage_uploads_row_' + data.index + '_port').value = data.port;
         $('manage_uploads_row_' + data.index + '_username').value = data.username;
         $('manage_uploads_row_' + data.index + '_password').value = data.password;
@@ -131,17 +163,20 @@ var manageUploadsControl = {
         $('manage_uploads_row_' + data.index + '_id').value = data.id;
 
         if (data.readOnly == '1') {
-            ['mode', 'host', 'port', 'username', 'password', 'path', 'gzip', 'delete'].each(function(idx){
+            ['mode', 'host', 'port', 'username', 'password', 'path', 'gzip', 'delete', 'host_key_fingerprint']
+                .each(function(idx){
                 $('manage_uploads_row_'+data.index+'_'+idx).disabled = true;
             });
             $('manage_uploads_row_'+data.index+'_delete_button').hide();
         }
 
         <?php if ($readonly): ?>
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
         <?php else: ?>
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+        $('<?=
+            $escaper->escapeHtml($htmlId)
+        ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
         <?php endif; ?>
     },
     disableElement: function(el) {
@@ -161,19 +196,20 @@ var manageUploadsControl = {
 };
 <?php foreach ($block->getValues() as $item): ?>
     manageUploadsControl.addItem(
-        '<?php echo (int) $item['id'] ?>',
-        '<?php echo $block->escapeHtml($item['mode']) ?>',
-        '<?php echo $block->escapeHtml($item['host']) ?>',
-        '<?php echo (int) $item['port'] ?>',
-        '<?php echo $block->escapeHtml($item['username']) ?>',
-        '<?php echo $block->escapeHtml(\MageOS\ShoppingFeed\Model\Feed\Upload::OBSCURED_VALUE) ?>',
-        '<?php echo $block->escapeHtml($item['path']) ?>',
-        '<?php echo (int) $item['gzip'] ?>',
-        <?php echo (int) !empty($item['readonly']) ?>
+        '<?= (int) $item['id'] ?>',
+        '<?= $escaper->escapeHtml($item['mode']) ?>',
+        '<?= $escaper->escapeHtml($item['host']) ?>',
+        '<?= (int) $item['port'] ?>',
+        '<?= $escaper->escapeHtml($item['username']) ?>',
+        '<?= $escaper->escapeHtml(\MageOS\ShoppingFeed\Model\Feed\Upload::OBSCURED_VALUE) ?>',
+        '<?= $escaper->escapeHtml($item['path']) ?>',
+        '<?= (int) $item['gzip'] ?>',
+        <?= (int) !empty($item['readonly']) ?>,
+        '<?= $escaper->escapeJs($item['host_key_fingerprint'] ?? '') ?>'
     );
 <?php endforeach; ?>
 <?php if ($readonly): ?>
-$('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button')
+$('<?= $escaper->escapeHtml($htmlId) ?>_container').up('table').select('button')
     .each(manageUploadsControl.disableElement);
 <?php endif; ?>
 
@@ -184,7 +220,7 @@ window.manageUploadsControl = manageUploadsControl;
 </script>
         <?php if ($block->getElement()->getNote() && strlen($block->getElement()->getNote())): ?>
         <div class="note">
-            <span><?php echo $block->escapeHtml($block->getElement()->getNote()) ?></span>
+            <span><?= $escaper->escapeHtml($block->getElement()->getNote()) ?></span>
         </div>
         <?php endif; ?>
     </div>

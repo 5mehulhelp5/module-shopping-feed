@@ -26,8 +26,8 @@ use MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Element\AbstractArrayElem
  */
 class ManageUploads extends AbstractArrayElement implements RendererInterface
 {
-    const DEFAULT_TRANSFER_MODE = 'sftp';
-    const DEFAULT_GZIP = 0;
+    public const DEFAULT_TRANSFER_MODE = 'sftp';
+    public const DEFAULT_GZIP = 0;
 
     /**
      * @var \Magento\Config\Model\Config\Source\Yesno
@@ -47,10 +47,10 @@ class ManageUploads extends AbstractArrayElement implements RendererInterface
     /**
      * ManageUploads constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context                          $context
-     * @param \Magento\Config\Model\Config\Source\Yesno                        $sourceYesno
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Config\Model\Config\Source\Yesno $sourceYesno
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Uploads\TransferModes $sourceTransferModes
-     * @param array                                                            $data
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -69,7 +69,7 @@ class ManageUploads extends AbstractArrayElement implements RendererInterface
      * @param                                   array $a
      * @param                                   array $b
      * @return                                  int
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function sortValuesCallback($a, $b)
     {
@@ -103,7 +103,7 @@ class ManageUploads extends AbstractArrayElement implements RendererInterface
     /**
      * Retrieve default value for Mode
      *
-     * @return int
+     * @return string
      */
     public function getDefaultTransferMode()
     {
@@ -128,7 +128,7 @@ class ManageUploads extends AbstractArrayElement implements RendererInterface
     public function getAddButtonHtml()
     {
         $button = $this->getLayout()->createBlock(
-            'Magento\Backend\Block\Widget\Button'
+            \Magento\Backend\Block\Widget\Button::class
         )->setData(
             [
                 'label' => __('Add Account'),

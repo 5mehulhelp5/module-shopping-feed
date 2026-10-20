@@ -49,6 +49,9 @@ class ProductTypeByCategory extends MapperAbstract
         parent::__construct($logger);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
 
@@ -56,6 +59,7 @@ class ProductTypeByCategory extends MapperAbstract
         $value = $this->matchByCategory($mapByCategory, $this->getAdapter()->getProduct()->getCategoryIds(), 'ty');
 
         $this->getAdapter()->getFilter()->findAndReplace($value, $params['column']);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- decodes the mapped taxonomy label; no decoder is injected here
         return html_entity_decode($value);
     }
 
@@ -86,7 +90,9 @@ class ProductTypeByCategory extends MapperAbstract
                 $sort['priority'][$categoryId] = $data['p'];
             }
 
-            if ($this->getAdapter()->getFeed()->getConfig('categories_sort_mode') == \MageOS\ShoppingFeed\Model\Feed\Source\Category\PriorityMode::PRIORITY_AFTER_LEVEL) {
+            if ($this->getAdapter()->getFeed()->getConfig('categories_sort_mode')
+                == \MageOS\ShoppingFeed\Model\Feed\Source\Category\PriorityMode::PRIORITY_AFTER_LEVEL
+            ) {
                 array_multisort($sort['level'], SORT_DESC, $sort['priority'], SORT_ASC, $map);
             } else {
                 array_multisort($sort['priority'], SORT_ASC, $map);
@@ -98,9 +104,11 @@ class ProductTypeByCategory extends MapperAbstract
         return $map;
     }
     /**
-     * @param  $mapByCategory
-     * @param  $categoryIds
-     * @param  string $field
+     * Field value of the first taxonomy map entry whose category the product is in.
+     *
+     * @param array<mixed> $mapByCategory Sorted taxonomy map
+     * @param array<mixed> $categoryIds Product category IDs
+     * @param string $field Map entry field to return
      * @return string
      */
     public function matchByCategory($mapByCategory, $categoryIds, $field = 'tx')

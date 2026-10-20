@@ -20,7 +20,7 @@ class Collection
     protected $configCollectionFactory;
 
     /**
-     * @var \Magento\SalesRule\Model\ResourceModel\Rule\Quote\Collection
+     * @var \Magento\SalesRule\Model\ResourceModel\Rule\Quote\CollectionFactory
      */
     protected $ruleQuoteCollectionFactory;
 
@@ -29,9 +29,18 @@ class Collection
      */
     protected $feed;
 
+    /**
+     * @var \Magento\Framework\App\ResourceConnection
+     */
     protected $resourceConnection;
 
-
+    /**
+     * @param \Magento\SalesRule\Model\ResourceModel\Rule\Quote\CollectionFactory $ruleQuoteCollectionFactory
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \MageOS\ShoppingFeed\Model\Feed\ConfigFactory $configFactory
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config\CollectionFactory $configCollectionFactory
+     * @param \Magento\Framework\App\ResourceConnection $resourceConnection
+     */
     public function __construct(
         \Magento\SalesRule\Model\ResourceModel\Rule\Quote\CollectionFactory $ruleQuoteCollectionFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
@@ -72,8 +81,11 @@ class Collection
 
         $collection->getSelect()->joinInner(
             ['customer_group_ids' => $this->resourceConnection->getTableName('salesrule_customer_group')],
-            $collection->getConnection()->quoteInto('main_table.rule_id = customer_group_ids.'. $customer_group_rule_column. '
-                AND customer_group_ids.customer_group_id = ?', (int)$groupIds),
+            $collection->getConnection()->quoteInto(
+                'main_table.rule_id = customer_group_ids.'. $customer_group_rule_column. '
+                AND customer_group_ids.customer_group_id = ?',
+                (int)$groupIds
+            ),
             []
         );
 
@@ -85,7 +97,7 @@ class Collection
      *
      * @param \MageOS\ShoppingFeed\Model\Feed $feed
      * @param array $data
-     * @return $this
+     * @return \MageOS\ShoppingFeed\Model\Feed the reloaded feed
      */
     public function updatePromotionsData(\MageOS\ShoppingFeed\Model\Feed $feed, $data = [])
     {

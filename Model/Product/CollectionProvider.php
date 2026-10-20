@@ -15,10 +15,16 @@ class CollectionProvider
     protected $stock;
 
     /**
-     * @var null|int
+     * @var null|string
      */
     protected $testSku = null;
 
+    /**
+     * Product collection provider constructor.
+     *
+     * @param \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $collectionFactory
+     * @param \Magento\CatalogInventory\Helper\Stock $stock
+     */
     public function __construct(
         \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $collectionFactory,
         \Magento\CatalogInventory\Helper\Stock $stock
@@ -29,7 +35,10 @@ class CollectionProvider
     }
 
     /**
+     * Enabled, visible products of the feed's store, filtered by the feed's product, category and stock settings.
+     *
      * @param \MageOS\ShoppingFeed\Model\Feed $feed
+     * @return \Magento\Catalog\Model\ResourceModel\Product\Collection
      */
     public function getCollection($feed)
     {
@@ -43,12 +52,14 @@ class CollectionProvider
 
         // Filter visible / enabled products
         $collection->addAttributeToFilter(
-            'status', [
+            'status',
+            [
             'neq' => \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_DISABLED
             ]
         );
         $collection->addAttributeToFilter(
-            'visibility', [
+            'visibility',
+            [
             'neq' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_NOT_VISIBLE
             ]
         );
@@ -56,7 +67,8 @@ class CollectionProvider
         $includeAllProducts = $feed->getConfig('categories_include_all_products');
         $categoryMap = $feed->getConfig('categories_provider_taxonomy_by_category', [], '');
 
-        // include the root categoryId (a.k.a. default category) by default so that products assigned to it exclusively aren't excluded
+        // include the root categoryId (a.k.a. default category) by default so that products assigned
+        // to it exclusively aren't excluded
         $excludeCategories = [];
 
         foreach ($categoryMap as $category) {
@@ -81,13 +93,19 @@ class CollectionProvider
             $this->stock->addInStockFilterToCollection($collection);
         }
 
-        if (!is_null($this->testSku)) {
+        if ($this->testSku !== null) {
             $collection->addAttributeToFilter('sku', $this->testSku);
         }
 
         return $collection;
     }
 
+    /**
+     * Restrict the collection to one SKU (feed test mode).
+     *
+     * @param string|null $testSku
+     * @return $this
+     */
     public function setTestSku($testSku)
     {
         $this->testSku = $testSku;
@@ -95,8 +113,10 @@ class CollectionProvider
     }
 
     /**
+     * Include or exclude product types according to the feed's product type filter.
+     *
      * @param \Magento\Catalog\Model\ResourceModel\Product\Collection $collection
-     * @param \MageOS\ShoppingFeed\Model\Feed                     $feed
+     * @param \MageOS\ShoppingFeed\Model\Feed $feed
      *
      * @return \Magento\Catalog\Model\ResourceModel\Product\Collection
      */
@@ -132,9 +152,9 @@ class CollectionProvider
     /**
      * Adds category ids to collection filter, adding join to category-product table if needed
      *
-     * @param $collection         \Magento\Catalog\Model\ResourceModel\Product\Collection
-     * @param $categoryIds        int[]
-     * @param $includeAllProducts boolean
+     * @param \Magento\Catalog\Model\ResourceModel\Product\Collection $collection
+     * @param int[] $categoryIds
+     * @param bool $includeAllProducts
      *
      * @return \Magento\Catalog\Model\ResourceModel\Product\Collection
      */
@@ -164,7 +184,10 @@ class CollectionProvider
         }
 
         if (count($categoryIds) > 0) {
-            $cond = $collection->getConnection()->quoteInto('cat_product.category_id NOT IN (' . implode(',', $categoryIds) . ')', "");
+            $cond = $collection->getConnection()->quoteInto(
+                'cat_product.category_id NOT IN (' . implode(',', $categoryIds) . ')',
+                ""
+            );
             if ($includeAllProducts) {
                 $cond .= ' OR cat_product.category_id IS NULL';
             }

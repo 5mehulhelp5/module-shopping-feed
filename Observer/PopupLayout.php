@@ -21,6 +21,12 @@ use Magento\Framework\Event\ObserverInterface;
 
 class PopupLayout implements ObserverInterface
 {
+    /**
+     * Strip the admin page chrome from the feed test and log popups
+     *
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return void
+     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $action = $observer->getEvent()->getFullActionName();

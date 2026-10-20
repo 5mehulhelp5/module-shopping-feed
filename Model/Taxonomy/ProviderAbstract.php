@@ -18,16 +18,13 @@
 
 namespace MageOS\ShoppingFeed\Model\Taxonomy;
 
-/**
- * Class ProviderAbstract
- */
 class ProviderAbstract extends \Magento\Framework\DataObject
 {
-    const CACHE_KEY = 'MAGEOS_SHOPPING_FEED_TAXONOMY';
+    public const CACHE_KEY = 'MAGEOS_SHOPPING_FEED_TAXONOMY';
 
-    const CACHE_TAG = 'MAGEOS_SHOPPING_FEED';
+    public const CACHE_TAG = 'MAGEOS_SHOPPING_FEED';
 
-    const CACHE_LIFETIME = 2592000;
+    public const CACHE_LIFETIME = 2592000;
 
     /**
      * @var \MageOS\ShoppingFeed\Model\Feed
@@ -42,9 +39,9 @@ class ProviderAbstract extends \Magento\Framework\DataObject
     /**
      * ProviderAbstract constructor.
      *
-     * @param \MageOS\ShoppingFeed\Model\Feed   $feed
+     * @param \MageOS\ShoppingFeed\Model\Feed $feed
      * @param \Magento\Framework\App\CacheInterface $cache
-     * @param array                                 $data
+     * @param array $data
      */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Feed $feed,
@@ -85,7 +82,8 @@ class ProviderAbstract extends \Magento\Framework\DataObject
     public function getCacheKey()
     {
         return implode(
-            '_', [
+            '_',
+            [
             self::CACHE_KEY,
             $this->feed->getType(),
             $this->feed->getConfig('categories_locale')

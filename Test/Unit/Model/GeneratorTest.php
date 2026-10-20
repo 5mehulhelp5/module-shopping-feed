@@ -28,7 +28,7 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHe
 class GeneratorTest extends ModelFramework
 {
     /**
-     * @var \MageOS\ShoppingFeed\Model\Generator
+     * @var \MageOS\ShoppingFeed\Model\Generator|null
      */
     protected $model;
 
@@ -91,8 +91,10 @@ class GeneratorTest extends ModelFramework
         $this->createModel();
         $this->model->setData('feed_file', '/tmp/feed.txt');
         $method = new \ReflectionMethod($this->model, 'getTemporaryHandle');
-        $this->assertSame('handle', $method->invoke($this->model));
-        $this->assertSame('handle', $method->invoke($this->model));
+        $firstHandle = $method->invoke($this->model);
+        $this->assertSame('handle', $firstHandle);
+        $secondHandle = $method->invoke($this->model);
+        $this->assertSame('handle', $secondHandle);
     }
 
     public static function temporaryFileEncodingCases(): array
@@ -127,7 +129,8 @@ class GeneratorTest extends ModelFramework
         $this->createModel();
         $this->model->setData('temporary_handle', 'handle');
         (new \ReflectionMethod($this->model, 'writeFeed'))->invoke(
-            $this->model, ['title' => 'A|"B"', 'empty' => '', 'zero' => 0]
+            $this->model,
+            ['title' => 'A|"B"', 'empty' => '', 'zero' => 0]
         );
     }
 
@@ -136,7 +139,8 @@ class GeneratorTest extends ModelFramework
         $generator = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Generator::class)
             ->disableOriginalConstructor()->onlyMethods(['updateBatchQueue'])->getMock();
         (new \ReflectionProperty($generator, 'batch'))->setValue(
-            $generator, new \MageOS\ShoppingFeed\Model\Generator\Batch(['enabled' => true, 'offset' => 100])
+            $generator,
+            new \MageOS\ShoppingFeed\Model\Generator\Batch(['enabled' => true, 'offset' => 100])
         );
         $generator->expects($this->never())->method('updateBatchQueue');
         try {
@@ -295,7 +299,10 @@ class GeneratorTest extends ModelFramework
         $this->createModel();
         $this->model->setTestSku('testSku');
 
-        $this->assertInstanceOf('Magento\Catalog\Model\ResourceModel\Product\Collection', $this->model->getCollection());
+        $this->assertInstanceOf(
+            'Magento\Catalog\Model\ResourceModel\Product\Collection',
+            $this->model->getCollection()
+        );
     }
 
     public function testProcessProductCallbackSkippedPhpLimit()
@@ -325,7 +332,6 @@ class GeneratorTest extends ModelFramework
 
         $this->model->processProductCallback($args);
     }
-
 
     public function testProcessProductCallbackSkipped()
     {
@@ -601,7 +607,9 @@ class GeneratorTest extends ModelFramework
             self::assertSame('original log', file_get_contents($path));
         } finally {
             unlink($path);
-            foreach (glob($path . '.*.gz') as $archive) {unlink($archive);}
+            foreach (glob($path . '.*.gz') as $archive) {
+                unlink($archive);
+            }
         }
     }
 
@@ -663,7 +671,10 @@ class GeneratorTest extends ModelFramework
         $this->expectReturn($this->batchMock, 'isEnabled', false);
 
         $this->createModel();
-        $this->setExpectedException('MageOS\ShoppingFeed\Model\Exception', 'Generator must be created using existing feed - no Feed Id found!');
+        $this->setExpectedException(
+            'MageOS\ShoppingFeed\Model\Exception',
+            'Generator must be created using existing feed - no Feed Id found!'
+        );
 
         $this->assertInstanceOf('MageOS\ShoppingFeed\Model\Generator', $this->model->run());
     }

@@ -19,31 +19,32 @@
 namespace MageOS\ShoppingFeed\Model\Product\Helper;
 
 use Magento\Tax\Api\Data\TaxClassKeyInterface;
+use Magento\Tax\Model\Config;
 
 /**
  * Catalog helper, overrides getTaxPrice method to push calculating taxes despite on config
  *
  * Class Catalog
  *
- * @package MageOS\ShoppingFeed\Model\Catalog\Helper
  */
 class Catalog extends \Magento\Catalog\Helper\Data
 {
     /**
      * Get product price with all tax settings processing
+     *
      * Overrides parent method to push calculating taxes despite on config if $includingTax = true
      *
      * @author yurii.pochtovyk@rocketweb.com
      *
-     * @param  \Magento\Catalog\Model\Product                       $product
-     * @param  float                                                $price            inputted product price
-     * @param  bool                                                 $includingTax     return price include tax flag
-     * @param  null|\Magento\Customer\Model\Address\AbstractAddress $shippingAddress
-     * @param  null|\Magento\Customer\Model\Address\AbstractAddress $billingAddress
-     * @param  null|int                                             $ctc              customer tax class
-     * @param  null|string|bool|int|\Magento\Store\Model\Store      $store
-     * @param  bool                                                 $priceIncludesTax flag what price parameter contain tax
-     * @param  bool                                                 $roundPrice
+     * @param \Magento\Catalog\Model\Product $product
+     * @param float $price inputted product price
+     * @param bool $includingTax return price include tax flag
+     * @param null|\Magento\Customer\Model\Address\AbstractAddress $shippingAddress
+     * @param null|\Magento\Customer\Model\Address\AbstractAddress $billingAddress
+     * @param null|int $ctc customer tax class
+     * @param null|string|bool|int|\Magento\Store\Model\Store $store
+     * @param bool $priceIncludesTax flag what price parameter contain tax
+     * @param bool $roundPrice
      * @return float
      */
     public function getTaxPrice(
@@ -85,21 +86,20 @@ class Catalog extends \Magento\Catalog\Helper\Data
 
     /**
      * Get product price with all tax settings processing
+     *
      * Always calculating taxes despite on config
      *
-     * @param                                         \Magento\Catalog\Model\Product                       $product
-     * @param                                         float                                                $price            inputted product price
-     * @param                                         bool                                                 $includingTax     return price include tax flag
-     * @param                                         null|\Magento\Customer\Model\Address\AbstractAddress $shippingAddress
-     * @param                                         null|\Magento\Customer\Model\Address\AbstractAddress $billingAddress
-     * @param                                         null|int                                             $ctc              customer tax class
-     * @param                                         null|string|bool|int|\Magento\Store\Model\Store      $store
-     * @param                                         bool                                                 $priceIncludesTax flag what price parameter contain tax
-     * @param                                         bool                                                 $roundPrice
-     * @return                                        float
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @param \Magento\Catalog\Model\Product $product
+     * @param float $price inputted product price
+     * @param bool $includingTax return price include tax flag
+     * @param null|int $ctc customer tax class
+     * @param null|string|bool|int|\Magento\Store\Model\Store $store
+     * @param bool $priceIncludesTax flag what price parameter contain tax
+     * @param bool $roundPrice
+     * @return float
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     public function getTaxPriceIncludingTax(
         $product,
@@ -178,15 +178,15 @@ class Catalog extends \Magento\Catalog\Helper\Data
             }
         } else {
             switch ($this->_taxConfig->getPriceDisplayType($store)) {
-            case Config::DISPLAY_TYPE_EXCLUDING_TAX:
-            case Config::DISPLAY_TYPE_BOTH:
-                $price = $taxDetailsItem->getPrice();
-                break;
-            case Config::DISPLAY_TYPE_INCLUDING_TAX:
-                $price = $taxDetailsItem->getPriceInclTax();
-                break;
-            default:
-                break;
+                case Config::DISPLAY_TYPE_EXCLUDING_TAX:
+                case Config::DISPLAY_TYPE_BOTH:
+                    $price = $taxDetailsItem->getPrice();
+                    break;
+                case Config::DISPLAY_TYPE_INCLUDING_TAX:
+                    $price = $taxDetailsItem->getPriceInclTax();
+                    break;
+                default:
+                    break;
             }
         }
 

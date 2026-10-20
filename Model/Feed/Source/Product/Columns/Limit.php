@@ -34,7 +34,7 @@ class Limit extends Columns
     /**
      * Limit constructor.
      *
-     * @param \Magento\Framework\Registry                     $coreRegistry
+     * @param \Magento\Framework\Registry $coreRegistry
      * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config $feedTypesConfig
      */
     public function __construct(
@@ -57,7 +57,7 @@ class Limit extends Columns
         }
 
         /**
-         * @var $feed \MageOS\ShoppingFeed\Model\Feed
+         * @var \MageOS\ShoppingFeed\Model\Feed $feed
          */
         $feed = $this->coreRegistry->registry('feed');
         $columns = $feed->getConfig('columns_product_columns');

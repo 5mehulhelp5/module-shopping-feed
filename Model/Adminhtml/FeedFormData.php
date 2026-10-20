@@ -17,8 +17,18 @@ class FeedFormData
         'filters_output_limit', 'filters_adwords_price_buckets', 'configurable_map_inherit', 'grouped_map_inherit'
     ];
     private const SCHEDULE_FIELDS = ['id', 'start_at', 'batch_mode', 'batch_limit', 'delete'];
-    private const UPLOAD_FIELDS = ['id', 'mode', 'host', 'port', 'username', 'password', 'path', 'gzip', 'delete'];
+    private const UPLOAD_FIELDS = [
+        'id', 'mode', 'host', 'port', 'username', 'password', 'path', 'gzip', 'host_key_fingerprint', 'delete'
+    ];
 
+    /**
+     * Project a saved feed into the editor's form data, with credentials redacted.
+     *
+     * @param Feed $feed
+     * @param array $configKeys
+     * @return array
+     * @throws LocalizedException
+     */
     public function project(Feed $feed, array $configKeys): array
     {
         $data = [
@@ -65,7 +75,13 @@ class FeedFormData
         return $this->redact($data);
     }
 
-    /** A JSON envelope keeps empty arrays, false, zero and nested parameter arrays intact. */
+    /**
+     * A JSON envelope keeps empty arrays, false, zero and nested parameter arrays intact.
+     *
+     * @param array $data
+     * @return string
+     * @throws \JsonException
+     */
     public function encodeForProvider(array $data): string
     {
         // Magento's metadata sanitizer otherwise adds __disableTmpl keys inside literal parameter arrays.
@@ -76,7 +92,13 @@ class FeedFormData
         ));
     }
 
-    /** A JSON envelope keeps empty arrays, false, zero and nested parameter arrays intact. */
+    /**
+     * A JSON envelope keeps empty arrays, false, zero and nested parameter arrays intact.
+     *
+     * @param mixed $json
+     * @return array
+     * @throws LocalizedException
+     */
     public function decode($json): array
     {
         try {
@@ -130,7 +152,12 @@ class FeedFormData
         ]));
     }
 
-    /** Never put decrypted or newly entered credentials in provider JSON or recovery sessions. */
+    /**
+     * Never put decrypted or newly entered credentials in provider JSON or recovery sessions.
+     *
+     * @param array $data
+     * @return array
+     */
     public function redact(array $data): array
     {
         foreach ($data['uploads'] ?? [] as $index => $upload) {
@@ -139,6 +166,14 @@ class FeedFormData
         return $data;
     }
 
+    /**
+     * Keep only the allowed fields of each schedule or upload row.
+     *
+     * @param mixed $rows
+     * @param array $fields
+     * @return array
+     * @throws LocalizedException
+     */
     private function children($rows, array $fields): array
     {
         if (!is_array($rows)) {

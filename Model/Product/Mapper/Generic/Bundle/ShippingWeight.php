@@ -26,11 +26,12 @@ use \MageOS\ShoppingFeed\Model\Exception as FeedException;
  *
  * Class ShippingWeight
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Bundle
  */
 class ShippingWeight extends MapperAbstract
 {
     /**
+     * Bundle weight with unit: summed associated weights when combined, else the bundle's own.
+     *
      * @param array $params
      */
     public function map(array $params = [])
@@ -45,7 +46,7 @@ class ShippingWeight extends MapperAbstract
         $weightAttribute = $this->getAdapter()->getMapAttribute($params);
         if ($weightAttribute === false) {
             throw new FeedException(
-                new \Magento\Framework\Phrase(sprintf('Couldn\'t find attribute \'%s\'.', $params['attribute']))
+                new \Magento\Framework\Phrase('Couldn\'t find attribute \'%1\'.', [$params['attribute']])
             );
         }
 
@@ -54,9 +55,12 @@ class ShippingWeight extends MapperAbstract
             $weight = 0;
             foreach ($associatedProductAdapters as $associatedProductAdapter) {
                 /**
- * @var $associatedProductAdapter \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple
+ * @var \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple $associatedProductAdapter
 */
-                $val = $associatedProductAdapter->getAttributeValue($associatedProductAdapter->getProduct(), $weightAttribute);
+                $val = $associatedProductAdapter->getAttributeValue(
+                    $associatedProductAdapter->getProduct(),
+                    $weightAttribute
+                );
                 $weight += floatval($val);
             }
         } else {
@@ -65,7 +69,6 @@ class ShippingWeight extends MapperAbstract
 
         $weight = number_format((float)$weight, 2);
         $weight = $weight ? sprintf('%s %s', $weight, $unit) : '';
-
 
         return $weight;
     }

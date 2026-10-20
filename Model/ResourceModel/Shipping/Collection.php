@@ -30,13 +30,15 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         $this->_init(
-            'MageOS\ShoppingFeed\Model\Shipping',
-            'MageOS\ShoppingFeed\Model\ResourceModel\Shipping'
+            \MageOS\ShoppingFeed\Model\Shipping::class,
+            \MageOS\ShoppingFeed\Model\ResourceModel\Shipping::class
         );
     }
 
     /**
-     * @param  \Magento\Store\Model\Store $store
+     * Filter cached shipping rows by store.
+     *
+     * @param \Magento\Store\Model\Store $store
      * @return $this
      */
     public function filterByStore(\Magento\Store\Model\Store $store)
@@ -46,7 +48,9 @@ class Collection extends AbstractCollection
     }
 
     /**
-     * @param  \MageOS\ShoppingFeed\Model\Feed $feed
+     * Filter cached shipping rows by feed.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Feed $feed
      * @return $this
      */
     public function filterByFeed(\MageOS\ShoppingFeed\Model\Feed $feed)
@@ -56,7 +60,9 @@ class Collection extends AbstractCollection
     }
 
     /**
-     * @param  $currencyCode
+     * Filter cached shipping rows by currency.
+     *
+     * @param string $currencyCode
      * @return $this
      */
     public function filterByCurrencyCode($currencyCode)
@@ -65,12 +71,24 @@ class Collection extends AbstractCollection
         return $this;
     }
 
+    /**
+     * Filter cached shipping rows by product.
+     *
+     * @param \Magento\Framework\Model\AbstractModel $product
+     * @return $this
+     */
     public function filterByProduct($product)
     {
         $this->addFieldToFilter('product_id', $product->getId());
         return $this;
     }
 
+    /**
+     * Keep cached shipping rows updated after the given date.
+     *
+     * @param string $date
+     * @return $this
+     */
     public function filterByDate($date)
     {
         $this->addFieldToFilter('updated_at', ['gt' => $date]);

@@ -20,9 +20,11 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\LocalInventory\Configurable;
 
 use MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\Availability as ConfigurableAvailability;
 
-
 class Availability extends ConfigurableAvailability
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $count = [0];

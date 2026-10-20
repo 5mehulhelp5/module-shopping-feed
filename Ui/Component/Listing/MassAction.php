@@ -9,6 +9,14 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 
 class MassAction extends \Magento\Ui\Component\MassAction
 {
+    /**
+     * Constructor
+     *
+     * @param ContextInterface $context
+     * @param AuthorizationInterface $authorization
+     * @param \Magento\Framework\View\Element\UiComponentInterface[] $components
+     * @param array $data
+     */
     public function __construct(
         ContextInterface $context,
         private AuthorizationInterface $authorization,
@@ -18,6 +26,11 @@ class MassAction extends \Magento\Ui\Component\MassAction
         parent::__construct($context, $components, $data);
     }
 
+    /**
+     * Prepare the mass actions, keeping only those the current admin user is allowed to run.
+     *
+     * @return void
+     */
     public function prepare()
     {
         parent::prepare();

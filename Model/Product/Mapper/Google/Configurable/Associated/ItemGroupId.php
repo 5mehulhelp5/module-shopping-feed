@@ -22,6 +22,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class ItemGroupId extends MapperAbstract
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $attributeName = isset($params['param']) && !empty($params['param']) ? $params['param'] : 'sku';
@@ -50,9 +53,12 @@ class ItemGroupId extends MapperAbstract
     }
 
     /**
-     * @param $options
+     * Variant feed columns (color, size, material, pattern) keyed by the option or attribute they map.
+     *
+     * @param array<mixed> $options
      * @return array
      */
+    // phpcs:ignore Generic.Metrics.NestingLevel.TooHigh -- legacy feed logic; refactor deferred to keep output identical
     protected function getVariableColumns($options)
     {
         $columns = [];
@@ -80,8 +86,10 @@ class ItemGroupId extends MapperAbstract
     }
 
     /**
-     * @param $code
-     * @param $suffixes
+     * Join the code and suffixes with dashes, hashing when the result reaches 50 characters.
+     *
+     * @param string $code
+     * @param string[] $suffixes
      * @return string
      */
     protected function mergePieces($code, $suffixes)

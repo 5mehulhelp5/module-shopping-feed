@@ -35,7 +35,7 @@ class FactoryTest extends ModelFramework
     protected $model;
 
     /**
-     * @var \Magento\Framework\ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\ObjectManagerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $objectManagerMock;
 
@@ -47,7 +47,10 @@ class FactoryTest extends ModelFramework
     public function setUp(): void
     {
         $this->objectManagerHelper = new ObjectManagerHelper($this);
-        $this->objectManagerMock = $this->getModelMock('Magento\Framework\ObjectManagerInterface', ['create', 'get', 'configure']);
+        $this->objectManagerMock = $this->getModelMock(
+            'Magento\Framework\ObjectManagerInterface',
+            ['create', 'get', 'configure']
+        );
 
         $this->model = $this->objectManagerHelper->getObject(
             'MageOS\ShoppingFeed\Model\Generator\Factory',

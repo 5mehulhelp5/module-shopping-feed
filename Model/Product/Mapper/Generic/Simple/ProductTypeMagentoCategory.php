@@ -25,7 +25,7 @@ class ProductTypeMagentoCategory extends MapperAbstract
     /**
      * Don't include those categories in the path building.
      */
-    const SKIP_CATEG_NAMES = ['default', 'default category', 'root', 'root catalog'];
+    public const SKIP_CATEG_NAMES = ['default', 'default category', 'root', 'root catalog'];
 
     /**
      * @var \MageOS\ShoppingFeed\Model\Generator\Cache
@@ -45,9 +45,10 @@ class ProductTypeMagentoCategory extends MapperAbstract
     /**
      * ProductTypeMagentoCategory constructor.
      *
-     * @param \MageOS\ShoppingFeed\Model\Logger          $logger
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
      * @param \MageOS\ShoppingFeed\Model\Generator\Cache $cache
-     * @param \Magento\Catalog\Model\CategoryFactory         $categoryFactory
+     * @param \Magento\Catalog\Model\CategoryFactory $categoryFactory
+     * @param \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory
      */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Logger $logger,
@@ -61,12 +62,16 @@ class ProductTypeMagentoCategory extends MapperAbstract
         parent::__construct($logger);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $return = [];
-        $maxValues = !empty($params['param']) ? intval($params['param']) : 3;
+        $maxValues = !empty($params['param']) ? (int) $params['param'] : 3;
 
         $categoryIds = $this->getAdapter()->getProduct()->getCategoryIds();
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- getCategoryIds() is typed array: === null adds a PHPStan finding
         if (is_null($categoryIds)) {
             $categoryIds = [];
         }
@@ -78,8 +83,9 @@ class ProductTypeMagentoCategory extends MapperAbstract
 
         // Exclude categories not in store
         $rootCategoryId = $this->getAdapter()->getStore()->getRootCategoryId();
-        $storeCategories = $this->categoryCollectionFactory->create()
-            ->addAttributeToSelect('id')
+        // EAV addFieldToFilter() returns the collection itself; keep the typed variable.
+        $storeCategories = $this->categoryCollectionFactory->create();
+        $storeCategories->addAttributeToSelect('id')
             ->addIsActiveFilter()
             ->addFieldToFilter('path', ['like' => "1/{$rootCategoryId}/%"]);
         $storeCategoryIds = array_keys($storeCategories->exportToArray());
@@ -109,7 +115,7 @@ class ProductTypeMagentoCategory extends MapperAbstract
     /**
      * Get array of category names path of the current categoryId
      *
-     * @param  $categoryId
+     * @param int $categoryId
      * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \MageOS\ShoppingFeed\Model\Exception
@@ -150,7 +156,7 @@ class ProductTypeMagentoCategory extends MapperAbstract
     /**
      * Callback for array_filter, removes all elements but the one disabled.
      *
-     * @param  $row
+     * @param array<mixed> $row Taxonomy map entry
      * @return bool
      */
     public function filterDisabled($row)

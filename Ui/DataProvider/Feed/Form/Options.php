@@ -10,12 +10,28 @@ use MageOS\ShoppingFeed\Model\Product\Category\CollectionProvider;
 /** Option sources are injectable so integrations can extend the form without rendering HTML. */
 class Options
 {
+    /**
+     * @var array
+     */
     private array $cache = [];
 
+    /**
+     * Constructor
+     *
+     * @param CollectionProvider $categoryProvider
+     * @param array $sources
+     */
     public function __construct(private CollectionProvider $categoryProvider, private array $sources = [])
     {
     }
 
+    /**
+     * Get the options of a named option source, cached per source.
+     *
+     * @param string $name
+     * @return array
+     * @throws \InvalidArgumentException
+     */
     public function get(string $name): array
     {
         if (!isset($this->sources[$name])) {
@@ -39,6 +55,12 @@ class Options
         return $this->cache[$name];
     }
 
+    /**
+     * Get the feed store's categories as options, indented by category level.
+     *
+     * @param Feed $feed
+     * @return array
+     */
     public function categories(Feed $feed): array
     {
         return array_map(static fn (array $category): array => [

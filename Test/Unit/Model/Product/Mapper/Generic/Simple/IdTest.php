@@ -38,7 +38,6 @@ class IdTest extends ModelFramework
      */
     protected $objectManagerHelper;
 
-
     /**
      * @inheritdoc
      */

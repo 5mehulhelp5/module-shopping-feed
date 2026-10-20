@@ -32,8 +32,10 @@ class StatusTest extends TestCase
         $result = $column->prepareDataSource(['data' => ['items' => [
             ['id' => 1, 'status' => StatusSource::STATUS_PROCESSING],
         ]]]);
-        self::assertSame('<span class="grid-severity-critical"><span>' . $label . '</span></span>',
-            $result['data']['items'][0]['status']);
+        self::assertSame(
+            '<span class="grid-severity-critical"><span>' . $label . '</span></span>',
+            $result['data']['items'][0]['status']
+        );
     }
 
     public static function progressMessages(): array

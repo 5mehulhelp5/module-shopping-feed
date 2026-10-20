@@ -1,4 +1,4 @@
-define(['Magento_Ui/js/form/element/abstract', 'ko'], function (Element, ko) {
+define(['Magento_Ui/js/form/element/abstract', 'ko', 'mage/translate'], function (Element, ko, $t) {
     'use strict';
     return Element.extend({
         defaults: {
@@ -65,11 +65,20 @@ define(['Magento_Ui/js/form/element/abstract', 'ko'], function (Element, ko) {
                 }));
             });
         },
+        rowLabel: function (row, purpose) {
+            var phrases = {
+                include: $t('%1 include'),
+                priority: $t('%1 priority'),
+                taxonomy: $t('%1 taxonomy'),
+                productType: $t('%1 product type')
+            };
+            return phrases[purpose].replace('%1', function () { return row.name; });
+        },
         validate: function () {
             var valid = this.rows.every(function (row) {
                 return !row.store_active || row.priority() === '' || /^\d+$/.test(String(row.priority()));
             });
-            this.error(valid ? '' : 'Category priority must be a non-negative integer.');
+            this.error(valid ? '' : $t('Category priority must be a non-negative integer.'));
             if (!valid) { this.source.set('params.invalid', true); }
             return {valid: valid, target: this};
         }

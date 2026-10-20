@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ * Copyright © 2016 Rocket Web Inc. (https://rocketweb.com/)
+ * Licensed under the Open Software License version 3.0. See LICENSE.txt.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
@@ -19,40 +20,38 @@
           <label>Versions installed:</label>
           <frontend_model>MageOS\ShoppingFeed\Block\Adminhtml\Info</frontend_model>
         </field>
-        <field id="cron_enabled" translate="label" type="select" sortOrder="20" showInDefault="1">
+        <field id="cron_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1">
           <label>Cron Enabled</label>
-          <comment>Feed generation is launched through magento's cron. If you disable it here, make sure to add stand alone crontab commands for feed:
-                    php bin/magento mage-os:shopping-feed:schedule,
-                    php bin/magento mage-os:shopping-feed:generate</comment>
+          <comment>Feed generation is launched through Magento's cron. If you disable it here, add standalone crontab entries for php bin/magento mage-os:shopping-feed:schedule and php bin/magento mage-os:shopping-feed:generate.</comment>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
       </group>
       <group id="log" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Log Settings</label>
-        <field id="level" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="level" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Logging Level</label>
           <source_model>MageOS\ShoppingFeed\Model\Logger\Source\LogLevel</source_model>
           <comment>Sets the minimum level of messages to log. Messages with lower priority will be ignored.</comment>
         </field>
-        <field id="rotate" translate="label" type="text" sortOrder="40" showInDefault="1">
+        <field id="rotate" translate="label comment" type="text" sortOrder="40" showInDefault="1">
           <label>Log rotate (Kb)</label>
           <validate>validate-number validate-greater-than-zero</validate>
-          <comment>Archive log file when it's size exceeds kilobytes set here.</comment>
+          <comment>Archive the log file when its size exceeds the number of kilobytes set here.</comment>
         </field>
       </group>
       <group id="google" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Google</label>
-        <field id="microdata_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="microdata_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Automatic Updates (Microdata)</label>
           <comment>Adds hidden schema.org microdata information to your product pages. For Google Shopping, you also need to enable Automatic Item Updates in your merchant account.</comment>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
-        <field id="dynamic_remarketing_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="dynamic_remarketing_enabled" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Enable Google Ads Dynamic Remarketing Events</label>
           <comment>Sends a Google tag view_item event when a configurable product option is selected. The Google tag must already be installed and consent-managed on the storefront.</comment>
           <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
         </field>
-        <field id="google_ads_destination_id" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="google_ads_destination_id" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
           <label>Google Ads Destination ID</label>
           <comment>Optional send_to destination, such as AW-123456789. Leave empty when Google Tag Manager handles event routing.</comment>
         </field>

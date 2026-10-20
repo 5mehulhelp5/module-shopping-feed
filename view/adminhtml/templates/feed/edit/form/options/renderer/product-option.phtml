@@ -3,11 +3,13 @@
 ?>
 
 <div>
-    <span class="top-allign"><?php echo $block->escapeHtml(__('Product Options:')) ?></span>
+    <span class="top-allign"><?= $escaper->escapeHtml(__('Product Options:')) ?></span>
     <select name="#{htmlName}[#{index}][param][]" multiple class="select">
         <?php foreach ($block->getProductOptions() as $option): ?>
-        <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']); ?></option>
+        <option value="<?=
+            $escaper->escapeHtml($option['value'])
+        ?>"><?= $escaper->escapeHtml($option['label']); ?></option>
         <?php endforeach; ?>
     </select>
 </div>
-<p class="note"><?php echo $block->escapeHtml(__('Numbers on the right represent the products count by each option.')) ?></p>
+<p class="note"><?= $escaper->escapeHtml(__('Numbers on the right represent the products count by each option.')) ?></p>

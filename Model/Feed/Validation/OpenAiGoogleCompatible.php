@@ -40,7 +40,10 @@ class OpenAiGoogleCompatible
         if ($errors) {
             return ['errors' => $errors, 'warnings' => []];
         }
-        $row = array_map(static fn($value) => is_bool($value) ? ($value ? 'true' : 'false') : trim((string)$value), $row);
+        $row = array_map(
+            static fn($value) => is_bool($value) ? ($value ? 'true' : 'false') : trim((string)$value),
+            $row
+        );
         foreach (self::REQUIRED as $field) {
             if (($row[$field] ?? '') === '' || in_array(strtolower($row[$field]), ['unknown', 'null', 'n/a'], true)) {
                 $errors[] = sprintf('%s requires a real, nonempty value', $field);
@@ -105,10 +108,15 @@ class OpenAiGoogleCompatible
             if (!in_array($row['google_product_category'] ?? '', ['267', '4745'], true)) {
                 $errors[] = 'zero price requires google_product_category ID 267 or 4745';
             }
-            if (!preg_match('/^(?:month|year):[1-9]\d*:(\d+\.\d{2} [A-Z]{3})$/D', $row['subscription_cost'] ?? '', $matches)
+            if (!preg_match(
+                '/^(?:month|year):[1-9]\d*:(\d+\.\d{2} [A-Z]{3})$/D',
+                $row['subscription_cost'] ?? '',
+                $matches
+            )
                 || (float)$matches[1] <= 0 || substr($matches[1], -3) !== substr($price, -3)
             ) {
-                $errors[] = 'zero price requires subscription_cost with positive periods and amount in the price currency';
+                $errors[] =
+                    'zero price requires subscription_cost with positive periods and amount in the price currency';
             }
         }
         $sale = $row['sale_price'] ?? '';
@@ -128,23 +136,40 @@ class OpenAiGoogleCompatible
         return ['errors' => $errors, 'warnings' => $warnings];
     }
 
-    /** Reject embedded credentials even if the URL is otherwise well formed. */
+    /**
+     * Reject embedded credentials even if the URL is otherwise well formed.
+     *
+     * @param string $value
+     * @return bool
+     */
     private function validUrl(string $value): bool
     {
         return filter_var($value, FILTER_VALIDATE_URL) !== false
             && preg_match('#^https?://#i', $value)
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- URL credential check; no framework equivalent injected
             && parse_url($value, PHP_URL_USER) === null
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- URL credential check; no framework equivalent injected
             && parse_url($value, PHP_URL_PASS) === null
             && !str_contains($value, '|');
     }
 
-    /** Keep prices at the compatibility profile's supported precision. */
+    /**
+     * Keep prices at the compatibility profile's supported precision.
+     *
+     * @param string $value
+     * @return bool
+     */
     private function validMoney(string $value): bool
     {
         return (bool)preg_match('/^\d+\.\d{2} [A-Z]{3}$/D', $value);
     }
 
-    /** Check the assigned GTIN's length and GS1 modulo-10 check digit. */
+    /**
+     * Check the assigned GTIN's length and GS1 modulo-10 check digit.
+     *
+     * @param string $value
+     * @return bool
+     */
     private function validGtin(string $value): bool
     {
         if (!preg_match('/^(?:\d{8}|\d{12,14})$/D', $value)) {
@@ -157,14 +182,24 @@ class OpenAiGoogleCompatible
         return (10 - $sum % 10) % 10 === (int)substr($value, -1);
     }
 
-    /** Date-only sale endpoints cover the full UTC day; timestamps must declare their timezone. */
+    /**
+     * Date-only sale endpoints cover the full UTC day; timestamps must declare their timezone.
+     *
+     * @param string $value
+     * @param bool $allowDateOnly
+     * @param bool $endOfDay
+     * @return \DateTimeImmutable|null
+     */
     private function parseDate(string $value, bool $allowDateOnly = true, bool $endOfDay = false): ?\DateTimeImmutable
     {
         $dateOnly = (bool)preg_match('/^\d{4}-\d{2}-\d{2}$/D', $value);
         if ($dateOnly && !$allowDateOnly) {
             return null;
         }
-        if (!$dateOnly && !preg_match('/^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?(?:Z|[+-](?:[01]\d|2[0-3]):?[0-5]\d)$/D', $value)) {
+        if (!$dateOnly && !preg_match(
+            '/^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?(?:Z|[+-](?:[01]\d|2[0-3]):?[0-5]\d)$/D',
+            $value
+        )) {
             return null;
         }
         try {

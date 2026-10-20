@@ -22,6 +22,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\LocalInventory\Simple\Availability
 
 class Availability extends SimpleAvailability
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $cell = self::IN_STOCK;
@@ -39,6 +42,9 @@ class Availability extends SimpleAvailability
         return $this->getAdapter()->getFilter()->cleanField($cell, $params);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function filter($cell)
     {
         if (!$this->getAdapter()->getFeed()->getConfig('configurable_add_out_of_stock')) {

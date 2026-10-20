@@ -25,9 +25,9 @@ use Magento\Framework\Data\OptionSourceInterface;
  */
 class AssociatedMode implements OptionSourceInterface
 {
-    const ONLY_PARENT = 0;
-    const ONLY_ASSOCIATED = 1;
-    const BOTH_PARENT_ASSOCIATED = 2;
+    public const ONLY_PARENT = 0;
+    public const ONLY_ASSOCIATED = 1;
+    public const BOTH_PARENT_ASSOCIATED = 2;
 
     /**
      * Retrieve option array

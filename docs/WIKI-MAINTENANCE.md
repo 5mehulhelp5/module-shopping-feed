@@ -63,6 +63,10 @@ Review the wiki for every release that changes:
 
 At minimum, recheck Google-owned links and terminology at release time. Keep Merchant Center navigation brief because its interface changes independently of this module.
 
+## 1.2.4 documentation baseline
+
+Release-focused pages, upload instructions, and troubleshooting name `v1.2.4` as their baseline. The new release page and upgrade checklist cover the required SFTP fingerprint and schema update. Unchanged guides and historical release pages retain their earlier review baselines. The October 20 security verification record covers the local Mage-OS 3.6 candidate. This release prepares the wiki source only; public wiki publication remains a separate action under the workflow above.
+
 ## 1.2.3 documentation baseline
 
 The current pages name `v1.2.3` as their baseline. Release notes and upgrade requirements are in `docs/releases/1.2.3.md` and `Release-1-2-3`; historical release pages retain their versions. Native inventory, promotion, manual batching, Hyvä, and Nebula grid/fallback results are in the October 8 reports. The October 13 release preparation record combines those changes with the package-version display fix from main. Publish this source set only after the release is available, and verify its separate wiki commit and rendered pages.

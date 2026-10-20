@@ -31,8 +31,8 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         $this->_init(
-            'MageOS\ShoppingFeed\Model\Feed\Upload',
-            'MageOS\ShoppingFeed\Model\ResourceModel\Feed\Upload'
+            \MageOS\ShoppingFeed\Model\Feed\Upload::class,
+            \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Upload::class
         );
     }
 

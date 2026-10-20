@@ -32,17 +32,17 @@ class FilterTest extends CompatibilityTestCase
     protected $model;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Generator\Cache|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Generator\Cache|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $cacheMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Feed|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Feed|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $feedMock;
 
     /**
-     * @var \Magento\Catalog\Model\Product|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Catalog\Model\Product|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $productMock;
 
@@ -125,7 +125,8 @@ class FilterTest extends CompatibilityTestCase
             ->method('getCache')
             ->will(
                 $this->onConsecutiveCalls(
-                    true, [
+                    true,
+                    [
                     'columnName' => ['find' => 'FIND STRING', 'replace' => 'REPLACE STRING'],
                     '-all-' => ['find' => 'FIND ALL', 'replace' => 'REPLACE ALL']
                     ]
@@ -151,7 +152,6 @@ class FilterTest extends CompatibilityTestCase
         $this->model->findAndReplace($string, $params);
         $this->assertEquals($expected, $string);
     }
-
 
     public function testCleanField()
     {
@@ -185,8 +185,9 @@ class FilterTest extends CompatibilityTestCase
 
     public function testDecodedCustomDelimiterIsRemoved(): void
     {
+        $settings = ['output_params_delimiter' => 'other', 'output_params_delimiter_other' => '|'];
         $this->feedMock->method('getConfig')->willReturnCallback(
-            fn($key, $default = null) => ['output_params_delimiter' => 'other', 'output_params_delimiter_other' => '|'][$key] ?? $default
+            fn($key, $default = null) => $settings[$key] ?? $default
         );
         $this->model->setFeed($this->feedMock);
         $this->assertSame('before after', $this->model->cleanField('before&#124;after'));
@@ -231,7 +232,8 @@ class FilterTest extends CompatibilityTestCase
                 null,
             ],
             'escaped style and script' => [
-                '&lt;style&gt;.rule{color:red}&lt;/style&gt;&lt;p&gt;Useful text&lt;/p&gt;&lt;script&gt;alert(1)&lt;/script&gt;',
+                '&lt;style&gt;.rule{color:red}&lt;/style&gt;&lt;p&gt;Useful text&lt;/p&gt;'
+                    . '&lt;script&gt;alert(1)&lt;/script&gt;',
                 'Useful text',
                 null,
             ],

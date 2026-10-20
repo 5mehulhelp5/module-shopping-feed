@@ -22,8 +22,11 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class IdentifierExists extends MapperAbstract
 {
-    const IDENTIFIER_FALSE = "FALSE";
+    public const IDENTIFIER_FALSE = "FALSE";
 
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         // Missing catalog data is not evidence that the manufacturer assigned no identifiers.

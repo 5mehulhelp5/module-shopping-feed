@@ -12,9 +12,12 @@ class BuilderTest extends TestCase
 {
     private function builder($factory): Builder
     {
-        return new Builder($factory, $this->createMock(\Psr\Log\LoggerInterface::class),
+        return new Builder(
+            $factory,
+            $this->createMock(\Psr\Log\LoggerInterface::class),
             $this->createMock(\Magento\Framework\Registry::class),
-            $this->createMock(\Magento\Backend\Model\Session::class));
+            $this->createMock(\Magento\Backend\Model\Session::class)
+        );
     }
 
     /** @dataProvider invalidInput */

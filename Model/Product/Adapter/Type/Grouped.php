@@ -25,7 +25,6 @@ use \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface;
  *
  * Class Grouped
  *
- * @package MageOS\ShoppingFeed\Model\Product\Adapter\Type
  */
 class Grouped extends Composite implements AdapterInterface
 {
@@ -50,16 +49,18 @@ class Grouped extends Composite implements AdapterInterface
      */
     public function beforeMap()
     {
-        if (!$this->hasData('associated_product_adapters') || !is_array($this->getData('associated_product_adapters'))) {
+        if (!$this->hasData('associated_product_adapters')
+            || !is_array($this->getData('associated_product_adapters'))
+        ) {
             // Get associated products with this one
             $groupedProduct = $this->getProduct();
 
-            /**
- * @var \Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection $associatedProductCollection
-*/
             // ProductLinks adds storefront stock filtering before returning its collection.
             $links = $groupedProduct->getLinkInstance();
             $links->setLinkTypeId(\Magento\GroupedProduct\Model\ResourceModel\Product\Link::LINK_TYPE_GROUPED);
+            /**
+ * @var \Magento\Catalog\Model\ResourceModel\Product\Link\Product\Collection $associatedProductCollection
+*/
             $associatedProductCollection = $this->linkedProductCollectionFactory->create()
                 ->setFlag('has_stock_status_filter', true)
                 ->setLinkModel($links)

@@ -1,82 +1,226 @@
 # Mage-OS Shopping Feed
 
-[![CI on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml?query=branch%3Amain)
+[![Check Extension on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml?query=branch%3Amain)
 
-`MageOS_ShoppingFeed` generates product feeds for Mage-OS and Magento Open Source.
+`MageOS_ShoppingFeed` turns a Mage-OS or Magento Open Source catalog into product data feeds for Google Shopping, Google Local Inventory, Google Promotions, Meta, Pinterest, TikTok, Microsoft Merchant Center, OpenAI Google-compatible and generic delimited recipients. Merchants define each feed's columns, filters, category taxonomy, schedule and optional FTP or SFTP delivery in the Admin. Cron writes the files under `pub/media/mageos-shopping-feed`. On the storefront, the module can add schema.org microdata for Google Automatic Item Updates, preselect product options from feed deep links, and send Google Ads `view_item` events.
 
-**Version 1.2.3** corrects website-stock reservations, physical-source Local Inventory quantities, promotion persistence and caching, and Nebula filter navigation. It also fixes Admin package-version reporting and several storefront and generation edge cases. Read the [1.2.3 release notes](docs/releases/1.2.3.md).
+The module consolidates four Rocket Web modules (generic, Google Shopping, Google Local Inventory and Google Promotions) into one independently named package. It has its own Composer name, namespace, module name, tables, configuration paths, routes, cron group, events and output names, so it can be installed beside the original Rocket Web packages without replacing or changing them. Moving from Rocket Shopping Feeds is a separate, explicit step; see [Migrating from Rocket Shopping Feeds](#migrating-from-rocket-shopping-feeds).
 
-**Migrating from Rocket Shopping Feeds?** Use the separately installed [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb). It previews existing feed configuration and imports it into disabled Mage-OS feeds for review before activation. See [installation and migration steps](docs/wiki/Rocket-Web-Migration.md).
+## Compatibility
 
-Version 1.2.0 introduced Magento UI Component forms, five catalog presets, and corrections to stock selection, configurable Local Inventory, frontend configuration scope, and existing-feed currency. Read the [1.2.0 release notes](docs/releases/1.2.0.md), [upgrade checklist](docs/wiki/Installation-and-Upgrade.md#upgrading-from-11-to-120), and [compatibility results](docs/reviews/2026-10-03-magento-247-acceptance.md). Version [1.1.0](docs/releases/1.1.0.md) remains documented for existing installations.
+| Area | Support |
+| --- | --- |
+| Mage-OS | 3.5.0 and 3.6.0 are CI targets. |
+| Magento Open Source | 2.4.8-p5 and 2.4.9 are CI targets. 2.4.7-p10 runs in a dedicated CI profile because its Flysystem dependency carries an upstream advisory; see the [2.4.7-p10 guidance](docs/compatibility/magento-2.4.7-p10.md). |
+| Declared floor | `magento/framework` 103.0.6-p15 (Magento Open Source 2.4.6-p15) and PHP 8.1. Dependency resolution, a locked dependency audit and PHP 8.1 syntax are checked in CI. No 2.4.6 store is installed or tested. The PHP 8.1 tool graph retains the same visible Flysystem advisory as the dedicated 2.4.7-p10 compatibility profile. |
+| PHP | 8.1 through 8.5, limited to what the chosen platform release supports. |
+| Luma | Microdata, configurable and custom-option deep links, and Google Ads `view_item` events. Inline scripts use Magento's CSP nonce mechanism and work with strict CSP. |
+| Hyvä | Microdata, native configurable deep links and custom-option deep links (registered with Hyvä's CSP helper). The Google Ads event bridge needs RequireJS and is not provided on Hyvä. |
+| Headless / GraphQL | No GraphQL schema. Generated feed files work for any frontend; the storefront features above are Luma and Hyvä template features and are not tested on headless frontends. |
+| Admin | Standard Magento Admin. The optional [Qoliber Nebula](https://github.com/qoliber) grid is supported; feed editing, previews and logs then open in the standard Admin layout. |
+| Inventory | Multi-Source Inventory is optional. Source-level Google Local Inventory feeds need the MSI APIs. |
 
-Version 1.2.0 includes [Meta Catalog](docs/wiki/Meta-Catalog.md), [Microsoft Merchant Center](docs/wiki/Microsoft-Merchant-Center.md), [TikTok Catalog](docs/wiki/TikTok-Catalog.md), [Pinterest Catalog](docs/wiki/Pinterest-Catalog.md), and [OpenAI / ChatGPT Google-compatible beta](docs/wiki/OpenAI-ChatGPT.md). Local validation and generation pass; external provider ingestion remains unverified. The OpenAI profile requires confirmation during onboarding and does not establish account access or checkout support.
-
-This repository consolidates four related Rocket Web modules into one independently named Mage-OS module:
-
-- Generic product feeds
-- Google Shopping feeds
-- Google Local Inventory feeds, including optional Multi-Source Inventory support
-- Google Promotions feeds
-
-Current integrations include configurable-product deep links, schema.org offer data for Automatic Item Updates, Google Ads `view_item` events, gzip transfer over FTP or SFTP, reservation-aware MSI quantities, and explicit MSI source-to-Google-store mapping.
-
-The package has its own Composer name, PHP namespace, Magento module name, database tables, configuration paths, routes, cron group, event names, JavaScript aliases, and default output names. It does not replace or mutate an installed Rocket Web package.
-
-## Status
-
-Version [1.2.3](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.3) is the current stable release. Its [release preparation record](docs/reviews/2026-10-13-release-1.2.3-preparation.md) identifies the combined source and validation scope. Existing Rocket Web installations are not migrated automatically. Read [MIGRATION.md](MIGRATION.md) and the [migration companion guide](docs/wiki/Rocket-Web-Migration.md) before evaluating it on a store that already uses Rocket Shopping Feeds.
-
-The [Mage-OS 3.5.0 hardening review](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) records inventory, all eight presets, promotions, queue recovery, and Luma/Admin checks. The [CI and native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) covers Hyvä, the Nebula grid and supported editor fallback, and the filter-preservation fix. These changes are included in 1.2.3. The combined release candidate passes 922 unit tests and 2481 assertions on the Mage-OS 3.5 framework; each dated report retains its original test scope.
-
-Version 1.2.0 makes Magento UI Component forms the default for New/Edit Feed and Test Feed. It retains the existing schema and save routes, but changes the editor customization API. See the [Admin form guide](docs/wiki/Admin-UI-Component-Forms.md) and [developer migration guide](docs/ui-component-editor.md).
-
-The 1.2.0 runtime was accepted at `133af71` on `mageos-latest`. It includes the UI Component forms, permission-filtered grid, preview repairs, feed-controlled stock selection, configurable Local Inventory corrections, store-scoped frontend settings, and preservation of existing feeds' effective currency. The [extended local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) records those historical results and remaining checks. All eight presets passed save/reopen and unchanged-save/output comparisons in the [earlier Mage-OS deployment](docs/reviews/2026-10-02-mageos-latest-deployment-acceptance.md) and [Magento 2.4.8/2.4.9 Docker run](docs/reviews/2026-10-02-magento-docker-acceptance.md). That 1.2.0 PHP suite passed 809 tests on all three frameworks; both Docker versions pass 21 official integration tests and production compilation. Nebula remains disabled on `mageos-latest`.
-
-Operational coverage includes scheduling edge cases, interrupted-worker recovery, private FTP/SFTP delivery, 26 semantic catalog scenarios, 15 native configurable MSI scenarios, pricing, store-scoped microdata, and eight 5,000-product preset generations per Magento version. Two real hourly cron cycles also pass with stable output and empty queues; the [current record](docs/reviews/2026-10-03-local-acceptance.md) records final cleanup and exact scope. External recipient and native Nebula bridge acceptance remain separate.
-
-Version 1.1.0 retains custom feed mapping and Hyva/Luma deep links while correcting identifier defaults, backorder dates, Local Inventory statuses, and CSV serialization. Existing Google mappings need review, comma-feed recipients must accept quoted CSV, and `setup:upgrade` is required for the upload-password column and feed-search index. See the [changelog](CHANGELOG.md), [Google/custom-feed acceptance report](docs/reviews/2026-09-28-google-custom-feed-fixes.md), and [issue acceptance report](docs/reviews/2026-09-28-github-issues.md). Historical [1.0.0 notes](docs/releases/1.0.0.md) remain available.
-
-Run [ACCEPTANCE-TEST-PLAN.md](ACCEPTANCE-TEST-PLAN.md) against the exact release before enabling production schedules or uploads.
-
-## Requirements
-
-- A currently supported Mage-OS or Magento Open Source release with `magento/framework` 103.0.6-p15 or later in the 103.x series
-- A PHP version supported by the selected platform release, within PHP 8.1 through PHP 8.5
-- Magento cron when scheduled feed generation is enabled
-- Magento Multi-Source Inventory APIs for source-level Local Inventory feeds
-
-Magento Open Source 2.4.7-p10 passes the dedicated compatibility profile and local eight-preset Admin/output acceptance. Its upstream Flysystem dependency remains affected by a security advisory. See the [2.4.7-p10 guidance](docs/compatibility/magento-2.4.7-p10.md) and [acceptance record](docs/reviews/2026-10-03-magento-247-acceptance.md) for the tested scope, scoped CI exception, and optional tested backport. The module does not weaken a store's Composer security settings.
-
-Release 1.2.3 targets Mage-OS 3.5.0, based on Magento Open Source 2.4.9, in CI. Its checks install the package into a Mage-OS 3.5.0 project, then run the unit and integration suites, Magento coding standard, and dependency-injection compilation. The [CI and native theme record](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) separates completed CI from each follow-up candidate; check the workflow's exact head SHA when evaluating a commit.
-
-Mage-OS 3.5.0 on PHP 8.4.24 was also verified locally on Magebox with Hyva: a complete 160-row storefront feed, all exported prices and stock values, and all 38 available configurable deep links passed the recorded checks. This local evidence is separate from CI and Merchant Center acceptance.
-
-The module supports Magento's standard Admin grid and an optional native Nebula Admin grid. With Nebula enabled, feed editing, previews, and logs open in the standard Admin layout so the complete existing editor remains available; returning to the list restores Nebula. No Nebula dependency is required for standard installations. See the [Admin compatibility acceptance report](docs/reviews/2026-09-25-admin-compatibility.md) for the tested versions and limits.
-
-A fresh Mage-OS 3.5.0 installation with no Nebula packages also passed Composer installation, schema upgrades, DI compilation, production-mode generation, and standard Admin browser checks. See the [installation without Nebula report](docs/reviews/2026-09-28-without-nebula-acceptance.md).
+The [Check Extension workflow](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml) installs the package into each CI target, runs the unit and integration suites, compiles dependency injection, checks the Magento coding standard, runs PHPStan and audits the locked dependencies. Dated local, CI and store acceptance records are listed in [Status and compatibility](docs/wiki/Status-and-Compatibility.md). External recipient ingestion (Google, Meta and the other providers) is not verified by this repository.
 
 ## Installation
 
-Install the stable 1.2 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed):
+Install the stable 1.2 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). See the [1.2.4 release notes](docs/releases/1.2.4.md) for changes and upgrade requirements:
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.2.3'
+composer require 'mage-os/module-shopping-feed:^1.2.4'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
 ```
 
-For a source checkout, place or symlink the repository at `app/code/MageOS/ShoppingFeed`, then run the Magento commands above without `composer require`.
+**Upgrading to 1.2.4:** run `setup:upgrade` and enter a trusted SHA256 host-key fingerprint for every SFTP destination. Destinations without a matching fingerprint cannot authenticate or upload. See [Uploads](docs/wiki/Uploads.md).
+
+In production mode, also run `bin/magento setup:di:compile` and `bin/magento setup:static-content:deploy`. For a source checkout, place the repository at `app/code/MageOS/ShoppingFeed` and run the Magento commands without `composer require`.
+
+## Configuration
+
+Store-wide settings live in **Stores > Configuration > Mage-OS > Mage-OS Shopping Feed**. Everything else is set per feed in the feed editor.
+
+### Stores > Configuration > Mage-OS > Mage-OS Shopping Feed
+
+![Mage-OS Shopping Feed configuration section](docs/images/config-mageos-shopping-feed.png)
+
+**General Info**
+
+| Setting | Default | Scope | What it does |
+| --- | --- | --- | --- |
+| Versions installed | Read only | n/a | Shows the installed package version, or the module schema version when Composer metadata is unavailable. |
+| Cron Enabled | Yes | Default | When No, the module's cron jobs do nothing. Schedule `bin/magento mage-os:shopping-feed:schedule` and `bin/magento mage-os:shopping-feed:generate` from your own crontab instead. |
+
+**Google**
+
+| Setting | Default | Scope | What it does |
+| --- | --- | --- | --- |
+| Enable Automatic Updates (Microdata) | No | Default, website, store view | Adds schema.org product and offer microdata to product pages, built from the store's Google Shopping feed that has **Use for microdata** set to Yes. It also adds an `aid` parameter to configurable child links in feeds so landing pages show matching data. |
+| Enable Google Ads Dynamic Remarketing Events | No | Default, website, store view | On Luma configurable product pages, sends a `view_item` event through the existing Google tag when a variant is selected. The page always dispatches a `mageos:shopping-feed:view-item` DOM event; this setting only controls the `gtag` call. |
+| Google Ads Destination ID | Empty | Default, website, store view | Optional `send_to` value for those events, such as `AW-123456789`. Leave empty when Google Tag Manager routes events. |
+
+**Log Settings**
+
+| Setting | Default | Scope | What it does |
+| --- | --- | --- | --- |
+| Logging Level | Notice | Default | Minimum level written to each feed's log in `var/log`. The field is shown at website and store view scope, but generation reads only the default value. |
+| Log rotate (Kb) | 512 | Default | Before a run, a feed log larger than this is copied to a timestamped `.gz` archive and emptied. |
+
+`mageos_shopping_feed/log/progress_every` (30 seconds) has no Admin field. It is the minimum time between progress lines in a feed log and progress updates in the feed grid. Override it in `app/etc/config.php` or `env.php` if needed.
+
+### Feed editor: Catalog > Mage-OS Shopping Feed > Feeds Management
+
+![Feeds Management grid](docs/images/feeds-grid.png)
+
+Choose **Create New Feed** and a preset, or open an existing feed. Every setting below is saved with that feed; the feed's **Store View** sets the store context for attributes, prices, URLs, categories, stock and currency. Defaults are those of a new feed and come from the preset. Where presets differ, the table says so, and the linked guide has the per-preset values.
+
+![Feed editor, General section](docs/images/feed-editor-general.png)
+
+**General**
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| Name | Empty | Admin label. Some presets show setup notes here. |
+| Store View | Default store view | Store context for the whole feed. Save and reopen after changing it to refresh store-dependent options. |
+| Feed Currency | Store default currency | Currency used for prices and microdata. |
+| Feed Path | `pub/media/mageos-shopping-feed` | Output directory; must stay inside that directory. |
+| Delimiter | Tab (TikTok: comma) | Field separator: tab, comma or **Other**. |
+| Other Delimiter | Empty | Custom separator when Delimiter is Other. |
+| Apply Catalog Price Rules | Yes | Uses catalog price rules when calculating sale prices. |
+| Use default Stock Statuses | Yes | When No, the attribute below supplies availability. |
+| Alternate Stock/Availability Attribute | None | Attribute used for availability when default stock statuses are off. |
+| Use Qty Increments | No | Multiplies the unit price by the minimum sale quantity or quantity increment. |
+| Use Stock Reservations | No (Local Inventory: Yes) | Subtracts pending reservations from aggregate quantities. |
+| Complex Product Context Prioritization | No (catalog presets: Yes) | Skips a standalone simple product that belongs to an enabled configurable, bundle or grouped parent, so it is exported in the parent's context. |
+| File Name | Per preset, such as `mageos_shopping_feed_%s.txt` | Output file name; `%s` becomes the feed ID. |
+| Cell Enclosure, Enclosure Escape, Empty Cell Value (Generic only) | Empty | CSV quoting and the value written for empty cells. A comma feed without an enclosure is quoted with `"` automatically. |
+| Use for microdata (Google Shopping only) | Yes for a new Google Shopping feed | Makes this feed the source of storefront microdata. Only one feed per store view can have it. |
+
+**Columns Map**: rows of Order, Column, Attribute or Directive, and Parameters. Each preset starts with its required columns. Directives compute values such as prices, availability, URLs, images, categories and identifiers; the Parameters control changes with the directive. See [Columns and directives](docs/wiki/Columns-and-Directives.md).
+
+**Categories Map**
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| Feed Localization | `en-US` | Locale for the provider taxonomy (not shown for Local Inventory). |
+| Include products w/o category | Yes | When No, uncategorized products are left out. |
+| Categories priority mode | Through all category depths | How category priority is compared (not shown for Local Inventory). |
+| Inventory Source to Google Store Code (Local Inventory only) | Empty | One `source=store_code` per line; unmapped sources keep their code. |
+| Taxonomy by Magento Category | All categories included | Per category: include or exclude, priority, provider taxonomy and product type. Local Inventory shows only Include. |
+
+See [Categories and taxonomy](docs/wiki/Categories-and-Taxonomy.md).
+
+**Product Filters**
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| Allow Out of Stock | Yes | When No, out-of-stock products are left out. |
+| Submit only products of these types | All standard types | Product types included. |
+| Submit only products that have these attribute sets | All | Attribute sets included. |
+| Skip Products with empty | Per preset | Skips a row when any listed column is empty. |
+| Skip Products with Price above / below (Google Shopping only) | Empty | Price limits; empty means no limit. |
+| Replace empty values | None | Fallback attribute or directive per column, tried in order. |
+| Find and Replace | None | Text replacement in one column or all columns. |
+| Limit column output | None | Truncates a column to a maximum number of characters. Preset limits are not added automatically; see [Troubleshooting](#troubleshooting). |
+| Adwords Price Buckets (Google Shopping only) | None | Labels for price ranges, used by the price bucket directive. |
+
+See [Filters and transformations](docs/wiki/Filters-and-Transformations.md).
+
+**Product Options** (not shown for Local Inventory)
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| How to add product options | Multiple rows | One row with options combined, or one row per option value. |
+| Multiple rows only for products in these categories | All products | Limits the multiple-row mode to these categories. |
+
+**Configurable Products**, **Grouped Products**, **Bundle Products**
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| How to add associated products | Configurable: only associated products. Grouped: only the parent. Bundle: only associated products. | Which of the parent and its children become rows. |
+| Allow Out of Stock (configurable, grouped) | Yes | Includes out-of-stock children. |
+| Inherit parent Out of Stock status (configurable) | Yes | Children of an out-of-stock parent are out of stock. |
+| Unique urls for associated products not visible | Yes | Gives children a deep link to the parent page with the variant preselected. |
+| Associated Product Attribute Value Separator (configurable) | `, ` | Separator for combined attribute values. |
+| Price Type (grouped) | Sum of associated products prices | Minimal price or the sum of the default quantities' prices. |
+| Combined weight (bundle) | No | Uses the sum of the selections' weights. |
+| Value inheritance by column (configurable, grouped) | None | Per column, whether the value comes from the child, the parent, or one falling back to the other. |
+
+See [Complex products](docs/wiki/Complex-Products.md).
+
+**Shipping** (not shown for Local Inventory; used by the shipping directive)
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| Methods | None | Offline carrier methods to quote. Realtime carriers are not offered. |
+| Countries | None | Countries to quote; with none selected, no shipping is exported. |
+| Shipping Weight Column | `shipping_weight` | Column whose value and unit give the weight; product weight otherwise. |
+| Only Minimum Price | Yes | Keeps the cheapest rate per country. |
+| Only Free Shipping | Yes | Keeps free methods only. |
+| Add Tax to Shipping Price | No | Adds tax when a shipping tax class is configured. |
+
+See [Shipping](docs/wiki/Shipping.md).
+
+**Schedule**: rows of Start At (hour), Batch Mode and Batch Limit (0 means 1000). A new feed starts with one 01:00 row; remove it before saving if you do not want scheduled runs. See [Scheduling and queues](docs/wiki/Scheduling-and-Queues.md).
+
+**Uploads**: rows of Mode (SFTP or unencrypted FTP), Host, SFTP Host Key Fingerprint, Port (22), Username, Password, Path and Gzip. SFTP requires a trusted SHA256 server-key fingerprint before authentication. Passwords stay encrypted in saved model data and are never sent back to the browser. Existing SFTP destinations need a fingerprint after `setup:upgrade`. See [Uploads](docs/wiki/Uploads.md).
+
+**Google Promotions** (Google Shopping only): Enable feed, then per active cart price rule for the NOT LOGGED IN group: Include, Promotion Title (60 characters), Effective from/to and Display from/to. See [Google Promotions](docs/wiki/Google-Promotions.md).
+
+### Permissions
+
+| Resource | Allows |
+| --- | --- |
+| Catalog > Mage-OS Shopping Feed > Shopping Feeds | The grid, Test Feed and View Log |
+| Save Feed | Opening the editor, creating and saving feeds, and enabling, disabling and cloning them |
+| Generate Feed | Run Now |
+| Delete Feed | Deleting feeds |
+| Stores > Settings > Configuration > Shopping Feeds Section | The configuration section above |
+
+## Getting started
+
+1. Make sure Magento cron runs, then open **Catalog > Mage-OS Shopping Feed > Feeds Management** and choose **Create New Feed > Google Shopping** (or the preset you need).
+2. In **General**, enter a name, pick the store view and currency, and keep the default path. Remove the default schedule row and leave **Uploads** empty for the first run.
+3. Review **Columns Map**: map real GTIN, MPN and brand attributes, and check URLs, prices, availability and images.
+4. Save, then choose **Test Feed** in the grid and enter a known SKU. Compare each value with the product in the Admin and on the storefront.
+
+   ![Test Feed result](docs/images/feed-test-result.png)
+
+5. Choose **Run Now**. Cron builds the file; the grid shows its status and a link to the file under `pub/media/mageos-shopping-feed`, and **View Log** shows the run.
+6. When the output is accepted, add a schedule and, if the recipient fetches by FTP or SFTP, an upload destination.
+
+The [Quick start](docs/wiki/Quick-Start.md) has a longer checklist, including fixtures worth testing first.
+
+## Where it shows up
+
+- **Admin**: the Feeds Management grid (status, file link, Run Now, Test Feed, View Log, mass enable, disable, clone and delete), the feed editor, and the configuration section.
+- **Files**: feeds under `pub/media/mageos-shopping-feed`, publicly downloadable so recipients can fetch them; feed names contain the feed ID. Google Promotions write a companion file next to the Google Shopping feed. Logs are `var/log/mageos_shopping_feed_<id>.log`.
+- **Storefront**: product pages carry the microdata and deep-link preselection, and Luma configurable pages send the optional `view_item` events.
+- **CLI**: `bin/magento mage-os:shopping-feed:generate [feed_id] [test_sku]` builds queued feeds, one feed, or one test SKU; `bin/magento mage-os:shopping-feed:schedule` queues feeds from their schedules.
+- **Cron**: the `mageos_shopping_feed` group queues scheduled feeds hourly and processes the queue every minute.
+- **Extension points**: events, UI form modifiers and parameter definitions are documented in the [UI component editor guide](docs/ui-component-editor.md).
+
+When inspecting CSV or TSV feeds in a spreadsheet, import the columns as text and turn off formula evaluation; values starting with `=`, `+`, `-` or `@` are kept as recipients expect them.
+
+## Troubleshooting
+
+- **A feed stays queued or never updates.** Check that Magento cron runs and that **Cron Enabled** is Yes. Run `bin/magento mage-os:shopping-feed:generate <feed_id>` to see errors directly, then check **View Log**.
+- **Products are missing.** Check the feed's store view and the product's website, the **Product Filters**, **Skip Products with empty**, and the category **Include** settings. **Test Feed** with the SKU shows the row as generated.
+- **Long values make a provider reject or skip rows.** The Meta, Pinterest, TikTok, Microsoft and OpenAI presets skip rows whose title or description exceed the provider's limits. Their preset character limits are not added to **Limit column output** automatically, so add the limits you need there.
+- **No microdata on product pages.** Turn on **Enable Automatic Updates (Microdata)** for the store, set **Use for microdata** to Yes on exactly one Google Shopping feed for that store view, then flush the cache.
+- **Uploads fail.** **View Log** shows the transfer error. Check host, port (22 for SFTP), credentials and that the remote path exists.
+
+More cases are in [Logs and troubleshooting](docs/wiki/Logs-and-Troubleshooting.md).
 
 ## Migrating from Rocket Shopping Feeds
 
-The optional [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb) is published separately as `rocketweb/module-shopping-feed-migration-rocketweb` 1.0.0 on [Packagist](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb). Stores without legacy feeds only need the main module.
+Installing this module does not read or change Rocket Web feeds, tables or configuration. The optional [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb) (`rocketweb/module-shopping-feed-migration-rocketweb` 1.0.0 on [Packagist](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb)) previews legacy feed configuration and imports it into disabled Mage-OS feeds for review. Stores without legacy feeds only need the main module.
 
 On staging, keep the legacy modules installed and enabled during schema upgrades, then install both packages:
 
 ```sh
-composer require 'mage-os/module-shopping-feed:^1.2.3' \
+composer require 'mage-os/module-shopping-feed:^1.2.4' \
   'rocketweb/module-shopping-feed-migration-rocketweb:^1.0' --no-update
 composer update mage-os/module-shopping-feed \
   rocketweb/module-shopping-feed-migration-rocketweb --with-dependencies
@@ -84,65 +228,19 @@ bin/magento module:enable MageOS_ShoppingFeed RocketWeb_ShoppingFeedMigration
 bin/magento setup:upgrade
 ```
 
-Use the [migration guide](docs/wiki/Rocket-Web-Migration.md) for backups, permissions, preview/import, output comparison, activation, and rollback. Installing the packages does not migrate data. Imports start disabled, with schedules and uploads held until explicit activation. Custom PHP, shared settings, and recipient URLs need manual review.
+Follow [MIGRATION.md](MIGRATION.md) and the [migration guide](docs/wiki/Rocket-Web-Migration.md) for backups, permissions, preview and import, output comparison, activation and rollback.
 
-## Use
+## Documentation and support
 
-Manage feeds in the Admin under **Catalog > Mage-OS Shopping Feed > Feeds Management**.
-
-Global settings are under **Stores > Configuration > Mage-OS > Mage-OS Shopping Feed**.
-
-The module registers two CLI commands:
-
-```bash
-# Build queued feeds, a specific feed, or one test SKU
-bin/magento mage-os:shopping-feed:generate [feed_id] [test_sku]
-
-# Create feed-generation queue entries from configured schedules
-bin/magento mage-os:shopping-feed:schedule
-```
-
-The dedicated `mageos_shopping_feed` cron group schedules feeds hourly and processes its queue every minute by default.
-
-Feed output is restricted to `pub/media/mageos-shopping-feed` and its safe subdirectories. Files are publicly downloadable for recipient fetches; default filenames contain the feed ID and are predictable. FTP or SFTP upload leaves that public local copy in place. Export only data intended for public distribution. Per-feed logs are restricted to `var/log` and use `mageos_shopping_feed_*.log` by default.
-
-When inspecting CSV or TSV feeds in a spreadsheet, import the columns as text and disable formula evaluation. Feed values beginning with `=`, `+`, `-`, or `@` can be interpreted as formulas by spreadsheet software. The module preserves these values for feed recipients without adding apostrophes or tabs.
-
-## Documentation
-
-For setup and troubleshooting, use the [Shopping Feed support bot on Rocket Web](https://rocketweb.com/rocket-shopping-feeds). Select **Open support chat** on the product page.
-
-The [public GitHub Wiki](https://github.com/mage-os-lab/module-shopping-feed/wiki) is published separately; it does not automatically update when this repository changes. The reviewable GitHub Wiki source is under [`docs/wiki`](docs/wiki), starting with [`Home.md`](docs/wiki/Home.md). Documentation contributors should update that source and follow [`docs/WIKI-MAINTENANCE.md`](docs/WIKI-MAINTENANCE.md) rather than editing the public wiki independently.
-
-For version 1.2.0, start with the [operating guide](docs/wiki/Admin-UI-Component-Forms.md), [implementation and customization contract](docs/ui-component-editor.md), [earlier platform checks](docs/ui-component-editor-acceptance.md), and [completed local acceptance](docs/reviews/2026-10-03-local-acceptance.md). Read dated acceptance reports in order; passing automated or platform checks do not override a later reproduced failure.
-
-## Development validation
-
-Run the dependency-free consolidation checks and PHP syntax checks from the repository root:
-
-```bash
-composer validate --strict --no-check-publish
-php dev/tests/validate.php
-php dev/tests/validate-wiki.php
-find . -path './.git' -prune -o -type f \( -name '*.php' -o -name '*.phtml' \) -print0 | xargs -0 -n1 php -l
-```
-
-Validate every Magento XML file against the schemas from an existing Magento or Mage-OS checkout:
-
-```bash
-php dev/tests/validate-magento-xml.php /path/to/magento
-```
-
-Run the imported and modernized unit suite with the PHPUnit installation from that checkout:
-
-```bash
-MAGENTO_ROOT=/path/to/magento /path/to/magento/vendor/bin/phpunit -c phpunit.xml.dist
-```
-
-The unit-test bootstrap loads Magento's test framework and the module directly, so the module does not need to be installed in the validation checkout. CI also installs the package into currently supported Magento Open Source releases and explicitly into Mage-OS 3.5.0, runs the unit and integration suites, checks the Magento coding standard, and compiles dependency injection.
+- The [Wiki source](docs/wiki/Home.md) covers each preset, the editor, scheduling, uploads and troubleshooting. The [public GitHub Wiki](https://github.com/mage-os-lab/module-shopping-feed/wiki) is published from it separately.
+- Developer contract for the editor: [UI component editor guide](docs/ui-component-editor.md).
+- [CHANGELOG.md](CHANGELOG.md), [release notes](docs/releases), and dated [review records](docs/reviews).
+- Report vulnerabilities as described in [SECURITY.md](SECURITY.md).
+- Contributing and local checks: [CONTRIBUTING.md](CONTRIBUTING.md).
+- For setup and troubleshooting, use the [Shopping Feed support bot on Rocket Web](https://rocketweb.com/rocket-shopping-feeds). Select **Open support chat** on the product page.
 
 ## Provenance and license
 
-The consolidated source and exact import revisions are documented in [PROVENANCE.md](PROVENANCE.md). Original Rocket Web copyright and author notices are retained in source files.
+The original code was developed by [Rocket Web](https://rocketweb.com/). The consolidated source and exact import revisions are documented in [PROVENANCE.md](PROVENANCE.md). Original copyright and author attribution is retained in source files.
 
-The package uses the [Open Software License 3.0](LICENSE.txt). Composer metadata, source notices, and the bundled license are aligned on OSL-3.0. See [LICENSING.md](LICENSING.md).
+The package uses the [Open Software License 3.0](LICENSE.txt). Composer metadata, source notices and the bundled license are aligned on OSL-3.0. See [LICENSING.md](LICENSING.md).

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © 2016 Rocket Web Inc. All rights reserved.
- * See LICENSE.txt for license details.
+ * Copyright © 2016 Rocket Web Inc. (https://rocketweb.com/)
+ * Licensed under the Open Software License version 3.0. See LICENSE.txt.
  */
 
 declare(strict_types=1);
@@ -12,6 +12,9 @@ use MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class VariantOption extends MapperAbstract
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = []): string
     {
         $adapter = $this->getAdapter();
@@ -44,6 +47,12 @@ class VariantOption extends MapperAbstract
         return implode(',', $options);
     }
 
+    /**
+     * Quote a variant option value that contains a separator or quote, doubling inner quotes.
+     *
+     * @param string $value
+     * @return string
+     */
     private function quoteValue(string $value): string
     {
         if (strpbrk($value, ':,"') === false) {

@@ -35,7 +35,13 @@ class StockAttribute extends Template
      */
     protected $_template = 'feed/edit/form/options/renderer/stock-attribute.phtml';
 
-
+    /**
+     * StockAttribute constructor.
+     *
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\CatalogInventory\Model\StockRegistryProvider $stockRegistryProvider
+     * @param array $data
+     */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\CatalogInventory\Model\StockRegistryProvider $stockRegistryProvider,
@@ -45,8 +51,14 @@ class StockAttribute extends Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get the scalar stock item fields as options
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function getAttributeOptions()
     {
+        /** @var \Magento\CatalogInventory\Model\Stock\Item $stockItem */
         $stockItem = $this->stockRegistryProvider->getStockItem(1, 1);
         $stockAttributes = $stockItem->getData();
 
@@ -66,6 +78,12 @@ class StockAttribute extends Template
         return $options;
     }
 
+    /**
+     * Turn a stock item field code into a readable label
+     *
+     * @param string $code
+     * @return string
+     */
     private function formatLabel($code)
     {
         return ucwords(str_replace('_', ' ', $code));

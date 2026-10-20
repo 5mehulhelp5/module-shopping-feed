@@ -22,6 +22,7 @@ namespace MageOS\ShoppingFeed\Test\Unit\Model\Feed\Source\Shipping;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 use MageOS\ShoppingFeed\Test\Unit\Model\ModelFramework;
+use PHPUnit\Framework\MockObject\MockObject;
 
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class AvailableMethodsTest extends ModelFramework
@@ -33,32 +34,32 @@ class AvailableMethodsTest extends ModelFramework
     protected $objectManagerHelper;
 
     /**
-     * @var \Magento\Shipping\Model\Config
+     * @var \Magento\Shipping\Model\Config&MockObject
      */
     protected $shippingMethodConfig;
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface&MockObject
      */
     protected $scopeConfig;
 
     /**
-     * @var \Magento\OfflineShipping\Model\Carrier\Flatrate
+     * @var \Magento\OfflineShipping\Model\Carrier\Flatrate&MockObject
      */
     protected $carrierFlatrate;
 
     /**
-     * @var \Magento\OfflineShipping\Model\Carrier\Tablerate
+     * @var \Magento\OfflineShipping\Model\Carrier\Tablerate&MockObject
      */
     protected $carrierTablerate;
 
     /**
-     * @var \Magento\OfflineShipping\Model\Carrier\Freeshipping
+     * @var \Magento\OfflineShipping\Model\Carrier\Freeshipping&MockObject
      */
     protected $carrierFreeshiping;
 
     /**
-     * @var \Magento\Fedex\Model\Carrier
+     * @var \Magento\Fedex\Model\Carrier&MockObject
      */
     protected $carrierFedex;
 
@@ -66,28 +67,22 @@ class AvailableMethodsTest extends ModelFramework
     {
         $this->objectManagerHelper = new ObjectManagerHelper($this);
 
-        /** @var \MageOS\ShoppingFeed\Model\Feed $feed */
+        /** @var \MageOS\ShoppingFeed\Model\Feed&MockObject $feed */
         $feed = $this->getModelMock('\MageOS\ShoppingFeed\Model\Feed');
 
-        /** @var \Magento\Framework\Registry $registry */
+        /** @var \Magento\Framework\Registry&MockObject $registry */
         $registry = $this->getModelMock('\Magento\Framework\Registry');
 
-        /** @var \Magento\Shipping\Model\Config $this->shippingMethodConfig */
         $this->shippingMethodConfig = $this->getModelMock('\Magento\Shipping\Model\Config');
 
-        /** @var \Magento\Framework\App\Config\ScopeConfigInterface $this->scopeConfig */
         $this->scopeConfig = $this->getModelMock('\Magento\Framework\App\Config\ScopeConfigInterface');
 
-        /** @var \Magento\OfflineShipping\Model\Carrier\Flatrate $this->carrierFlatrate */
         $this->carrierFlatrate = $this->getModelMock('\Magento\OfflineShipping\Model\Carrier\Flatrate');
 
-        /** @var \Magento\OfflineShipping\Model\Carrier\Tablerate $this->carrierTablerate */
         $this->carrierTablerate = $this->getModelMock('\Magento\OfflineShipping\Model\Carrier\Tablerate');
 
-        /** @var \Magento\OfflineShipping\Model\Carrier\Freeshipping $this->carrierFreeshiping */
         $this->carrierFreeshiping = $this->getModelMock('\Magento\OfflineShipping\Model\Carrier\Freeshipping');
 
-        /** @var \Magento\Fedex\Model\Carrier $this->carrierFedex */
         $this->carrierFedex = $this->getModelMock('\Magento\Fedex\Model\Carrier');
 
         $feed->expects($this->exactly(1))

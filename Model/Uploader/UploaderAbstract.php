@@ -31,10 +31,17 @@ abstract class UploaderAbstract extends \Magento\Framework\DataObject
     protected $feedUpload;
 
     /**
+     * Transport supplied by the concrete uploader
+     *
+     * @var \Magento\Framework\Filesystem\Io\IoInterface
+     */
+    protected $connection;
+
+    /**
      * UploaderAbstract constructor.
      *
      * @param \MageOS\ShoppingFeed\Model\Feed\Upload $feedUpload
-     * @param array                                      $data
+     * @param array $data
      */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Feed\Upload $feedUpload,
@@ -64,10 +71,15 @@ abstract class UploaderAbstract extends \Magento\Framework\DataObject
      */
     public function upload($filePath)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- remote file name only; a driver needs a constructor change
         $fileName = basename($filePath);
 
         $connection  = $this->getConnection();
-        return $connection->write($fileName, $filePath);
+        try {
+            return $connection->write($fileName, $filePath);
+        } finally {
+            $connection->close();
+        }
     }
 
     /**
@@ -80,12 +92,14 @@ abstract class UploaderAbstract extends \Magento\Framework\DataObject
     {
         try {
             $connection  = $this->getConnection();
+            $connection->close();
             return true;
         } catch (\Exception $e) {
             throw new \Magento\Framework\Exception\LocalizedException(
                 __(
-                    'Cannot validate connection for host="' . $this->feedUpload->getHost(). '". An error "' .
-                    $e->getMessage() . '" occurred'
+                    'Cannot validate connection for host="%1". An error "%2" occurred',
+                    $this->feedUpload->getHost(),
+                    $e->getMessage()
                 )
             );
         }
@@ -110,6 +124,7 @@ abstract class UploaderAbstract extends \Magento\Framework\DataObject
         }
 
         $config['user'] = $config['username'];
+        $config['password'] = $this->feedUpload->getDecryptedPassword();
         $config['passive'] = true;
 
         $this->connection->open($this->getConnectionConfiguration($config));
@@ -127,8 +142,8 @@ abstract class UploaderAbstract extends \Magento\Framework\DataObject
     /**
      * Provides connection configuration for connection class
      *
-     * @param  $config
-     * @return array
+     * @param array<string,mixed> $config
+     * @return array<string,mixed>
      */
     abstract public function getConnectionConfiguration($config);
 }

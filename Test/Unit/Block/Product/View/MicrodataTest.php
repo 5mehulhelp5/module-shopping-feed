@@ -20,8 +20,15 @@ class MicrodataTest extends CompatibilityTestCase
 {
     /** @dataProvider associatedProductProvider */
     #[DataProvider('associatedProductProvider')]
-    public function testOnlyEligibleConfigurableChildrenSupplyMicrodata($aid, string $type, bool $related, int $status, array $websites, bool $accepted, int $childId = 20): void
-    {
+    public function testOnlyEligibleConfigurableChildrenSupplyMicrodata(
+        $aid,
+        string $type,
+        bool $related,
+        int $status,
+        array $websites,
+        bool $accepted,
+        int $childId = 20
+    ): void {
         $parent = $this->createCompatibleMock(Product::class, ['getTypeId', 'getId', 'getTypeInstance']);
         $parent->method('getId')->willReturn(10);
         $parent->method('getTypeId')->willReturn($type);
@@ -29,7 +36,10 @@ class MicrodataTest extends CompatibilityTestCase
         $productType->method('getChildrenIds')->with(10)->willReturn([0 => $related ? [20 => 20] : [30 => 30]]);
         $parent->method('getTypeInstance')->willReturn($productType);
 
-        $child = $this->createCompatibleMock(Product::class, ['load', 'getId', 'getStatus', 'getWebsiteIds', 'setStoreId']);
+        $child = $this->createCompatibleMock(
+            Product::class,
+            ['load', 'getId', 'getStatus', 'getWebsiteIds', 'setStoreId']
+        );
         $child->method('setStoreId')->with(2)->willReturnSelf();
         $child->method('load')->willReturnSelf();
         $child->method('getId')->willReturn($childId);
@@ -57,7 +67,8 @@ class MicrodataTest extends CompatibilityTestCase
             ->onlyMethods(['getProduct', 'getRequest'])->getMock();
         $block->method('getProduct')->willReturn($parent);
         $block->method('getRequest')->willReturn($request);
-        foreach (['_storeManager' => $stores, 'productFactory' => $products, 'microdataFactory' => $factory] as $property => $value) {
+        $dependencies = ['_storeManager' => $stores, 'productFactory' => $products, 'microdataFactory' => $factory];
+        foreach ($dependencies as $property => $value) {
             (new \ReflectionProperty(Microdata::class, $property))->setValue($block, $value);
         }
         (new \ReflectionMethod(Microdata::class, 'getModel'))->invoke($block);

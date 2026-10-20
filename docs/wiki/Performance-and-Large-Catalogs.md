@@ -2,7 +2,7 @@
 
 Treat feed performance as a measured workload. Product count alone does not explain cost because field directives and complex-product expansion can dominate generation time.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
 
 ## Start with a baseline
 
@@ -47,7 +47,7 @@ Batch mode creates the final file only after the last batch completes. Monitor t
 5. Increase the limit gradually while preserving operational headroom.
 6. Validate the complete final file and upload after tuning.
 
-The generator logs progress periodically, with a default interval of 30 product objects. Use Info or Notice for routine operation and Debug for bounded diagnosis. Log rotation controls file size; reducing logs should not substitute for identifying an expensive mapping.
+The generator logs progress at most every 30 seconds by default (`mageos_shopping_feed/log/progress_every`, which has no Admin field), plus the first and last item and each batch boundary. Use Info or Notice for routine operation and Debug for bounded diagnosis. Log rotation controls file size; reducing logs should not substitute for identifying an expensive mapping.
 
 ## Acceptance
 

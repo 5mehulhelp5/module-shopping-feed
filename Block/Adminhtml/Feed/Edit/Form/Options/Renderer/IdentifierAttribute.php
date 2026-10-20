@@ -35,7 +35,9 @@ class IdentifierAttribute extends Template
      */
     protected $sourceAttributes;
     /**
-     * ProductId constructor.
+     * IdentifierAttribute constructor.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Attributes $sourceAttributes
      * @param \Magento\Backend\Block\Template\Context $context
      * @param array $data
      */

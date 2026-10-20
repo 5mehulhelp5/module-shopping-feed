@@ -3,10 +3,12 @@
 ?>
 
 <div>
-    <span><?php echo $block->escapeHtml(__('Stock Attribute:')) ?></span>
+    <span><?= $escaper->escapeHtml(__('Stock Attribute:')) ?></span>
     <select name="#{htmlName}[#{index}][param]" class="select">
         <?php foreach ($block->getAttributeOptions() as $option): ?>
-            <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>
+            <option value="<?=
+                $escaper->escapeHtml($option['value'])
+            ?>"><?= $escaper->escapeHtml($option['label']) ?></option>
         <?php endforeach; ?>
     </select>
 </div>

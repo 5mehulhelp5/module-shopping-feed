@@ -7,56 +7,65 @@ $element = $block->getElement();
 <?php $htmlName    = $block->getElement()->getName() ?>
 <?php $readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled() ?>
 
-<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
-     data-apply-to="<?php echo $block->escapeHtml(
-         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+<div class="field" id="attribute-<?= $escaper->escapeHtml($htmlId) ?>-container"
+     data-attribute-code="<?= $escaper->escapeHtml($htmlId) ?>"
+     data-apply-to="<?= $escaper->escapeHtml(
+         $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode(
              $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
          )
      )?>">
     <?php if (false === $block->getMapExistingColumns()): ?>
         <table class="columns-info-table data-table">
             <thead>
-            <th><strong><?php echo $block->escapeHtml(__('Columns')) ?></strong></th>
-            <th><?php echo $block->escapeHtml(__('Info about column')) ?></th>
+            <th><strong><?= $escaper->escapeHtml(__('Columns')) ?></strong></th>
+            <th><?= $escaper->escapeHtml(__('Info about column')) ?></th>
             </thead>
             <tbody>
             <tr>
-                <td><strong><?php echo $block->escapeHtml(__('Order')) ?></strong></td>
-                <td><?php echo $block->escapeHtml(__('allows you to define the columns order in the feed. Higher numbers go last.')) ?></td>
+                <td><strong><?= $escaper->escapeHtml(__('Order')) ?></strong></td>
+                <td><?=
+                    $escaper->escapeHtml(
+                        __('allows you to define the columns order in the feed. Higher numbers go last.')
+                    ) ?></td>
             </tr>
             <tr>
-                <td><strong><?php echo $block->escapeHtml(__('Feed Column')) ?></strong></td>
-                <td><?php echo $block->escapeHtml(__('is the name of the column.')) ?></td>
+                <td><strong><?= $escaper->escapeHtml(__('Feed Column')) ?></strong></td>
+                <td><?= $escaper->escapeHtml(__('is the name of the column.')) ?></td>
             </tr>
             <tr>
-                <td><strong><?php echo $block->escapeHtml(__('Map To')) ?></strong></td>
-                <td><?php echo $block->escapeHtml(__('can be either Directive (first options in the dropdown), or a product Attribute. Directives have special logic, and Attributes simply grab the value from product.')) ?></td>
+                <td><strong><?= $escaper->escapeHtml(__('Map To')) ?></strong></td>
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase ?>
+                <td><?= $escaper->escapeHtml(__('can be either Directive (first options in the dropdown), or a product Attribute. Directives have special logic, and Attributes simply grab the value from product.')) ?></td>
             </tr>
             <tr>
-                <td><strong><?php echo $block->escapeHtml(__('Options')) ?></strong></td>
-                <td><?php echo $block->escapeHtml(__('some Directives accept parameters that can be specified here.')) ?></td>
+                <td><strong><?= $escaper->escapeHtml(__('Options')) ?></strong></td>
+                <td><?=
+                    $escaper->escapeHtml(
+                        __('some Directives accept parameters that can be specified here.')
+                    ) ?></td>
             </tr>
             </tbody>
         </table>
     <?php endif; ?>
     <div class="label-w-space">
-        <label class="label"><span><?php echo $block->escapeHtml($block->getElement()->getLabel()) ?></span></label>
+        <label class="label"><span><?= $escaper->escapeHtml($block->getElement()->getLabel()) ?></span></label>
     </div>
     <div class="control">
-        <table class="admin__control-table <?php echo $block->escapeHtml($block->getControlName()); ?>_table data-grid" id="<?php echo $block->escapeHtml($block->getControlName()) ?>_table">
+        <table class="admin__control-table <?= $escaper->escapeHtml($block->getControlName()); ?>_table data-grid"
+               id="<?= $escaper->escapeHtml($block->getControlName()) ?>_table">
             <thead>
                 <tr>
-                    <th class="data-grid-th col-order required"><?php echo $block->escapeHtml(__('Order')) ?></th>
-                    <th class="data-grid-th col-column required"><?php echo $block->escapeHtml(__('Column')) ?></th>
-                    <th class="data-grid-th col-attribute required"><?php echo $block->escapeHtml(__('Map to')) ?></th>
-                    <th class="data-grid-th col-param"><?php echo $block->escapeHtml(__('Options')) ?></th>
-                    <th class="data-grid-th col-delete"><?php  echo $block->escapeHtml(__('Action')) ?></th>
+                    <th class="data-grid-th col-order required"><?= $escaper->escapeHtml(__('Order')) ?></th>
+                    <th class="data-grid-th col-column required"><?= $escaper->escapeHtml(__('Column')) ?></th>
+                    <th class="data-grid-th col-attribute required"><?= $escaper->escapeHtml(__('Map to')) ?></th>
+                    <th class="data-grid-th col-param"><?= $escaper->escapeHtml(__('Options')) ?></th>
+                    <th class="data-grid-th col-delete"><?=  $escaper->escapeHtml(__('Action')) ?></th>
                 </tr>
             </thead>
-            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container"></tbody>
+            <tbody id="<?= $escaper->escapeHtml($htmlId) ?>_container"></tbody>
             <tfoot>
                 <tr>
-                    <td colspan="5" class="col-actions-add"><?php echo $block->getAddButtonHtml() ?></td>
+                    <td colspan="5" class="col-actions-add"><?= /* @noEscape */ $block->getAddButtonHtml() ?></td>
                 </tr>
             </tfoot>
         </table>
@@ -71,39 +80,49 @@ require([
 //<![CDATA[
 var rowTemplate = '<tr>'
     + '<td class="col-order">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> order required-entry validate-greater-than-zero" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][order]" value="<%- data.order %>" id="<?php echo $block->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_order" />'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> order required-entry validate-greater-than-zero" type="text" name="<?= $escaper->escapeHtml($htmlName) ?>[<%- data.index %>][order]" value="<%- data.order %>" id="<?= $escaper->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_order" />'
     + '</td>'
     + '<td class="col-column">'
     <?php if ($block->getMapExistingColumns()): ?>
-    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?> required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][column]" id="<?php echo $block->escapeHtml($block->getControlName()); ?>_row_<%- data.index %>_column">'
-    <?php foreach ($block->getColumns() as $column): ?>
-    + '<option value="<?php echo $block->escapeHtml($column['value']) ?>"><?php echo $block->escapeJsQuote($block->escapeHtml($column['label'])) ?></option>'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<select class="<?= $escaper->escapeHtml($htmlClass) ?> required-entry" name="<?= $escaper->escapeHtml($htmlName) ?>[<%- data.index %>][column]" id="<?= $escaper->escapeHtml($block->getControlName()); ?>_row_<%- data.index %>_column">'
+        <?php foreach ($block->getColumns() as $column): ?>
+    + '<option value="<?= $escaper->escapeHtml($column['value']) ?>"><?=
+        $escaper->escapeJsQuote($escaper->escapeHtml($column['label']))
+    ?></option>'
     <?php endforeach ?>
     + '</select>'
     <?php else: ?>
-    + '<input type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][column]" value="<%- data.column %>" id="<?php echo $block->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_column" />'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<input type="text" name="<?= $escaper->escapeHtml($htmlName) ?>[<%- data.index %>][column]" value="<%- data.column %>" id="<?= $escaper->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_column" />'
     <?php endif; ?>
     + '</td>'
-    + '<td class="col-attribute"><select class="<?php echo $block->escapeHtml($htmlClass) ?> attribute required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][attribute]" id="<?php echo $block->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_attribute">'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<td class="col-attribute"><select class="<?= $escaper->escapeHtml($htmlClass) ?> attribute required-entry" name="<?= $escaper->escapeHtml($htmlName) ?>[<%- data.index %>][attribute]" id="<?= $escaper->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_attribute">'
     <?php foreach ($block->getDirectivesAndAttributes() as $group): ?>
-    + '<optgroup label="<?php echo $block->escapeHtml($group['label']) ?>">'
+    + '<optgroup label="<?= $escaper->escapeHtml($group['label']) ?>">'
         <?php foreach ($group['value'] as $attribute): ?>
-    + '<option value="<?php echo $block->escapeHtml($attribute['value']) ?>"><?php echo $block->escapeJsQuote($block->escapeHtml($attribute['label'])) ?></option>'
+    + '<option value="<?= $escaper->escapeHtml($attribute['value']) ?>"><?=
+        $escaper->escapeJsQuote($escaper->escapeHtml($attribute['label']))
+    ?></option>'
         <?php endforeach ?>
     + '</optgroup>'
     <?php endforeach ?>
     + '</select></td>'
-    + '<td class="col-param" id="<?php echo $block->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_param">'
-    + '<input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][param]" value="" />'
+    + '<td class="col-param" id="<?= $escaper->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_param">'
+    + '<input type="hidden" name="<?= $escaper->escapeHtml($htmlName) ?>[<%- data.index %>][param]" value="" />'
     + '</td>'
-    + '<td class="col-delete"><input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][delete]" class="delete" value="" id="<?php echo $block->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_delete" />'
-    + '<button title="<?php echo $block->escapeHtml(__('Delete')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="<?php echo $block->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_delete_button" onclick="return <?php echo $block->escapeHtml($block->getControlName()) ?>.deleteItem(event);">'
-    + '<span><?php echo $block->escapeHtml(__("Delete")) ?></span></button></td>'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<td class="col-delete"><input type="hidden" name="<?= $escaper->escapeHtml($htmlName) ?>[<%- data.index %>][delete]" class="delete" value="" id="<?= $escaper->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_delete" />'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<button title="<?= $escaper->escapeHtml(__('Delete')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="<?= $escaper->escapeHtml($block->getControlName()) ?>_row_<%- data.index %>_delete_button" onclick="return <?= $escaper->escapeHtml($block->getControlName()) ?>.deleteItem(event);">'
+    + '<span><?= $escaper->escapeHtml(__("Delete")) ?></span></button></td>'
     + '</tr>';
 
-var <?php echo $block->escapeHtml($block->getControlName()) ?> = {
-    config: <?php /* @noEscape */ echo $block->configToJson();?>,
-    htmlName: '<?php echo $block->escapeHtml($htmlName) ?>',
+var <?= $escaper->escapeHtml($block->getControlName()) ?> = {
+    config: <?= /* @noEscape */ $block->configToJson();?>,
+    htmlName: '<?= $escaper->escapeHtml($htmlName) ?>',
     template: mageTemplate(rowTemplate),
     itemsCount: 0,
     addItem : function () {
@@ -114,8 +133,8 @@ var <?php echo $block->escapeHtml($block->getControlName()) ?> = {
         <?php endif; ?>
         var data = {
             order: this.nextOrder(),
-            column: '<?php echo $block->getMapExistingColumns() ? $block->escapeHtml($block->getDefaultColumn()) : ''; ?>',
-            attribute: '<?php echo $block->escapeHtml($block->getDefaultAttribute()) ?>',
+            column: '<?= $block->getMapExistingColumns() ? $escaper->escapeHtml($block->getDefaultColumn()) : ''; ?>',
+            attribute: '<?= $escaper->escapeHtml($block->getDefaultAttribute()) ?>',
             param: '',
             readOnly: false,
             index: this.itemsCount++,
@@ -129,30 +148,35 @@ var <?php echo $block->escapeHtml($block->getControlName()) ?> = {
             data.readOnly  = arguments[4];
         }
 
-        Element.insert($('<?php echo $block->escapeHtml($htmlId) ?>_container'), {
+        Element.insert($('<?= $escaper->escapeHtml($htmlId) ?>_container'), {
             bottom : this.template({
                 data: data
             })
         });
 
-        $('<?php echo $block->escapeHtml($block->getControlName()); ?>_row_' + data.index + '_attribute').value = data.attribute;
-        $('<?php echo $block->escapeHtml($block->getControlName()); ?>_row_' + data.index + '_column').value    = data.column;
+        $('<?=
+            $escaper->escapeHtml($block->getControlName());
+        ?>_row_' + data.index + '_attribute').value = data.attribute;
+        $('<?=
+            $escaper->escapeHtml($block->getControlName());
+        ?>_row_' + data.index + '_column').value    = data.column;
 
         if (data.readOnly == '1') {
             ['order','column', 'attribute', 'param', 'delete'].each(function(idx){
-                $('<?php echo $block->escapeHtml($block->getControlName()) ?>_row_'+data.index+'_'+idx).disabled = true;
+                $('<?= $escaper->escapeHtml($block->getControlName()) ?>_row_'+data.index+'_'+idx).disabled = true;
             });
-            $('<?php echo $block->escapeHtml($block->getControlName()) ?>_row_'+data.index+'_delete_button').hide();
+            $('<?= $escaper->escapeHtml($block->getControlName()) ?>_row_'+data.index+'_delete_button').hide();
         }
 
         <?php if ($readonly): ?>
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input', 'select').each(this.disableElement);
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').select('input', 'select').each(this.disableElement);
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
         <?php else: ?>
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input', 'select').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').select('input', 'select').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
         <?php endif; ?>
 
-        var el = $('<?php echo $block->escapeHtml($block->getControlName()) ?>_row_' + data.index + '_attribute');
+        var el = $('<?= $escaper->escapeHtml($block->getControlName()) ?>_row_' + data.index + '_attribute');
         Event.observe(el, 'change', this.eventListenerRowChanges.bindAsEventListener(this, data));
         this.fillParamsColumn(data.attribute, data);
     },
@@ -172,7 +196,7 @@ var <?php echo $block->escapeHtml($block->getControlName()) ?> = {
     },
     nextOrder : function () {
         var v, max = 0;
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('input.order').each(function (elm) {
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').up('table').select('input.order').each(function (elm) {
             v = parseInt(elm.value)
             if (v > max) {
                 max = v;
@@ -185,7 +209,7 @@ var <?php echo $block->escapeHtml($block->getControlName()) ?> = {
         this.fillParamsColumn(event.element().value, data);
     },
     fillParamsColumn : function (directive, data) {
-        var paramColumn = $('<?php echo $block->escapeHtml($block->getControlName()) ?>_row_'+data.index+'_param');
+        var paramColumn = $('<?= $escaper->escapeHtml($block->getControlName()) ?>_row_'+data.index+'_param');
 
         if (this.config.directives[directive] == undefined) {
             paramColumn.innerHTML = '';
@@ -206,7 +230,7 @@ var <?php echo $block->escapeHtml($block->getControlName()) ?> = {
         this.preselectParamsColumn(data);
     },
     preselectParamsColumn : function (data) {
-        var paramColumn = $('<?php echo $block->escapeHtml($block->getControlName()) ?>_row_'+data.index+'_param');
+        var paramColumn = $('<?= $escaper->escapeHtml($block->getControlName()) ?>_row_'+data.index+'_param');
         var select = paramColumn.select('select[multiple]')[0];
         // Keep saved attribute codes when the attribute is absent from this catalog.
         // Otherwise the browser omits the parameter and a later save can change its meaning.
@@ -243,31 +267,36 @@ var <?php echo $block->escapeHtml($block->getControlName()) ?> = {
     var param = '';
 <?php foreach ($block->getValues() as $item): ?>
     <?php if (isset($item['param']) && is_array($item['param'])): ?>
-    param = <?php /* @noEscape */ echo json_encode($item['param'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR); ?>;
+    param = <?= /* @noEscape */
+        json_encode($item['param'], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
+    ?>;
     <?php else: ?>
-    param = '<?= $escaper->escapeJs(isset($item['param']) ? addslashes($block->escapeHtml($item['param'])) : '') ?>';
+<?php // phpcs:ignore Magento2.Functions.DiscouragedFunction -- legacy JS string escaping; output must stay identical ?>
+    param = '<?= $escaper->escapeJs(isset($item['param']) ? addslashes($escaper->escapeHtml($item['param'])) : '') ?>';
     <?php endif; ?>
-    <?php echo $block->escapeHtml($block->getControlName()) ?>.addItem(
-        '<?php echo (int) $item['order'] ?>',
-        '<?php echo $block->escapeJsQuote($block->escapeHtml($item['column'])) ?>',
-        '<?php echo $block->escapeJsQuote($block->escapeHtml($item['attribute'])) ?>',
+    <?= $escaper->escapeHtml($block->getControlName()) ?>.addItem(
+        '<?= (int) $item['order'] ?>',
+        '<?= $escaper->escapeJsQuote($escaper->escapeHtml($item['column'])) ?>',
+        '<?= $escaper->escapeJsQuote($escaper->escapeHtml($item['attribute'])) ?>',
         param,
-        <?php echo (int) !empty($item['readonly'])?>
+        <?= (int) !empty($item['readonly'])?>
     );
 <?php endforeach; ?>
 <?php if ($readonly): ?>
-$('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button')
-    .each(<?php echo $block->escapeHtml($block->getControlName()) ?>.disableElement);
+$('<?= $escaper->escapeHtml($htmlId) ?>_container').up('table').select('button')
+    .each(<?= $escaper->escapeHtml($block->getControlName()) ?>.disableElement);
 <?php endif; ?>
 
-window.<?php echo $block->escapeHtml($block->getControlName()) ?> = <?php echo $block->escapeHtml($block->getControlName()) ?>;
+window.<?= $escaper->escapeHtml($block->getControlName()) ?> = <?= $escaper->escapeHtml($block->getControlName()) ?>;
 //]]>
 
 });
 </script>
         <?php if ($block->getElement()->getNote() && strlen($block->getElement()->getNote())): ?>
         <div class="note">
-            <span><?php /* @escapeNotVerified */ echo $block->getElement()->getNote() ?></span>
+            <span><?=
+                $escaper->escapeHtml($block->getElement()->getNote(), ['a', 'strong', 'b', 'em', 'br', 'span'])
+            ?></span>
         </div>
         <?php endif; ?>
     </div>

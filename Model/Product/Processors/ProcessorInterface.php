@@ -20,9 +20,26 @@ namespace MageOS\ShoppingFeed\Model\Product\Processors;
 
 interface ProcessorInterface
 {
+    /**
+     * Bind the processor to the adapter whose rows it processes.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter
+     * @return $this
+     */
     public function setAdapter($adapter);
 
+    /**
+     * Adapter whose rows are processed.
+     *
+     * @return \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract
+     */
     public function getAdapter();
 
+    /**
+     * Process the adapter's mapped rows and return the rows to output.
+     *
+     * @param array<mixed> $rows
+     * @return array<mixed>
+     */
     public function execute(array $rows);
 }

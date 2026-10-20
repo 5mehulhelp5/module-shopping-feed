@@ -9,7 +9,12 @@ use MageOS\ShoppingFeed\Model\Product\Formatter\Price\Currency;
 /** Preserve zero regular prices so the row validator can check the mobile subscription exception. */
 class Price extends Currency
 {
-    /** Format zero without changing the shared sale-price formatter. */
+    /**
+     * Format zero without changing the shared sale-price formatter.
+     *
+     * @param mixed $var Cell value
+     * @return mixed
+     */
     public function run($var)
     {
         if (!is_numeric($var) || (float)$var !== 0.0) {

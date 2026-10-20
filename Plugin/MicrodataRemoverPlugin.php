@@ -26,25 +26,35 @@ namespace MageOS\ShoppingFeed\Plugin;
  *
  * vendor/magento/module-catalog/view/base/templates/product/price/amount/default.phtml
  *
- * @package MageOS\ShoppingFeed\Plugin
  */
 class MicrodataRemoverPlugin
 {
-    const XML_PATH_ENABLED = 'mageos_shopping_feed/google/microdata_enabled';
+    public const XML_PATH_ENABLED = 'mageos_shopping_feed/google/microdata_enabled';
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     protected $scopeConfig;
 
+    // phpcs:ignore Magento2.Commenting.ClassPropertyPHPDocFormatting.Missing -- @var adds new PHPStan false positives
     private $feedCollectionFactory;
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
     private $storeManager;
+
+    /**
+     * @var array<int, bool> Whether each store ID has a feed used for microdata
+     */
     private array $selectedFeeds = [];
 
     /**
      * Constructor
      *
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Feed\CollectionFactory $feedCollectionFactory
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -57,8 +67,10 @@ class MicrodataRemoverPlugin
     }
 
     /**
-     * @param \Magento\Framework\Pricing\Render\Amount $subject
-     * @param $interceptedFileName
+     * Turn off the native price schema markup when the store has a microdata feed
+     *
+     * @param \Magento\Framework\View\Element\Template $subject
+     * @param string $interceptedFileName
      * @return array
      */
     public function beforeFetchView(\Magento\Framework\View\Element\Template $subject, $interceptedFileName)
@@ -70,7 +82,12 @@ class MicrodataRemoverPlugin
         return [$interceptedFileName];
     }
 
-    /** Remove native title/SKU attributes only when the current store has a replacement feed. */
+    /**
+     * Remove native title/SKU attributes only when the current store has a replacement feed.
+     *
+     * @param \Magento\Framework\View\Element\AbstractBlock $subject
+     * @return void
+     */
     public function beforeToHtml(\Magento\Framework\View\Element\AbstractBlock $subject): void
     {
         $attribute = [
@@ -83,6 +100,8 @@ class MicrodataRemoverPlugin
     }
 
     /**
+     * Check whether microdata is enabled and the current store has a feed used for microdata
+     *
      * @return bool
      */
     public function isEnabled()

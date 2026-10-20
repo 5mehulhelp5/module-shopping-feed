@@ -34,7 +34,7 @@ class MapperFactoryTest extends CompatibilityTestCase
     protected $model;
 
     /**
-     * @var \Magento\Framework\ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\ObjectManagerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $objectManagerMock;
 
@@ -63,7 +63,7 @@ class MapperFactoryTest extends CompatibilityTestCase
     public function testCreate()
     {
         /**
- * @var \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple|\PHPUnit_Framework_MockObject_MockObject $adapter
+ * @var \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple&\PHPUnit\Framework\MockObject\MockObject $adapter
 */
         $adapter = $this->createCompatibleMock(
             'MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple',

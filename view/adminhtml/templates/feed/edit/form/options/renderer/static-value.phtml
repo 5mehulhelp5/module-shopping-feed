@@ -2,6 +2,6 @@
 /* @var $block \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Static */
 ?>
 <div>
-    <span><?php echo $block->escapeHtml(__('Value:')) ?></span>
+    <span><?= $escaper->escapeHtml(__('Value:')) ?></span>
     <input type="text" name="#{htmlName}[#{index}][param]" value="#{param}" class="" />
 </div>

@@ -1,0 +1,34 @@
+includes:
+    - vendor/bitexpert/phpstan-magento/extension.neon
+    # Reviewed existing debt for this released module. It may only shrink: CI rejects new or
+    # increased entries (dev/tests/check-phpstan-baseline.php). Do not regenerate it wholesale.
+    - phpstan-baseline.neon
+
+parameters:
+    level: 8
+    # The PHP range composer.json supports, so version-guarded code is not treated as dead.
+    phpVersion:
+        min: 80100
+        max: 80599
+    # Every directory that contains module PHP. Listing them keeps vendor/ out of
+    # symbol discovery: vendor classes come from Composer's autoloader, and
+    # scanning vendor/ would pick up stubs such as Rector's empty PHPUnit TestCase.
+    paths:
+        - .github/scripts
+        - Block
+        - Console
+        - Controller
+        - Cron
+        - Model
+        - Observer
+        - Plugin
+        - Test
+        - Ui
+        - dev
+        - registration.php
+    # Magento's integration test framework ships in magento2-base, outside Composer's autoloader.
+    scanDirectories:
+        - vendor/magento/magento2-base/dev/tests/integration/framework
+    # The unit suite picks its PHPUnit compatibility base class with a runtime class_alias.
+    bootstrapFiles:
+        - Test/Unit/CompatibilityTestCase.php

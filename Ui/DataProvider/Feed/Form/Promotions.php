@@ -10,15 +10,34 @@ use MageOS\ShoppingFeed\Model\Promotions\Provider\Collection;
 
 class Promotions
 {
+    /**
+     * Constructor
+     *
+     * @param Provider $provider
+     * @param Collection $collection
+     */
     public function __construct(private Provider $provider, private Collection $collection)
     {
     }
 
+    /**
+     * Get the cart price rules that can be submitted as promotions for the feed.
+     *
+     * @param Feed $feed
+     * @return \Magento\SalesRule\Model\ResourceModel\Rule\Quote\Collection
+     */
     public function rules(Feed $feed)
     {
         return $this->collection->getPromotionRules($feed);
     }
 
+    /**
+     * Add the promotions widget values for each cart price rule to the form data.
+     *
+     * @param Feed $feed
+     * @param array $data
+     * @return array
+     */
     public function data(Feed $feed, array $data): array
     {
         $this->provider->setFeed($feed);

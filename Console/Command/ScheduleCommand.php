@@ -50,8 +50,11 @@ class ScheduleCommand extends Command
     }
 
     /**
+     * Create generation queues from the feed schedules
+     *
      * @param InputInterface                                           $input
      * @param OutputInterface|\Symfony\Component\Console\Output\Output $output
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

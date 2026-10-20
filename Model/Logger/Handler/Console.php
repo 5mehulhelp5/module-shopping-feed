@@ -17,16 +17,19 @@
  */
 
 namespace MageOS\ShoppingFeed\Model\Logger\Handler;
-use Monolog\LogRecord;
 
+use Monolog\LogRecord;
 
 class Console extends \Monolog\Handler\AbstractProcessingHandler
 {
     /**
-     * @var \Symfony\Component\Console\Output\OutputInterface
+     * @var \Symfony\Component\Console\Output\OutputInterface|null
      */
     protected $output;
 
+    /**
+     * Use the memory log formatter at INFO level for console output.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -35,14 +38,26 @@ class Console extends \Monolog\Handler\AbstractProcessingHandler
         $this->setLevel(\Monolog\Logger::INFO);
     }
 
+    /**
+     * Set the console output that receives formatted records.
+     *
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return void
+     */
     public function setOutputInterface(\Symfony\Component\Console\Output\OutputInterface $output)
     {
         $this->output = $output;
     }
 
+    /**
+     * Write the formatted record to the console output when one is set.
+     *
+     * @param LogRecord|array<string,mixed> $record Monolog 3 record, or array on Monolog 2
+     * @return void
+     */
     protected function write($record): void
     {
-        if (!is_null($this->output) && $this->output instanceof \Symfony\Component\Console\Output\OutputInterface) {
+        if ($this->output instanceof \Symfony\Component\Console\Output\OutputInterface) {
             $this->output->write((string) $record['formatted']);
         }
     }

@@ -33,7 +33,6 @@ class AdditionalImageLinkTest extends ModelFramework
      */
     protected $model;
 
-
     /**
      * @inheritdoc
      */
@@ -96,7 +95,9 @@ class AdditionalImageLinkTest extends ModelFramework
 
         $params = ['column' => 'test'];
         $cell = $this->model->map($params);
-        $expected = 'url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png';
+        $expected = 'url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,'
+            . 'url_prefix/media_image.png,url_prefix/media_image.png,url_prefix/media_image.png,'
+            . 'url_prefix/media_image.png,url_prefix/media_image.png';
         $this->assertEquals($expected, $cell);
     }
     public function testConfiguredCommaSeparatorPreservesCsvImageList(): void
@@ -117,5 +118,4 @@ class AdditionalImageLinkTest extends ModelFramework
         $this->model->setConfiguration('separator', ',');
         self::assertSame('https://example.com/one.jpg,https://example.com/two.png', $this->model->map());
     }
-
 }

@@ -22,6 +22,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate as Simp
 
 class Concatenate extends SimpleConcatenate
 {
+    /**
+     * @inheritdoc
+     */
     protected function getAttributeValue($key, $attributeColumn, $values = [], $params = [])
     {
         $inheritColumnsFromParent = $this->getAdapter()
@@ -42,6 +45,9 @@ class Concatenate extends SimpleConcatenate
         return $values;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         if (strpos($params['param'], '{{variants}}') !== false) {
@@ -58,7 +64,8 @@ class Concatenate extends SimpleConcatenate
                         sprintf(
                             'Could not get value of configurable attribute {{%s}} in Concatenate directive.',
                             $attribute['attribute_code']
-                        ), $newParams
+                        ),
+                        $newParams
                     );
                 }
             }
@@ -68,7 +75,7 @@ class Concatenate extends SimpleConcatenate
             $params['param'] = str_replace('{{variants}}', $out, $params['param']);
 
             preg_match_all('/\{\{(.*?)\}\}/is', $params['param'], $matches);
-            if (!isset($matches[1]) || empty($matches[1])) {
+            if (empty($matches[1])) {
                 return $params['param'];
             }
         }

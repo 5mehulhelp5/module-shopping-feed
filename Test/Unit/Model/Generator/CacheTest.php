@@ -33,8 +33,14 @@ class CacheTest extends ModelFramework
      */
     protected $model;
 
+    /**
+     * @var \Magento\Framework\Json\Encoder|\PHPUnit\Framework\MockObject\MockObject
+     */
     protected $jsonEncoderMock;
 
+    /**
+     * @var \Magento\Framework\Json\Decoder|\PHPUnit\Framework\MockObject\MockObject
+     */
     protected $jsonDecoderMock;
 
     public function setUp(): void

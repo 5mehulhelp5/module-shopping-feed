@@ -7,16 +7,21 @@ $state = $block->getNoticeState();
      data-mage-init='{"MageOS_ShoppingFeed/js/migration-notice":{}}'
      role="status">
     <?php if ($state === 'installed'): ?>
-        <span><?= $block->escapeHtml(__('The Rocket Web feed migration tool is available.')) ?></span>
-        <a href="<?= $block->escapeUrl($block->getMigrationUrl()) ?>"><?= $block->escapeHtml(__('Review legacy feeds')) ?></a>
+        <span><?= $escaper->escapeHtml(__('The Rocket Web feed migration tool is available.')) ?></span>
+        <a href="<?= $escaper->escapeUrl($block->getMigrationUrl()) ?>"><?=
+            $escaper->escapeHtml(__('Review legacy feeds'))
+        ?></a>
     <?php else: ?>
-        <span><?= $block->escapeHtml($state === 'legacy_module'
+        <span><?= $escaper->escapeHtml($state === 'legacy_module'
+            // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
             ? __('Rocket Web Shopping Feeds is installed. Its configuration can be reviewed with the optional migration tool. Keep the legacy module enabled during setup.')
+            // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
             : __('Legacy Rocket Web feed tables were found. The original module and its feed definitions are also needed before migration.')) ?></span>
-        <a href="<?= $block->escapeUrl($block->getInstructionsUrl()) ?>" target="_blank" rel="noopener noreferrer"><?= $block->escapeHtml(__('Installation instructions')) ?></a>
+        <a href="<?= $escaper->escapeUrl($block->getInstructionsUrl()) ?>" target="_blank"
+           rel="noopener noreferrer"><?= $escaper->escapeHtml(__('Installation instructions')) ?></a>
     <?php endif; ?>
     <button type="button" class="action-tertiary" data-action="dismiss-migration-notice">
-        <?= $block->escapeHtml(__('Dismiss')) ?>
+        <?= $escaper->escapeHtml(__('Dismiss')) ?>
     </button>
 </div>
 <?php endif; ?>

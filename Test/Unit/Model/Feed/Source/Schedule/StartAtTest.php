@@ -22,6 +22,7 @@ namespace MageOS\ShoppingFeed\Test\Unit\Model\Feed\Source\Schedule;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 use MageOS\ShoppingFeed\Test\Unit\Model\ModelFramework;
+use PHPUnit\Framework\MockObject\MockObject;
 
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class StartAtTest extends ModelFramework
@@ -34,17 +35,17 @@ class StartAtTest extends ModelFramework
 
     protected function setUp(): void
     {
-        /** @var \DateTime $dateTimeMock */
+        /** @var \DateTime&MockObject $datetimeMock */
         $datetimeMock = $this->createMock('\DateTime');
 
-        /** @var \Magento\Framework\Locale\ResolverInterface $localeResolverMock */
+        /** @var \Magento\Framework\Locale\ResolverInterface&MockObject $localeResolverMock */
         $localeResolverMock = $this->createMock('\Magento\Framework\Locale\ResolverInterface');
 
         $localeResolverMock->expects($this->once())
             ->method('getLocale')
             ->will($this->returnValue('en_US'));
 
-        /** @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDateMock */
+        /** @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface&MockObject $localeDateMock */
         $localeDateMock = $this->getModelMock(
             '\Magento\Framework\Stdlib\DateTime\TimezoneInterface'
         );

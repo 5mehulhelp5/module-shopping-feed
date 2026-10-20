@@ -2,18 +2,11 @@
 
 namespace MageOS\ShoppingFeed\Model\Generator;
 
-/**
- * Class Batch
- *
- * @package MageOS\ShoppingFeed\Model\Generator
- *
- * @method $this   setEnabled(boolean $enabled)
- * @method $this   setOffset(int $offset)
- * @method $this   setLimit(int $limit)
- */
 class Batch extends \Magento\Framework\DataObject
 {
     /**
+     * Batch size, defaulting to 1000 when unset or not positive.
+     *
      * @return int
      */
     public function getLimit()
@@ -21,13 +14,19 @@ class Batch extends \Magento\Framework\DataObject
         return ($this->hasData('limit') && $this->getData('limit') > 0) ? $this->getData('limit') : 1000;
     }
 
-
+    /**
+     * Whether this batch starts at the first product.
+     *
+     * @return bool
+     */
     public function isNew()
     {
         return $this->getOffset() == 0;
     }
 
     /**
+     * Whether batch processing is enabled.
+     *
      * @return boolean
      */
     public function isEnabled()
@@ -36,6 +35,8 @@ class Batch extends \Magento\Framework\DataObject
     }
 
     /**
+     * Number of products already processed, defaulting to 0.
+     *
      * @return int
      */
     public function getOffset()

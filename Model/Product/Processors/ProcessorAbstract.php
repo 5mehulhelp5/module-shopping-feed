@@ -26,6 +26,8 @@ class ProcessorAbstract
     protected $adapter;
 
     /**
+     * Bind the processor to the adapter whose rows it processes.
+     *
      * @param  \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter
      * @return $this
      */
@@ -36,6 +38,8 @@ class ProcessorAbstract
     }
 
     /**
+     * Adapter whose rows are processed.
+     *
      * @return \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract
      */
     public function getAdapter()
@@ -44,6 +48,8 @@ class ProcessorAbstract
     }
 
     /**
+     * Return the rows unchanged; processors override this.
+     *
      * @param  array $rows
      * @return array
      */

@@ -2,7 +2,7 @@
 
 This is the compact operational reference for the current Mage-OS module identity.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
 
 ## Identity
 
@@ -34,7 +34,7 @@ This is the compact operational reference for the current Mage-OS module identit
 | Purpose | Path or pattern |
 | --- | --- |
 | Default feed directory | `pub/media/mageos-shopping-feed` |
-| Default feed filename | `mageos_shopping_feed_%s.txt` |
+| Default feed filename | Generic, Google Shopping and Local Inventory: `mageos_shopping_feed_%s.txt`. Meta: `mageos_meta_catalog_%s.tsv`. Pinterest: `mageos_pinterest_catalog_%s.tsv`. TikTok: `mageos_tiktok_catalog_%s.csv`. Microsoft: `mageos_microsoft_%s.txt`. OpenAI: `mageos_openai_google_compatible_%s.tsv` |
 | Default Promotions filename | `mageos_shopping_feed_promotion_%s.txt` |
 | Feed log | `var/log/mageos_shopping_feed_<feed_id>.log` |
 | Per-feed lock | `var/tmp/mageos_shopping_feed_<feed_id>.lock` |

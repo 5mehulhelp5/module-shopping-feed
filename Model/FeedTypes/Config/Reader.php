@@ -33,15 +33,16 @@ class Reader extends \Magento\Framework\Config\Reader\Filesystem
     ];
 
     /**
-     * @param \Magento\Framework\Config\FileResolverInterface               $fileResolver
-     * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config\Converter     $converter
+     * @param \Magento\Framework\Config\FileResolverInterface $fileResolver
+     * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config\Converter $converter
      * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config\SchemaLocator $schemaLocator
-     * @param \Magento\Framework\Config\ValidationStateInterface            $validationState
-     * @param string                                                        $fileName
-     * @param array                                                         $idAttributes
-     * @param string                                                        $domDocumentClass
-     * @param string                                                        $defaultScope
+     * @param \Magento\Framework\Config\ValidationStateInterface $validationState
+     * @param string $fileName
+     * @param array $idAttributes
+     * @param string $domDocumentClass
+     * @param string $defaultScope
      */
+    // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod -- narrows converter and schema locator types for DI and sets the module's file name
     public function __construct(
         \Magento\Framework\Config\FileResolverInterface $fileResolver,
         \MageOS\ShoppingFeed\Model\FeedTypes\Config\Converter $converter,
@@ -49,7 +50,7 @@ class Reader extends \Magento\Framework\Config\Reader\Filesystem
         \Magento\Framework\Config\ValidationStateInterface $validationState,
         $fileName = 'mageos_shopping_feed.xml',
         $idAttributes = [],
-        $domDocumentClass = 'Magento\Framework\Config\Dom',
+        $domDocumentClass = \Magento\Framework\Config\Dom::class,
         $defaultScope = 'global'
     ) {
         parent::__construct(

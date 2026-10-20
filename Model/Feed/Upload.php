@@ -21,21 +21,16 @@ namespace MageOS\ShoppingFeed\Model\Feed;
 
 use Magento\Framework\Model\AbstractModel;
 
-/**
- * Class Upload
- *
- * @package MageOS\ShoppingFeed\Model\Feed
- */
 class Upload extends AbstractModel
 {
-    const OBSCURED_VALUE = '******';
+    public const OBSCURED_VALUE = '******';
 
     /**
      * @var \Magento\Framework\Encryption\EncryptorInterface
      */
     protected $encryptor;
 
-    /** @var string|null Ciphertext retained independently of decrypted original data. */
+    /** @var string|null Ciphertext retained across masked and repeated saves. */
     private $encryptedPassword;
 
     /**
@@ -75,14 +70,13 @@ class Upload extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('MageOS\ShoppingFeed\Model\ResourceModel\Feed\Upload');
+        $this->_init(\MageOS\ShoppingFeed\Model\ResourceModel\Feed\Upload::class);
     }
 
     /**
      * Encrypts password before save
      *
-     * A masked value retains the loaded ciphertext. Original model data contains
-     * the decrypted password after a resource load and cannot be stored directly.
+     * A masked value retains the loaded ciphertext. Model data stays encrypted.
      *
      * @return $this
      */
@@ -108,23 +102,31 @@ class Upload extends AbstractModel
         return parent::beforeSave();
     }
 
-    /** Restore the in-memory credential for upload and subsequent saves. */
-    public function afterSave()
-    {
-        $this->setData('password', $this->encryptor->decrypt($this->encryptedPassword));
-        return parent::afterSave();
-    }
-
     /**
-     * Decrypts password after load
+     * Remember the stored ciphertext without decrypting model data.
      *
      * @return $this
      */
     protected function _afterLoad()
     {
         $this->encryptedPassword = (string)$this->getData('password');
-        $this->setData('password', $this->encryptor->decrypt($this->encryptedPassword));
-
         return parent::_afterLoad();
+    }
+
+    /**
+     * Decrypt the credential only at the transport boundary.
+     *
+     * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getDecryptedPassword(): string
+    {
+        $password = $this->encryptor->decrypt((string)$this->getData('password'));
+        if ($password === '') {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('The saved upload password cannot be read. Enter it again.')
+            );
+        }
+        return $password;
     }
 }

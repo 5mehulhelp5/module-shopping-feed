@@ -35,9 +35,9 @@ class AddGoogleGeneralMicrodataFieldsObserver implements ObserverInterface
      */
     protected $sourceYesno;
 
-
     /**
      * @param \Magento\Framework\View\Element\Context $context
+     * @param \Magento\Config\Model\Config\Source\Yesno $sourceYesno
      */
     public function __construct(
         \Magento\Framework\View\Element\Context $context,
@@ -71,8 +71,10 @@ class AddGoogleGeneralMicrodataFieldsObserver implements ObserverInterface
                     'required' => true,
                     'values' => $this->sourceYesno->toOptionArray(),
                     'disabled' => $isElementDisabled,
-                    'note' => __('When set to yes, store\'s microdata uses mapping of this feed.
-                    Only one feed per store should have this turned on.'),
+                    'note' => __(
+                        // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
+                        'When set to yes, store\'s microdata uses mapping of this feed. Only one feed per store should have this turned on.'
+                    ),
                 ]
             );
         }

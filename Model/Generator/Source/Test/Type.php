@@ -22,9 +22,6 @@ use Magento\Framework\Data\Form\Element\CollectionFactory;
 use Magento\Framework\Data\Form\Element\Factory;
 use Magento\Framework\Escaper;
 
-/**
- * Class Type
- */
 class Type extends \Magento\Framework\Data\Form\Element\Select
 {
     public function __construct(

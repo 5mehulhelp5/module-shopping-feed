@@ -25,8 +25,8 @@ use Magento\Framework\Data\OptionSourceInterface;
  */
 class PriorityMode implements OptionSourceInterface
 {
-    const PRIORITY_ONLY = 0;
-    const PRIORITY_AFTER_LEVEL = 1;
+    public const PRIORITY_ONLY = 0;
+    public const PRIORITY_AFTER_LEVEL = 1;
 
     /**
      * Retrieve option array

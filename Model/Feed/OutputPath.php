@@ -16,12 +16,25 @@ class OutputPath
 
     private const MEDIA_BASE_DIRECTORY = 'mageos-shopping-feed';
 
+    /**
+     * @var DirectoryList
+     */
     private DirectoryList $directoryList;
 
+    /**
+     * @var WriteInterface
+     */
     private WriteInterface $mediaDirectory;
 
+    /**
+     * @var WriteInterface
+     */
     private WriteInterface $logDirectory;
 
+    /**
+     * @param Filesystem $filesystem
+     * @param DirectoryList $directoryList
+     */
     public function __construct(Filesystem $filesystem, DirectoryList $directoryList)
     {
         $this->directoryList = $directoryList;
@@ -29,6 +42,13 @@ class OutputPath
         $this->logDirectory = $filesystem->getDirectoryWrite(DirectoryList::LOG);
     }
 
+    /**
+     * Reject a feed whose configured feed, log or promotion file paths are not allowed.
+     *
+     * @param Feed $feed
+     * @return void
+     * @throws LocalizedException
+     */
     public function validateFeed(Feed $feed): void
     {
         $directory = (string) $feed->getConfig('general_feed_dir');
@@ -41,6 +61,14 @@ class OutputPath
         }
     }
 
+    /**
+     * Feed output file path, absolute or relative to the Magento root.
+     *
+     * @param Feed $feed
+     * @param bool $absolute
+     * @return string
+     * @throws LocalizedException
+     */
     public function getFeedFile(Feed $feed, bool $absolute = true): string
     {
         return $this->resolveFeedFile(
@@ -51,11 +79,27 @@ class OutputPath
         );
     }
 
+    /**
+     * Feed log file path inside var/log, absolute or relative to the Magento root.
+     *
+     * @param Feed $feed
+     * @param bool $absolute
+     * @return string
+     * @throws LocalizedException
+     */
     public function getLogFile(Feed $feed, bool $absolute = true): string
     {
         return $this->resolveLogFile((string) $feed->getConfig('file_log'), (int) $feed->getId(), $absolute);
     }
 
+    /**
+     * Promotions output file path, absolute or relative to the Magento root.
+     *
+     * @param Feed $feed
+     * @param bool $absolute
+     * @return string
+     * @throws LocalizedException
+     */
     public function getPromotionFile(Feed $feed, bool $absolute = true): string
     {
         return $this->resolvePath(
@@ -67,6 +111,16 @@ class OutputPath
         );
     }
 
+    /**
+     * Resolve a feed file inside the configured media output directory.
+     *
+     * @param string $configuredDirectory
+     * @param string $filenameTemplate
+     * @param int $feedId
+     * @param bool $absolute
+     * @return string
+     * @throws LocalizedException
+     */
     public function resolveFeedFile(
         string $configuredDirectory,
         string $filenameTemplate,
@@ -82,6 +136,15 @@ class OutputPath
         );
     }
 
+    /**
+     * Resolve a log file inside var/log, creating the directory when needed.
+     *
+     * @param string $filenameTemplate
+     * @param int $feedId
+     * @param bool $absolute
+     * @return string
+     * @throws LocalizedException
+     */
     public function resolveLogFile(string $filenameTemplate, int $feedId, bool $absolute = true): string
     {
         $filename = $this->validateFilename($filenameTemplate, ['log'], $feedId);
@@ -99,6 +162,17 @@ class OutputPath
         return $absolute ? $absolutePath : $this->makeRootRelative($absolutePath);
     }
 
+    /**
+     * Validate, create and contain an output path under the media directory.
+     *
+     * @param string $configuredDirectory
+     * @param string $filenameTemplate
+     * @param int $feedId
+     * @param array $allowedExtensions
+     * @param bool $absolute
+     * @return string
+     * @throws LocalizedException
+     */
     private function resolvePath(
         string $configuredDirectory,
         string $filenameTemplate,
@@ -126,6 +200,16 @@ class OutputPath
         return $this->makeRootRelative($absolutePath);
     }
 
+    /**
+     * Validate the configured directory and filename; return the media-relative directory and filename.
+     *
+     * @param string $configuredDirectory
+     * @param string $filenameTemplate
+     * @param array $allowedExtensions
+     * @param int|null $feedId
+     * @return array
+     * @throws LocalizedException
+     */
     private function validatePath(
         string $configuredDirectory,
         string $filenameTemplate,
@@ -134,7 +218,11 @@ class OutputPath
     ): array {
         $directory = trim(str_replace('\\', '/', $configuredDirectory), '/');
         if ($directory !== self::CONFIGURED_BASE_DIRECTORY
-            && strncmp($directory, self::CONFIGURED_BASE_DIRECTORY . '/', strlen(self::CONFIGURED_BASE_DIRECTORY) + 1) !== 0
+            && strncmp(
+                $directory,
+                self::CONFIGURED_BASE_DIRECTORY . '/',
+                strlen(self::CONFIGURED_BASE_DIRECTORY) + 1
+            ) !== 0
         ) {
             throw new LocalizedException(
                 __('Feed output must be inside %1.', self::CONFIGURED_BASE_DIRECTORY)
@@ -158,6 +246,13 @@ class OutputPath
         return [$mediaRelativeDirectory, $filename];
     }
 
+    /**
+     * Reject an output directory that resolves outside pub/media.
+     *
+     * @param string $mediaRelativeDirectory
+     * @return void
+     * @throws LocalizedException
+     */
     private function assertDirectoryRemainsInsideMedia(string $mediaRelativeDirectory): void
     {
         $driver = $this->mediaDirectory->getDriver();
@@ -176,6 +271,14 @@ class OutputPath
         }
     }
 
+    /**
+     * Reject an existing output file that resolves outside its output directory.
+     *
+     * @param string $absolutePath
+     * @param string $mediaRelativeDirectory
+     * @return void
+     * @throws LocalizedException
+     */
     private function assertExistingPathRemainsInsideOutputDirectory(
         string $absolutePath,
         string $mediaRelativeDirectory
@@ -193,6 +296,15 @@ class OutputPath
         $this->assertExistingPathInsideDirectory($absolutePath, $outputDirectory, $driver);
     }
 
+    /**
+     * Expand the feed id into the filename template and check its characters and extension.
+     *
+     * @param string $filenameTemplate
+     * @param array $allowedExtensions
+     * @param int|null $feedId
+     * @return string
+     * @throws LocalizedException
+     */
     private function validateFilename(
         string $filenameTemplate,
         array $allowedExtensions,
@@ -205,7 +317,10 @@ class OutputPath
         }
 
         $filename = $feedId === null ? str_replace('%s', '1', $filenameTemplate) : sprintf($filenameTemplate, $feedId);
-        $extensionPattern = implode('|', array_map(static fn (string $extension): string => preg_quote($extension, '#'), $allowedExtensions));
+        $extensionPattern = implode('|', array_map(
+            static fn (string $extension): string => preg_quote($extension, '#'),
+            $allowedExtensions
+        ));
         if (!preg_match('#^[A-Za-z0-9][A-Za-z0-9._-]*\.(?:' . $extensionPattern . ')$#D', $filename)) {
             throw new LocalizedException(__('The feed filename or extension is not allowed.'));
         }
@@ -213,6 +328,15 @@ class OutputPath
         return $filename;
     }
 
+    /**
+     * Reject an existing path whose real path is outside the given directory.
+     *
+     * @param string $absolutePath
+     * @param string $absoluteDirectory
+     * @param \Magento\Framework\Filesystem\DriverInterface $driver
+     * @return void
+     * @throws LocalizedException
+     */
     private function assertExistingPathInsideDirectory(
         string $absolutePath,
         string $absoluteDirectory,
@@ -229,6 +353,13 @@ class OutputPath
         }
     }
 
+    /**
+     * Convert an absolute path under the Magento root to a root-relative path with forward slashes.
+     *
+     * @param string $absolutePath
+     * @return string
+     * @throws LocalizedException
+     */
     private function makeRootRelative(string $absolutePath): string
     {
         $root = rtrim($this->directoryList->getRoot(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;

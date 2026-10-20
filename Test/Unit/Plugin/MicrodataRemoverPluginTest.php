@@ -60,8 +60,11 @@ class MicrodataRemoverPluginTest extends TestCase
 
     /** @dataProvider settings */
     #[DataProvider('settings')]
-    public function testNativeSchemaRequiresAnExplicitReplacementFeed(bool $enabled, bool $selected, bool $expected): void
-    {
+    public function testNativeSchemaRequiresAnExplicitReplacementFeed(
+        bool $enabled,
+        bool $selected,
+        bool $expected
+    ): void {
         $config = $this->createMock(ScopeConfigInterface::class);
         $config->method('getValue')->with(
             MicrodataRemoverPlugin::XML_PATH_ENABLED,

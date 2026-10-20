@@ -8,10 +8,20 @@ use MageOS\ShoppingFeed\Model\Promotions\Provider;
 
 class PromotionCacheBatch
 {
+    /**
+     * @param Provider $provider
+     */
     public function __construct(private Provider $provider)
     {
     }
 
+    /**
+     * Batch promotion cache writes for the whole generator run
+     *
+     * @param Generator $subject
+     * @param callable $proceed
+     * @return mixed
+     */
     public function aroundRun(Generator $subject, callable $proceed)
     {
         $this->provider->beginCacheBatch();

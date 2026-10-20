@@ -17,6 +17,8 @@ const observable = initial => {
     return function (next) { if (arguments.length) { value = next; } return value; };
 };
 const base = {extend: definition => definition};
+// Stands in for mage/translate and marks every phrase that passes through it.
+const translate = text => `[t]${text}`;
 
 test('selects preserve missing scalar, zero and array options without interpreting HTML', () => {
     const preserve = load('preserve-options');
@@ -31,7 +33,7 @@ test('selects preserve missing scalar, zero and array options without interpreti
 });
 
 test('opening a custom parameter keeps its exact structure; explicit directive change applies defaults', () => {
-    const component = load('parameter', [base, load('preserve-options')]);
+    const component = load('parameter', [base, load('preserve-options'), translate]);
     const param = {zero: '0', values: ['missing', '<b>literal</b>']};
     const field = Object.assign({}, component, {
         definitions: {custom: {kind: 'unsupported'}, price: {kind: 'select', default: '0', options: [{value: '0', label: 'No'}]}},
@@ -51,7 +53,7 @@ test('opening a custom parameter keeps its exact structure; explicit directive c
 });
 
 test('parameter initialization preserves null defaults and explicit empty values', () => {
-    const component = load('parameter', [base, load('preserve-options')]);
+    const component = load('parameter', [base, load('preserve-options'), translate]);
     for (const value of [null, '', '0', 0, false, ['literal']]) {
         const field = Object.assign({}, component, {value: observable(value), default: 'replacement'});
         assert.equal(field.getInitialValue(), value);
@@ -137,7 +139,7 @@ test('category edits preserve zero priorities, inactive and unknown mappings, an
         result.subscribe = callback => subscribers.push(callback);
         return result;
     }
-    const component = load('categories', [base, {observable: subscribed}]);
+    const component = load('categories', [base, {observable: subscribed}, translate]);
     const field = Object.assign({}, component, {
         _super: () => {}, disabled: observable(false),
         categories: [
@@ -163,4 +165,26 @@ test('category edits preserve zero priorities, inactive and unknown mappings, an
     field.collapseAll();
     assert.equal(field.rows[0].shown(), true);
     assert.equal(field.rows[1].shown(), false);
+});
+
+test('admin form messages and category labels pass through mage/translate', () => {
+    const parameter = load('parameter', [base, load('preserve-options'), translate]);
+    const field = Object.assign({}, parameter, {
+        definitions: {}, value: observable({legacy: true}), kind: observable(''), parameterLabel: observable(''),
+        parameterNotice: observable(''), parameterOptions: observable([])
+    });
+    field.changeAttribute('directive_from_removed_extension');
+    assert.equal(field.kind(), 'unsupported');
+    assert.match(field.parameterNotice(), /^\[t\]This saved parameter is preserved\./);
+
+    const categories = load('categories', [base, {observable}, translate]);
+    const row = {name: 'Shoes $& Boots'};
+    assert.equal(categories.rowLabel(row, 'include'), '[t]Shoes $& Boots include');
+    assert.equal(categories.rowLabel(row, 'productType'), '[t]Shoes $& Boots product type');
+    const invalid = Object.assign({}, categories, {
+        rows: [{store_active: true, priority: observable('-1')}], error: observable(''),
+        source: {set: () => {}}
+    });
+    assert.equal(invalid.validate().valid, false);
+    assert.equal(invalid.error(), '[t]Category priority must be a non-negative integer.');
 });

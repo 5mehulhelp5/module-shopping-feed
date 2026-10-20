@@ -23,13 +23,14 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Grouped;
  *
  * Class SalePrice
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Grouped
  */
 class SalePrice extends Price
 {
     /**
+     * Grouped sale price, 0 when it is not below the regular price.
+     *
      * @param  array $params
-     * @return string
+     * @return float|int|string '' when the product has no sale price
      */
     public function map(array $params = [])
     {
@@ -50,8 +51,11 @@ class SalePrice extends Price
         return $specialPrice;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function filter($cell)
     {
-        return intval($cell) > 0 ? parent::filter($cell) : false;
+        return (int) $cell > 0 ? parent::filter($cell) : false;
     }
 }

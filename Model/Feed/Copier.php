@@ -27,13 +27,19 @@ class Copier
      */
     protected $feedFactory;
 
+    /** @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Upload */
+    private $uploadResource;
+
     /**
      * @param \MageOS\ShoppingFeed\Model\FeedFactory $feedFactory
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Upload $uploadResource
      */
     public function __construct(
-        \MageOS\ShoppingFeed\Model\FeedFactory $feedFactory
+        \MageOS\ShoppingFeed\Model\FeedFactory $feedFactory,
+        \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Upload $uploadResource
     ) {
         $this->feedFactory = $feedFactory;
+        $this->uploadResource = $uploadResource;
     }
 
     /**
@@ -62,20 +68,30 @@ class Copier
             $duplicate->setData('schedules', $schedules);
         }
 
-        $uploads = $feed->getUploads();
-        if (!empty($uploads)) {
-            foreach ($uploads as $index => &$upload) {
-                unset($upload['id']);
-            }
-            $duplicate->setData('uploads', $uploads);
-        }
+        $duplicate->setData('uploads', []);
 
         $duplicate->setStatus(Status::STATUS_DISABLED);
         if ($feed->getConfig()) {
             $duplicate->setConfig($feed->getConfig());
         }
 
-        $duplicate->save();
+        $this->uploadResource->beginTransaction();
+        try {
+            $duplicate->save();
+            if ($feed->getUploads()) {
+                /** @var Upload $upload */
+                foreach ($feed->getUploadCollection() as $upload) {
+                    $copy = clone $upload;
+                    $copy->setId(null)->setData('feed_id', $duplicate->getId());
+                    $this->uploadResource->save($copy);
+                }
+            }
+            $this->uploadResource->commit();
+        } catch (\Throwable $exception) {
+            $this->uploadResource->rollBack();
+            throw $exception;
+        }
+        $duplicate->unsetData('uploads');
         return $duplicate;
     }
 }

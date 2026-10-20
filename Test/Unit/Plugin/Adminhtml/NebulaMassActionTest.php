@@ -31,7 +31,11 @@ class NebulaMassActionTest extends TestCase
             ->with('id', ['in' => ['7', '11']])->willReturnSelf();
         $plugin = new NebulaMassAction($this->request(['7', '11']));
         self::assertSame($collection, $plugin->aroundGetCollection(
-            $this->createMock(Filter::class), static function () { self::fail('Must not use select-all filter.'); }, $collection
+            $this->createMock(Filter::class),
+            static function () {
+                self::fail('Must not use select-all filter.');
+            },
+            $collection
         ));
     }
 
@@ -41,11 +45,13 @@ class NebulaMassActionTest extends TestCase
             $collection = $this->createMock(AbstractDb::class);
             $called = false;
             $result = (new NebulaMassAction($this->request($ids, $route)))->aroundGetCollection(
-                $this->createMock(Filter::class), function ($argument) use (&$called, $collection) {
+                $this->createMock(Filter::class),
+                function ($argument) use (&$called, $collection) {
                     $called = true;
                     self::assertSame($collection, $argument);
                     return $argument;
-                }, $collection
+                },
+                $collection
             );
             self::assertTrue($called);
             self::assertSame($collection, $result);
@@ -54,12 +60,17 @@ class NebulaMassActionTest extends TestCase
 
     public function testMalformedAndEmptySelectionsFailClosed(): void
     {
-        foreach ([[], '7', ['0'], ['-1'], ['1 OR 1=1'], [['7']], ['7.0'], ['01'], [true], array_fill(0, 201, '7')] as $ids) {
+        $selections = [[], '7', ['0'], ['-1'], ['1 OR 1=1'], [['7']], ['7.0'], ['01'], [true], array_fill(0, 201, '7')];
+        foreach ($selections as $ids) {
             $collection = $this->createMock(AbstractDb::class);
             $collection->expects(self::never())->method('addFieldToFilter');
             try {
                 (new NebulaMassAction($this->request($ids)))->aroundGetCollection(
-                    $this->createMock(Filter::class), static function () { self::fail('Must fail closed.'); }, $collection
+                    $this->createMock(Filter::class),
+                    static function () {
+                        self::fail('Must fail closed.');
+                    },
+                    $collection
                 );
                 self::fail('Accepted invalid selection.');
             } catch (LocalizedException $e) {

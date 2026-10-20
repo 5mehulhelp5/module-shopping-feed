@@ -30,7 +30,7 @@ use MageOS\ShoppingFeed\Test\Unit\Model\ModelFramework;
 class SalePriceEffectiveDateTest extends ModelFramework
 {
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ExpirationDate
+     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\SalePriceEffectiveDate
      */
     protected $model;
 

@@ -24,7 +24,7 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed;
 class Edit extends \Magento\Backend\Block\Widget\Form\Container
 {
     /**
-     * @var UrlInterface
+     * @var \Magento\Framework\UrlInterface
      */
     protected $urlBuilder;
 
@@ -42,10 +42,16 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
         parent::_construct();
 
         $this->buttonList->remove('reset');
-        $this->buttonList->add(
-            'test',
-            ['label' => __('Test Feed'), 'onclick' => "window.open('". $this->getTestFeedUrl(). "','feed_test','width=835,height=700,resizable=1,scrollbars=1');"]
-        );
+        if ($this->_isAllowedAction('MageOS_ShoppingFeed::generate')) {
+            $this->buttonList->add(
+                'test',
+                [
+                    'label' => __('Test Feed'),
+                    'onclick' => 'window.open(' . json_encode($this->getTestFeedUrl())
+                        . ', "feed_test", "width=835,height=700,resizable=1,scrollbars=1");'
+                ]
+            );
+        }
 
         if ($this->_isAllowedAction('MageOS_ShoppingFeed::save')) {
             $this->buttonList->update('save', 'label', __('Save Page'));
@@ -79,6 +85,8 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
     }
 
     /**
+     * Get the URL that opens the feed test popup
+     *
      * @return string
      */
     public function getTestFeedUrl()

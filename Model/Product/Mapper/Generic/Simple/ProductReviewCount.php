@@ -25,7 +25,6 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
  *
  * Class ProductReviewCount
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
  */
 class ProductReviewCount extends MapperAbstract
 {
@@ -34,6 +33,11 @@ class ProductReviewCount extends MapperAbstract
      */
     protected $summary;
 
+    /**
+     * Product review count mapper constructor.
+     *
+     * @param \Magento\Review\Model\Review\Summary $summary
+     */
     public function __construct(
         \Magento\Review\Model\Review\Summary $summary
     ) {
@@ -41,11 +45,11 @@ class ProductReviewCount extends MapperAbstract
         $this->summary = $summary;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
-        /**
- * @var \Magento\Catalog\Model\Product $product
-*/
         if ($this->getAdapter()->hasParentAdapter()) {
             $product = $this->getAdapter()->getParentAdapter()->getProduct();
         } else {
@@ -55,6 +59,7 @@ class ProductReviewCount extends MapperAbstract
         $count = 0;
         $summary = $this->summary->setData('store_id', $this->getAdapter()->getData('store_id'))
             ->load($product->getId());
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- getReviewsCount() is typed int: !== null adds a PHPStan finding
         if (!is_null($summary->getReviewsCount())) {
             $count = $summary->getReviewsCount();
         }

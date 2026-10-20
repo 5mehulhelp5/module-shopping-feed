@@ -19,18 +19,57 @@
 namespace MageOS\ShoppingFeed\Model\Product\Adapter\Type;
 
 use \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface;
+use Magento\Catalog\Model\ResourceModel\Product\Link\Product\CollectionFactory as LinkedProductCollectionFactory;
+use Magento\CatalogRule\Model\ResourceModel\Rule\Product\Price\CollectionFactory as RulePriceCollectionFactory;
+use Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable\Product\Collection as ChildCollection;
 
 /**
  * Configurable Adapter, holds business logic between Product, Config and Mapper
  *
  * Class Configurable
  *
- * @package MageOS\ShoppingFeed\Model\Product\Adapter\Type
  */
 class Configurable extends Composite implements AdapterInterface
 {
+    /**
+     * @var \Magento\Framework\App\ProductMetadataInterface
+     */
     protected $productMetadata;
 
+    /**
+     * Configurable adapter constructor.
+     *
+     * @param \Magento\Framework\Filesystem $filesystem
+     * @param \MageOS\ShoppingFeed\Model\Feed $feed
+     * @param \Magento\Catalog\Model\Product $product
+     * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config $feedTypesConfig
+     * @param \MageOS\ShoppingFeed\Model\Product\Mapper\MapperFactory $mapperFactory
+     * @param \MageOS\ShoppingFeed\Model\Product\Helper $helper
+     * @param \Magento\Weee\Helper\Data $weeeData
+     * @param \Magento\Tax\Helper\Data $taxData
+     * @param \MageOS\ShoppingFeed\Model\Product\Helper\Catalog $catalogHelper
+     * @param RulePriceCollectionFactory $catalogRuleCollectionFactory
+     * @param \Magento\Catalog\Model\Product\Type\Price $productTypePrice
+     * @param \Magento\CatalogInventory\Model\StockState $stockState
+     * @param \MageOS\ShoppingFeed\Model\Product\Filter $filter
+     * @param \Magento\Framework\Locale\Resolver $localeResolver
+     * @param \Magento\Framework\Stdlib\DateTime\Timezone $timezone
+     * @param \Magento\Framework\Stdlib\DateTime $date
+     * @param \MageOS\ShoppingFeed\Model\Product\Processors\OptionFactory $optionFactory
+     * @param \MageOS\ShoppingFeed\Model\Generator\ProcessFactory $processFactory
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process\CollectionFactory $processCollectionFactory
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param \MageOS\ShoppingFeed\Model\Generator\Cache $cache
+     * @param \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterFactory $adapterFactory
+     * @param \MageOS\ShoppingFeed\Model\Product\Formatter\FormatterFactory $formatterFactory
+     * @param \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory
+     * @param \Magento\Framework\App\ProductMetadataInterface $productMetadata
+     * @param \MageOS\ShoppingFeed\Model\Inventory\Api $sourceInventoryApi
+     * @param \Magento\Framework\Serialize\SerializerInterface $jsonSerializer
+     * @param \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate $concatenateMapper
+     * @param LinkedProductCollectionFactory $linkedProductCollectionFactory
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\Filesystem $filesystem,
         \MageOS\ShoppingFeed\Model\Feed $feed,
@@ -66,11 +105,35 @@ class Configurable extends Composite implements AdapterInterface
 
         $this->productMetadata = $productMetadata;
         parent::__construct(
-            $filesystem, $feed, $product, $feedTypesConfig, $mapperFactory, $helper, $weeeData,
-            $taxData, $catalogHelper, $catalogRuleCollectionFactory, $productTypePrice, $stockState, $filter,
-            $localeResolver, $timezone, $date, $optionFactory, $processFactory, $processCollectionFactory, $logger,
-            $cache, $adapterFactory, $formatterFactory, $categoryCollectionFactory, $sourceInventoryApi,
-            $jsonSerializer, $concatenateMapper, $linkedProductCollectionFactory, $data
+            $filesystem,
+            $feed,
+            $product,
+            $feedTypesConfig,
+            $mapperFactory,
+            $helper,
+            $weeeData,
+            $taxData,
+            $catalogHelper,
+            $catalogRuleCollectionFactory,
+            $productTypePrice,
+            $stockState,
+            $filter,
+            $localeResolver,
+            $timezone,
+            $date,
+            $optionFactory,
+            $processFactory,
+            $processCollectionFactory,
+            $logger,
+            $cache,
+            $adapterFactory,
+            $formatterFactory,
+            $categoryCollectionFactory,
+            $sourceInventoryApi,
+            $jsonSerializer,
+            $concatenateMapper,
+            $linkedProductCollectionFactory,
+            $data
         );
     }
 
@@ -117,13 +180,21 @@ class Configurable extends Composite implements AdapterInterface
      */
     public function beforeMap()
     {
-        if (!$this->hasData('associated_product_adapters') || !is_array($this->getData('associated_product_adapters'))) {
+        if (!$this->hasData('associated_product_adapters')
+            || !is_array($this->getData('associated_product_adapters'))
+        ) {
             // Get associated products with this one
             $configurableProduct = $this->getProduct();
             /**
- * @var \Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable\Product\Collection $associatedProductCollection
+             * AdapterFactory picks this adapter by the product's type ID, so the type instance is configurable.
+             *
+             * @var \Magento\ConfigurableProduct\Model\Product\Type\Configurable $configurableTypeInstance
+             */
+            $configurableTypeInstance = $configurableProduct->getTypeInstance();
+            /**
+ * @var ChildCollection $associatedProductCollection
 */
-            $associatedProductCollection = $configurableProduct->getTypeInstance()
+            $associatedProductCollection = $configurableTypeInstance
                 ->setStoreFilter($this->getStore(), $configurableProduct)
                 ->getUsedProductCollection($configurableProduct)
                 ->setFlag('has_stock_status_filter', true)
@@ -153,6 +224,12 @@ class Configurable extends Composite implements AdapterInterface
         return $this->getFeed()->getConfig('configurable_map_inherit', []);
     }
 
+    /**
+     * Whether the URL also carries the attribute code, for swatch attributes on Magento 2.0.13 and later.
+     *
+     * @param \Magento\ConfigurableProduct\Model\Product\Type\Configurable\Attribute $attribute
+     * @return bool
+     */
     public function useAttributeCodeForUrl($attribute)
     {
         /**

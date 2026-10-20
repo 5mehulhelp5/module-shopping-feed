@@ -13,11 +13,11 @@ class TabNoticeTest extends TestCase
     public function testNoticeRendersSafeLinksAndFormatting(): void
     {
         $escaper = new Escaper();
-        (new \ReflectionProperty(Escaper::class, 'logger'))->setValue($escaper, $this->createMock(\Psr\Log\LoggerInterface::class));
+        (new \ReflectionProperty(Escaper::class, 'logger'))
+            ->setValue($escaper, $this->createMock(\Psr\Log\LoggerInterface::class));
         (new \ReflectionProperty(Escaper::class, 'escaper'))->setValue($escaper, new \Magento\Framework\ZendEscaper());
-        (new \ReflectionProperty(Escaper::class, 'translateInline'))->setValue(
-            $escaper, $this->createMock(\Magento\Framework\Translate\InlineInterface::class)
-        );
+        (new \ReflectionProperty(Escaper::class, 'translateInline'))
+            ->setValue($escaper, $this->createMock(\Magento\Framework\Translate\InlineInterface::class));
         $block = new class ($escaper) {
             public function __construct(private Escaper $escaper)
             {

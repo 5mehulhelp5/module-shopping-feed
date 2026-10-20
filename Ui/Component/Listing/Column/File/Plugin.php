@@ -33,6 +33,14 @@ class Plugin
      */
     protected $feedFactory;
 
+    /**
+     * Constructor
+     *
+     * @param StoreManagerInterface $storeManager
+     * @param FeedFactory $feedFactory
+     * @param \Magento\Framework\App\Filesystem\DirectoryList $directoryList
+     * @param \Magento\Framework\Escaper $escaper
+     */
     public function __construct(
         StoreManagerInterface $storeManager,
         FeedFactory $feedFactory,
@@ -44,6 +52,13 @@ class Plugin
         $this->storeManager = $storeManager;
     }
 
+    /**
+     * Append the promotions feed file link and row count to the File column of the feed grid.
+     *
+     * @param \MageOS\ShoppingFeed\Ui\Component\Listing\Column\File $subject
+     * @param mixed[] $dataSource
+     * @return mixed[]
+     */
     public function afterPrepareDataSource($subject, $dataSource)
     {
         if (isset($dataSource['data']['items'])) {
@@ -57,8 +72,11 @@ class Plugin
                     if (!is_string($filepath) || $filepath === '' || !isset($messages['promotion_added'])) {
                         continue;
                     }
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction -- realpath() media containment check; a filesystem driver needs a constructor change
                     $path = realpath($filepath);
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction -- realpath() media containment check; a filesystem driver needs a constructor change
                     $media = realpath($this->directoryList->getPath('media'));
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction -- is_file() on the contained path; a filesystem driver needs a constructor change
                     if ($media && $path && is_file($path) && str_starts_with($path, $media . '/')) {
                         $store = $this->storeManager->getStore((int)$feed->getStoreId());
                         $url = sprintf(
@@ -68,7 +86,9 @@ class Plugin
                         );
                         $item[$name] .= '<br /><a href="' . $this->escaper->escapeUrl($url)
                             . '" target="_blank" rel="noopener">' . $this->escaper->escapeHtml($url) . '</a><br />'
-                            . $this->escaper->escapeHtml((string) __('%1 promotion rows', (int) $messages['promotion_added']));
+                            . $this->escaper->escapeHtml(
+                                (string) __('%1 promotion rows', (int) $messages['promotion_added'])
+                            );
                     }
                 }
             }

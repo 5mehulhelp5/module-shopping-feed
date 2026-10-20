@@ -50,7 +50,8 @@ class OptionsRendererFactory
     /**
      * Create class instance with specified parameters
      *
-     * @param  $renderer
+     * @param string $renderer
+     * @param bool $singleton
      * @return \Magento\Framework\View\Element\Template
      */
     public function create($renderer, $singleton = true)

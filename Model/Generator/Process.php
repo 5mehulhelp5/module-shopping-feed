@@ -7,7 +7,6 @@ use Magento\Framework\Model\AbstractModel;
 /**
  * Class Queue
  *
- * @package MageOS\ShoppingFeed\Model\Generator
  *
  * @method $this    setParentItemId(int $parentId)
  * @method $this    setStatus(int $status)
@@ -18,8 +17,8 @@ use Magento\Framework\Model\AbstractModel;
  */
 class Process extends AbstractModel
 {
-    const STATUS_PENDING = 0;
-    const STATUS_PROCESSED = 1;
+    public const STATUS_PENDING = 0;
+    public const STATUS_PROCESSED = 1;
 
     /**
      * Initialize resource model
@@ -28,6 +27,6 @@ class Process extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process');
+        $this->_init(\MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process::class);
     }
 }

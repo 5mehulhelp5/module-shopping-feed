@@ -18,11 +18,15 @@
 
 namespace MageOS\ShoppingFeed\Model\Logger\Formatter;
 
-
 class DefaultLog extends \Monolog\Formatter\LineFormatter
 {
-    const SIMPLE_FORMAT = "[%extra.pid%][%datetime%] %level_name%: %message% %context% %extra%\n";
+    public const SIMPLE_FORMAT = "[%extra.pid%][%datetime%] %level_name%: %message% %context% %extra%\n";
 
+    /**
+     * @inheritdoc
+     *
+     * Adds the process id and drops empty context/extra placeholders.
+     */
     public function format($record): string
     {
         $record['extra']['pid'] = getmypid();

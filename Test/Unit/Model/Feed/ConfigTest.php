@@ -34,12 +34,12 @@ class ConfigTest extends ModelFramework
     protected $model;
 
     /**
-     * @var \Magento\Framework\Json\EncoderInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\Json\EncoderInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $jsonEncoderMock;
 
     /**
-     * @var \Magento\Framework\Json\DecoderInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\Json\DecoderInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $jsonDecoderMock;
 
@@ -87,7 +87,6 @@ class ConfigTest extends ModelFramework
         );
     }
 
-
     public function testBeforeSave()
     {
         $this->model->setData('value', ['test' => 'value']);
@@ -116,8 +115,20 @@ class ConfigTest extends ModelFramework
     public function testScalarAndStructuredSettingsRoundTripWithoutChangingType(): void
     {
         $this->jsonEncoderMock->method('encode')->willReturnCallback(static fn($value) => json_encode($value));
-        $this->jsonDecoderMock->method('decode')->willReturnCallback(static fn($value) => json_decode($value, true, 512, JSON_THROW_ON_ERROR));
-        foreach (['[plain text default]', '[1,2]', '{"key":"value"}', '"quoted"', '0', '', '__mageos_shopping_feed_string__:literal', ['a' => 'b'], []] as $value) {
+        $this->jsonDecoderMock->method('decode')
+            ->willReturnCallback(static fn($value) => json_decode($value, true, 512, JSON_THROW_ON_ERROR));
+        $values = [
+            '[plain text default]',
+            '[1,2]',
+            '{"key":"value"}',
+            '"quoted"',
+            '0',
+            '',
+            '__mageos_shopping_feed_string__:literal',
+            ['a' => 'b'],
+            [],
+        ];
+        foreach ($values as $value) {
             $this->model->setData('value', $value);
             $this->model->beforeSave();
             $stored = $this->model->getData('value');
@@ -158,5 +169,4 @@ class ConfigTest extends ModelFramework
             $this->assertSame($value, $this->model->getData('value'));
         }
     }
-
 }

@@ -5,12 +5,21 @@ namespace MageOS\ShoppingFeed\Plugin\Adminhtml;
 /** Use the complete Magento editor on feed detail pages; Nebula keeps its native listing. */
 class FeedEditorTheme
 {
+    /**
+     * @param \Magento\Framework\App\Request\Http $request
+     * @param \Magento\Framework\Module\Manager $modules
+     */
     public function __construct(
         private \Magento\Framework\App\Request\Http $request,
         private \Magento\Framework\Module\Manager $modules
     ) {
     }
 
+    /**
+     * Check whether the request opens a feed detail screen while Nebula is enabled
+     *
+     * @return bool
+     */
     public function isFeedEditor(): bool
     {
         return $this->modules->isEnabled('Qoliber_Nebula')
@@ -19,6 +28,14 @@ class FeedEditorTheme
             && in_array(strtolower((string) $this->request->getActionName()), ['new', 'edit', 'test', 'viewlog'], true);
     }
 
+    /**
+     * Switch feed detail screens to the Magento backend theme
+     *
+     * @param mixed $subject \Magento\Theme\Model\View\Design
+     * @param string|\Magento\Framework\View\Design\ThemeInterface|null $themeId
+     * @param string|null $area
+     * @return array<int, mixed>
+     */
     public function beforeSetDesignTheme($subject, $themeId = null, $area = null): array
     {
         if (($area === 'adminhtml' || ($area === null && $subject->getArea() === 'adminhtml'))
@@ -29,6 +46,13 @@ class FeedEditorTheme
         return [$themeId, $area];
     }
 
+    /**
+     * Map Nebula page layouts to their Magento backend equivalents on feed detail screens
+     *
+     * @param mixed $subject \Magento\Framework\View\Model\Layout\Merge
+     * @param string|null $result
+     * @return string|null
+     */
     public function afterGetPageLayout($subject, ?string $result): ?string
     {
         if ($this->isFeedEditor()) {
@@ -38,6 +62,13 @@ class FeedEditorTheme
         return $result;
     }
 
+    /**
+     * Use the standard menu and drop Nebula theme assets on feed detail screens
+     *
+     * @param mixed $subject \Magento\Framework\View\Model\Layout\Merge
+     * @param mixed $result
+     * @return mixed
+     */
     public function afterLoad($subject, $result)
     {
         if ($this->isFeedEditor()) {
@@ -46,8 +77,10 @@ class FeedEditorTheme
                 . ' name="menu" as="menu" template="Magento_Backend::menu.phtml"/>'
                 . '</referenceContainer>');
             // Nebula's global assets belong to its theme and are not present in Magento/backend.
-            foreach (['nebula.vendor.sortable', 'nebula.component.scripts', 'nebula.directive.scripts',
-                'nebula.form.scripts', 'nebula.grid.scripts', 'nebula.media.scripts', 'nebula.quill.scripts'] as $name) {
+            foreach ([
+                'nebula.vendor.sortable', 'nebula.component.scripts', 'nebula.directive.scripts',
+                'nebula.form.scripts', 'nebula.grid.scripts', 'nebula.media.scripts', 'nebula.quill.scripts'
+            ] as $name) {
                 $subject->addUpdate('<referenceBlock name="' . $name . '" remove="true"/>');
             }
         }

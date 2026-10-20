@@ -23,10 +23,10 @@
     <?php if ($block->getTabNotice() && strlen($block->getTabNotice())): ?>
     <div class="messages">
         <div class="message message-notice">
-            <?=$block->escapeHtml($block->getTabNotice(), ['a', 'strong', 'br'])?>
+            <?=$escaper->escapeHtml($block->getTabNotice(), ['a', 'strong', 'br'])?>
         </div>
     </div>
     <?php endif; ?>
-    <?=$block->getFormHtml()?>
+    <?= /* @noEscape */ $block->getFormHtml() ?>
 </div>
-<?php echo $block->getChildHtml('form_after');?>
+<?= $block->getChildHtml('form_after');?>

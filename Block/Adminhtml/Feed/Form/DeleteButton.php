@@ -6,6 +6,11 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Form;
 
 class DeleteButton implements \Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface
 {
+    /**
+     * @param \Magento\Backend\Model\UrlInterface $url
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\AuthorizationInterface $authorization
+     */
     public function __construct(
         private \Magento\Backend\Model\UrlInterface $url,
         private \Magento\Framework\Registry $registry,
@@ -13,6 +18,11 @@ class DeleteButton implements \Magento\Framework\View\Element\UiComponent\Contro
     ) {
     }
 
+    /**
+     * Get the Delete button for a saved feed when the admin user may delete feeds
+     *
+     * @return array<string, mixed>
+     */
     public function getButtonData(): array
     {
         $feed = $this->registry->registry('feed');

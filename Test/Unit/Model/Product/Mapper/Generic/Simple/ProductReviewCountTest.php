@@ -34,6 +34,9 @@ class ProductReviewCountTest extends ModelFramework
      */
     protected $model;
 
+    /**
+     * @var \Magento\Review\Model\Review\Summary|\PHPUnit\Framework\MockObject\MockObject
+     */
     protected $summaryMock;
 
     /**

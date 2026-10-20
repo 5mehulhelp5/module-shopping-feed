@@ -8,10 +8,18 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 
 class SaveButton implements ButtonProviderInterface
 {
+    /**
+     * @param \Magento\Framework\AuthorizationInterface $authorization
+     */
     public function __construct(private \Magento\Framework\AuthorizationInterface $authorization)
     {
     }
 
+    /**
+     * Get the Save split button when the admin user may save feeds
+     *
+     * @return array<string, mixed>
+     */
     public function getButtonData(): array
     {
         if (!$this->authorization->isAllowed('MageOS_ShoppingFeed::save')) {
@@ -28,6 +36,12 @@ class SaveButton implements ButtonProviderInterface
         ];
     }
 
+    /**
+     * Build the form save action, optionally redirecting back to the grid
+     *
+     * @param bool $redirect
+     * @return array<string, mixed>
+     */
     private function action(bool $redirect): array
     {
         return ['mage-init' => ['buttonAdapter' => ['actions' => [[

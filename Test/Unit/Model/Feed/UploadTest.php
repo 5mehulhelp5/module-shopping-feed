@@ -29,7 +29,9 @@ class UploadTest extends TestCase
         $upload->afterLoad();
         // AbstractDb::load records original data after the model afterLoad hook.
         $upload->setOrigData();
-        $this->assertSame('synthetic password', $upload->getPassword());
+        $this->assertSame($ciphertext, $upload->getPassword());
+        $this->assertSame($ciphertext, $upload->getOrigData('password'));
+        $this->assertSame('synthetic password', $upload->getDecryptedPassword());
         $upload->setData('host', 'new.example')->setPassword(Upload::OBSCURED_VALUE)->beforeSave();
         $this->assertSame($ciphertext, $upload->getData('password'));
     }
@@ -43,7 +45,8 @@ class UploadTest extends TestCase
                 $upload->beforeSave();
                 $this->assertSame('encrypted:' . base64_encode($password), $upload->getData('password'));
                 $upload->afterSave();
-                $this->assertSame($password, $upload->getData('password'));
+                $this->assertSame('encrypted:' . base64_encode($password), $upload->getData('password'));
+                $this->assertSame($password, $upload->getDecryptedPassword());
             }
         }
     }

@@ -21,20 +21,17 @@ namespace MageOS\ShoppingFeed\Model\Feed\Source\Directory;
 use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Framework\Locale\Bundle\CurrencyBundle as CurrencyBundle;
 
-/**
- * Class AvailableCurrencies
- */
 class AvailableCurrencies implements OptionSourceInterface
 {
     /**
-     * Store manager
+     * Resolves the store whose currencies are offered
      *
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
 
     /**
-     * Currency factory
+     * Creates currency models to read currency rates
      *
      * @var \Magento\Directory\Model\CurrencyFactory
      */
@@ -51,12 +48,12 @@ class AvailableCurrencies implements OptionSourceInterface
     protected $localeResolver;
 
     /**
-     * @var array
+     * @var array|null
      */
     protected $options;
 
     /**
-     * @var array
+     * @var array|null
      */
     protected $currencies;
 
@@ -70,8 +67,9 @@ class AvailableCurrencies implements OptionSourceInterface
      *
      * @param \Magento\Store\Model\StoreManagerInterface      $storeManager
      * @param \Magento\Directory\Model\CurrencyFactory        $currencyFactory
-     * @param \Magento\Framework\Locale\Bundle\CurrencyBundle $currency
+     * @param \Magento\Framework\Locale\Bundle\CurrencyBundle $currencyBundle
      * @param \Magento\Framework\Locale\Resolver              $localeResolver
+     * @param \Magento\Framework\Registry                     $registry
      */
     public function __construct(
         \Magento\Store\Model\StoreManagerInterface $storeManager,
@@ -126,11 +124,15 @@ class AvailableCurrencies implements OptionSourceInterface
             $feed = $this->registry->registry('feed');
 
             $storeId = ($feed && $feed->getStoreId()) ? $feed->getStoreId() : 0;
-            $codes = $this->storeManager->getStore($storeId)->getAvailableCurrencyCodes(true);
+            /** @var \Magento\Store\Model\Store $store */
+            $store = $this->storeManager->getStore($storeId);
+            $codes = $store->getAvailableCurrencyCodes(true);
 
             if (is_array($codes) && count($codes) > 0) {
+                /** @var \Magento\Store\Model\Store $store */
+                $store = $this->storeManager->getStore($storeId);
                 $rates = $this->currencyFactory->create()->getCurrencyRates(
-                    $this->storeManager->getStore($storeId)->getBaseCurrency(),
+                    $store->getBaseCurrency(),
                     $codes
                 );
 

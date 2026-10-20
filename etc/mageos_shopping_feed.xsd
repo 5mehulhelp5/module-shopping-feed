@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ * Copyright © 2016 Rocket Web Inc. (https://rocketweb.com/)
+ * Licensed under the Open Software License version 3.0. See LICENSE.txt.
  */
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -266,6 +267,7 @@
         </xs:choice>
         <xs:attribute name="name" type="xs:string" />
         <xs:attribute name="allow_output_limit" type="xs:boolean" default="false" />
+        <xs:attribute name="translate" type="xs:string" />
     </xs:complexType>
 
     <xs:complexType name="feedDefaultMapProductColumns">

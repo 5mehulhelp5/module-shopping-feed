@@ -54,7 +54,9 @@ class SalePriceTest extends ModelFramework
     {
         $this->expectReturn($this->adapterMock, 'hasSpecialPrice', true);
         $this->expectReturn(
-            $this->adapterMock, 'getPrices', [
+            $this->adapterMock,
+            'getPrices',
+            [
                 'sp_excl_tax' => 100,
                 'sp_incl_tax' => 122
             ]

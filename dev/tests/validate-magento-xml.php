@@ -21,6 +21,13 @@ if ($componentRegistrar->getPath(
 ) === null) {
     require $moduleRoot . '/registration.php';
 }
+// A framework checkout may already contain an installed copy of this module. Point the
+// module's URNs at the source being validated so its own XSDs are used.
+$registeredPaths = new ReflectionProperty(Magento\Framework\Component\ComponentRegistrar::class, 'paths');
+$paths = $registeredPaths->getValue();
+$paths[Magento\Framework\Component\ComponentRegistrar::MODULE]['MageOS_ShoppingFeed'] =
+    str_replace('\\', '/', $moduleRoot);
+$registeredPaths->setValue(null, $paths);
 
 $failures = [];
 $validated = 0;
@@ -31,7 +38,9 @@ foreach ($iterator as $file) {
     if (!$file instanceof SplFileInfo || !$file->isFile() || $file->getExtension() !== 'xml') {
         continue;
     }
-    if (str_contains($file->getPathname(), DIRECTORY_SEPARATOR . '.git' . DIRECTORY_SEPARATOR)) {
+    if (str_contains($file->getPathname(), DIRECTORY_SEPARATOR . '.git' . DIRECTORY_SEPARATOR)
+        || str_starts_with($file->getPathname(), $moduleRoot . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR)
+    ) {
         continue;
     }
 

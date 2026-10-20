@@ -24,6 +24,8 @@ use Magento\Framework\Event\ObserverInterface;
 class LocalInventoryFilterFields implements ObserverInterface
 {
     /**
+     * Adapt the categories tab fields for local inventory feeds
+     *
      * @param EventObserver $observer
      * @return void
      */

@@ -29,7 +29,7 @@ use MageOS\ShoppingFeed\Test\Unit\Model\ModelFramework;
 class ProductOptionTest extends ModelFramework
 {
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Id
+     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductOption
      */
     protected $model;
 

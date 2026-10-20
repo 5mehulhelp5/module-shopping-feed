@@ -22,8 +22,17 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class AdditionalImageLink extends MapperAbstract
 {
+    /**
+     * @var \Magento\Catalog\Model\Product\Gallery\ReadHandler
+     */
     protected $galleryHandler;
 
+    /**
+     * Additional image links mapper constructor.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param \Magento\Catalog\Model\Product\Gallery\ReadHandler $galleryHandler
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Logger $logger,
         \Magento\Catalog\Model\Product\Gallery\ReadHandler $galleryHandler
@@ -33,6 +42,9 @@ class AdditionalImageLink extends MapperAbstract
         parent::__construct($logger);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         /**

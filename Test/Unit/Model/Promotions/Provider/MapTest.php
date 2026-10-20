@@ -14,7 +14,8 @@ class MapTest extends CompatibilityTestCase
         $provider = $this->createMock(\MageOS\ShoppingFeed\Model\Promotions\Provider::class);
         $feed = $this->createMock(\MageOS\ShoppingFeed\Model\Feed::class);
         $store = $this->createMock(\Magento\Store\Model\Store::class);
-        $store->method('getData')->with('current_currency')->willReturn(new \Magento\Framework\DataObject(['code'=>'USD']));
+        $store->method('getData')->with('current_currency')
+            ->willReturn(new \Magento\Framework\DataObject(['code'=>'USD']));
         $feed->method('getStore')->willReturn($store);
         $provider->method('getFeed')->willReturn($feed);
         return $map->setProvider($provider);
@@ -32,8 +33,10 @@ class MapTest extends CompatibilityTestCase
 
     public static function conditionTrees(): array
     {
-        $subtotal = static fn($amount, $operator='>=') => ['attribute'=>'base_subtotal','operator'=>$operator,'value'=>$amount];
-        $combine = static fn($children, $aggregator='all', $value='1') => [
+        $subtotal = static fn($amount, $operator = '>=') => [
+            'attribute'=>'base_subtotal','operator'=>$operator,'value'=>$amount,
+        ];
+        $combine = static fn($children, $aggregator = 'all', $value = '1') => [
             'type'=>\Magento\SalesRule\Model\Rule\Condition\Combine::class,
             'aggregator'=>$aggregator,'value'=>$value,'conditions'=>$children];
         $country = ['attribute'=>'country_id','operator'=>'==','value'=>'US'];

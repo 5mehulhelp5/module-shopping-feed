@@ -20,15 +20,12 @@ namespace MageOS\ShoppingFeed\Model\Product\Formatter\Price;
 
 use MageOS\ShoppingFeed\Model\Product\Formatter\FormatterAbstract;
 
-/**
- * Class NoCurrency
- *
- * @package MageOS\ShoppingFeed\Model\Product\Formatter\Price
- */
 class NoCurrency extends FormatterAbstract
 {
     /**
-     * @param  $var
+     * Format a positive numeric price with two decimals; anything else becomes empty.
+     *
+     * @param mixed $var Cell value
      * @return mixed
      */
     public function run($var)

@@ -20,16 +20,13 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Grouped;
 
 use \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Price as SimplePrice;
 
-/**
- * Class Price
- *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Grouped
- */
 class Price extends SimplePrice
 {
     /**
+     * Grouped price per the feed's display mode: summed at default quantities or the lowest price.
+     *
      * @param  array $params
-     * @return string
+     * @return float|int 0 when there are no associated products
      */
     public function map(array $params = [])
     {
@@ -39,6 +36,12 @@ class Price extends SimplePrice
         return $price;
     }
 
+    /**
+     * Grouped price for the price key per the feed's price display mode.
+     *
+     * @param string $key Price array key
+     * @return float|int 0 when there are no associated products
+     */
     protected function getPrice($key)
     {
         $associatedProductAdapters = $this->getAdapter()->getData('associated_product_adapters');
@@ -50,26 +53,31 @@ class Price extends SimplePrice
 */
         foreach ($associatedProductAdapters as $associatedProductAdapter) {
             $prices = $associatedProductAdapter->getPrices();
-            $prices['qty'] = intval($associatedProductAdapter->getProduct()->getQty());
+            $prices['qty'] = (int) $associatedProductAdapter->getProduct()->getQty();
             $allPrices[] = $prices;
             $minPrice =  $minPrice == 0 ? $prices[$key] : min($prices[$key], $minPrice);
         }
 
         if (count($allPrices) == 0) {
-            $this->getAdapter()->setSkipProduct(sprintf('Product skipped - no associated products found, price = 0. Product SKU #%s', $this->getAdapter()->getProduct()->getSku()));
+            $this->getAdapter()->setSkipProduct(
+                sprintf(
+                    'Product skipped - no associated products found, price = 0. Product SKU #%s',
+                    $this->getAdapter()->getProduct()->getSku()
+                )
+            );
             return 0;
         }
 
         switch ($this->getAdapter()->getFeed()->getConfig('grouped_price_display_mode')) {
-        case \MageOS\ShoppingFeed\Model\Feed\Source\Product\Grouped\PriceType::PRICE_SUM_DEFAULT_QTY:
-            $totalPrice = 0;
-            foreach ($allPrices as $price) {
-                $totalPrice += $price['qty'] > 0 ? ($price[$key] * $price['qty']) : 0;
-            }
-            return $totalPrice > 0 ? $totalPrice : $minPrice;
-        case \MageOS\ShoppingFeed\Model\Feed\Source\Product\Grouped\PriceType::PRICE_START_AT:
-        default:
-            return $minPrice;
+            case \MageOS\ShoppingFeed\Model\Feed\Source\Product\Grouped\PriceType::PRICE_SUM_DEFAULT_QTY:
+                $totalPrice = 0;
+                foreach ($allPrices as $price) {
+                    $totalPrice += $price['qty'] > 0 ? ($price[$key] * $price['qty']) : 0;
+                }
+                return $totalPrice > 0 ? $totalPrice : $minPrice;
+            case \MageOS\ShoppingFeed\Model\Feed\Source\Product\Grouped\PriceType::PRICE_START_AT:
+            default:
+                return $minPrice;
         }
     }
 }

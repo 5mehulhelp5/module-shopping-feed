@@ -6,6 +6,11 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Form;
 
 class RunTestButton implements \Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface
 {
+    /**
+     * Get the Test Now button that submits the feed test form
+     *
+     * @return array<string, mixed>
+     */
     public function getButtonData(): array
     {
         return ['label' => __('Test Now'), 'class' => 'save primary', 'sort_order' => 90, 'on_click' => '',

@@ -34,17 +34,17 @@ class ShippingProviderTest extends ModelFramework
     protected $model;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Shipping\CollectionFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Shipping\CollectionFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $shippingCollectionFactoryMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Shipping\Collection|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Shipping\Collection|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $shippingCollectionMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\ShippingFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Product\ShippingFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $shippingFactoryMock;
 
@@ -56,7 +56,8 @@ class ShippingProviderTest extends ModelFramework
         $this->expectSelf($this->cacheMock, 'setCache');
 
         $this->shippingCollectionMock = $this->getModelMock(
-            'MageOS\ShoppingFeed\Model\Product\Shipping', [
+            'MageOS\ShoppingFeed\Model\Product\Shipping',
+            [
                     'filterByFeed', 'filterByProduct', 'filterByStore',
                     'filterByCurrencyCode', 'filterByDate', 'count',
                     'getFirstItem', 'getValue', 'setPageSize', 'getSize'

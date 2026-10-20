@@ -37,7 +37,7 @@ class MassDisable extends \Magento\Backend\App\Action implements \Magento\Framew
     protected $filter;
 
     /**
-     * @var FeedCollectionFactoryx
+     * @var FeedCollectionFactory
      */
     protected $collectionFactory;
 
@@ -47,9 +47,10 @@ class MassDisable extends \Magento\Backend\App\Action implements \Magento\Framew
     protected $queueCollectionFactory;
 
     /**
-     * @param Context           $context
-     * @param Filter            $filter
-     * @param CollectionFactory $collectionFactory
+     * @param Context                $context
+     * @param Filter                 $filter
+     * @param FeedCollectionFactory  $collectionFactory
+     * @param QueueCollectionFactory $queueCollectionFactory
      */
     public function __construct(
         Context $context,
@@ -73,6 +74,7 @@ class MassDisable extends \Magento\Backend\App\Action implements \Magento\Framew
         $feedIds = [];
 
         $collection = $this->filter->getCollection($this->collectionFactory->create());
+        /** @var \MageOS\ShoppingFeed\Model\Feed $feed */
         foreach ($collection->getItems() as $feed) {
             $feed->setStatus(Status::STATUS_DISABLED);
             $feed->save();
@@ -80,8 +82,9 @@ class MassDisable extends \Magento\Backend\App\Action implements \Magento\Framew
         }
 
         $queueItems = $this->queueCollectionFactory->create()
-            ->addFieldToFilter('feed_id', array('in'=> $feedIds))
+            ->addFieldToFilter('feed_id', ['in'=> $feedIds])
             ->getItems();
+        /** @var \MageOS\ShoppingFeed\Model\Generator\Queue $item */
         foreach ($queueItems as $item) {
             $item->delete();
         }

@@ -30,6 +30,12 @@ class Helper
      */
     protected $stockRegistry;
 
+    /**
+     * Product helper constructor.
+     *
+     * @param \Magento\CatalogInventory\Model\StockRegistry $stockRegistry
+     * @param \Magento\Msrp\Model\Config $msrp
+     */
     public function __construct(
         \Magento\CatalogInventory\Model\StockRegistry $stockRegistry,
         \Magento\Msrp\Model\Config $msrp
@@ -39,12 +45,11 @@ class Helper
         $this->stockRegistry = $stockRegistry;
     }
 
-
     /**
      * Calculate the quantity increments including minimal sale quantity
      *
-     * @param  \Magento\Catalog\Model\Product      $product
-     * @param  \MageOS\ShoppingFeed\Model\Feed $feed
+     * @param \Magento\Catalog\Model\Product $product
+     * @param \MageOS\ShoppingFeed\Model\Feed $feed
      * @return float
      */
     public function getQuantityIcrements(
@@ -56,6 +61,7 @@ class Helper
         if ($feed->getConfig('general_use_qty_increments')) {
             $stockItem = $this->stockRegistry->getStockItem($product->getId());
             if ($stockItem) {
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction -- getMinSaleQty() is typed float: !== null adds a PHPStan finding
                 if (!is_null($stockItem->getMinSaleQty())) {
                     $qtyIncrements = $stockItem->getMinSaleQty();
                 }
@@ -77,6 +83,8 @@ class Helper
     }
 
     /**
+     * Whether MSRP is enabled and the product's price is below its MSRP.
+     *
      * @param  \Magento\Catalog\Model\Product $product
      * @return bool
      */

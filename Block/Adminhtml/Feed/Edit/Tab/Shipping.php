@@ -24,7 +24,8 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab;
 /**
  * Feed edit form Shipping tab
  */
-class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements
+    \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
      * @var \MageOS\ShoppingFeed\Model\Feed\Source\Shipping\AvailableMethods $sourceShippingMethods
@@ -47,14 +48,15 @@ class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
     protected $sourceProductColumns;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context                              $context
-     * @param \Magento\Framework\Registry                                          $registry
-     * @param \Magento\Framework\Data\FormFactory                                  $formFactory
-     * @param \MageOS\ShoppingFeed\Model\Feed\Converter                        $feedConverter
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
+     * @param \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Shipping\AvailableMethods $sourceShippingMethods
      * @param \Magento\Catalog\Model\Product\Attribute\Source\Countryofmanufacture $sourceCountry
-     * @param \Magento\Config\Model\Config\Source\Yesno                            $sourceYesno
-     * @param array                                                                $data
+     * @param \Magento\Config\Model\Config\Source\Yesno $sourceYesno
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns $sourceProductColumns
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -78,7 +80,7 @@ class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
      * Prepare form
      *
      * @return                                        $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function _prepareForm()
     {
@@ -112,6 +114,7 @@ class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
                 'required' => true,
                 'values' => $this->sourceShippingMethods->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Allowed shipping methods. Realtime carriers aren\'t allowed to avoid getting banned or to spam carriers\' servers. e.g. UPS, USPS, FedEx, DHL, Royal Mail, ..<br />Please add/configure any realtime carriers in your Google Merchant account.'),
             ]
         );
@@ -126,6 +129,7 @@ class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
                 'required' => true,
                 'values' => $this->sourceCountry->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Shipping allowed countries. Select only a few countries the avoid a very long feed generation and to keep the feed size to a minimnum.'),
             ]
         );
@@ -140,6 +144,7 @@ class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
                 'required' => false,
                 'values' => $this->sourceProductColumns->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Set shipping weight column from which we calculate shipping costs. Columns must exist in <a href="#feed_tabs_columns">Columns Map</a>, save your config before looking for columns here.'),
             ]
         );
@@ -154,6 +159,7 @@ class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
                 'required' => true,
                 'values' => $this->sourceYesno->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('If there are more carriers/shipping methods than the shipping column will be filled with only the minimum price and the related carrier/shipping method.'),
             ]
         );
@@ -187,7 +193,8 @@ class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
         );
 
         $this->_eventManager->dispatch(
-            sprintf('mageos_shopping_feed_feed_edit_tab_shipping_prepare_form_%s', $model->getType()), [
+            sprintf('mageos_shopping_feed_feed_edit_tab_shipping_prepare_form_%s', $model->getType()),
+            [
             'form' => $form,
             'feed' => $model,
             'is_element_disabled' => $isElementDisabled,
@@ -227,6 +234,7 @@ class Shipping extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
      */
     public function getTabNotice()
     {
+        // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
         return __('This setting tunes how <strong>Shipping</strong> directive works. You must also add your shipping column under <a href="#feed_tabs_columns">Columns Map</a> and map it to the <strong>Shipping</strong> directive.');
     }
 }

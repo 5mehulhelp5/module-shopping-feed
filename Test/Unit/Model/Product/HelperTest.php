@@ -31,22 +31,22 @@ class HelperTest extends CompatibilityTestCase
     protected $model;
 
     /**
-     * @var \Magento\CatalogInventory\Model\StockRegistry|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\CatalogInventory\Model\StockRegistry|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $stockRegistryMock;
 
     /**
-     * @var \Magento\Msrp\Model\Config|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Msrp\Model\Config|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $msrpMock;
 
     /**
-     * @var \Magento\Catalog\Model\Product|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Catalog\Model\Product|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $productMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Feed|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Feed|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $feedMock;
     /**
@@ -83,7 +83,6 @@ class HelperTest extends CompatibilityTestCase
         $this->feedMock->expects($this->any())
             ->method('getConfig')
             ->will($this->returnValue(true));
-
 
         $this->model = $this->objectManagerHelper->getObject(
             'MageOS\ShoppingFeed\Model\Product\Helper',

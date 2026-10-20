@@ -25,11 +25,12 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
  *
  * Class Url
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
  */
 class Url extends MapperAbstract
 {
     /**
+     * Product URL on the store base URL, with the configured query.
+     *
      * @param  array $params
      * @return string
      */
@@ -44,7 +45,9 @@ class Url extends MapperAbstract
             $urlQuery = substr($urlQuery, 1);
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- splits the product URL; no URL parser is injected here
         $url = parse_url($product->getProductUrl());
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- splits the store base URL; no URL parser is injected here
         $pieces = parse_url($product->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK, false));
         if (!is_array($url) || empty($url['path']) || !is_array($pieces)
             || empty($pieces['host']) || !in_array(strtolower($pieces['scheme'] ?? ''), ['http', 'https'], true)) {

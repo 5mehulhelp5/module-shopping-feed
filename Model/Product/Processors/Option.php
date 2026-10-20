@@ -20,8 +20,33 @@ namespace MageOS\ShoppingFeed\Model\Product\Processors;
 
 class Option extends ProcessorAbstract
 {
-    protected $_items = [], $_prices = [];
-    protected $_item = [], $_row = [];
+    /**
+     * Rows generated for the option combinations
+     *
+     * @var array<mixed>
+     */
+    protected $_items = [];
+
+    /**
+     * Option value prices of the combination being built, keyed by option ID
+     *
+     * @var array<mixed>
+     */
+    protected $_prices = [];
+
+    /**
+     * Row being built for the current option combination
+     *
+     * @var array<mixed>
+     */
+    protected $_item = [];
+
+    /**
+     * Original product row (column => value array) the combinations are built from
+     *
+     * @var mixed
+     */
+    protected $_row = [];
 
     /**
      * @var \Magento\Framework\Pricing\Helper\Data
@@ -33,7 +58,12 @@ class Option extends ProcessorAbstract
      */
     protected $concatenateMapper;
 
-
+    /**
+     * Product options processor constructor.
+     *
+     * @param \Magento\Framework\Pricing\Helper\Data $pricingHelper
+     * @param \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate $concatenateMapper
+     */
     public function __construct(
         \Magento\Framework\Pricing\Helper\Data $pricingHelper,
         \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate $concatenateMapper
@@ -43,6 +73,8 @@ class Option extends ProcessorAbstract
     }
 
     /**
+     * Rows generated for the option combinations.
+     *
      * @return mixed
      */
     public function getItems()
@@ -50,11 +82,10 @@ class Option extends ProcessorAbstract
         return $this->_items;
     }
 
-
     /**
      * Process current product rows and append or update them according to options usage
      *
-     * @param  $rows
+     * @param array $rows
      * @return array
      */
     public function execute(array $rows)
@@ -75,11 +106,13 @@ class Option extends ProcessorAbstract
 
     /**
      * Returns an array of product options used in the column map across all columns.
+     *
      * If $names provided, it will only add those that are within those names.
      *
      * @param  array $names
      * @return array
      */
+    // phpcs:ignore Generic.Metrics.NestingLevel.TooHigh -- legacy feed logic; refactor deferred to keep output identical
     public function getOptions($names = [])
     {
         $return = [];
@@ -96,12 +129,15 @@ class Option extends ProcessorAbstract
                 }
             }
 
+            // Custom options and their values use the catalog DI preferences for these interfaces.
+            /** @var \Magento\Catalog\Model\Product\Option $option */
             foreach ($options as $option) {
                 foreach ($names as $column => $name) {
                     if (in_array($option->getTitle(), $name)) {
                         if (!isset($return[$column])) {
                             $return[$column] = [];
                         }
+                        /** @var \Magento\Catalog\Model\Product\Option\Value $value */
                         foreach ($option->getValues() as $value) {
                             $value->setOptionId($option->getId());
                             $type = $option->getType();
@@ -140,7 +176,10 @@ class Option extends ProcessorAbstract
 
                 $this->_updateConcatenate($this->_item[$column], $value->getTitle());
 
-                $this->_item[$column] = $this->getAdapter()->getFilter()->cleanField($value->getTitle(), ['column' => $column]);
+                $this->_item[$column] = $this->getAdapter()->getFilter()->cleanField(
+                    $value->getTitle(),
+                    ['column' => $column]
+                );
 
                 $price = $value->getPrice(true);
                 $this->_prices[$value->getOptionId()] = $this->pricingHelper->currency($price, false, false);
@@ -154,7 +193,7 @@ class Option extends ProcessorAbstract
                     $this->updateVariantDetails($fill);
                     $this->_items[] = $this->_item;
                     // We reset the link value otherwise it sticks thru whole row
-                    if (!is_null($originalLink)) {
+                    if ($originalLink !== null) {
                         $this->_item['link'] = $originalLink;
                     }
                     $this->_prices = $originalPrices;
@@ -167,6 +206,12 @@ class Option extends ProcessorAbstract
         }
     }
 
+    /**
+     * Copy the parent title to item_group_title and write the variant_option "name:value" pairs.
+     *
+     * @param array $values Option value title per column
+     * @return void
+     */
     private function updateVariantDetails(array $values): void
     {
         if (array_key_exists('item_group_title', $this->_item) && isset($this->_row['title'])) {
@@ -183,6 +228,12 @@ class Option extends ProcessorAbstract
         $this->_item['variant_option'] = implode(',', $options);
     }
 
+    /**
+     * Quote a variant_option part that contains a separator or quote, doubling inner quotes.
+     *
+     * @param string $value
+     * @return string
+     */
     private function quoteVariantPart(string $value): string
     {
         if (strpbrk($value, ':,"') === false) {
@@ -193,6 +244,8 @@ class Option extends ProcessorAbstract
     }
 
     /**
+     * Add the combination's option prices to the row's price and sale price.
+     *
      * @return $this
      */
     protected function updateItemPrice()
@@ -223,8 +276,8 @@ class Option extends ProcessorAbstract
     /**
      * Update value for concatenate directive
      *
-     * @param string $oldValue
-     * @param string $newValue
+     * @param string|null $oldValue Current cell value, null when the column is empty
+     * @param string      $newValue
      */
     protected function _updateConcatenate($oldValue, $newValue)
     {
@@ -243,33 +296,35 @@ class Option extends ProcessorAbstract
      * Update the SKU with the option sku if provided, else append increment
      * Update item group id to be the sku of initial product
      *
-     * @param  $value \Magento\Catalog\Model\Product\Option\Value
+     * @param \Magento\Catalog\Model\Product\Option\Value $value
      * @return $this
      */
     protected function updateItemId($value)
     {
         foreach ($this->getAdapter()->getFeed()->getColumnsMap() as $column) {
             switch ($column['attribute']) {
-            case 'directive_id':
-                $this->_item[$column['column']] = $value->getProduct()->getId(). '-option'. count($this->_items);
-                break;
-            case 'sku':
-                if (!is_null($value->getSku())) {
-                    $this->_item[$column['column']] = $value->getSku();
-                } else {
-                    $this->_item[$column['column']] = $this->_row[$column['column']]. '-'. (count($this->_items)+1);
-                }
-                break;
-            case 'directive_item_group_id':
-                $this->_item[$column['column']] = $value->getProduct()->getSku();
-                break;
+                case 'directive_id':
+                    $this->_item[$column['column']] = $value->getProduct()->getId(). '-option'. count($this->_items);
+                    break;
+                case 'sku':
+                    if ($value->getSku() !== null) {
+                        $this->_item[$column['column']] = $value->getSku();
+                    } else {
+                        $this->_item[$column['column']] = $this->_row[$column['column']]. '-'. (count($this->_items)+1);
+                    }
+                    break;
+                case 'directive_item_group_id':
+                    $this->_item[$column['column']] = $value->getProduct()->getSku();
+                    break;
             }
         }
         return $this;
     }
 
     /**
-     * @param  $params
+     * Add the selected option values to the link's URL fragment, keeping existing fragment parameters.
+     *
+     * @param array<mixed> $params Option ID => option value ID
      * @return $this
      */
     protected function updateItemLink($params)
@@ -278,6 +333,7 @@ class Option extends ProcessorAbstract
             return $this;
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- splits the feed link; no URL parser is injected here
         $parts = parse_url($this->_item['link']);
         if (!is_array($parts) || empty($parts['host'])
             || !in_array(strtolower($parts['scheme'] ?? ''), ['http', 'https'], true)) {
@@ -286,6 +342,7 @@ class Option extends ProcessorAbstract
         }
 
         if (isset($parts['fragment'])) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- reads the link fragment; no URL parser is injected here
             parse_str($parts['fragment'], $old_params);
             foreach ($old_params as $key => $value) {
                 if (!array_key_exists($key, $params)) {
@@ -299,20 +356,20 @@ class Option extends ProcessorAbstract
         $link = "";
         foreach ($parts as $k => $v) {
             switch ($k) {
-            case 'scheme':
-                $link .= $v . '://';
-                break;
-            case 'port':
-                $link .= ':' . $v;
-                break;
-            case 'query':
-                $link .= '?' . $v;
-                break;
-            case 'fragment':
-                $link .= '#' . $v;
-                break;
-            default:
-                $link .= $v;
+                case 'scheme':
+                    $link .= $v . '://';
+                    break;
+                case 'port':
+                    $link .= ':' . $v;
+                    break;
+                case 'query':
+                    $link .= '?' . $v;
+                    break;
+                case 'fragment':
+                    $link .= '#' . $v;
+                    break;
+                default:
+                    $link .= $v;
             }
         }
 

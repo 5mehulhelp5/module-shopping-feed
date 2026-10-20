@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MageOS\ShoppingFeed\Test\Unit\Model\Product\Adapter;
 
 use MageOS\ShoppingFeed\Model\Feed;
+use MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract;
 use MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple;
 use Magento\Catalog\Model\Product;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -26,14 +27,22 @@ class ComplexContextTest extends TestCase
         $feed = $this->createMock(Feed::class);
         $feed->method('getStore')->willReturn($store);
         $feed->method('isProductTypeEnabled')->willReturnCallback(static fn($type) => $type === 'configurable');
-        $connection = $this->createMock(\Magento\Framework\DB\Adapter\AdapterInterface::class);
+        $connection = $this->createMock(\Magento\Framework\DB\Adapter\Pdo\Mysql::class);
+        $connection->method('quoteInto')->willReturnArgument(0);
+        $connection->method('select')->willReturnCallback(fn () => new \Magento\Framework\DB\Select(
+            $connection,
+            $this->createMock(\Magento\Framework\DB\Select\SelectRenderer::class)
+        ));
         $connection->expects($expected ? $this->once() : $this->never())->method('fetchOne')->willReturn(99);
+        $resource = $this->createMock(\Magento\Framework\App\ResourceConnection::class);
+        $resource->method('getTableName')->willReturnArgument(0);
         $adapter = $this->getMockBuilder(Simple::class)->disableOriginalConstructor()
             ->onlyMethods(['getProduct', 'getFeed', 'getDbConnection'])->getMock();
         $adapter->method('getProduct')->willReturn($product);
         $adapter->method('getFeed')->willReturn($feed);
         $adapter->method('getDbConnection')->willReturn($connection);
         (new \ReflectionProperty(Simple::class, 'eavLinkField'))->setValue($adapter, 'entity_id');
+        (new \ReflectionProperty(AdapterAbstract::class, 'dbResource'))->setValue($adapter, $resource);
         $result = (new \ReflectionMethod(Simple::class, 'getProductInComplexProduct'))->invoke($adapter);
         $this->assertSame($expected, $result);
     }

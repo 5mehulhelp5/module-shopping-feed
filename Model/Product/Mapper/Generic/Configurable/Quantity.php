@@ -25,11 +25,12 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
  *
  * Class Quantity
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable
  */
 class Quantity extends MapperAbstract
 {
     /**
+     * Highest stock quantity among the associated products.
+     *
      * @param  array $params
      * @return string
      */

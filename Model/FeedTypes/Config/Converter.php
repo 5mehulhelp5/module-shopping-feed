@@ -22,7 +22,7 @@ namespace MageOS\ShoppingFeed\Model\FeedTypes\Config;
 class Converter implements \Magento\Framework\Config\ConverterInterface
 {
     /**
-     * @var null|\Magento\Framework\Json\Decoder
+     * @var null|\Magento\Framework\Json\DecoderInterface
      */
     private $jsonDecoder = null;
 
@@ -42,15 +42,16 @@ class Converter implements \Magento\Framework\Config\ConverterInterface
      * @return array
      * @throws \InvalidArgumentException
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
+    // phpcs:ignore Generic.Metrics.NestingLevel.TooHigh -- legacy feed logic; refactor deferred to keep output identical
     public function convert($source)
     {
         $output = [];
         $xpath = new \DOMXPath($source);
         $types = $xpath->evaluate('/config/feed');
         /**
- * @var $typeNode \DOMNode
+ * @var \DOMNode $typeNode
 */
         foreach ($types as $typeNode) {
             $typeName = $this->getAttributeValue($typeNode, 'name');
@@ -60,7 +61,7 @@ class Converter implements \Magento\Framework\Config\ConverterInterface
             $data['taxonomyProvider'] = $this->getAttributeValue($typeNode, 'taxonomyProvider');
 
             /**
- * @var $childNode \DOMNode
+ * @var \DOMNode $childNode
 */
             foreach ($typeNode->childNodes as $childNode) {
                 if ($childNode->nodeType != XML_ELEMENT_NODE) {
@@ -68,61 +69,75 @@ class Converter implements \Magento\Framework\Config\ConverterInterface
                 }
 
                 switch ($childNode->nodeName) {
-                case 'label':
-                    $data['label'] = $childNode->nodeValue;
-                    break;
-                case 'description':
-                    $data['description'] = $childNode->nodeValue;
-                    break;
-                case 'directives':
-                    $data['directives'] = [];
-                    /**
- * @var $directive \DOMNode
+                    case 'label':
+                        $data['label'] = $childNode->nodeValue;
+                        break;
+                    case 'description':
+                        $data['description'] = $childNode->nodeValue;
+                        break;
+                    case 'directives':
+                        $data['directives'] = [];
+                        /**
+     * @var \DOMNode $directive
 */
-                    foreach ($childNode->childNodes as $directive) {
-                        if ($directive->nodeType != XML_ELEMENT_NODE) {
-                            continue;
-                        }
+                        foreach ($childNode->childNodes as $directive) {
+                            if ($directive->nodeType != XML_ELEMENT_NODE) {
+                                continue;
+                            }
 
-                        $name = $this->getAttributeValue($directive, 'name');
-                        $directiveData = [
+                            $name = $this->getAttributeValue($directive, 'name');
+                            $directiveData = [
                             'mappers' => [],
                             'allow_output_limit' =>
                                 $this->getAttributeValue($directive, 'allow_output_limit', false)
-                        ];
+                            ];
 
-                        foreach ($directive->childNodes as $directiveNode) {
-                            if ($directiveNode->nodeType != XML_ELEMENT_NODE) {
-                                continue;
+                            foreach ($directive->childNodes as $directiveNode) {
+                                if ($directiveNode->nodeType != XML_ELEMENT_NODE) {
+                                    continue;
+                                }
+                                switch ($directiveNode->nodeName) {
+                                    case 'label':
+                                    case 'param':
+                                        $directiveData[$directiveNode->nodeName] = $directiveNode->nodeValue;
+                                        break;
+                                    case 'renderer':
+                                        $directiveData[$directiveNode->nodeName] = $this->getAttributeValue(
+                                            $directiveNode,
+                                            'type'
+                                        );
+                                        break;
+                                    case 'formatters':
+                                        $directiveData['formatters'] = $this->getDirectiveFormatters($directiveNode);
+                                        break;
+                                    case 'mappers':
+                                        // phpcs:ignore Magento2.Performance.ForeachArrayMerge -- legacy feed logic; refactor deferred to keep output identical
+                                        $directiveData['mappers'] = array_merge(
+                                            $directiveData['mappers'],
+                                            $this->getDirectiveMappers($directiveNode)
+                                        );
+                                        break;
+                                }
                             }
-                            switch ($directiveNode->nodeName) {
-                            case 'label':
-                            case 'param':
-                                $directiveData[$directiveNode->nodeName] = $directiveNode->nodeValue;
-                                break;
-                            case 'renderer':
-                                $directiveData[$directiveNode->nodeName] = $this->getAttributeValue($directiveNode, 'type');
-                                break;
-                            case 'formatters':
-                                $directiveData['formatters'] = $this->getDirectiveFormatters($directiveNode);
-                                break;
-                            case 'mappers':
-                                $directiveData['mappers'] = array_merge($directiveData['mappers'], $this->getDirectiveMappers($directiveNode));
-                                break;
-                            }
+                            $data['directives'][$name] = $directiveData;
                         }
-                        $data['directives'][$name] = $directiveData;
-                    }
-                    break;
-                case 'default_product_columns':
-                    $columns = isset($data['default_feed_config']['columns']['product_columns']) ?
+                        break;
+                    case 'default_product_columns':
+                        $columns = isset($data['default_feed_config']['columns']['product_columns']) ?
                         $data['default_feed_config']['columns']['product_columns'] : [];
-                    $data['default_feed_config']['columns']['product_columns']
-                        = array_merge($columns, $this->getDefaultColumns($childNode));
-                    break;
-                case 'default_feed_config':
-                    $data['default_feed_config'] = array_merge($this->getDefaultConfig($childNode), $data['default_feed_config']);
-                    break;
+                        // phpcs:ignore Magento2.Performance.ForeachArrayMerge -- legacy feed logic; refactor deferred to keep output identical
+                        $data['default_feed_config']['columns']['product_columns'] = array_merge(
+                            $columns,
+                            $this->getDefaultColumns($childNode)
+                        );
+                        break;
+                    case 'default_feed_config':
+                        // phpcs:ignore Magento2.Performance.ForeachArrayMerge -- legacy feed logic; refactor deferred to keep output identical
+                        $data['default_feed_config'] = array_merge(
+                            $this->getDefaultConfig($childNode),
+                            $data['default_feed_config']
+                        );
+                        break;
                 }
             }
             $output['feed'][$typeName] = $data;
@@ -132,7 +147,9 @@ class Converter implements \Magento\Framework\Config\ConverterInterface
     }
 
     /**
-     * @param  \DOMNode $node
+     * Mapper type, filter and configuration for each product type in the mapper's "for" list.
+     *
+     * @param \DOMNode $node
      * @return array
      */
     private function getDirectiveMappers(\DOMNode $node)
@@ -166,7 +183,9 @@ class Converter implements \Magento\Framework\Config\ConverterInterface
     }
 
     /**
-     * @param  \DOMNode $node
+     * Formatter type for each product type in the formatter's "for" list.
+     *
+     * @param \DOMNode $node
      * @return array
      */
     private function getDirectiveFormatters(\DOMNode $node)
@@ -187,14 +206,16 @@ class Converter implements \Magento\Framework\Config\ConverterInterface
     }
 
     /**
-     * @param  \DOMNode $node
+     * Default product columns keyed by column name.
+     *
+     * @param \DOMNode $node
      * @return array
      */
     private function getDefaultColumns(\DOMNode $node)
     {
         $data = [];
         foreach ($node->childNodes as $column) {
-            if ($column->nodeType != XML_ELEMENT_NODE) {
+            if (!$column instanceof \DOMElement) {
                 continue;
             }
             $name = $this->getChildNodeValue($column, 'column');
@@ -209,7 +230,9 @@ class Converter implements \Magento\Framework\Config\ConverterInterface
     }
 
     /**
-     * @param  \DOMNode $node
+     * Default feed configuration values keyed by group and field; the first value of a field wins.
+     *
+     * @param \DOMNode $node
      * @return array
      */
     private function getDefaultConfig(\DOMNode $node)
@@ -237,10 +260,10 @@ class Converter implements \Magento\Framework\Config\ConverterInterface
     /**
      * Get attribute value
      *
-     * @param  \DOMNode    $input
-     * @param  string      $attributeName
-     * @param  string|null $default
-     * @return null|string
+     * @param  \DOMNode          $input
+     * @param  string            $attributeName
+     * @param  string|false|null $default
+     * @return string|false|null
      */
     private function getAttributeValue(\DOMNode $input, $attributeName, $default = null)
     {
@@ -251,10 +274,10 @@ class Converter implements \Magento\Framework\Config\ConverterInterface
     /**
      * Get child node value by child node name
      *
-     * @param  \DOMNode $input
-     * @param  $nodeName
-     * @param  null     $default
-     * @return null
+     * @param  \DOMElement $input
+     * @param  string      $nodeName
+     * @param  mixed       $default
+     * @return mixed
      */
     private function getChildNodeValue(\DOMNode $input, $nodeName, $default = null)
     {
@@ -267,6 +290,12 @@ class Converter implements \Magento\Framework\Config\ConverterInterface
         return $nodeValue;
     }
 
+    /**
+     * Decode JSON array/object strings; return any other value unchanged.
+     *
+     * @param mixed $value
+     * @return mixed
+     */
     private function decodeValue($value)
     {
         if (!is_string($value)) {

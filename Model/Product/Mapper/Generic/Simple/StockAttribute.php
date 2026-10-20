@@ -20,7 +20,6 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple;
 
 use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
-
 class StockAttribute extends MapperAbstract
 {
     /**
@@ -28,6 +27,12 @@ class StockAttribute extends MapperAbstract
      */
     protected $stockRegistryProvider;
 
+    /**
+     * Stock attribute mapper constructor.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param \Magento\CatalogInventory\Model\StockRegistryProvider $stockRegistryProvider
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Logger $logger,
         \Magento\CatalogInventory\Model\StockRegistryProvider $stockRegistryProvider
@@ -37,6 +42,8 @@ class StockAttribute extends MapperAbstract
     }
 
     /**
+     * Stock item field named by the column param, backorders by default.
+     *
      * @param  array $params
      * @return string
      */
@@ -45,9 +52,11 @@ class StockAttribute extends MapperAbstract
         $attr_code = isset($params['param']) ? $params['param'] : 'backorders';
         $product = $this->getAdapter()->getProduct();
 
+        /** @var \Magento\CatalogInventory\Model\Stock\Item $stockItem DI preference for StockItemInterface */
         $stockItem = $this->stockRegistryProvider->getStockItem($product->getId(), $product->getStoreId());
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- $stockItem is typed Stock\Item: !== null adds a PHPStan finding
         $value = !is_null($stockItem) ? $stockItem->getData($attr_code) : '';
-        if (is_null($value)) {
+        if ($value === null) {
             $value = '';
         }
 

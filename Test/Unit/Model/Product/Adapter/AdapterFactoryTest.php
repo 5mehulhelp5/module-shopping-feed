@@ -35,7 +35,7 @@ class AdapterFactoryTest extends ModelFramework
     protected $model;
 
     /**
-     * @var \Magento\Framework\ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\ObjectManagerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $objectManagerMock;
 
@@ -53,7 +53,6 @@ class AdapterFactoryTest extends ModelFramework
             ['create', 'get', 'configure']
         );
 
-
         $this->model = $this->objectManagerHelper->getObject(
             'MageOS\ShoppingFeed\Model\Product\Adapter\AdapterFactory',
             [
@@ -65,7 +64,7 @@ class AdapterFactoryTest extends ModelFramework
     public function testCreate()
     {
         /**
- * @var \Magento\Catalog\Model\Product|\PHPUnit_Framework_MockObject_MockObject $productMock
+ * @var \Magento\Catalog\Model\Product|\PHPUnit\Framework\MockObject\MockObject $productMock
 */
         $productMock = $this->getModelMock('Magento\Catalog\Model\Product', ['getTypeId']);
 
@@ -74,10 +73,9 @@ class AdapterFactoryTest extends ModelFramework
             ->will($this->returnValue('simple'));
 
         /**
- * @var \MageOS\ShoppingFeed\Model\Feed|\PHPUnit_Framework_MockObject_MockObject $feedMock
+ * @var \MageOS\ShoppingFeed\Model\Feed|\PHPUnit\Framework\MockObject\MockObject $feedMock
 */
         $feedMock = $this->getModelMock('MageOS\ShoppingFeed\Model\Feed');
-
 
         $this->objectManagerMock->expects($this->any())
             ->method('create')
@@ -89,19 +87,23 @@ class AdapterFactoryTest extends ModelFramework
                 )
             );
 
+        // The object manager stub above builds DataObject stand-ins, not real adapters.
         $adapter = $this->model->create($productMock, $feedMock);
+        $this->assertInstanceOf(DataObject::class, $adapter);
         $this->assertEquals(
             'MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple',
             $adapter->getClassName()
         );
 
         $adapter = $this->model->create($productMock, $feedMock);
+        $this->assertInstanceOf(DataObject::class, $adapter);
         $this->assertEquals(
             null,
             $adapter->getClassName()
         );
 
         $adapter = $this->model->create($productMock, $feedMock, false);
+        $this->assertInstanceOf(DataObject::class, $adapter);
         $this->assertEquals(
             'MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple',
             $adapter->getClassName()

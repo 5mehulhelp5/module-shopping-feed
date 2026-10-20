@@ -21,9 +21,6 @@ namespace MageOS\ShoppingFeed\Model\Feed\Source\Product;
 use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Catalog\Model\Product\Type as ProductType;
 
-/**
- * Class Attributes
- */
 class Attributes implements OptionSourceInterface
 {
     /**
@@ -34,7 +31,7 @@ class Attributes implements OptionSourceInterface
     protected $attributes;
 
     /**
-     * Core registry
+     * Registry holding the feed being edited
      *
      * @var \Magento\Framework\Registry
      */
@@ -119,7 +116,8 @@ class Attributes implements OptionSourceInterface
         }
 
         usort(
-            $attributes, function ($a, $b) {
+            $attributes,
+            function ($a, $b) {
                 if ($a['label'] != $b['label']) {
                     return $a['label'] < $b['label'] ? -1 : 1;
                 }

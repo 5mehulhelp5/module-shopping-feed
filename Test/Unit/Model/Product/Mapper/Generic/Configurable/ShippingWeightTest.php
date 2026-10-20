@@ -62,4 +62,18 @@ class ShippingWeightTest extends ModelFramework
         $cell = $this->model->map($params);
         $this->assertEquals('123.00 g', $cell);
     }
+
+    public function testMissingMinimumPriceIdsUsesAvailableWeight(): void
+    {
+        $adapter = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class);
+        $parent = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable::class);
+        $adapter->method('getProduct')->willReturn($this->productMock);
+        $parent->method('getData')->willReturnCallback(
+            static fn($key) => $key === 'associated_product_adapters' ? [$adapter] : null
+        );
+        $parent->method('getMapAttribute')->willReturn('weight');
+        $parent->method('getAttributeValue')->willReturn(2.5);
+        $this->model->addAdapter($parent);
+        $this->assertSame('2.50 kg', $this->model->map(['param' => 'kg']));
+    }
 }

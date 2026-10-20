@@ -22,6 +22,7 @@ namespace MageOS\ShoppingFeed\Test\Unit\Model\Feed\Source\Directory;
 
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager as ObjectManagerHelper;
 use MageOS\ShoppingFeed\Test\Unit\Model\ModelFramework;
+use PHPUnit\Framework\MockObject\MockObject;
 
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class AvailableCurrenciesTest extends ModelFramework
@@ -36,22 +37,22 @@ class AvailableCurrenciesTest extends ModelFramework
     {
         $this->objectManagerHelper = new ObjectManagerHelper($this);
 
-        /** @var \Magento\Store\Model\Store $store */
+        /** @var \Magento\Store\Model\Store&MockObject $store */
         $store = $this->getModelMock('\Magento\Store\Model\Store');
 
-        /** @var \Magento\Store\Model\StoreManagerInterface $storeManager */
+        /** @var \Magento\Store\Model\StoreManagerInterface&MockObject $storeManager */
         $storeManager = $this->getModelMock('\Magento\Store\Model\StoreManagerInterface');
 
-        /** @var \Magento\Directory\Model\CurrencyFactory $currencyFactory */
+        /** @var \Magento\Directory\Model\CurrencyFactory&MockObject $currencyFactory */
         $currencyFactory = $this->getModelMock('\Magento\Directory\Model\CurrencyFactory', ['create']);
 
-        /** @var \Magento\Framework\Locale\Bundle\CurrencyBundle $currencyBundle */
+        /** @var \Magento\Framework\Locale\Bundle\CurrencyBundle&MockObject $currencyBundle */
         $currencyBundle = $this->getModelMock('\Magento\Framework\Locale\Bundle\CurrencyBundle');
 
-        /** @var \Magento\Directory\Model\Currency $currency */
+        /** @var \Magento\Directory\Model\Currency&MockObject $currency */
         $currency = $this->getModelMock('\Magento\Directory\Model\Currency');
 
-        /** @var \Magento\Framework\Locale\Resolver $localeResolver */
+        /** @var \Magento\Framework\Locale\Resolver&MockObject $localeResolver */
         $localeResolver = $this->getModelMock('\Magento\Framework\Locale\Resolver');
 
         $store->expects($this->once())

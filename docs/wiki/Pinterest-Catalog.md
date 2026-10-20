@@ -1,6 +1,6 @@
 # Pinterest Catalog
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
 
 The **Pinterest Catalog** preset produces quoted UTF-8 TSV for a primary retail catalog. It uses the module's generation, Test Feed, scheduling, and upload tools. Pinterest import acceptance has not been verified.
 
@@ -22,7 +22,7 @@ Map `google_product_category` to the most specific accurate taxonomy value. An e
 | Stock | In-stock and sold-out values use spaces; preorder is retained; backorders become `out of stock` |
 | Prices | Positive amounts with currency, such as `49.95 USD`; discounted prices use the same currency |
 | Sales | Equal or higher sale prices are omitted with their dates. An undated discount produces a refresh warning; supplied dates must form a valid ISO 8601 interval |
-| Text | Title output limit is 500 characters and description 10,000. IDs are limited to 127 characters; product links to 511 |
+| Text | The preset declares 500-character title and 10,000-character description limits, but they are not applied automatically; add them under [Limit column output](Filters-and-Transformations#limit-column-output). IDs are limited to 127 characters; product links to 511 |
 | Categories | One merchant path, at most five levels; mapped Google taxonomy is preserved separately |
 | Images | One primary URL and up to ten comma-separated additional URLs; each image URL is limited to 2,000 characters |
 

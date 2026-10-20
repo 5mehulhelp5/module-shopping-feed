@@ -28,17 +28,21 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper;
 abstract class MapperStock extends MapperAbstract
 {
     /**
+     * Whether the feed reads stock from the default stock rather than a custom stock attribute.
+     *
      * @return bool
      */
     public function usesDefaultStock()
     {
         $useDefaultStock = $this->getAdapter()->getFeed()->getConfig('general_use_default_stock');
         $customStockAttribute = $this->getCustomStockAttributeCode();
-        return $useDefaultStock || (!$useDefaultStock && empty($customStockAttribute));
+        return $useDefaultStock || empty($customStockAttribute);
     }
 
     /**
-     * @return string/null
+     * Custom stock attribute code configured on the feed.
+     *
+     * @return string|null
      */
     public function getCustomStockAttributeCode()
     {

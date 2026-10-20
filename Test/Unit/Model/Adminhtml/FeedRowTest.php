@@ -30,14 +30,25 @@ class FeedRowTest extends TestCase
         foreach ([true, false] as $allowed) {
             $auth = $this->createMock(\Magento\Framework\AuthorizationInterface::class);
             $auth->method('isAllowed')->willReturn($allowed);
-            $formatter = new FeedRow($escaper,$url,$auth,$key,
-                $this->createMock(\Magento\Store\Model\StoreManagerInterface::class),$directories);
+            $formatter = new FeedRow(
+                $escaper,
+                $url,
+                $auth,
+                $key,
+                $this->createMock(\Magento\Store\Model\StoreManagerInterface::class),
+                $directories
+            );
             $row=$formatter->format($feed);
-            foreach (['config','uploads','messages'] as $field) self::assertArrayNotHasKey($field,$row);
+            foreach (['config','uploads','messages'] as $field) {
+                self::assertArrayNotHasKey($field, $row);
+            }
             if ($allowed) {
                 self::assertStringContainsString('<form method="post"', $row['actions']);
                 self::assertStringContainsString('name="form_key"', $row['actions']);
-                self::assertStringNotContainsString('href="https://local.test/admin/mageos_shopping_feed/feed/generate', $row['actions']);
+                self::assertStringNotContainsString(
+                    'href="https://local.test/admin/mageos_shopping_feed/feed/generate',
+                    $row['actions']
+                );
             } else {
                 self::assertSame('', $row['actions']);
             }

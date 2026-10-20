@@ -20,6 +20,6 @@ namespace MageOS\ShoppingFeed\Model\Logger\Formatter;
 
 class MemoryLog extends \Monolog\Formatter\LineFormatter
 {
-    const SIMPLE_FORMAT = "[%datetime%]: %message%\n";
-    const SIMPLE_DATE = "H:i:s";
+    public const SIMPLE_FORMAT = "[%datetime%]: %message%\n";
+    public const SIMPLE_DATE = "H:i:s";
 }

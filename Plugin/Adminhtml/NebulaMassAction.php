@@ -12,10 +12,22 @@ class NebulaMassAction
 {
     private const ACTIONS = ['massenable', 'massdisable', 'massclone', 'massdelete'];
 
+    /**
+     * @param Http $request
+     */
     public function __construct(private Http $request)
     {
     }
 
+    /**
+     * Filter the collection by Nebula's posted feed IDs for this module's mass actions
+     *
+     * @param Filter $subject
+     * @param callable $proceed
+     * @param AbstractDb $collection
+     * @return AbstractDb
+     * @throws LocalizedException
+     */
     public function aroundGetCollection(Filter $subject, callable $proceed, AbstractDb $collection)
     {
         $ids = $this->request->getParam('ids');

@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ * Copyright © 2016 Rocket Web Inc. (https://rocketweb.com/)
+ * Licensed under the Open Software License version 3.0. See LICENSE.txt.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -10,19 +11,19 @@
         <resources>
             <resource id="Magento_Backend::admin">
                 <resource id="Magento_Catalog::catalog">
-                    <resource id="MageOS_ShoppingFeed::mageos_shopping_feed" title="Mage-OS Shopping Feed"
+                    <resource id="MageOS_ShoppingFeed::mageos_shopping_feed" translate="title" title="Mage-OS Shopping Feed"
                               sortOrder="1000">
-                        <resource id="MageOS_ShoppingFeed::grid" title="Shopping Feeds" sortOrder="5">
-                            <resource id="MageOS_ShoppingFeed::save" title="Save Feed" sortOrder="10" />
-                            <resource id="MageOS_ShoppingFeed::generate" title="Generate Feed" sortOrder="15" />
-                            <resource id="MageOS_ShoppingFeed::delete" title="Delete Feed" sortOrder="20" />
+                        <resource id="MageOS_ShoppingFeed::grid" translate="title" title="Shopping Feeds" sortOrder="5">
+                            <resource id="MageOS_ShoppingFeed::save" translate="title" title="Save Feed" sortOrder="10" />
+                            <resource id="MageOS_ShoppingFeed::generate" translate="title" title="Generate Feed" sortOrder="15" />
+                            <resource id="MageOS_ShoppingFeed::delete" translate="title" title="Delete Feed" sortOrder="20" />
                         </resource>
                     </resource>
                 </resource>
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
                         <resource id="Magento_Config::config">
-                            <resource id="MageOS_ShoppingFeed::configuration" title="Shopping Feeds Section"
+                            <resource id="MageOS_ShoppingFeed::configuration" translate="title" title="Shopping Feeds Section"
                                       sortOrder="1200" />
                         </resource>
                     </resource>

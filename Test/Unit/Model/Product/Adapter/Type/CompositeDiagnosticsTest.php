@@ -28,7 +28,10 @@ class CompositeDiagnosticsTest extends TestCase
         $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
         $this->expectExceptionMessage('Unknown product inheritance mode');
         (new \ReflectionMethod($adapter, 'mapByInheritanceFrom'))->invoke(
-            $adapter, $this->createMock(AdapterAbstract::class), ['column' => 'title'], 'invalid'
+            $adapter,
+            $this->createMock(AdapterAbstract::class),
+            ['column' => 'title'],
+            'invalid'
         );
     }
 }

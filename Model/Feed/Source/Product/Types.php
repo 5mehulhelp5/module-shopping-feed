@@ -21,9 +21,6 @@ namespace MageOS\ShoppingFeed\Model\Feed\Source\Product;
 use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Catalog\Model\Product\Type as ProductType;
 
-/**
- * Class Types
- */
 class Types implements OptionSourceInterface
 {
     /**
@@ -52,7 +49,7 @@ class Types implements OptionSourceInterface
         $options = [];
         foreach ($this->getProductTypes() as $type) {
             $options[] = [
-                'label' => $type['label'],
+                'label' => __($type['label']),
                 'value' => $type['name'],
             ];
         }

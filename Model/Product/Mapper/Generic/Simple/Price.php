@@ -20,16 +20,13 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple;
 
 use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
-/**
- * Class Price
- *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
- */
 class Price extends MapperAbstract
 {
     /**
+     * Product price from the adapter, including tax when the column param is set.
+     *
      * @param  array $params
-     * @return string
+     * @return float|int Price from the adapter's getPrices()
      */
     public function map(array $params = [])
     {
@@ -41,6 +38,8 @@ class Price extends MapperAbstract
     }
 
     /**
+     * Price array key for the regular or special price, including tax when the column param is set.
+     *
      * @param  boolean $isSpecialPrice
      * @param  array   $params
      * @return string
@@ -59,6 +58,9 @@ class Price extends MapperAbstract
         return $key;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function filter($cell)
     {
         $above = $this->getAdapter()->getFeed()->getConfig('filters_skip_price_above', false);

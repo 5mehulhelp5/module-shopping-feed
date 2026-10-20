@@ -26,11 +26,12 @@ use \MageOS\ShoppingFeed\Model\Exception as FeedException;
  *
  * Class ShippingWeight
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable
  */
 class ShippingWeight extends MapperAbstract
 {
     /**
+     * Weight with unit of the lowest-priced associated product, else the lowest associated weight.
+     *
      * @param array $params
      */
     public function map(array $params = [])
@@ -48,11 +49,20 @@ class ShippingWeight extends MapperAbstract
         foreach ($associatedProductAdapters as $associatedProductAdapter) {
             $weightAttribute = $this->getAdapter()->getMapAttribute($params);
             if ($weightAttribute !== false) {
-                $weights[] = number_format((float)$this->getAdapter()->getAttributeValue($associatedProductAdapter->getProduct(), $weightAttribute), 2);
+                $weights[] = number_format(
+                    (float)$this->getAdapter()->getAttributeValue(
+                        $associatedProductAdapter->getProduct(),
+                        $weightAttribute
+                    ),
+                    2
+                );
             }
 
             // Use the weight of the product used when pulling the price.
-            if (in_array($associatedProductAdapter->getProduct()->getId(), $this->getAdapter()->getData('min_price_product_ids'))) {
+            if (in_array(
+                $associatedProductAdapter->getProduct()->getId(),
+                (array)$this->getAdapter()->getData('min_price_product_ids')
+            )) {
                 array_push($selected_weights, end($weights));
             }
         }

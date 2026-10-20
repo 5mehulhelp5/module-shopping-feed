@@ -19,11 +19,7 @@
 namespace MageOS\ShoppingFeed\Model\Feed\Source\Product;
 
 use Magento\Framework\Data\OptionSourceInterface;
-use Magento\Catalog\Model\Product\Type as ProductType;
 
-/**
- * Class Columns
- */
 class Columns implements OptionSourceInterface
 {
     /**
@@ -34,7 +30,7 @@ class Columns implements OptionSourceInterface
     protected $columns;
 
     /**
-     * Core registry
+     * Registry holding the feed being edited
      *
      * @var \Magento\Framework\Registry
      */
@@ -43,7 +39,7 @@ class Columns implements OptionSourceInterface
     /**
      * Types constructor.
      *
-     * @param ProductType $productType
+     * @param \Magento\Framework\Registry $coreRegistry
      */
     public function __construct(
         \Magento\Framework\Registry $coreRegistry

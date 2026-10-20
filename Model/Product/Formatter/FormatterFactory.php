@@ -25,7 +25,6 @@ use MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface;
  *
  * Class MapperFactory
  *
- * @package MageOS\ShoppingFeed\Model\Product\Formatter
  */
 class FormatterFactory
 {
@@ -45,7 +44,6 @@ class FormatterFactory
      * Factory constructor
      *
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
-     * @param string                                    $instanceName
      */
     public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
     {
@@ -53,17 +51,10 @@ class FormatterFactory
     }
 
     /**
-     * Create class instance with specified parameters
+     * Create (or reuse) the directive's formatter for the adapter's product type and bind the adapter to it.
      *
-     * @param array $directive
-     * @param \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract|AdapterInterface $adapter
-     *
-     * @return \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract
-     */
-
-    /**
-     * @param  $directive
-     * @param  AdapterInterface $adapter
+     * @param array<string,mixed> $directive
+     * @param AdapterInterface $adapter
      * @return mixed
      */
     public function create($directive, AdapterInterface $adapter)
@@ -77,7 +68,9 @@ class FormatterFactory
                 ->getTypeId();
         }
         $formatterData = $this->getFormatterData($directive, $productType, $parentAdapterProductType);
-        $instanceName = !is_null($formatterData) ? $formatterData['type'] : 'MageOS\ShoppingFeed\Model\Product\Formatter\FormatterAbstract';
+        $instanceName = $formatterData !== null
+            ? $formatterData['type']
+            : \MageOS\ShoppingFeed\Model\Product\Formatter\FormatterAbstract::class;
 
         if (!isset($this->objectCache[$instanceName])) {
             $this->objectCache[$instanceName] = $this->_objectManager->create($instanceName);
@@ -88,8 +81,7 @@ class FormatterFactory
     }
 
     /**
-     * Returns null if no formatter specified,
-     * otherwise returns the formatter config array
+     * Returns null if no formatter specified, otherwise returns the formatter config array
      *
      * @param  array  $directive
      * @param  string $productType
@@ -105,11 +97,11 @@ class FormatterFactory
         $data = $directive['formatters']['default'];
 
         $parentKey = null;
-        if (!is_null($parentProductType)) {
+        if ($parentProductType !== null) {
             $parentKey = sprintf('%s_child', $parentProductType);
         }
 
-        if (!is_null($parentProductType) && isset($directive['formatters'][$parentKey])) {
+        if ($parentProductType !== null && isset($directive['formatters'][$parentKey])) {
             $data = $directive['formatters'][$parentKey];
         } elseif (isset($directive['formatters'][$productType])) {
             $data = $directive['formatters'][$productType];

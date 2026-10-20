@@ -30,7 +30,7 @@ class Delete extends \Magento\Backend\App\Action implements \Magento\Framework\A
     protected $feedBuilder;
 
     /**
-     * @param \Magento\Backend\App\Action\Context                        $context
+     * @param \Magento\Backend\App\Action\Context $context
      * @param \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Builder $feedBuilder
      */
     public function __construct(

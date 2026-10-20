@@ -40,14 +40,14 @@ class MassClone extends \Magento\Backend\App\Action implements \Magento\Framewor
     protected $collectionFactory;
 
     /**
-     * @var Copier
+     * @var \MageOS\ShoppingFeed\Model\Feed\Copier
      */
     protected $copier;
 
     /**
-     * @param Context                                    $context
-     * @param Filter                                     $filter
-     * @param CollectionFactory                          $collectionFactory
+     * @param Context $context
+     * @param Filter $filter
+     * @param CollectionFactory $collectionFactory
      * @param \MageOS\ShoppingFeed\Model\Feed\Copier $copier
      */
     public function __construct(
@@ -70,6 +70,7 @@ class MassClone extends \Magento\Backend\App\Action implements \Magento\Framewor
     public function execute()
     {
         $collection = $this->filter->getCollection($this->collectionFactory->create());
+        /** @var \MageOS\ShoppingFeed\Model\Feed $feed */
         foreach ($collection->getItems() as $feed) {
             $this->copier->copy($feed);
         }

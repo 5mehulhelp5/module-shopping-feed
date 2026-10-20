@@ -21,6 +21,9 @@ namespace MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
+/**
+ * @method \MageOS\ShoppingFeed\Model\Feed\Config getFirstItem()
+ */
 class Collection extends AbstractCollection
 {
 
@@ -32,8 +35,8 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         $this->_init(
-            'MageOS\ShoppingFeed\Model\Feed\Config',
-            'MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config'
+            \MageOS\ShoppingFeed\Model\Feed\Config::class,
+            \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config::class
         );
     }
 

@@ -23,10 +23,10 @@ namespace MageOS\ShoppingFeed\Model\Promotions\Provider;
  */
 class Map
 {
-    const APPLICABILITY_ALL         = 'all_products';
-    const APPLICABILITY_SPECIFIC    = 'specific_products';
-    const GENERIC_CODE              = 'generic_code';
-    const NO_CODE                   = 'no_code';
+    public const APPLICABILITY_ALL         = 'all_products';
+    public const APPLICABILITY_SPECIFIC    = 'specific_products';
+    public const GENERIC_CODE              = 'generic_code';
+    public const NO_CODE                   = 'no_code';
 
     /**
      * @var  \MageOS\ShoppingFeed\Model\Promotions\Provider
@@ -34,10 +34,13 @@ class Map
     protected $provider;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Serializer
+     * @var \Magento\Framework\Serialize\SerializerInterface
      */
     protected $serializer;
 
+    /**
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
+     */
     public function __construct(
         \Magento\Framework\Serialize\SerializerInterface $serializer
     ) {
@@ -45,6 +48,8 @@ class Map
     }
 
     /**
+     * Set the provider that supplies the feed and date formatting.
+     *
      * @param \MageOS\ShoppingFeed\Model\Promotions\Provider $provider
      * @return $this
      */
@@ -57,8 +62,8 @@ class Map
     /**
      * Creates promotion_id
      *
-     * @param $counter
-     * @param $rule
+     * @param int|string $counter promotions generation counter
+     * @param \Magento\SalesRule\Model\Rule $rule
      * @return string
      */
     public function mapPromotionId($counter, $rule)
@@ -67,11 +72,14 @@ class Map
     }
 
     /**
+     * Specific products when the rule's actions or conditions use product attributes, otherwise all products.
+     *
      * @param \Magento\SalesRule\Model\Rule $rule
      * @return string
      */
     public function mapProductApplicability(\Magento\SalesRule\Model\Rule $rule)
     {
+        /** @var \Magento\SalesRule\Model\ResourceModel\Rule $resource */
         $resource = $rule->getResource();
         $actionsAttributes = $resource->getProductAttributes($rule->getActionsSerialized());
         $conditionsAttributes = $resource->getProductAttributes($rule->getConditionsSerialized());
@@ -87,7 +95,7 @@ class Map
      * @param array $row
      * @return string
      */
-    public function mapEffectiveDates($row = array())
+    public function mapEffectiveDates($row = [])
     {
         return $this->mapDates($row['date'] ?? []);
     }
@@ -98,7 +106,7 @@ class Map
      * @param array $row
      * @return string
      */
-    public function mapDisplayDates($row = array())
+    public function mapDisplayDates($row = [])
     {
         return $this->mapDates($row['display'] ?? []);
     }
@@ -106,10 +114,10 @@ class Map
     /**
      * Helper method for dates
      *
-     * @param array $row
+     * @param mixed $row array with 'from' and 'to' strings; anything else maps to ''
      * @return string
      */
-    public function mapDates($row = array())
+    public function mapDates($row = [])
     {
         if (!is_array($row) || !is_string($row['from'] ?? null) || !is_string($row['to'] ?? null)
             || trim($row['from']) === '' || trim($row['to']) === '') {
@@ -148,7 +156,8 @@ class Map
             $conditions = $this->serializer->unserialize($serialized);
         } catch (\InvalidArgumentException $exception) {
             throw new \Magento\Framework\Exception\LocalizedException(
-                __('Promotion rule conditions must contain valid JSON. Resave the cart price rule.'), $exception
+                __('Promotion rule conditions must contain valid JSON. Resave the cart price rule.'),
+                $exception
             );
         }
         if (!is_array($conditions)) {
@@ -163,7 +172,12 @@ class Map
         return sprintf("%.2F", $minimumPurchaseAmount) . ' ' . $currency;
     }
 
-    /** Compute a lower bound without treating OR or negated conditions as AND. */
+    /**
+     * Compute a lower bound without treating OR or negated conditions as AND.
+     *
+     * @param array $condition
+     * @return float
+     */
     private function minimumSubtotal(array $condition): float
     {
         if (isset($condition['conditions']) && is_array($condition['conditions'])) {
@@ -172,8 +186,10 @@ class Map
                 || !$condition['conditions']) {
                 return 0;
             }
-            $amounts = array_map(fn($child) => is_array($child) ? $this->minimumSubtotal($child) : 0,
-                $condition['conditions']);
+            $amounts = array_map(
+                fn($child) => is_array($child) ? $this->minimumSubtotal($child) : 0,
+                $condition['conditions']
+            );
             return $condition['aggregator'] === 'all' ? max($amounts) : min($amounts);
         }
         if (($condition['attribute'] ?? null) !== 'base_subtotal'

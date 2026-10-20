@@ -49,7 +49,15 @@ class Microdata extends \Magento\Framework\Model\AbstractModel
      */
     protected $feedCollectionFactory;
 
-
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Eav\Model\Config $eavConfig
+     * @param \MageOS\ShoppingFeed\Model\FeedFactory $feedFactory
+     * @param \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterFactory $adapterFactory
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Feed\CollectionFactory $feedCollectionFactory
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -68,7 +76,9 @@ class Microdata extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * @return \Magento\Framework\DataObject
+     * Microdata for the current product from the store's microdata feed.
+     *
+     * @return \Magento\Framework\DataObject|null null when the product has no usable microdata row
      */
     public function getMicrodata()
     {
@@ -86,13 +96,12 @@ class Microdata extends \Magento\Framework\Model\AbstractModel
         $product = $this->getProduct();
         $assocId = $this->getAssocId();
 
-        /** @var \MageOS\ShoppingFeed\Model\Feed $feed */
         $feed = $this->getFeed();
         if ($feed === null) {
             return [];
         }
 
-        /** @var \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter */
+        /** @var \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract|false $adapter */
         $adapter = $this->adapterFactory->create($product, $feed);
         if (!$adapter) {
             return [];
@@ -172,9 +181,10 @@ class Microdata extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Product microdata values, overridden by matching feed columns, with custom option prices added.
+     *
      * @param \Magento\Catalog\Model\Product $product
      * @param \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter
-     * @param null $conditionAttribute
      * @return array
      */
     protected function mapProduct(Product $product, Adapter $adapter)
@@ -187,7 +197,7 @@ class Microdata extends \Magento\Framework\Model\AbstractModel
             'condition' => 'new', 'currency' => $adapter->getFeed()->getConfig('general_currency')
         ];
 
-        foreach($columns_map as $elm) {
+        foreach ($columns_map as $elm) {
             if (in_array($elm['column'], array_keys($map))) {
                 $map[$elm['column']] = $adapter->getMapValue($elm);
             }
@@ -203,6 +213,8 @@ class Microdata extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Price of the custom option values selected in the request parameters.
+     *
      * @param Product $product
      * @return int
      */
@@ -227,7 +239,7 @@ class Microdata extends \Magento\Framework\Model\AbstractModel
                 if (array_key_exists($key, $requestParams)) {
                     $valueId = $requestParams[$key];
 
-                    /** @var Product\Option\Value $values */
+                    /** @var Product\Option\Value[]|null $values */
                     $values = $option->getValues();
 
                     foreach ($values as $value) {

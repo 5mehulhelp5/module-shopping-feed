@@ -84,13 +84,15 @@ class Shipping
      * Shipping constructor.
      *
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $config
-     * @param \Magento\Shipping\Model\Shipping                   $shipping
-     * @param \Magento\Tax\Helper\Data                           $taxHelper
-     * @param \Magento\Customer\Model\AddressFactory             $addressFactory
-     * @param \Magento\Directory\Model\Region                    $region
-     * @param \MageOS\ShoppingFeed\Model\Generator\Cache     $cache
-     * @param Adapter\AdapterAbstract                            $adapter
-     * @param Helper\Catalog                                     $catalogHelper
+     * @param \Magento\Shipping\Model\Shipping $shipping
+     * @param \Magento\Tax\Helper\Data $taxHelper
+     * @param \Magento\Customer\Model\AddressFactory $addressFactory
+     * @param \Magento\Directory\Model\Region $region
+     * @param \MageOS\ShoppingFeed\Model\Generator\Cache $cache
+     * @param Adapter\AdapterAbstract $adapter
+     * @param Helper\Catalog $catalogHelper
+     * @param \Magento\Quote\Model\Quote\ItemFactory $quoteItemFactory
+     * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
      */
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $config,
@@ -115,18 +117,32 @@ class Shipping
         $this->catalogHelper = $catalogHelper;
         $this->quoteItemFactory = $quoteItemFactory;
         $this->quoteFactory = $quoteFactory;
-
     }
 
+    /**
+     * Build a one-item rate request for the product, shipped from the store's shipping origin.
+     *
+     * @param \Magento\Catalog\Model\Product $product
+     * @return \Magento\Quote\Model\Quote\Address\RateRequest
+     */
     public function setRequest(\Magento\Catalog\Model\Product $product)
     {
         /**
  * cache this
 */
         if ($this->cache->getCache('shipping/origin/country_id', false) === false) {
-            $this->cache->setCache('shipping/origin/country_id', $this->config->getValue('shipping/origin/country_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-            $this->cache->setCache('shipping/origin/region_id', $this->config->getValue('shipping/origin/region_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-            $this->cache->setCache('shipping/origin/postcode', $this->config->getValue('shipping/origin/postcode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+            $this->cache->setCache(
+                'shipping/origin/country_id',
+                $this->config->getValue('shipping/origin/country_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            );
+            $this->cache->setCache(
+                'shipping/origin/region_id',
+                $this->config->getValue('shipping/origin/region_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            );
+            $this->cache->setCache(
+                'shipping/origin/postcode',
+                $this->config->getValue('shipping/origin/postcode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+            );
         }
         $shippingOriginCountryId = $this->cache->getCache('shipping/origin/country_id');
         $shippingOriginRegionId = $this->cache->getCache('shipping/origin/region_id');
@@ -165,6 +181,12 @@ class Shipping
         return $rateRequest;
     }
 
+    /**
+     * Collect the allowed carriers' rates for every country/region of the feed's shipping territory.
+     *
+     * @param \Magento\Quote\Model\Quote\Address\RateRequest $rateRequest
+     * @return $this
+     */
     public function collectRates(\Magento\Quote\Model\Quote\Address\RateRequest $rateRequest)
     {
         $this->rates = [];
@@ -185,7 +207,7 @@ class Shipping
                 }
 
                 foreach ($regions as $regionId => $regionCode) {
-                    if (is_null($regionCode)) {
+                    if ($regionCode === null) {
                         $regionId = null;
                         $regionCode = '*';
                     }
@@ -220,6 +242,8 @@ class Shipping
     }
 
     /**
+     * Keep only the zero-priced methods, dropping carriers left without methods.
+     *
      * @param  array $result
      * @return array
      */
@@ -244,8 +268,11 @@ class Shipping
     }
 
     /**
+     * Collected rates as the feed's "country:region:title:price" shipping value.
+     *
      * @return array|string
      */
+    // phpcs:ignore Generic.Metrics.NestingLevel.TooHigh -- legacy feed logic; refactor deferred to keep output identical
     public function getFormatedValue()
     {
         if (!is_array($this->rates) || count($this->rates) == 0) {
@@ -271,7 +298,12 @@ class Shipping
                                             $this->getPriceTax($method['price'], $countryId),
                                             $this->adapter->getData('store_currency_code')
                                         );
-                                        $values[] = sprintf("%s::%s:%s", $countryId, $this->getShippingTitle($carrier, $method), $price);
+                                        $values[] = sprintf(
+                                            "%s::%s:%s",
+                                            $countryId,
+                                            $this->getShippingTitle($carrier, $method),
+                                            $price
+                                        );
                                     }
                                 }
                             }
@@ -287,7 +319,13 @@ class Shipping
                                             $this->getPriceTax($method['price'], $countryId),
                                             $this->adapter->getData('store_currency_code')
                                         );
-                                        $values[] = sprintf("%s:%s:%s:%s", $countryId, $regionId, $this->getShippingTitle($carrier, $method), $price);
+                                        $values[] = sprintf(
+                                            "%s:%s:%s:%s",
+                                            $countryId,
+                                            $regionId,
+                                            $this->getShippingTitle($carrier, $method),
+                                            $price
+                                        );
                                     }
                                 }
                             }
@@ -303,8 +341,8 @@ class Shipping
     /**
      * Get title slot from shipping format ::{title}:
      *
-     * @param  $carrier
-     * @param  $method
+     * @param array<mixed> $carrier
+     * @param array<mixed> $method
      * @return string
      */
     protected function getShippingTitle($carrier, $method)
@@ -323,9 +361,11 @@ class Shipping
     }
 
     /**
-     * @param  $price
-     * @param  null $countryId
-     * @param  null $regionId
+     * Shipping price with the store's shipping tax applied when configured, in the store currency.
+     *
+     * @param float $price
+     * @param string|null $countryId
+     * @param int|string|null $regionId
      * @return float
      */
     protected function getPriceTax($price, $countryId = null, $regionId = null)
@@ -343,9 +383,9 @@ class Shipping
 */
             $address = $this->addressFactory->create();
 
-            if (!is_null($countryId)) {
+            if ($countryId !== null) {
                 $address->setCountryId($countryId);
-                if (!is_null($regionId) && $regionId != "*") {
+                if ($regionId !== null && $regionId != "*") {
                     $address->setRegionId($regionId);
                 }
             }
@@ -370,11 +410,13 @@ class Shipping
 
     /**
      * Transform rates from:
+     *
      *    US:CA:x:99 and US:NY:x:99 to US:*:x:99
      *
      * @param  array $rates
      * @return array
      */
+    // phpcs:ignore Generic.Metrics.NestingLevel.TooHigh -- legacy feed logic; refactor deferred to keep output identical
     public function minimiseData($rates)
     {
         $ret = $rates;
@@ -408,7 +450,8 @@ class Shipping
                 }
             }
 
-            // Find which methods have same prices in all regions ($same) and transform $ret: for each method in all regions with same price => set method in region_id == *.
+            // Find which methods have same prices in all regions ($same) and transform $ret:
+            // for each method in all regions with same price => set method in region_id == *.
             $same = [];
             foreach ($allMethods as $code => $v) {
                 $same[$code] = PHP_INT_MAX;
@@ -493,6 +536,8 @@ class Shipping
     }
 
     /**
+     * Carrier codes of the feed's shipping methods, excluding realtime carriers.
+     *
      * @return array
      */
     public function getAllowedCarriers()
@@ -516,11 +561,13 @@ class Shipping
     }
 
     /**
+     * Feed shipping countries, each with its regions when shipping varies by region.
+     *
      * @return array|null
      */
     public function getShippingTerritory()
     {
-        if (is_null($this->shippingTerritory)) {
+        if ($this->shippingTerritory === null) {
             $this->shippingTerritory = [];
             $allowedCountries = $this->adapter->getFeed()->getConfig('shipping_country');
             if (empty($allowedCountries)) {
@@ -530,7 +577,9 @@ class Shipping
             $allowedCountryWithRegions = [];
             if ($shippingByRegion) {
                 $allowedCountryWithRegions = $this->adapter->getFeed()->getConfig('shipping_country_with_region');
-                $allowedCountryWithRegions = empty($allowedCountryWithRegions) ? $allowedCountries : array_intersect($allowedCountryWithRegions, $allowedCountries);
+                $allowedCountryWithRegions = empty($allowedCountryWithRegions)
+                    ? $allowedCountries
+                    : array_intersect($allowedCountryWithRegions, $allowedCountries);
             }
 
             foreach ($allowedCountries as $countryId) {
@@ -554,9 +603,10 @@ class Shipping
                 }
                 unset($regionsCollection);
 
+                // This list is only filled when shipping varies by region; $countryRegions keys have regions.
                 foreach ($allowedCountryWithRegions as $countryId) {
                     $this->shippingTerritory[$countryId] = [];
-                    if ($shippingByRegion && isset($countryRegions[$countryId]) && count($countryRegions[$countryId]) > 0) {
+                    if (isset($countryRegions[$countryId])) {
                         $this->shippingTerritory[$countryId] = $countryRegions[$countryId];
                     }
                 }
@@ -570,11 +620,11 @@ class Shipping
      * This method copies method getShippingPrice from \Magento\Tax\Helper\Data,
      * but uses another helper to push price calculation
      *
-     * @param  float                      $price
-     * @param  bool|null                  $includingTax
-     * @param  Address|null               $shippingAddress
-     * @param  int|null                   $ctc
-     * @param  null|string|bool|int|Store $store
+     * @param  float                                           $price
+     * @param  bool|null                                       $includingTax
+     * @param  \Magento\Customer\Model\Address|null            $shippingAddress
+     * @param  int|null                                        $ctc
+     * @param  null|string|bool|int|\Magento\Store\Model\Store $store
      * @return float
      */
     protected function getShippingTaxPrice(
@@ -632,7 +682,7 @@ class Shipping
                     break;
                 }
             }
-            if (!is_null($shippingColumnMap) && isset($shippingColumnMap['param'])) {
+            if ($shippingColumnMap !== null && isset($shippingColumnMap['param'])) {
                 $unit = $shippingColumnMap['param'];
 
                 try {
@@ -647,7 +697,7 @@ class Shipping
                 $weight = 1;
             }
         }
-        $weight = intval($weight);
+        $weight = (int) $weight;
 
         $this->cache->setCache($cacheKey, $weight);
         return $weight;

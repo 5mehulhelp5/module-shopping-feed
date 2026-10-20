@@ -47,17 +47,35 @@ class ActionContractTest extends TestCase
         return [
             'delete' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Delete::class, 'MageOS_ShoppingFeed::delete'],
             'edit' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Edit::class, 'MageOS_ShoppingFeed::save'],
-            'generate' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Generate::class, 'MageOS_ShoppingFeed::generate'],
+            'generate' => [
+                \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Generate::class,
+                'MageOS_ShoppingFeed::generate',
+            ],
             'import' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Import::class, 'MageOS_ShoppingFeed::grid'],
             'index' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Index::class, 'MageOS_ShoppingFeed::grid'],
-            'mass clone' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\MassClone::class, 'MageOS_ShoppingFeed::save'],
-            'mass delete' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\MassDelete::class, 'MageOS_ShoppingFeed::delete'],
-            'mass disable' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\MassDisable::class, 'MageOS_ShoppingFeed::save'],
-            'mass enable' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\MassEnable::class, 'MageOS_ShoppingFeed::save'],
+            'mass clone' => [
+                \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\MassClone::class,
+                'MageOS_ShoppingFeed::save',
+            ],
+            'mass delete' => [
+                \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\MassDelete::class,
+                'MageOS_ShoppingFeed::delete',
+            ],
+            'mass disable' => [
+                \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\MassDisable::class,
+                'MageOS_ShoppingFeed::save',
+            ],
+            'mass enable' => [
+                \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\MassEnable::class,
+                'MageOS_ShoppingFeed::save',
+            ],
             'new' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\NewAction::class, 'MageOS_ShoppingFeed::save'],
             'save' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Save::class, 'MageOS_ShoppingFeed::save'],
-            'suggest categories' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\SuggestCategories::class, 'MageOS_ShoppingFeed::save'],
-            'test' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Test::class, 'MageOS_ShoppingFeed::grid'],
+            'suggest categories' => [
+                \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\SuggestCategories::class,
+                'MageOS_ShoppingFeed::save',
+            ],
+            'test' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Test::class, 'MageOS_ShoppingFeed::generate'],
             'view log' => [\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Viewlog::class, 'MageOS_ShoppingFeed::grid'],
         ];
     }

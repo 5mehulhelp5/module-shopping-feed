@@ -27,14 +27,14 @@ use MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Element\AbstractArrayElem
 class CategoryTaxonomy extends AbstractArrayElement implements RendererInterface
 {
     /**
-     * Category collection factory
+     * Feed category provider
      *
-     * @var \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory
+     * @var \MageOS\ShoppingFeed\Model\Product\Category\CollectionProvider
      */
     protected $categoryProvider;
 
     /**
-     * Core registry
+     * Registry holding the current feed
      *
      * @var \Magento\Framework\Registry
      */
@@ -53,11 +53,11 @@ class CategoryTaxonomy extends AbstractArrayElement implements RendererInterface
     /**
      * CategoryTaxonomy constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context                         $context
-     * @param \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryProvider
-     * @param \Magento\Framework\Registry                                     $coreRegistry
-     * @param \MageOS\ShoppingFeed\Model\Taxonomy\ProviderFactory         $taxonomyProviderFactory
-     * @param array                                                           $data
+     * @param \Magento\Backend\Block\Template\Context                        $context
+     * @param \MageOS\ShoppingFeed\Model\Product\Category\CollectionProvider $categoryProvider
+     * @param \Magento\Framework\Registry                                    $coreRegistry
+     * @param \MageOS\ShoppingFeed\Model\Taxonomy\ProviderFactory            $taxonomyProviderFactory
+     * @param array                                                          $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -90,7 +90,7 @@ class CategoryTaxonomy extends AbstractArrayElement implements RendererInterface
      * @param                                   array $a
      * @param                                   array $b
      * @return                                  int
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function sortValuesCallback($a, $b)
     {
@@ -114,7 +114,8 @@ class CategoryTaxonomy extends AbstractArrayElement implements RendererInterface
         $categories = $this->categoryProvider->getCategories($feed);
 
         array_walk(
-            $categories, function (&$category) {
+            $categories,
+            function (&$category) {
                 $category = array_merge($category, $this->getTaxonomyValues($category['id']));
             }
         );
@@ -127,8 +128,8 @@ class CategoryTaxonomy extends AbstractArrayElement implements RendererInterface
      *
      * Return empty template if it doesn't exist.
      *
-     * @param  $categoryId
-     * @return array
+     * @param int|string $categoryId
+     * @return array<string, mixed>
      */
     public function getTaxonomyValues($categoryId)
     {
@@ -155,8 +156,8 @@ class CategoryTaxonomy extends AbstractArrayElement implements RendererInterface
     /**
      * Formats category path into format which can be used in HTML class name.
      *
-     * @param  $path
-     * @return mixed
+     * @param string $path
+     * @return string
      */
     public function formatCategoryPath($path)
     {
@@ -166,11 +167,12 @@ class CategoryTaxonomy extends AbstractArrayElement implements RendererInterface
     /**
      * Formats parent category path into format which can be used in HTML class name.
      *
-     * @param  $path
-     * @return mixed
+     * @param string $path
+     * @return string
      */
     public function formatParentCategoryPath($path)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- dirname() trims a category id path, not a file path
         return str_replace('/', '_', dirname($path));
     }
 
@@ -192,6 +194,8 @@ class CategoryTaxonomy extends AbstractArrayElement implements RendererInterface
     }
 
     /**
+     * Get the taxonomy list of the current feed's provider
+     *
      * @return array
      */
     public function getTaxonomyOptions()
@@ -205,6 +209,8 @@ class CategoryTaxonomy extends AbstractArrayElement implements RendererInterface
     }
 
     /**
+     * Check whether the current feed uses taxonomy autocomplete
+     *
      * @return mixed
      */
     public function isTaxonomyAutocompleteEnabled()

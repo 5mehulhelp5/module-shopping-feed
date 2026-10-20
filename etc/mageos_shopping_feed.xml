@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © 2016 Rocket Web Inc. All rights reserved.
+ * Copyright © 2016 Rocket Web Inc. (https://rocketweb.com/)
+ * Licensed under the Open Software License version 3.0. See LICENSE.txt.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:MageOS_ShoppingFeed:etc/mageos_shopping_feed.xsd">
@@ -9,14 +10,14 @@
     <label>Generic</label>
     <description>Generic feed type.</description>
     <directives>
-      <directive name="directive_static_value">
+      <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\StaticValue"/>
         </mappers>
       </directive>
-      <directive name="directive_id">
+      <directive name="directive_id" translate="label">
         <label>Product Id</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductId"/>
         <mappers>
@@ -24,7 +25,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_url">
+      <directive name="directive_url" translate="label">
         <label>Product URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductUrl"/>
         <mappers>
@@ -33,7 +34,7 @@
         </mappers>
         <param><![CDATA[]]></param>
       </directive>
-      <directive name="directive_price">
+      <directive name="directive_price" translate="label">
         <label>Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -46,7 +47,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_tier_price">
+      <directive name="directive_tier_price" translate="label">
         <label>Tier Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\CustomerGroup"/>
         <mappers filter="true">
@@ -59,14 +60,14 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_image_link">
+      <directive name="directive_image_link" translate="label">
         <label>Product Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImage"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_additional_image_link">
+      <directive name="directive_additional_image_link" translate="label">
         <label>Product Additional Images URLs</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImageAdditional"/>
         <mappers>
@@ -74,7 +75,7 @@
         </mappers>
         <param>image</param>
       </directive>
-      <directive name="directive_category_image_link">
+      <directive name="directive_category_image_link" translate="label param">
         <label>Product Category Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <param>First category found with an image is been used.</param>
@@ -82,7 +83,7 @@
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\CategoryImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_sale_price">
+      <directive name="directive_sale_price" translate="label">
         <label>Sale Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -94,7 +95,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_sale_price_effective_date">
+      <directive name="directive_sale_price_effective_date" translate="label param">
         <label>Sale Price Date Range</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -103,7 +104,7 @@
         </mappers>
         <param>Computes the start and end dates of special price. If end date is not specified, defaults to one year.</param>
       </directive>
-      <directive name="directive_availability">
+      <directive name="directive_availability" translate="label param">
         <label>Availability</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers filter="true">
@@ -114,7 +115,7 @@
         </mappers>
         <param><![CDATA[Computes the product availability: in stock / out of stock. See additional setting <a href="#" data-tab-id="#feed_tabs_general">Use default Stock Statuses</a>]]></param>
       </directive>
-      <directive name="directive_quantity">
+      <directive name="directive_quantity" translate="label">
         <label>Inventory Count</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductQuantity"/>
         <mappers>
@@ -123,7 +124,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_stock_attribute">
+      <directive name="directive_stock_attribute" translate="label">
         <label>Stock Attribute</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StockAttribute"/>
         <mappers>
@@ -131,7 +132,7 @@
         </mappers>
         <param>backorders</param>
       </directive>
-      <directive name="directive_expiration_date">
+      <directive name="directive_expiration_date" translate="label">
         <label>Product Expiration in Feed</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Expiration"/>
         <mappers>
@@ -139,7 +140,7 @@
         </mappers>
         <param>7</param>
       </directive>
-      <directive name="directive_variant_attributes" allow_output_limit="true">
+      <directive name="directive_variant_attributes" translate="label" allow_output_limit="true">
         <label>Variant Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\VariantAttributes"/>
         <mappers>
@@ -147,19 +148,19 @@
           <mapper for="configurable grouped bundle" type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\VariantAttributes"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_average">
+      <directive name="directive_product_review_average" translate="label">
         <label>Product Review Average</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewAverage"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_count">
+      <directive name="directive_product_review_count" translate="label">
         <label>Product Review Count</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewCount"/>
         </mappers>
       </directive>
-      <directive name="directive_concatenate" allow_output_limit="true">
+      <directive name="directive_concatenate" translate="label" allow_output_limit="true">
         <label>Concatenate Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Concatenate"/>
         <mappers>
@@ -169,7 +170,7 @@
         </mappers>
         <param>Product's name is "{{name}}" and sku is "{{sku}}".</param>
       </directive>
-      <directive name="directive_is_bundle">
+      <directive name="directive_is_bundle" translate="label param">
         <label>Is Bundle</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -178,14 +179,14 @@
         </mappers>
         <param>Outputs TRUE for bundle items and FALSE for the rest.</param>
       </directive>
-      <directive name="directive_product_option" allow_output_limit="true">
+      <directive name="directive_product_option" translate="label" allow_output_limit="true">
         <label>Product Option</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductOption"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductOption"/>
         </mappers>
       </directive>
-      <directive name="directive_shipping">
+      <directive name="directive_shipping" translate="label param">
         <label>Shipping</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -193,7 +194,7 @@
         </mappers>
         <param><![CDATA[Please configure the section below: <a href="#" data-tab-id="#feed_tabs_shipping">Shipping</a>]]></param>
       </directive>
-      <directive name="directive_shipping_weight">
+      <directive name="directive_shipping_weight" translate="label">
         <label>Shipping Weight</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ShippingWeight"/>
         <mappers>
@@ -203,7 +204,7 @@
         </mappers>
         <param><![CDATA[kg]]></param>
       </directive>
-      <directive name="directive_product_type_magento_category" allow_output_limit="true">
+      <directive name="directive_product_type_magento_category" translate="label" allow_output_limit="true">
         <label>Type by Magento Category Path</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductTypeMagentoCategory"/>
         <mappers>
@@ -213,7 +214,7 @@
         </mappers>
         <param>3</param>
       </directive>
-      <directive name="directive_product_type_by_category">
+      <directive name="directive_product_type_by_category" translate="label param">
         <label>Type by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -391,14 +392,14 @@
     <label>Google Shopping</label>
     <description>Google Shopping feed type.</description>
     <directives>
-      <directive name="directive_static_value">
+      <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\StaticValue"/>
         </mappers>
       </directive>
-      <directive name="directive_id">
+      <directive name="directive_id" translate="label">
         <label>Product Id</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductId"/>
         <mappers>
@@ -406,7 +407,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_url">
+      <directive name="directive_url" translate="label">
         <label>Product URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductUrl"/>
         <mappers>
@@ -415,7 +416,7 @@
         </mappers>
         <param><![CDATA[?utm_source=google_shopping]]></param>
       </directive>
-      <directive name="directive_price">
+      <directive name="directive_price" translate="label">
         <label>Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -428,7 +429,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_tier_price">
+      <directive name="directive_tier_price" translate="label">
         <label>Tier Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\CustomerGroup"/>
         <mappers filter="true">
@@ -441,14 +442,14 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_image_link">
+      <directive name="directive_image_link" translate="label">
         <label>Product Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImage"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_additional_image_link">
+      <directive name="directive_additional_image_link" translate="label">
         <label>Product Additional Images URLs</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImageAdditional"/>
         <mappers>
@@ -456,7 +457,7 @@
         </mappers>
         <param>image</param>
       </directive>
-      <directive name="directive_category_image_link">
+      <directive name="directive_category_image_link" translate="label param">
         <label>Product Category Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <param>First category found with an image is been used.</param>
@@ -464,7 +465,7 @@
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\CategoryImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_sale_price">
+      <directive name="directive_sale_price" translate="label">
         <label>Sale Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -476,7 +477,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_sale_price_effective_date">
+      <directive name="directive_sale_price_effective_date" translate="label param">
         <label>Sale Price Date Range</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -485,7 +486,7 @@
         </mappers>
         <param>Computes the start and end dates of special price. If end date is not specified, defaults to one year.</param>
       </directive>
-      <directive name="directive_availability">
+      <directive name="directive_availability" translate="label param">
         <label>Availability</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers filter="true">
@@ -496,7 +497,7 @@
         </mappers>
         <param><![CDATA[Computes the product availability: in stock / out of stock. See additional setting <a href="#" data-tab-id="#feed_tabs_general">Use default Stock Statuses</a>]]></param>
       </directive>
-      <directive name="directive_quantity">
+      <directive name="directive_quantity" translate="label">
         <label>Inventory Count</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductQuantity"/>
         <mappers>
@@ -505,7 +506,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_stock_attribute">
+      <directive name="directive_stock_attribute" translate="label">
         <label>Stock Attribute</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StockAttribute"/>
         <mappers>
@@ -513,7 +514,7 @@
         </mappers>
         <param>backorders</param>
       </directive>
-      <directive name="directive_expiration_date">
+      <directive name="directive_expiration_date" translate="label">
         <label>Product Expiration in Feed</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Expiration"/>
         <mappers>
@@ -521,7 +522,7 @@
         </mappers>
         <param>7</param>
       </directive>
-      <directive name="directive_variant_attributes" allow_output_limit="true">
+      <directive name="directive_variant_attributes" translate="label" allow_output_limit="true">
         <label>Variant Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\VariantAttributes"/>
         <mappers>
@@ -529,19 +530,19 @@
           <mapper for="configurable grouped bundle" type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\VariantAttributes"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_average">
+      <directive name="directive_product_review_average" translate="label">
         <label>Product Review Average</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewAverage"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_count">
+      <directive name="directive_product_review_count" translate="label">
         <label>Product Review Count</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewCount"/>
         </mappers>
       </directive>
-      <directive name="directive_concatenate" allow_output_limit="true">
+      <directive name="directive_concatenate" translate="label" allow_output_limit="true">
         <label>Concatenate Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Concatenate"/>
         <mappers>
@@ -551,7 +552,7 @@
         </mappers>
         <param>Product's name is "{{name}}" and sku is "{{sku}}".</param>
       </directive>
-      <directive name="directive_is_bundle">
+      <directive name="directive_is_bundle" translate="label param">
         <label>Is Bundle</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -560,14 +561,14 @@
         </mappers>
         <param>Outputs TRUE for bundle items and FALSE for the rest.</param>
       </directive>
-      <directive name="directive_product_option" allow_output_limit="true">
+      <directive name="directive_product_option" translate="label" allow_output_limit="true">
         <label>Product Option</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductOption"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductOption"/>
         </mappers>
       </directive>
-      <directive name="directive_shipping">
+      <directive name="directive_shipping" translate="label param">
         <label>Shipping</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -575,7 +576,7 @@
         </mappers>
         <param><![CDATA[Please configure the section below: <a href="#" data-tab-id="#feed_tabs_shipping">Shipping</a>]]></param>
       </directive>
-      <directive name="directive_shipping_weight">
+      <directive name="directive_shipping_weight" translate="label">
         <label>Shipping Weight</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ShippingWeight"/>
         <mappers>
@@ -585,7 +586,7 @@
         </mappers>
         <param><![CDATA[kg]]></param>
       </directive>
-      <directive name="directive_price_buckets">
+      <directive name="directive_price_buckets" translate="label param">
         <label>Adwords Price Buckets</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <param><![CDATA[Please configure the <a href="#" data-tab-id="#feed_tabs_filters">Adwords Price Buckets</a> setting]]></param>
@@ -593,7 +594,7 @@
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Google\Simple\PriceBuckets"/>
         </mappers>
       </directive>
-      <directive name="directive_identifier_exists">
+      <directive name="directive_identifier_exists" translate="label">
         <label>Identifier Exists</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\IdentifierExists"/>
         <mappers>
@@ -601,7 +602,7 @@
         </mappers>
         <param><![CDATA[]]></param>
       </directive>
-      <directive name="directive_identifier_attribute">
+      <directive name="directive_identifier_attribute" translate="label">
         <label><![CDATA[Identifier Attribute]]></label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\IdentifierAttribute"/>
         <mappers>
@@ -609,7 +610,7 @@
         </mappers>
         <param><![CDATA[]]></param>
       </directive>
-      <directive name="directive_item_group_id">
+      <directive name="directive_item_group_id" translate="label">
         <label>Item Group ID</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ItemGroupId"/>
         <param><![CDATA[sku]]></param>
@@ -618,19 +619,19 @@
           <mapper for="configurable_child" type="MageOS\ShoppingFeed\Model\Product\Mapper\Google\Configurable\Associated\ItemGroupId"/>
         </mappers>
       </directive>
-      <directive name="directive_item_group_title">
+      <directive name="directive_item_group_title" translate="label">
         <label>Item Group Title</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Google\Simple\ItemGroupTitle"/>
         </mappers>
       </directive>
-      <directive name="directive_variant_option">
+      <directive name="directive_variant_option" translate="label">
         <label>Variant Option</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Google\Simple\VariantOption"/>
         </mappers>
       </directive>
-      <directive name="directive_product_type_magento_category" allow_output_limit="true">
+      <directive name="directive_product_type_magento_category" translate="label" allow_output_limit="true">
         <label>Type by Magento Category Path</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductTypeMagentoCategory"/>
         <mappers>
@@ -640,7 +641,7 @@
         </mappers>
         <param>3</param>
       </directive>
-      <directive name="directive_product_type_by_category">
+      <directive name="directive_product_type_by_category" translate="label param">
         <label>Type by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -648,7 +649,7 @@
         </mappers>
         <param><![CDATA[Please configure the <a href="#" data-tab-id="#feed_tabs_categories">Categories Map</a>]]></param>
       </directive>
-      <directive name="directive_google_category_by_category">
+      <directive name="directive_google_category_by_category" translate="label param">
         <label>Taxonomy by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -657,7 +658,7 @@
         </mappers>
         <param><![CDATA[Please configure the <a href="#" data-tab-id="#feed_tabs_categories">Categories Map</a>]]></param>
       </directive>
-      <directive name="directive_promotions_id">
+      <directive name="directive_promotions_id" translate="label param">
         <label>Promotion ID</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -908,14 +909,14 @@
     <label>Meta Catalog (Facebook and Instagram)</label>
     <description>UTF-8 TSV product catalog for Meta Commerce Manager scheduled data feeds. Review brand, identifiers, condition, and variant mappings before upload.</description>
     <directives>
-      <directive name="directive_static_value">
+      <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\StaticValue"/>
         </mappers>
       </directive>
-      <directive name="directive_id">
+      <directive name="directive_id" translate="label">
         <label>Product Id</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductId"/>
         <mappers>
@@ -923,7 +924,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_url">
+      <directive name="directive_url" translate="label">
         <label>Product URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductUrl"/>
         <mappers>
@@ -932,7 +933,7 @@
         </mappers>
         <param><![CDATA[?utm_source=meta_catalog]]></param>
       </directive>
-      <directive name="directive_price">
+      <directive name="directive_price" translate="label">
         <label>Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -945,7 +946,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_tier_price">
+      <directive name="directive_tier_price" translate="label">
         <label>Tier Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\CustomerGroup"/>
         <mappers filter="true">
@@ -958,14 +959,14 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_image_link">
+      <directive name="directive_image_link" translate="label">
         <label>Product Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImage"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_additional_image_link">
+      <directive name="directive_additional_image_link" translate="label">
         <label>Product Additional Images URLs</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImageAdditional"/>
         <mappers>
@@ -973,7 +974,7 @@
         </mappers>
         <param>image</param>
       </directive>
-      <directive name="directive_category_image_link">
+      <directive name="directive_category_image_link" translate="label param">
         <label>Product Category Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <param>First category found with an image is been used.</param>
@@ -981,7 +982,7 @@
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\CategoryImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_sale_price">
+      <directive name="directive_sale_price" translate="label">
         <label>Sale Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -993,7 +994,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_sale_price_effective_date">
+      <directive name="directive_sale_price_effective_date" translate="label param">
         <label>Sale Price Date Range</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -1002,7 +1003,7 @@
         </mappers>
         <param>Computes the start and end dates of special price. If end date is not specified, defaults to one year.</param>
       </directive>
-      <directive name="directive_availability">
+      <directive name="directive_availability" translate="label param">
         <label>Availability</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers filter="true">
@@ -1016,7 +1017,7 @@
         </formatters>
         <param><![CDATA[Computes the product availability: in stock / out of stock. See additional setting <a href="#" data-tab-id="#feed_tabs_general">Use default Stock Statuses</a>]]></param>
       </directive>
-      <directive name="directive_quantity">
+      <directive name="directive_quantity" translate="label">
         <label>Inventory Count</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductQuantity"/>
         <mappers>
@@ -1025,7 +1026,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_stock_attribute">
+      <directive name="directive_stock_attribute" translate="label">
         <label>Stock Attribute</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StockAttribute"/>
         <mappers>
@@ -1033,7 +1034,7 @@
         </mappers>
         <param>backorders</param>
       </directive>
-      <directive name="directive_expiration_date">
+      <directive name="directive_expiration_date" translate="label">
         <label>Product Expiration in Feed</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Expiration"/>
         <mappers>
@@ -1041,7 +1042,7 @@
         </mappers>
         <param>7</param>
       </directive>
-      <directive name="directive_variant_attributes" allow_output_limit="true">
+      <directive name="directive_variant_attributes" translate="label" allow_output_limit="true">
         <label>Variant Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\VariantAttributes"/>
         <mappers>
@@ -1049,19 +1050,19 @@
           <mapper for="configurable grouped bundle" type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\VariantAttributes"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_average">
+      <directive name="directive_product_review_average" translate="label">
         <label>Product Review Average</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewAverage"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_count">
+      <directive name="directive_product_review_count" translate="label">
         <label>Product Review Count</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewCount"/>
         </mappers>
       </directive>
-      <directive name="directive_concatenate" allow_output_limit="true">
+      <directive name="directive_concatenate" translate="label" allow_output_limit="true">
         <label>Concatenate Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Concatenate"/>
         <mappers>
@@ -1071,14 +1072,14 @@
         </mappers>
         <param>Product's name is "{{name}}" and sku is "{{sku}}".</param>
       </directive>
-      <directive name="directive_product_option" allow_output_limit="true">
+      <directive name="directive_product_option" translate="label" allow_output_limit="true">
         <label>Product Option</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductOption"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductOption"/>
         </mappers>
       </directive>
-      <directive name="directive_shipping_weight">
+      <directive name="directive_shipping_weight" translate="label">
         <label>Shipping Weight</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ShippingWeight"/>
         <mappers>
@@ -1088,7 +1089,7 @@
         </mappers>
         <param><![CDATA[kg]]></param>
       </directive>
-      <directive name="directive_identifier_attribute">
+      <directive name="directive_identifier_attribute" translate="label">
         <label><![CDATA[Identifier Attribute]]></label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\IdentifierAttribute"/>
         <mappers>
@@ -1096,7 +1097,7 @@
         </mappers>
         <param><![CDATA[]]></param>
       </directive>
-      <directive name="directive_item_group_id">
+      <directive name="directive_item_group_id" translate="label">
         <label>Item Group ID</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ItemGroupId"/>
         <param><![CDATA[sku]]></param>
@@ -1105,7 +1106,7 @@
           <mapper for="configurable_child" type="MageOS\ShoppingFeed\Model\Product\Mapper\Google\Configurable\Associated\ItemGroupId"/>
         </mappers>
       </directive>
-      <directive name="directive_product_type_magento_category" allow_output_limit="true">
+      <directive name="directive_product_type_magento_category" translate="label" allow_output_limit="true">
         <label>Type by Magento Category Path</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductTypeMagentoCategory"/>
         <mappers>
@@ -1115,7 +1116,7 @@
         </mappers>
         <param>3</param>
       </directive>
-      <directive name="directive_product_type_by_category">
+      <directive name="directive_product_type_by_category" translate="label param">
         <label>Type by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -1123,7 +1124,7 @@
         </mappers>
         <param><![CDATA[Please configure the <a href="#" data-tab-id="#feed_tabs_categories">Categories Map</a>]]></param>
       </directive>
-      <directive name="directive_google_category_by_category">
+      <directive name="directive_google_category_by_category" translate="label param">
         <label>Taxonomy by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -1338,14 +1339,14 @@
     <label>Pinterest Catalog</label>
     <description>Quoted TSV for Pinterest retail catalogs and product Pins.</description>
     <directives>
-      <directive name="directive_static_value">
+      <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\StaticValue"/>
         </mappers>
       </directive>
-      <directive name="directive_id">
+      <directive name="directive_id" translate="label">
         <label>Product Id</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductId"/>
         <mappers>
@@ -1353,7 +1354,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_url">
+      <directive name="directive_url" translate="label">
         <label>Product URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductUrl"/>
         <mappers>
@@ -1362,7 +1363,7 @@
         </mappers>
         <param><![CDATA[?utm_source=pinterest_catalog]]></param>
       </directive>
-      <directive name="directive_price">
+      <directive name="directive_price" translate="label">
         <label>Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -1375,7 +1376,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_tier_price">
+      <directive name="directive_tier_price" translate="label">
         <label>Tier Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\CustomerGroup"/>
         <mappers filter="true">
@@ -1388,14 +1389,14 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_image_link">
+      <directive name="directive_image_link" translate="label">
         <label>Product Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImage"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_additional_image_link">
+      <directive name="directive_additional_image_link" translate="label">
         <label>Product Additional Images URLs</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImageAdditional"/>
         <mappers>
@@ -1403,7 +1404,7 @@
         </mappers>
         <param>image</param>
       </directive>
-      <directive name="directive_category_image_link">
+      <directive name="directive_category_image_link" translate="label param">
         <label>Product Category Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <param>First category found with an image is been used.</param>
@@ -1411,7 +1412,7 @@
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\CategoryImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_sale_price">
+      <directive name="directive_sale_price" translate="label">
         <label>Sale Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -1423,7 +1424,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_sale_price_effective_date">
+      <directive name="directive_sale_price_effective_date" translate="label param">
         <label>Sale Price Date Range</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -1432,7 +1433,7 @@
         </mappers>
         <param>Computes the start and end dates of special price. If end date is not specified, defaults to one year.</param>
       </directive>
-      <directive name="directive_availability">
+      <directive name="directive_availability" translate="label param">
         <label>Availability</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers filter="true">
@@ -1446,7 +1447,7 @@
         </formatters>
         <param><![CDATA[Computes the product availability: in stock / out of stock. See additional setting <a href="#" data-tab-id="#feed_tabs_general">Use default Stock Statuses</a>]]></param>
       </directive>
-      <directive name="directive_quantity">
+      <directive name="directive_quantity" translate="label">
         <label>Inventory Count</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductQuantity"/>
         <mappers>
@@ -1455,7 +1456,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_stock_attribute">
+      <directive name="directive_stock_attribute" translate="label">
         <label>Stock Attribute</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StockAttribute"/>
         <mappers>
@@ -1463,7 +1464,7 @@
         </mappers>
         <param>backorders</param>
       </directive>
-      <directive name="directive_expiration_date">
+      <directive name="directive_expiration_date" translate="label">
         <label>Product Expiration in Feed</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Expiration"/>
         <mappers>
@@ -1471,7 +1472,7 @@
         </mappers>
         <param>7</param>
       </directive>
-      <directive name="directive_variant_attributes" allow_output_limit="true">
+      <directive name="directive_variant_attributes" translate="label" allow_output_limit="true">
         <label>Variant Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\VariantAttributes"/>
         <mappers>
@@ -1479,19 +1480,19 @@
           <mapper for="configurable grouped bundle" type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\VariantAttributes"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_average">
+      <directive name="directive_product_review_average" translate="label">
         <label>Product Review Average</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewAverage"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_count">
+      <directive name="directive_product_review_count" translate="label">
         <label>Product Review Count</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewCount"/>
         </mappers>
       </directive>
-      <directive name="directive_concatenate" allow_output_limit="true">
+      <directive name="directive_concatenate" translate="label" allow_output_limit="true">
         <label>Concatenate Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Concatenate"/>
         <mappers>
@@ -1501,14 +1502,14 @@
         </mappers>
         <param>Product's name is "{{name}}" and sku is "{{sku}}".</param>
       </directive>
-      <directive name="directive_product_option" allow_output_limit="true">
+      <directive name="directive_product_option" translate="label" allow_output_limit="true">
         <label>Product Option</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductOption"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductOption"/>
         </mappers>
       </directive>
-      <directive name="directive_shipping_weight">
+      <directive name="directive_shipping_weight" translate="label">
         <label>Shipping Weight</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ShippingWeight"/>
         <mappers>
@@ -1518,7 +1519,7 @@
         </mappers>
         <param><![CDATA[kg]]></param>
       </directive>
-      <directive name="directive_identifier_attribute">
+      <directive name="directive_identifier_attribute" translate="label">
         <label><![CDATA[Identifier Attribute]]></label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\IdentifierAttribute"/>
         <mappers>
@@ -1526,7 +1527,7 @@
         </mappers>
         <param><![CDATA[]]></param>
       </directive>
-      <directive name="directive_item_group_id">
+      <directive name="directive_item_group_id" translate="label">
         <label>Item Group ID</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ItemGroupId"/>
         <param><![CDATA[sku]]></param>
@@ -1535,7 +1536,7 @@
           <mapper for="configurable_child" type="MageOS\ShoppingFeed\Model\Product\Mapper\Google\Configurable\Associated\ItemGroupId"/>
         </mappers>
       </directive>
-      <directive name="directive_product_type_magento_category" allow_output_limit="true">
+      <directive name="directive_product_type_magento_category" translate="label" allow_output_limit="true">
         <label>Type by Magento Category Path</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductTypeMagentoCategory"/>
         <mappers>
@@ -1548,7 +1549,7 @@
         </formatters>
         <param>3</param>
       </directive>
-      <directive name="directive_product_type_by_category">
+      <directive name="directive_product_type_by_category" translate="label param">
         <label>Type by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -1556,7 +1557,7 @@
         </mappers>
         <param><![CDATA[Please configure the <a href="#" data-tab-id="#feed_tabs_categories">Categories Map</a>]]></param>
       </directive>
-      <directive name="directive_google_category_by_category">
+      <directive name="directive_google_category_by_category" translate="label param">
         <label>Taxonomy by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -1772,14 +1773,14 @@
     <label>TikTok Catalog</label>
     <description>Quoted CSV for TikTok Ads Manager product catalogs.</description>
     <directives>
-      <directive name="directive_static_value">
+      <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\StaticValue"/>
         </mappers>
       </directive>
-      <directive name="directive_id">
+      <directive name="directive_id" translate="label">
         <label>Product Id</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductId"/>
         <mappers>
@@ -1787,7 +1788,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_url">
+      <directive name="directive_url" translate="label">
         <label>Product URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductUrl"/>
         <mappers>
@@ -1796,7 +1797,7 @@
         </mappers>
         <param><![CDATA[?utm_source=tiktok_catalog]]></param>
       </directive>
-      <directive name="directive_price">
+      <directive name="directive_price" translate="label">
         <label>Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -1809,7 +1810,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_tier_price">
+      <directive name="directive_tier_price" translate="label">
         <label>Tier Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\CustomerGroup"/>
         <mappers filter="true">
@@ -1822,14 +1823,14 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_image_link">
+      <directive name="directive_image_link" translate="label">
         <label>Product Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImage"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_additional_image_link">
+      <directive name="directive_additional_image_link" translate="label">
         <label>Product Additional Images URLs</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImageAdditional"/>
         <mappers>
@@ -1839,7 +1840,7 @@
         </mappers>
         <param>image</param>
       </directive>
-      <directive name="directive_category_image_link">
+      <directive name="directive_category_image_link" translate="label param">
         <label>Product Category Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <param>First category found with an image is been used.</param>
@@ -1847,7 +1848,7 @@
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\CategoryImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_sale_price">
+      <directive name="directive_sale_price" translate="label">
         <label>Sale Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -1859,7 +1860,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_sale_price_effective_date">
+      <directive name="directive_sale_price_effective_date" translate="label param">
         <label>Sale Price Date Range</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -1868,7 +1869,7 @@
         </mappers>
         <param>Computes the start and end dates of special price. If end date is not specified, defaults to one year.</param>
       </directive>
-      <directive name="directive_availability">
+      <directive name="directive_availability" translate="label param">
         <label>Availability</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers filter="true">
@@ -1882,7 +1883,7 @@
         </formatters>
         <param><![CDATA[Computes the product availability: in stock / out of stock. See additional setting <a href="#" data-tab-id="#feed_tabs_general">Use default Stock Statuses</a>]]></param>
       </directive>
-      <directive name="directive_quantity">
+      <directive name="directive_quantity" translate="label">
         <label>Inventory Count</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductQuantity"/>
         <mappers>
@@ -1891,7 +1892,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_stock_attribute">
+      <directive name="directive_stock_attribute" translate="label">
         <label>Stock Attribute</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StockAttribute"/>
         <mappers>
@@ -1899,7 +1900,7 @@
         </mappers>
         <param>backorders</param>
       </directive>
-      <directive name="directive_expiration_date">
+      <directive name="directive_expiration_date" translate="label">
         <label>Product Expiration in Feed</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Expiration"/>
         <mappers>
@@ -1907,7 +1908,7 @@
         </mappers>
         <param>7</param>
       </directive>
-      <directive name="directive_variant_attributes" allow_output_limit="true">
+      <directive name="directive_variant_attributes" translate="label" allow_output_limit="true">
         <label>Variant Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\VariantAttributes"/>
         <mappers>
@@ -1915,19 +1916,19 @@
           <mapper for="configurable grouped bundle" type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\VariantAttributes"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_average">
+      <directive name="directive_product_review_average" translate="label">
         <label>Product Review Average</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewAverage"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_count">
+      <directive name="directive_product_review_count" translate="label">
         <label>Product Review Count</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewCount"/>
         </mappers>
       </directive>
-      <directive name="directive_concatenate" allow_output_limit="true">
+      <directive name="directive_concatenate" translate="label" allow_output_limit="true">
         <label>Concatenate Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Concatenate"/>
         <mappers>
@@ -1937,14 +1938,14 @@
         </mappers>
         <param>Product's name is "{{name}}" and sku is "{{sku}}".</param>
       </directive>
-      <directive name="directive_product_option" allow_output_limit="true">
+      <directive name="directive_product_option" translate="label" allow_output_limit="true">
         <label>Product Option</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductOption"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductOption"/>
         </mappers>
       </directive>
-      <directive name="directive_shipping_weight">
+      <directive name="directive_shipping_weight" translate="label">
         <label>Shipping Weight</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ShippingWeight"/>
         <mappers>
@@ -1954,7 +1955,7 @@
         </mappers>
         <param><![CDATA[kg]]></param>
       </directive>
-      <directive name="directive_identifier_attribute">
+      <directive name="directive_identifier_attribute" translate="label">
         <label><![CDATA[Identifier Attribute]]></label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\IdentifierAttribute"/>
         <mappers>
@@ -1962,7 +1963,7 @@
         </mappers>
         <param><![CDATA[]]></param>
       </directive>
-      <directive name="directive_item_group_id">
+      <directive name="directive_item_group_id" translate="label">
         <label>Item Group ID</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ItemGroupId"/>
         <param><![CDATA[sku]]></param>
@@ -1971,7 +1972,7 @@
           <mapper for="configurable_child" type="MageOS\ShoppingFeed\Model\Product\Mapper\Google\Configurable\Associated\ItemGroupId"/>
         </mappers>
       </directive>
-      <directive name="directive_product_type_magento_category" allow_output_limit="true">
+      <directive name="directive_product_type_magento_category" translate="label" allow_output_limit="true">
         <label>Type by Magento Category Path</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductTypeMagentoCategory"/>
         <mappers>
@@ -1984,7 +1985,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_product_type_by_category">
+      <directive name="directive_product_type_by_category" translate="label param">
         <label>Type by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -1992,7 +1993,7 @@
         </mappers>
         <param><![CDATA[Please configure the <a href="#" data-tab-id="#feed_tabs_categories">Categories Map</a>]]></param>
       </directive>
-      <directive name="directive_google_category_by_category">
+      <directive name="directive_google_category_by_category" translate="label param">
         <label>Taxonomy by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -2214,14 +2215,14 @@
     <label>Microsoft Merchant Center (TSV)</label>
     <description>Tab-delimited product catalog for Microsoft Merchant Center.</description>
     <directives>
-      <directive name="directive_static_value">
+      <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\StaticValue"/>
         </mappers>
       </directive>
-      <directive name="directive_id">
+      <directive name="directive_id" translate="label">
         <label>Product Id</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductId"/>
         <mappers>
@@ -2229,7 +2230,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_url">
+      <directive name="directive_url" translate="label">
         <label>Product URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductUrl"/>
         <mappers>
@@ -2238,7 +2239,7 @@
         </mappers>
         <param><![CDATA[?utm_source=microsoft_merchant_center]]></param>
       </directive>
-      <directive name="directive_price">
+      <directive name="directive_price" translate="label">
         <label>Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -2251,7 +2252,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_tier_price">
+      <directive name="directive_tier_price" translate="label">
         <label>Tier Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\CustomerGroup"/>
         <mappers filter="true">
@@ -2264,14 +2265,14 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_image_link">
+      <directive name="directive_image_link" translate="label">
         <label>Product Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImage"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_additional_image_link">
+      <directive name="directive_additional_image_link" translate="label">
         <label>Product Additional Images URLs</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImageAdditional"/>
         <mappers>
@@ -2279,7 +2280,7 @@
         </mappers>
         <param>image</param>
       </directive>
-      <directive name="directive_category_image_link">
+      <directive name="directive_category_image_link" translate="label param">
         <label>Product Category Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <param>First category found with an image is been used.</param>
@@ -2287,7 +2288,7 @@
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\CategoryImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_sale_price">
+      <directive name="directive_sale_price" translate="label">
         <label>Sale Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -2299,7 +2300,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_sale_price_effective_date">
+      <directive name="directive_sale_price_effective_date" translate="label param">
         <label>Sale Price Date Range</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -2308,7 +2309,7 @@
         </mappers>
         <param>Computes the start and end dates of special price. If end date is not specified, defaults to one year.</param>
       </directive>
-      <directive name="directive_availability">
+      <directive name="directive_availability" translate="label param">
         <label>Availability</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers filter="true">
@@ -2322,7 +2323,7 @@
         </formatters>
         <param><![CDATA[Computes the product availability: in stock / out of stock. See additional setting <a href="#" data-tab-id="#feed_tabs_general">Use default Stock Statuses</a>]]></param>
       </directive>
-      <directive name="directive_quantity">
+      <directive name="directive_quantity" translate="label">
         <label>Inventory Count</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductQuantity"/>
         <mappers>
@@ -2331,7 +2332,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_stock_attribute">
+      <directive name="directive_stock_attribute" translate="label">
         <label>Stock Attribute</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StockAttribute"/>
         <mappers>
@@ -2339,7 +2340,7 @@
         </mappers>
         <param>backorders</param>
       </directive>
-      <directive name="directive_expiration_date">
+      <directive name="directive_expiration_date" translate="label">
         <label>Product Expiration in Feed</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Expiration"/>
         <mappers>
@@ -2347,7 +2348,7 @@
         </mappers>
         <param>7</param>
       </directive>
-      <directive name="directive_variant_attributes" allow_output_limit="true">
+      <directive name="directive_variant_attributes" translate="label" allow_output_limit="true">
         <label>Variant Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\VariantAttributes"/>
         <mappers>
@@ -2355,19 +2356,19 @@
           <mapper for="configurable grouped bundle" type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\VariantAttributes"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_average">
+      <directive name="directive_product_review_average" translate="label">
         <label>Product Review Average</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewAverage"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_count">
+      <directive name="directive_product_review_count" translate="label">
         <label>Product Review Count</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewCount"/>
         </mappers>
       </directive>
-      <directive name="directive_concatenate" allow_output_limit="true">
+      <directive name="directive_concatenate" translate="label" allow_output_limit="true">
         <label>Concatenate Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Concatenate"/>
         <mappers>
@@ -2377,14 +2378,14 @@
         </mappers>
         <param>Product's name is "{{name}}" and sku is "{{sku}}".</param>
       </directive>
-      <directive name="directive_product_option" allow_output_limit="true">
+      <directive name="directive_product_option" translate="label" allow_output_limit="true">
         <label>Product Option</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductOption"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductOption"/>
         </mappers>
       </directive>
-      <directive name="directive_shipping_weight">
+      <directive name="directive_shipping_weight" translate="label">
         <label>Shipping Weight</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ShippingWeight"/>
         <mappers>
@@ -2394,7 +2395,7 @@
         </mappers>
         <param><![CDATA[kg]]></param>
       </directive>
-      <directive name="directive_identifier_attribute">
+      <directive name="directive_identifier_attribute" translate="label">
         <label><![CDATA[Identifier Attribute]]></label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\IdentifierAttribute"/>
         <mappers>
@@ -2402,7 +2403,7 @@
         </mappers>
         <param><![CDATA[]]></param>
       </directive>
-      <directive name="directive_item_group_id">
+      <directive name="directive_item_group_id" translate="label">
         <label>Item Group ID</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ItemGroupId"/>
         <param><![CDATA[sku]]></param>
@@ -2411,7 +2412,7 @@
           <mapper for="configurable_child" type="MageOS\ShoppingFeed\Model\Product\Mapper\Google\Configurable\Associated\ItemGroupId"/>
         </mappers>
       </directive>
-      <directive name="directive_product_type_magento_category" allow_output_limit="true">
+      <directive name="directive_product_type_magento_category" translate="label" allow_output_limit="true">
         <label>Type by Magento Category Path</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductTypeMagentoCategory"/>
         <mappers>
@@ -2421,7 +2422,7 @@
         </mappers>
         <param>3</param>
       </directive>
-      <directive name="directive_product_type_by_category">
+      <directive name="directive_product_type_by_category" translate="label param">
         <label>Type by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -2429,7 +2430,7 @@
         </mappers>
         <param><![CDATA[Please configure the <a href="#" data-tab-id="#feed_tabs_categories">Categories Map</a>]]></param>
       </directive>
-      <directive name="directive_google_category_by_category">
+      <directive name="directive_google_category_by_category" translate="label param">
         <label>Taxonomy by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -2438,7 +2439,7 @@
         </mappers>
         <param><![CDATA[Please configure the <a href="#" data-tab-id="#feed_tabs_categories">Categories Map</a>]]></param>
       </directive>
-      <directive name="directive_identifier_exists">
+      <directive name="directive_identifier_exists" translate="label">
         <label>Identifier Exists</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\IdentifierExists"/>
         <mappers>
@@ -2656,14 +2657,14 @@
     <label>OpenAI / ChatGPT (Google-compatible, beta)</label>
     <description>Beta TSV preset for the OpenAI Google-compatible discovery profile. Requires feed onboarding and confirmation of format, merchant identity, and markets. Does not enable checkout.</description>
     <directives>
-      <directive name="directive_static_value">
+      <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\StaticValue"/>
         </mappers>
       </directive>
-      <directive name="directive_id">
+      <directive name="directive_id" translate="label">
         <label>Product Id</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductId"/>
         <mappers>
@@ -2671,7 +2672,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_url">
+      <directive name="directive_url" translate="label">
         <label>Product URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductUrl"/>
         <mappers>
@@ -2680,7 +2681,7 @@
         </mappers>
         <param><![CDATA[?utm_source=openai_google_compatible]]></param>
       </directive>
-      <directive name="directive_price">
+      <directive name="directive_price" translate="label">
         <label>Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -2693,7 +2694,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_tier_price">
+      <directive name="directive_tier_price" translate="label">
         <label>Tier Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\CustomerGroup"/>
         <mappers filter="true">
@@ -2706,14 +2707,14 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_image_link">
+      <directive name="directive_image_link" translate="label">
         <label>Product Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImage"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_additional_image_link">
+      <directive name="directive_additional_image_link" translate="label">
         <label>Product Additional Images URLs</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductImageAdditional"/>
         <mappers>
@@ -2723,7 +2724,7 @@
         </mappers>
         <param>image</param>
       </directive>
-      <directive name="directive_category_image_link">
+      <directive name="directive_category_image_link" translate="label param">
         <label>Product Category Image URL</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <param>First category found with an image is been used.</param>
@@ -2731,7 +2732,7 @@
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\CategoryImageLink"/>
         </mappers>
       </directive>
-      <directive name="directive_sale_price">
+      <directive name="directive_sale_price" translate="label">
         <label>Sale Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -2743,7 +2744,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_sale_price_effective_date">
+      <directive name="directive_sale_price_effective_date" translate="label param">
         <label>Sale Price Date Range</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -2752,7 +2753,7 @@
         </mappers>
         <param>Computes the start and end dates of special price. If end date is not specified, defaults to one year.</param>
       </directive>
-      <directive name="directive_availability">
+      <directive name="directive_availability" translate="label param">
         <label>Availability</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers filter="true">
@@ -2763,7 +2764,7 @@
         </mappers>
         <param><![CDATA[Computes the product availability: in stock / out of stock. See additional setting <a href="#" data-tab-id="#feed_tabs_general">Use default Stock Statuses</a>]]></param>
       </directive>
-      <directive name="directive_quantity">
+      <directive name="directive_quantity" translate="label">
         <label>Inventory Count</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductQuantity"/>
         <mappers>
@@ -2772,7 +2773,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_stock_attribute">
+      <directive name="directive_stock_attribute" translate="label">
         <label>Stock Attribute</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StockAttribute"/>
         <mappers>
@@ -2780,7 +2781,7 @@
         </mappers>
         <param>backorders</param>
       </directive>
-      <directive name="directive_expiration_date">
+      <directive name="directive_expiration_date" translate="label">
         <label>Product Expiration in Feed</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Expiration"/>
         <mappers>
@@ -2788,7 +2789,7 @@
         </mappers>
         <param>7</param>
       </directive>
-      <directive name="directive_variant_attributes" allow_output_limit="true">
+      <directive name="directive_variant_attributes" translate="label" allow_output_limit="true">
         <label>Variant Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\VariantAttributes"/>
         <mappers>
@@ -2796,19 +2797,19 @@
           <mapper for="configurable grouped bundle" type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\VariantAttributes"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_average">
+      <directive name="directive_product_review_average" translate="label">
         <label>Product Review Average</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewAverage"/>
         </mappers>
       </directive>
-      <directive name="directive_product_review_count">
+      <directive name="directive_product_review_count" translate="label">
         <label>Product Review Count</label>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductReviewCount"/>
         </mappers>
       </directive>
-      <directive name="directive_concatenate" allow_output_limit="true">
+      <directive name="directive_concatenate" translate="label" allow_output_limit="true">
         <label>Concatenate Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Concatenate"/>
         <mappers>
@@ -2818,14 +2819,14 @@
         </mappers>
         <param>Product's name is "{{name}}" and sku is "{{sku}}".</param>
       </directive>
-      <directive name="directive_product_option" allow_output_limit="true">
+      <directive name="directive_product_option" translate="label" allow_output_limit="true">
         <label>Product Option</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductOption"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductOption"/>
         </mappers>
       </directive>
-      <directive name="directive_shipping_weight">
+      <directive name="directive_shipping_weight" translate="label">
         <label>Shipping Weight</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ShippingWeight"/>
         <mappers>
@@ -2835,7 +2836,7 @@
         </mappers>
         <param><![CDATA[kg]]></param>
       </directive>
-      <directive name="directive_identifier_attribute">
+      <directive name="directive_identifier_attribute" translate="label">
         <label><![CDATA[Identifier Attribute]]></label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\IdentifierAttribute"/>
         <mappers>
@@ -2843,7 +2844,7 @@
         </mappers>
         <param><![CDATA[]]></param>
       </directive>
-      <directive name="directive_item_group_id">
+      <directive name="directive_item_group_id" translate="label">
         <label>Item Group ID</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ItemGroupId"/>
         <param><![CDATA[sku]]></param>
@@ -2852,7 +2853,7 @@
           <mapper for="configurable_child" type="MageOS\ShoppingFeed\Model\Product\Mapper\Google\Configurable\Associated\ItemGroupId"/>
         </mappers>
       </directive>
-      <directive name="directive_product_type_magento_category" allow_output_limit="true">
+      <directive name="directive_product_type_magento_category" translate="label" allow_output_limit="true">
         <label>Type by Magento Category Path</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductTypeMagentoCategory"/>
         <mappers>
@@ -2862,7 +2863,7 @@
         </mappers>
         <param>3</param>
       </directive>
-      <directive name="directive_product_type_by_category">
+      <directive name="directive_product_type_by_category" translate="label param">
         <label>Type by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -2870,7 +2871,7 @@
         </mappers>
         <param><![CDATA[Please configure the <a href="#" data-tab-id="#feed_tabs_categories">Categories Map</a>]]></param>
       </directive>
-      <directive name="directive_google_category_by_category">
+      <directive name="directive_google_category_by_category" translate="label param">
         <label>Taxonomy by Magento Category</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -3116,14 +3117,14 @@
     <label>Google Local Inventory</label>
     <description>Google Local Inventory feed type.</description>
     <directives>
-      <directive name="directive_static_value">
+      <directive name="directive_static_value" translate="label">
         <label>Static Value</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StaticValue"/>
         <mappers>
           <mapper type="MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\StaticValue"/>
         </mappers>
       </directive>
-      <directive name="directive_id">
+      <directive name="directive_id" translate="label">
         <label>Product Id</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductId"/>
         <mappers>
@@ -3131,7 +3132,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_price">
+      <directive name="directive_price" translate="label">
         <label>Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -3144,7 +3145,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_tier_price">
+      <directive name="directive_tier_price" translate="label">
         <label>Tier Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\CustomerGroup"/>
         <mappers filter="true">
@@ -3157,7 +3158,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_sale_price">
+      <directive name="directive_sale_price" translate="label">
         <label>Sale Price</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductPrice"/>
         <mappers filter="true">
@@ -3169,7 +3170,7 @@
         </formatters>
         <param>1</param>
       </directive>
-      <directive name="directive_sale_price_effective_date">
+      <directive name="directive_sale_price_effective_date" translate="label param">
         <label>Sale Price Date Range</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>
@@ -3178,7 +3179,7 @@
         </mappers>
         <param>Computes the start and end dates of special price. If end date is not specified, defaults to one year.</param>
       </directive>
-      <directive name="directive_availability">
+      <directive name="directive_availability" translate="label param">
         <label>Availability</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers filter="true">
@@ -3189,7 +3190,7 @@
         </mappers>
         <param><![CDATA[Computes the product availability: in stock / out of stock. See additional setting <a href="#" data-tab-id="#feed_tabs_general">Use default Stock Statuses</a>]]></param>
       </directive>
-      <directive name="directive_quantity">
+      <directive name="directive_quantity" translate="label">
         <label>Inventory Count</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\ProductQuantity"/>
         <mappers>
@@ -3198,7 +3199,7 @@
         </mappers>
         <param>0</param>
       </directive>
-      <directive name="directive_stock_attribute">
+      <directive name="directive_stock_attribute" translate="label">
         <label>Stock Attribute</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\StockAttribute"/>
         <mappers>
@@ -3206,7 +3207,7 @@
         </mappers>
         <param>backorders</param>
       </directive>
-      <directive name="directive_concatenate" allow_output_limit="true">
+      <directive name="directive_concatenate" translate="label" allow_output_limit="true">
         <label>Concatenate Attributes</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\Concatenate"/>
         <mappers>
@@ -3216,7 +3217,7 @@
         </mappers>
         <param>Product's name is "{{name}}" and sku is "{{sku}}".</param>
       </directive>
-      <directive name="directive_inventory_source">
+      <directive name="directive_inventory_source" translate="label param">
         <label>Inventory Source</label>
         <renderer type="MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\Renderer\HelpMessage"/>
         <mappers>

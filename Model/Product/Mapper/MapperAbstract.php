@@ -58,6 +58,8 @@ abstract class MapperAbstract implements MapperInterface
     }
 
     /**
+     * Adapter of the product being mapped (the most recently added one).
+     *
      * @return \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract
      */
     public function getAdapter()
@@ -66,6 +68,8 @@ abstract class MapperAbstract implements MapperInterface
     }
 
     /**
+     * Push the adapter of the product to map; popAdapter() restores the previous one.
+     *
      * @param  \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter
      * @return \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract
      */
@@ -76,6 +80,8 @@ abstract class MapperAbstract implements MapperInterface
     }
 
     /**
+     * Remove and return the most recently added adapter.
+     *
      * @return \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple
      */
     public function popAdapter()
@@ -109,6 +115,8 @@ abstract class MapperAbstract implements MapperInterface
     }
 
     /**
+     * Whether the mapper configuration has a value for the path.
+     *
      * @param string $path
      *
      * @return bool
@@ -119,6 +127,8 @@ abstract class MapperAbstract implements MapperInterface
     }
 
     /**
+     * Clear the mapper configuration.
+     *
      * @return MapperAbstract
      */
     public function resetConfiguration()
@@ -128,7 +138,9 @@ abstract class MapperAbstract implements MapperInterface
     }
 
     /**
-     * @param  $cell
+     * Whether the mapped cell value excludes the product from the feed; mappers with a filter override this.
+     *
+     * @param mixed $cell
      * @return boolean
      */
     public function filter($cell)

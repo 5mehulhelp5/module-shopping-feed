@@ -23,7 +23,10 @@ class FeedEditorThemeTest extends TestCase
             $modules = $this->createMock(Manager::class);
             $modules->method('isEnabled')->with('Qoliber_Nebula')->willReturn($enabled);
             $plugin = new FeedEditorTheme($request, $modules);
-            self::assertSame([$expected, $area], $plugin->beforeSetDesignTheme(new \stdClass(), 'Qoliber/Nebula', $area));
+            self::assertSame(
+                [$expected, $area],
+                $plugin->beforeSetDesignTheme(new \stdClass(), 'Qoliber/Nebula', $area)
+            );
         }
     }
 
@@ -36,6 +39,9 @@ class FeedEditorThemeTest extends TestCase
         $modules = $this->createMock(Manager::class);
         $modules->method('isEnabled')->willReturn(true);
         $plugin = new FeedEditorTheme($request, $modules);
-        self::assertSame(['Qoliber/Nebula', 'adminhtml'], $plugin->beforeSetDesignTheme(new \stdClass(), 'Qoliber/Nebula', 'adminhtml'));
+        self::assertSame(
+            ['Qoliber/Nebula', 'adminhtml'],
+            $plugin->beforeSetDesignTheme(new \stdClass(), 'Qoliber/Nebula', 'adminhtml')
+        );
     }
 }

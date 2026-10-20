@@ -29,12 +29,18 @@ class AvailabilityTest extends TestCase
         $adapter = $this->createMock(AdapterAbstract::class);
         $adapter->method('getFeed')->willReturn($feed);
         $adapter->method('getProduct')->willReturn($this->createMock(Product::class));
-        $adapter->method('getData')->with('inventory_source_item')->willReturn(new DataObject(['quantity' => $qty, 'status' => $status]));
+        $adapter->method('getData')->with('inventory_source_item')
+            ->willReturn(new DataObject(['quantity' => $qty, 'status' => $status]));
         $stockItem = (new \ReflectionClass(Item::class))->newInstanceWithoutConstructor();
         $stockItem->setData(['item_id' => 1, 'is_in_stock' => 1, 'qty' => 0, 'backorders' => 1, 'manage_stock' => 1]);
         $registry = $this->createMock(StockRegistryProvider::class);
         $registry->method('getStockItem')->willReturn($stockItem);
-        $mapper = new Availability($this->createMock(Logger::class), $this->createMock(Status::class), $this->createMock(Api::class), $registry);
+        $mapper = new Availability(
+            $this->createMock(Logger::class),
+            $this->createMock(Status::class),
+            $this->createMock(Api::class),
+            $registry
+        );
         $mapper->addAdapter($adapter);
         $this->assertSame($expected, $mapper->getStockStatus($adapter));
     }
@@ -47,16 +53,25 @@ class AvailabilityTest extends TestCase
                 $child = $this->createMock(AdapterAbstract::class);
                 $child->method('getInventoryCount')->willReturn($qty);
                 $adapter = $this->createMock(AdapterAbstract::class);
-                $adapter->method('getData')->willReturnCallback(fn($key) => $key === 'associated_product_adapters' ? [$child] : null);
+                $adapter->method('getData')->willReturnCallback(
+                    fn($key) => $key === 'associated_product_adapters' ? [$child] : null
+                );
                 $adapter->method('getProduct')->willReturn($this->createMock(Product::class));
                 $filter = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Filter::class);
                 $filter->method('cleanField')->willReturnArgument(0);
                 $adapter->method('getFilter')->willReturn($filter);
                 $item = (new \ReflectionClass(Item::class))->newInstanceWithoutConstructor();
-                $item->setData(['item_id' => 1, 'is_in_stock' => 1, 'qty' => 0, 'backorders' => 1, 'manage_stock' => 1]);
+                $item->setData(
+                    ['item_id' => 1, 'is_in_stock' => 1, 'qty' => 0, 'backorders' => 1, 'manage_stock' => 1]
+                );
                 $registry = $this->createMock(StockRegistryProvider::class);
                 $registry->method('getStockItem')->willReturn($item);
-                $mapper = new $class($this->createMock(Logger::class), $this->createMock(Status::class), $this->createMock(Api::class), $registry);
+                $mapper = new $class(
+                    $this->createMock(Logger::class),
+                    $this->createMock(Status::class),
+                    $this->createMock(Api::class),
+                    $registry
+                );
                 $mapper->addAdapter($adapter);
                 $this->assertSame($expected, $mapper->map(['column' => 'availability']), $class);
             }
@@ -86,12 +101,17 @@ class AvailabilityTest extends TestCase
         $api = $this->createMock(Api::class);
         $api->expects(self::never())->method('getReservations');
         $quantity = new \MageOS\ShoppingFeed\Model\Product\Mapper\LocalInventory\Simple\Quantity(
-            $this->createMock(Logger::class), $api
+            $this->createMock(Logger::class),
+            $api
         );
         $quantity->addAdapter($adapter);
         self::assertSame('1', $quantity->map());
-        $availability = new Availability($this->createMock(Logger::class), $this->createMock(Status::class),
-            $api, $this->createMock(StockRegistryProvider::class));
+        $availability = new Availability(
+            $this->createMock(Logger::class),
+            $this->createMock(Status::class),
+            $api,
+            $this->createMock(StockRegistryProvider::class)
+        );
         $availability->addAdapter($adapter);
         self::assertSame('in_stock', $availability->getStockStatus($adapter));
     }
@@ -119,7 +139,9 @@ class AvailabilityTest extends TestCase
             new DataObject(['source_code' => 'another-source', 'status' => 1]),
         ]);
         $mapper = new \MageOS\ShoppingFeed\Model\Product\Mapper\LocalInventory\Configurable\Availability(
-            $this->createMock(Logger::class), $this->createMock(Status::class), $api,
+            $this->createMock(Logger::class),
+            $this->createMock(Status::class),
+            $api,
             $this->createMock(StockRegistryProvider::class)
         );
         $mapper->addAdapter($adapter);

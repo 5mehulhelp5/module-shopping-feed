@@ -25,7 +25,8 @@ class FeedFormDataTest extends TestCase
             ])]);
         $feed->method('getSchedules')->willReturn([['id' => 8, 'feed_id' => 7, 'processed_at' => 'private']]);
         $feed->method('getUploads')->willReturn([
-            ['id' => 9, 'password' => 'decrypted-secret', 'host' => 'example.invalid', 'internal_secret' => 'hidden'],
+            ['id' => 9, 'password' => 'decrypted-secret', 'host' => 'example.invalid', 'internal_secret' => 'hidden',
+                'host_key_fingerprint' => 'SHA256:' . str_repeat('A', 43)],
             ['id' => null, 'password' => 'new-secret']
         ]);
         $data = (new FeedFormData())->project($feed, [
@@ -35,9 +36,13 @@ class FeedFormDataTest extends TestCase
         self::assertFalse($data['config']['custom_boolean']);
         self::assertSame('0', $data['config']['general_use_default_stock']);
         self::assertSame(Upload::OBSCURED_VALUE, $data['uploads'][0]['password']);
+        self::assertSame('SHA256:' . str_repeat('A', 43), $data['uploads'][0]['host_key_fingerprint']);
         self::assertSame('', $data['uploads'][1]['password']);
         self::assertSame([['id' => 8]], $data['schedules']);
-        self::assertSame([['column' => 'zero', 'param' => '0', 'position' => 1]], $data['config']['columns_product_columns']);
+        self::assertSame(
+            [['column' => 'zero', 'param' => '0', 'position' => 1]],
+            $data['config']['columns_product_columns']
+        );
         self::assertStringNotContainsString('secret', json_encode($data));
         self::assertStringNotContainsString('private', json_encode($data));
         self::assertStringNotContainsString('hidden', json_encode($data));
@@ -61,7 +66,8 @@ class FeedFormDataTest extends TestCase
             ['param' => ['zero' => 0, 'flag' => false, 'nested' => ['${ literal }', '<b>text</b>']]]
         ]]];
         $json = (new FeedFormData())->encodeForProvider($data);
-        $sanitized = (new \Magento\Framework\View\Element\UiComponent\DataProvider\Sanitizer())->sanitize(['data' => $json]);
+        $sanitized = (new \Magento\Framework\View\Element\UiComponent\DataProvider\Sanitizer())
+            ->sanitize(['data' => $json]);
         self::assertSame(['data' => $json], $sanitized);
         self::assertSame($data, json_decode($sanitized['data'], true));
         self::assertStringNotContainsString('${', $json);

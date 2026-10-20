@@ -4,10 +4,20 @@ namespace MageOS\ShoppingFeed\Plugin\Adminhtml;
 
 class NebulaDefinition
 {
+    /**
+     * @param \Magento\Framework\AuthorizationInterface $authorization
+     */
     public function __construct(private \Magento\Framework\AuthorizationInterface $authorization)
     {
     }
 
+    /**
+     * Keep only the feed grid mass actions the admin user may run, with full URLs
+     *
+     * @param mixed $subject \Qoliber\NebulaGrid\Block\Grid (optional dependency)
+     * @param array<mixed> $result
+     * @return array<mixed>
+     */
     public function afterGetDefinition($subject, array $result): array
     {
         if (($result['id'] ?? '') === 'mageos_shopping_feed_grid') {
@@ -22,6 +32,14 @@ class NebulaDefinition
         return $result;
     }
 
+    /**
+     * Keep feed grid filters, sorting and paging in query parameters of grid and export links
+     *
+     * @param mixed $subject \Qoliber\NebulaGrid\Block\Grid (optional dependency)
+     * @param string $route
+     * @param array<mixed> $params
+     * @return array<int, mixed>
+     */
     public function beforeGetUrl($subject, $route = '', $params = []): array
     {
         if ($subject->getGridId() !== 'mageos_shopping_feed_grid') {

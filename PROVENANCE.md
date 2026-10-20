@@ -1,6 +1,6 @@
 # Source provenance
 
-This module is a consolidated derivative of four Rocket Web repositories. The initial Mage-OS import used these exact revisions:
+This module is a consolidated derivative of four [Rocket Web](https://rocketweb.com/) repositories. The initial Mage-OS import used these exact revisions:
 
 | Source repository | Imported revision | Consolidated capability |
 | --- | --- | --- |
@@ -15,6 +15,6 @@ The consolidation also resolves source-level integration defects that could not 
 
 The imported unit suite was updated for the current Magento testing framework and PHP runtime, then expanded with regression coverage for the consolidated module. It runs through the repository bootstrap in `Test/Unit/bootstrap.php`.
 
-Historical Rocket Web data patches were intentionally not imported. The new module creates fresh declarative-schema tables, so upgrades for serialized legacy rows are unnecessary. The legacy log migration also moves and deletes shared `pub/media/feeds/log_*.log` files, which would violate the coexistence boundary on a store running a paid package.
+Historical Rocket Web data patches were intentionally not imported. The new module creates fresh declarative-schema tables, so upgrades for serialized legacy rows are unnecessary. The legacy log migration also moves and deletes shared `pub/media/feeds/log_*.log` files, which would violate the coexistence boundary on a store running an original Rocket Web module.
 
-Original Rocket Web notices remain in the imported source. The package metadata, source notices, and bundled license in this repository are aligned on OSL-3.0. See [LICENSING.md](LICENSING.md).
+Original Rocket Web copyright and author attribution is retained in the imported source. The package metadata, source notices, and bundled license in this repository use OSL-3.0. See [LICENSING.md](LICENSING.md).

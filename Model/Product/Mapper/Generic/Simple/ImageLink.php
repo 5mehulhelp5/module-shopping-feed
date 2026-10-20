@@ -20,14 +20,11 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple;
 
 use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
-/**
- * Class ImageLink
- *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
- */
 class ImageLink extends MapperAbstract
 {
     /**
+     * Image URL of the configured image attribute, '' without an image.
+     *
      * @param  array $params
      * @return mixed|string
      */

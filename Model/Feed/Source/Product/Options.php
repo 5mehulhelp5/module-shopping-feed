@@ -15,10 +15,14 @@ class Options
     protected $optionFactory;
 
     /**
-     * @var \Magento\Catalog\Model\ResourceModel\Product\Option\Collection
+     * @var \Magento\Catalog\Model\ResourceModel\Product\Option\Collection|null
      */
     protected $optionCollection;
 
+    /**
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Catalog\Model\ResourceModel\Product\Option\CollectionFactory $optionFactory
+     */
     public function __construct(
         \Magento\Framework\Registry $registry,
         \Magento\Catalog\Model\ResourceModel\Product\Option\CollectionFactory $optionFactory
@@ -28,6 +32,11 @@ class Options
         $this->optionFactory = $optionFactory;
     }
 
+    /**
+     * Custom option titles of the current feed's store, with product counts.
+     *
+     * @return array<int,array<string,mixed>>
+     */
     public function toOptionArray()
     {
         $result = [];
@@ -44,16 +53,20 @@ class Options
         return $result;
     }
 
+    /**
+     * Custom options grouped by title for the feed held in the registry.
+     *
+     * @return \Magento\Catalog\Model\ResourceModel\Product\Option\Collection
+     */
     public function getOptionCollection()
     {
-        if (is_null($this->optionCollection)) {
+        if ($this->optionCollection === null) {
             $feed = $this->registry->registry('feed');
-            /**
- * @var \Magento\Catalog\Model\ResourceModel\Product\Option\Collection $optionCollection
-*/
             $this->optionCollection = $this->optionFactory->create();
             $this->optionCollection->addTitleToResult($feed->getStoreId());
-            $this->optionCollection->getSelect()->columns('COUNT(*) AS count_products')->group('HEX(default_option_title.title)');
+            $this->optionCollection->getSelect()
+                ->columns('COUNT(*) AS count_products')
+                ->group('HEX(default_option_title.title)');
         }
 
         return $this->optionCollection;

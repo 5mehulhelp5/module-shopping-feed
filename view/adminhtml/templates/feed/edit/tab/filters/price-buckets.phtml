@@ -8,27 +8,28 @@ $element = $block->getElement();
 <?php $htmlName    = $block->getElement()->getName() ?>
 <?php $readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled() ?>
 
-<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
-     data-apply-to="<?php echo $block->escapeHtml(
-         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+<div class="field" id="attribute-<?= $escaper->escapeHtml($htmlId) ?>-container"
+     data-attribute-code="<?= $escaper->escapeHtml($htmlId) ?>"
+     data-apply-to="<?= $escaper->escapeHtml(
+         $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode(
              $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
          )
      )?>">
-    <label class="label"><span><?php echo $block->escapeHtml($block->getElement()->getLabel()) ?></span></label>
+    <label class="label"><span><?= $escaper->escapeHtml($block->getElement()->getLabel()) ?></span></label>
     <div class="control">
         <table class="admin__control-table price_bucket_table data-grid" id="price_bucket_table">
             <thead>
                 <tr>
-                    <th class="data-grid-th col-pricefrom required"><?php echo $block->escapeHtml(__('Price from')) ?></th>
-                    <th class="data-grid-th col-priceto required"><?php echo $block->escapeHtml(__('Price to')) ?></th>
-                    <th class="data-grid-th col-label"><?php echo $block->escapeHtml(__('Bucket label')) ?></th>
-                    <th class="data-grid-th col-delete"><?php echo $block->escapeHtml(__('Action')) ?></th>
+                    <th class="data-grid-th col-pricefrom required"><?= $escaper->escapeHtml(__('Price from')) ?></th>
+                    <th class="data-grid-th col-priceto required"><?= $escaper->escapeHtml(__('Price to')) ?></th>
+                    <th class="data-grid-th col-label"><?= $escaper->escapeHtml(__('Bucket label')) ?></th>
+                    <th class="data-grid-th col-delete"><?= $escaper->escapeHtml(__('Action')) ?></th>
                 </tr>
             </thead>
-            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container"></tbody>
+            <tbody id="<?= $escaper->escapeHtml($htmlId) ?>_container"></tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="col-actions-add"><?php echo $block->getAddButtonHtml() ?></td>
+                    <td colspan="4" class="col-actions-add"><?= /* @noEscape */ $block->getAddButtonHtml() ?></td>
                 </tr>
             </tfoot>
         </table>
@@ -43,17 +44,24 @@ require([
 //<![CDATA[
 var priceBucketsRowTemplate = '<tr>'
     + '<td class="col-pricefrom">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> pricefrom required-entry validate-not-negative-number" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][pricefrom]" value="<%- data.pricefrom %>" id="price_bucket_row_<%- data.index %>_pricefrom" />'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> pricefrom required-entry validate-not-negative-number" type="text" name="<?= $escaper->escapeHtml($htmlName) ?>[<%- data.index %>][pricefrom]" value="<%- data.pricefrom %>" id="price_bucket_row_<%- data.index %>_pricefrom" />'
     + '</td>'
     + '<td class="col-priceto">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> priceto required-entry validate-greater-than-zero" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][priceto]" value="<%- data.priceto %>" id="price_bucket_row_<%- data.index %>_priceto" />'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> priceto required-entry validate-greater-than-zero" type="text" name="<?= $escaper->escapeHtml($htmlName) ?>[<%- data.index %>][priceto]" value="<%- data.priceto %>" id="price_bucket_row_<%- data.index %>_priceto" />'
     + '</td>'
     + '<td class="col-label">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> bucketlabel" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][label]" value="<%- data.label %>" id="price_bucket_row_<%- data.index %>_label" />'
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> bucketlabel" type="text" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][label]" value="<%- data.label %>" id="price_bucket_row_<%- data.index %>_label" />'
     + '</td>'
-    + '<td class="col-delete"><input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][delete]" class="delete" value="" id="price_bucket_row_<%- data.index %>_delete" />'
-    + '<button title="<?php echo $block->escapeHtml(__('Delete')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="price_bucket_row_<%- data.index %>_delete_button" onclick="return priceBucketsControl.deleteItem(event);">'
-    + '<span><?php echo $block->escapeHtml(__("Delete")) ?></span></button></td>'
+    + '<td class="col-delete"><input type="hidden" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][delete]" class="delete" value="" id="price_bucket_row_<%- data.index %>_delete" />'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<button title="<?= $escaper->escapeHtml(__('Delete')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="price_bucket_row_<%- data.index %>_delete_button" onclick="return priceBucketsControl.deleteItem(event);">'
+    + '<span><?= $escaper->escapeHtml(__("Delete")) ?></span></button></td>'
     + '</tr>';
 
 var priceBucketsControl = {
@@ -80,7 +88,7 @@ var priceBucketsControl = {
             data.readOnly  = arguments[3];
         }
 
-        Element.insert($('<?php echo $block->escapeHtml($htmlId) ?>_container'), {
+        Element.insert($('<?= $escaper->escapeHtml($htmlId) ?>_container'), {
             bottom : this.template({
                 data: data
             })
@@ -97,10 +105,12 @@ var priceBucketsControl = {
         }
 
         <?php if ($readonly): ?>
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
         <?php else: ?>
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+        $('<?=
+            $escaper->escapeHtml($htmlId)
+        ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
         <?php endif; ?>
     },
     disableElement: function(el) {
@@ -120,14 +130,14 @@ var priceBucketsControl = {
 };
 <?php foreach ($block->getValues() as $item): ?>
     priceBucketsControl.addItem(
-        '<?php echo $block->escapeJsQuote($block->escapeHtml($item['pricefrom'])) ?>',
-        '<?php echo $block->escapeJsQuote($block->escapeHtml($item['priceto'])) ?>',
-        '<?php echo $block->escapeJsQuote($block->escapeHtml($item['label'])) ?>',
-        <?php echo (int) !empty($item['readonly'])?>
+        '<?= $escaper->escapeJsQuote($escaper->escapeHtml($item['pricefrom'])) ?>',
+        '<?= $escaper->escapeJsQuote($escaper->escapeHtml($item['priceto'])) ?>',
+        '<?= $escaper->escapeJsQuote($escaper->escapeHtml($item['label'])) ?>',
+        <?= (int) !empty($item['readonly'])?>
     );
 <?php endforeach; ?>
 <?php if ($readonly): ?>
-$('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button')
+$('<?= $escaper->escapeHtml($htmlId) ?>_container').up('table').select('button')
     .each(priceBucketsControl.disableElement);
 <?php endif; ?>
 
@@ -138,7 +148,9 @@ window.priceBucketsControl = priceBucketsControl;
 </script>
         <?php if (strlen($block->getElement()->getNote())): ?>
         <div class="note">
-            <span><?php /* @escapeNotVerified */ echo $block->getElement()->getNote() ?></span>
+            <span><?=
+                $escaper->escapeHtml($block->getElement()->getNote(), ['a', 'strong', 'b', 'em', 'br', 'span'])
+            ?></span>
         </div>
         <?php endif; ?>
     </div>

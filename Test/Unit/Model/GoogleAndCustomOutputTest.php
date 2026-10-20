@@ -26,7 +26,8 @@ class GoogleAndCustomOutputTest extends TestCase
             $writes[] = $line;
             return strlen($line);
         });
-        $generator = $this->getMockBuilder(Generator::class)->disableOriginalConstructor()->onlyMethods(['getLogger'])->getMock();
+        $generator = $this->getMockBuilder(Generator::class)->disableOriginalConstructor()
+            ->onlyMethods(['getLogger'])->getMock();
         $generator->method('getLogger')->willReturn($this->createMock(Logger::class));
         (new \ReflectionProperty(Generator::class, 'feed'))->setValue($generator, $feed);
         (new \ReflectionProperty(Generator::class, 'fileDriver'))->setValue($generator, $driver);
@@ -78,7 +79,16 @@ class GoogleAndCustomOutputTest extends TestCase
 
     public static function dateCases(): array
     {
-        return [['', false], ['tomorrow', false], ['2027-02-30', false], ['past', false], ['too_far', false], ['bad_timezone', false], ['future', true], ['database', true]];
+        return [
+            ['', false],
+            ['tomorrow', false],
+            ['2027-02-30', false],
+            ['past', false],
+            ['too_far', false],
+            ['bad_timezone', false],
+            ['future', true],
+            ['database', true],
+        ];
     }
 
     public function testCustomFeedsKeepTheirColumnOrderAndBackorderVocabulary(): void

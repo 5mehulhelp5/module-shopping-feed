@@ -44,9 +44,9 @@ class Builder
 
     /**
      * @param \MageOS\ShoppingFeed\Model\FeedFactory $feedFactory
-     * @param \Psr\Log\LoggerInterface                   $logger
-     * @param \Magento\Framework\Registry                $registry
-     * @param \Magento\Backend\Model\Session             $session
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Backend\Model\Session $session
      */
     public function __construct(
         \MageOS\ShoppingFeed\Model\FeedFactory $feedFactory,
@@ -63,8 +63,9 @@ class Builder
     /**
      * Build feed based on user request
      *
-     * @param  array
+     * @param  array $formData
      * @return \MageOS\ShoppingFeed\Model\Feed
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function build($formData)
     {
@@ -75,14 +76,13 @@ class Builder
             throw new \Magento\Framework\Exception\LocalizedException(__('Invalid feed type.'));
         }
         $useMicrodata = $this->nonNegativeInteger(
-            $formData['use_microdata'] ?? ($typeId === 'google_shopping' ? 1 : 0), 'use_microdata'
+            $formData['use_microdata'] ?? ($typeId === 'google_shopping' ? 1 : 0),
+            'use_microdata'
         );
         if ($useMicrodata > 1) {
             throw new \Magento\Framework\Exception\LocalizedException(__('Invalid use_microdata value.'));
         }
-        /**
- * @var $feed \MageOS\ShoppingFeed\Model\Feed
-*/
+        /** @var \MageOS\ShoppingFeed\Model\Feed $feed */
         $feed = $this->feedFactory->create();
         $feed->setStoreId($storeId);
 
@@ -103,7 +103,9 @@ class Builder
         if (isset($formData['schedules'])) {
             $feed->setSchedules($formData['schedules']);
         } elseif ($feed->isObjectNew() && empty($feed->getSchedules())) {
-            $feed->setSchedules([['id' => null, 'feed_id' => null, 'start_at' => 1, 'batch_mode' => 0, 'batch_limit' => '']]);
+            $feed->setSchedules(
+                [['id' => null, 'feed_id' => null, 'start_at' => 1, 'batch_mode' => 0, 'batch_limit' => '']]
+            );
         }
 
         $this->registry->register('feed', $feed);
@@ -118,11 +120,22 @@ class Builder
         return $feed;
     }
 
+    /**
+     * Parse a request value as a non-negative integer
+     *
+     * @param mixed $value
+     * @param string $field
+     * @return int
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     private function nonNegativeInteger($value, string $field): int
     {
         if ((is_int($value) || is_string($value)) && ctype_digit((string)$value)) {
-            $integer = filter_var(ltrim((string)$value, '0') ?: '0', FILTER_VALIDATE_INT,
-                ['options' => ['min_range' => 0]]);
+            $integer = filter_var(
+                ltrim((string)$value, '0') ?: '0',
+                FILTER_VALIDATE_INT,
+                ['options' => ['min_range' => 0]]
+            );
             if ($integer !== false) {
                 return $integer;
             }

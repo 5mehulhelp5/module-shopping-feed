@@ -24,7 +24,28 @@ foreach (['require', 'require-dev', 'replace', 'provide', 'conflict'] as $depend
     );
 }
 
-$ciWorkflow = (string) file_get_contents($root . '/.github/workflows/ci.yml');
+$ciWorkflow = (string) file_get_contents($root . '/.github/workflows/check-extension.yaml');
+$assert(!is_file($root . '/.github/workflows/ci.yml'), 'The CI workflow must use the standard check-extension.yaml name');
+$assert(
+    preg_match('/^  pull_request:\s*$/m', $ciWorkflow) === 1,
+    'Pull request CI must run for every base branch'
+);
+$checkExtensionConfig = json_decode((string) @file_get_contents($root . '/.github/check-extension.json'), true);
+$assert(
+    is_array($checkExtensionConfig) && ($checkExtensionConfig['jobs']['phpstan'] ?? false) === true,
+    'The check-extension PHPStan job must be enabled'
+);
+$assert(
+    preg_match_all('/check-extension\.yaml@[0-9a-f]{40} # v\d+\.\d+\.\d+/', $ciWorkflow) === 2,
+    'Reusable check-extension workflows must be pinned to a commit with a version comment'
+);
+$assert(
+    preg_match('/^\s*-?\s*uses: [^@\s]+@(?![0-9a-f]{40}\b)/m', $ciWorkflow) !== 1,
+    'Every action must be pinned to a full commit SHA'
+);
+$assert(str_contains($ciWorkflow, 'dependency-audit:'), 'Locked platform dependency audit job is missing');
+$assert(str_contains($ciWorkflow, 'development-tool-audit:'), 'Locked extension and tool audit job is missing');
+$assert(is_file($root . '/.github/dependabot.yml'), 'Dependabot configuration is missing');
 $assert(str_contains($ciWorkflow, 'check-magento:'), 'Magento Open Source CI job is missing');
 $assert(str_contains($ciWorkflow, 'check-mageos:'), 'Mage-OS CI job is missing');
 $assert(
@@ -51,7 +72,10 @@ foreach ($iterator as $file) {
     }
 
     $path = $file->getPathname();
-    if (str_contains($path, DIRECTORY_SEPARATOR . '.git' . DIRECTORY_SEPARATOR)) {
+    // The local dev install (vendor/) is not module source.
+    if (str_contains($path, DIRECTORY_SEPARATOR . '.git' . DIRECTORY_SEPARATOR)
+        || str_starts_with($path, $root . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR)
+    ) {
         continue;
     }
 
@@ -237,10 +261,6 @@ $schema = new DOMDocument();
 $schema->load($root . '/etc/db_schema.xml', LIBXML_NONET);
 $expectedWhitelist = [];
 foreach ($schema->getElementsByTagName('table') as $table) {
-    if (!$table instanceof DOMElement) {
-        continue;
-    }
-
     $tableData = ['column' => [], 'index' => [], 'constraint' => []];
     foreach ($table->childNodes as $child) {
         if (!$child instanceof DOMElement) {
@@ -309,6 +329,7 @@ foreach ($iterator as $file) {
     }
     $path = $file->getPathname();
     if (str_contains($path, DIRECTORY_SEPARATOR . '.git' . DIRECTORY_SEPARATOR)
+        || str_starts_with($path, $root . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR)
         || $path === __FILE__
         || in_array($file->getExtension(), ['md', 'png'], true)
         || $file->getBasename() === 'LICENSE.txt'

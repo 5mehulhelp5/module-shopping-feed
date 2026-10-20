@@ -22,6 +22,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\LocalInventory\Simple\Availability
 
 class Availability extends SimpleAvailability
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $cell = self::IN_STOCK;

@@ -20,13 +20,10 @@ namespace MageOS\ShoppingFeed\Model\Feed\Source\Uploads;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * Class TransferModes
- */
 class TransferModes implements OptionSourceInterface
 {
-    const MODE_FTP  = 'ftp';
-    const MODE_SFTP = 'sftp';
+    public const MODE_FTP  = 'ftp';
+    public const MODE_SFTP = 'sftp';
 
     /**
      * Retrieve option array
@@ -37,7 +34,7 @@ class TransferModes implements OptionSourceInterface
     {
         return [
             self::MODE_SFTP => __('SFTP'),
-            self::MODE_FTP  => __('FTP'),
+            self::MODE_FTP  => __('FTP (unencrypted)'),
         ];
     }
 

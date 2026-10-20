@@ -44,8 +44,9 @@ class Viewlog extends \Magento\Backend\Block\Template
     /**
      * @param \Magento\Backend\Block\Template\Context             $context
      * @param \Magento\Framework\App\Filesystem\DirectoryList     $directoryList
-     * @param \Magento\Framework\Filesystem\Directory\ReadFactory
+     * @param \Magento\Framework\Filesystem\Directory\ReadFactory $readFactory
      * @param \Magento\Framework\Registry                         $registry
+     * @param \MageOS\ShoppingFeed\Model\Feed\OutputPath          $outputPath
      * @param array                                               $data
      */
     public function __construct(
@@ -73,10 +74,13 @@ class Viewlog extends \Magento\Backend\Block\Template
         $file = false;
         $feed = $this->registry->registry('feed');
         $feedLogFile = $this->outputPath->getLogFile($feed);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- log path split; driver needs constructor arg
         $directoryReader = $this->readFactory->create(dirname($feedLogFile));
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- log path split; driver needs constructor arg
         if ($directoryReader->isExist(basename($feedLogFile))) {
             try {
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction -- log path split; driver needs constructor arg
                 $fileReader = $directoryReader->openFile(basename($feedLogFile));
                 $file = $fileReader->readAll();
             } catch (\Exception $e) {

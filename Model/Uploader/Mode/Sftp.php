@@ -26,7 +26,7 @@ use \MageOS\ShoppingFeed\Model\Uploader\UploaderInterface;
  */
 class Sftp extends UploaderAbstract implements UploaderInterface
 {
-    const DEFAULT_TIMEOUT = 10;
+    public const DEFAULT_TIMEOUT = 10;
 
     /**
      * @var \Magento\Framework\Filesystem\Io\Sftp
@@ -37,8 +37,8 @@ class Sftp extends UploaderAbstract implements UploaderInterface
      * Ftp constructor.
      *
      * @param \MageOS\ShoppingFeed\Model\Feed\Upload $feedUpload
-     * @param \Magento\Framework\Filesystem\Io\Sftp      $connection
-     * @param array                                      $data
+     * @param \Magento\Framework\Filesystem\Io\Sftp $connection
+     * @param array $data
      */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Feed\Upload $feedUpload,
@@ -52,16 +52,18 @@ class Sftp extends UploaderAbstract implements UploaderInterface
     /**
      * Provides connection configuration for connection class
      *
-     * @param  $config
-     * @return array
+     * @param array<string,mixed> $config
+     * @return array<string,mixed>
      */
     public function getConnectionConfiguration($config)
     {
         return [
-            'host'     => sprintf('%s:%s', $config['host'], $config['port']),
+            'host'     => $config['host'],
+            'port'     => $config['port'],
             'username' => $config['username'],
             'password' => $config['password'],
             'timeout'  => self::DEFAULT_TIMEOUT,
+            'host_key_fingerprint' => $config['host_key_fingerprint'] ?? '',
         ];
     }
 }

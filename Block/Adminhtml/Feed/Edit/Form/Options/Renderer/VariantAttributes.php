@@ -38,9 +38,9 @@ class VariantAttributes extends Template
     /**
      * VariantAttributes constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context                       $context
+     * @param \Magento\Backend\Block\Template\Context $context
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Attributes $sourceAttributes
-     * @param array                                                         $data
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -51,6 +51,11 @@ class VariantAttributes extends Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get the product attribute options
+     *
+     * @return array<mixed>
+     */
     public function getAttributes()
     {
         return $this->sourceAttributes->toOptionArray();

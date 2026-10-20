@@ -24,6 +24,8 @@ use Magento\Framework\Event\ObserverInterface;
 class LocalInventoryFilterFields implements ObserverInterface
 {
     /**
+     * Remove configurable options that local inventory feeds do not use
+     *
      * @param EventObserver $observer
      * @return void
      */

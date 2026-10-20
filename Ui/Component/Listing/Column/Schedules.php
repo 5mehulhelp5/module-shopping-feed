@@ -23,12 +23,9 @@ use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 use MageOS\ShoppingFeed\Model\FeedFactory;
 
-/**
- * Class Schedules
- */
 class Schedules extends Column
 {
-    const SCHEDULE_PARAGRAPH_CLASS = 'class="schedule"';
+    public const SCHEDULE_PARAGRAPH_CLASS = 'class="schedule"';
 
     /**
      * Feed model factory
@@ -40,11 +37,12 @@ class Schedules extends Column
     /**
      * Constructor
      *
-     * @param ContextInterface   $context
+     * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
-     * @param FeedFactory        $feedFactory
-     * @param array              $components
-     * @param array              $data
+     * @param FeedFactory $feedFactory
+     * @param \Magento\Framework\Escaper $escaper
+     * @param array $components
+     * @param array $data
      */
     public function __construct(
         ContextInterface $context,

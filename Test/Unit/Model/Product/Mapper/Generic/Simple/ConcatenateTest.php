@@ -55,7 +55,9 @@ class ConcatenateTest extends ModelFramework
         $this->expectReturn($this->adapterMock, 'getProduct', $this->productMock);
         $this->expectReturn($this->adapterMock, 'getData', 'store_code');
         $this->expectReturn(
-            $this->feedMock, 'getColumnsMap', [
+            $this->feedMock,
+            'getColumnsMap',
+            [
             ['column' => 'link', 'attribute' => 'directive_url'],
             ['column' => 'image_link', 'attribute' => 'image_link'],
             ['column' => 'test_attribute', 'attribute' => 'directive_concatenate']

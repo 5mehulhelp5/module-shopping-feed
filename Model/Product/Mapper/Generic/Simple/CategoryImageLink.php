@@ -28,14 +28,19 @@ class CategoryImageLink extends MapperAbstract
      */
     protected $cache;
 
+    /**
+     * Category factory; typed mixed so PHPStan does not newly flag the legacy Category::load() call
+     *
+     * @var mixed
+     */
     protected $categoryFactory;
 
     /**
      * CategoryImageLink constructor.
      *
-     * @param \MageOS\ShoppingFeed\Model\Logger          $logger
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
      * @param \MageOS\ShoppingFeed\Model\Generator\Cache $cache
-     * @param CategoryFactory                                $categoryFactory
+     * @param CategoryFactory $categoryFactory
      */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Logger $logger,
@@ -47,6 +52,9 @@ class CategoryImageLink extends MapperAbstract
         parent::__construct($logger);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $image = '';
@@ -58,9 +66,6 @@ class CategoryImageLink extends MapperAbstract
         if (count($categoryIds) > 0) {
             $cacheKey = implode('-', $categoryIds);
             if ($this->cache->getCache($cacheKey, true)) {
-                /**
- * @var \Magento\Catalog\Model\Category $category
-*/
                 foreach ($categoryIds as $categoryId) {
                     $category = $this->categoryFactory->create()->load($categoryId);
                     if (!$category->hasChildren() && ($imageUrl = $category->getImageUrl())) {

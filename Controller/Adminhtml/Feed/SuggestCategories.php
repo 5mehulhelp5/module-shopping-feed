@@ -59,13 +59,14 @@ class SuggestCategories extends \Magento\Backend\App\Action
 */
         $resultJson = $this->resultJsonFactory->create();
         return $resultJson->setJsonData(
-            $this->layoutFactory->create()->createBlock('\MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Options\Category\Tree')
+            $this->layoutFactory->create()
+                ->createBlock(\MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Options\Category\Tree::class)
                 ->getSuggestedCategoriesJson($this->getRequest()->getParam('label_part'))
         );
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function _isAllowed()
     {
