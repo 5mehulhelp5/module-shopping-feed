@@ -4,6 +4,10 @@ All notable changes to this project will be documented here.
 
 ## Unreleased
 
+### CI
+
+- Keep the Magento 2.4.7-p10 compatibility profile on its release-tested Ubuntu 24.04 runner after `ubuntu-latest` advanced to Ubuntu 26. Stop at the first integration failure so its exception is reported before secondary transaction errors.
+
 ### Documentation
 
 - Review the operating guides against 1.2.4, reconcile release/distribution and CI evidence, correct Test Feed permissions, and complete SFTP, credential, log-rotation, migration, and acceptance guidance.
