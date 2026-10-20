@@ -4,7 +4,7 @@ Mage-OS Shopping Feed 1.2.4 is the current stable release. See [Release 1.2.4](R
 
 > Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
 
-Version 1.2.4 adds verified SFTP server keys, encrypted upload model data, safe log rotation, and preview permission checks. Its local Mage-OS 3.6.0 run passes 939 unit tests, 30 integration tests, four database persistence tests, and 66 JavaScript checks. Existing SFTP destinations require a trusted fingerprint after `setup:upgrade`. See [Release 1.2.4](Release-1-2-4).
+Version 1.2.4 adds verified SFTP server keys, encrypted upload model data, safe log rotation, and preview permission checks. Its local Mage-OS 3.6.0 run passes 939 unit tests, 30 integration tests, four database persistence tests, and 84 JavaScript checks. Existing SFTP destinations require a trusted fingerprint after `setup:upgrade`. See [Release 1.2.4](Release-1-2-4).
 
 Version 1.2.3 includes the Mage-OS 3.5 hardening and native Hyvä/Nebula checks, plus the installed-package version display correction. The combined local candidate passes 922 unit tests and 2481 assertions. The earlier hardening commit passed 27 integration tests per platform and all 25 CI jobs. Release CI is checked separately against the merged SHA; see [Release 1.2.3](Release-1-2-3). Native Nebula UI Bridge rendering and external recipient ingestion remain unverified.
 

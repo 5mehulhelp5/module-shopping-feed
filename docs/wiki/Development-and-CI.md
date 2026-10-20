@@ -6,7 +6,9 @@ The repository validates module identity, configuration integrity, PHP behavior,
 
 ## 1.2.4 standards and security
 
-The workflow now targets Mage-OS 3.5.0 and 3.6.0, uses pinned actions and development tools, runs locked dependency audits, and enforces PHPStan level 8 against a baseline that may only shrink. The local Mage-OS 3.6 candidate passes 939 unit tests and 66 JavaScript checks; integration and transfer evidence is linked from [Release 1.2.4](Release-1-2-4). Check the [workflow results](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml) against the exact release commit.
+The workflow now targets Mage-OS 3.5.0 and 3.6.0, uses pinned actions and development tools, runs locked dependency audits, and enforces PHPStan level 8 against a baseline that may only shrink. The local Mage-OS 3.6 candidate passes 939 unit tests and 84 JavaScript checks; integration and transfer evidence is linked from [Release 1.2.4](Release-1-2-4). Check the [workflow results](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml) against the exact release commit.
+
+The PHP 8.1 tool graph uses the existing legacy compatibility policy only for the exact Magento base 2.4.7-p10, framework 103.0.7-p10, and Flysystem 2.5.0 versions. Its known upstream advisory remains visible, and other findings fail. Other profiles retain strict dependency auditing.
 
 ## 1.2.3 hardening and compatibility
 

@@ -12,6 +12,6 @@ The package adds an explicit `phpseclib/phpseclib:^3.0` dependency and declares 
 
 ## Verification
 
-The local Mage-OS 3.6.0 run passes 939 unit tests with 2565 assertions, 30 integration tests with 88 assertions, four database persistence tests, and 66 JavaScript checks. Standard Admin save/reopen, DI compilation, real local FTP/SFTP delivery, gzip cleanup, failed host-key rejection before authentication, and complete log archival are recorded in the [verification report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.4/docs/reviews/2026-10-20-standards-security-mageos36.md).
+The local Mage-OS 3.6.0 run passes 939 unit tests with 2565 assertions, 30 integration tests with 88 assertions, four database persistence tests, and 84 JavaScript checks. Standard Admin save/reopen, DI compilation, real local FTP/SFTP delivery, gzip cleanup, failed host-key rejection before authentication, and complete log archival are recorded in the [verification report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.4/docs/reviews/2026-10-20-standards-security-mageos36.md).
 
 Check the [CI workflow](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml) for the exact tagged commit and supported platform matrix. Native Nebula acceptance, external recipient ingestion, and production volume were not repeated in this local run. The known preset output-limit key mismatch remains deferred; configure explicit **Limit column output** rows where needed.

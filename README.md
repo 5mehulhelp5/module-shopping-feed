@@ -12,7 +12,7 @@ The module consolidates four Rocket Web modules (generic, Google Shopping, Googl
 | --- | --- |
 | Mage-OS | 3.5.0 and 3.6.0 are CI targets. |
 | Magento Open Source | 2.4.8-p5 and 2.4.9 are CI targets. 2.4.7-p10 runs in a dedicated CI profile because its Flysystem dependency carries an upstream advisory; see the [2.4.7-p10 guidance](docs/compatibility/magento-2.4.7-p10.md). |
-| Declared floor | `magento/framework` 103.0.6-p15 (Magento Open Source 2.4.6-p15) and PHP 8.1. Dependency resolution, a locked dependency audit and PHP 8.1 syntax are checked in CI. No 2.4.6 store is installed or tested. |
+| Declared floor | `magento/framework` 103.0.6-p15 (Magento Open Source 2.4.6-p15) and PHP 8.1. Dependency resolution, a locked dependency audit and PHP 8.1 syntax are checked in CI. No 2.4.6 store is installed or tested. The PHP 8.1 tool graph retains the same visible Flysystem advisory as the dedicated 2.4.7-p10 compatibility profile. |
 | PHP | 8.1 through 8.5, limited to what the chosen platform release supports. |
 | Luma | Microdata, configurable and custom-option deep links, and Google Ads `view_item` events. Inline scripts use Magento's CSP nonce mechanism and work with strict CSP. |
 | Hyvä | Microdata, native configurable deep links and custom-option deep links (registered with Hyvä's CSP helper). The Google Ads event bridge needs RequireJS and is not provided on Hyvä. |

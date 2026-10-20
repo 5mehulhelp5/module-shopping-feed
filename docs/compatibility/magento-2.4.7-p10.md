@@ -21,6 +21,8 @@ The dedicated `Magento 2.4.7-p10 compatibility` job retains the platform's cover
 
 The test-configuration helper rejects other project versions, unrelated exceptions, and broad policy overrides. It is not a production installation script. Do not disable Composer security blocking globally or copy the test exception into a store as a substitute for mitigation.
 
+The PHP 8.1 development-tool audit also resolves `magento/magento2-base` 2.4.7-p10, `magento/framework` 103.0.7-p10, and Flysystem 2.5.0, as verified in the October 20 release CI. Only that exact locked dependency set uses the same visible-advisory compatibility check. A different version or PHP profile retains strict auditing; duplicate packages, hidden findings, unavailable repositories, and additional advisories fail. This checks the declared PHP floor's tool dependencies, not a running Magento 2.4.6 store or platform security approval.
+
 ## Optional Flysystem 2.5.0 backport
 
 The repository includes a narrow [patch](../../dev/patches/league-flysystem-2.5.0-malformed-utf8.patch) adapted from [upstream commit ef4a9a5](https://github.com/thephpleague/flysystem/commit/ef4a9a557d769b5d472c403125716706a0d9cc77). It treats a PCRE error as a corrupted path, matching the upstream correction. This is a project-maintained backport for **Flysystem 2.5.0**, not a new upstream release or a complete platform security certification. It is not applied automatically by the module.

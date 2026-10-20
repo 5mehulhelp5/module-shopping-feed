@@ -199,11 +199,11 @@ jobs:
         run: composer update --no-install --no-interaction --no-progress
       - name: Audit the locked dependencies
         env:
-          PROFILE: extension and tools on PHP ${{ matrix.php-version }}
+          PHP_PROFILE: ${{ matrix.php-version }}
         run: |
           composer audit --locked --format=json --abandoned=report > dependency-audit.json || true
           cat dependency-audit.json
-          php .github/scripts/check-audit-report.php dependency-audit.json "$PROFILE"
+          php .github/scripts/check-development-audit.php dependency-audit.json composer.lock "$PHP_PROFILE"
 
   check-magento-247:
     name: Magento 2.4.7-p10 compatibility

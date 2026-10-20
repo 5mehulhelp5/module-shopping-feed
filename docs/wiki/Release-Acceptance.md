@@ -8,7 +8,7 @@ Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream 
 
 ## 1.2.4 verification
 
-The [Mage-OS 3.6 verification record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.4/docs/reviews/2026-10-20-standards-security-mageos36.md) covers 939 unit tests, 30 integration tests, four database persistence tests, 66 JavaScript checks, DI compilation, and standard Admin save/reopen. Real local FTP/SFTP transfers verify plain and gzip payloads, fingerprint rejection before authentication, temporary-file cleanup, and complete archived logs. Static checks and dependency audits pass for the recorded local candidate. [Release 1.2.4](Release-1-2-4) links exact-commit CI and upgrade requirements.
+The [Mage-OS 3.6 verification record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.4/docs/reviews/2026-10-20-standards-security-mageos36.md) covers 939 unit tests, 30 integration tests, four database persistence tests, 84 JavaScript checks, DI compilation, and standard Admin save/reopen. Real local FTP/SFTP transfers verify plain and gzip payloads, fingerprint rejection before authentication, temporary-file cleanup, and complete archived logs. Static checks and dependency audits pass for the recorded local candidate. [Release 1.2.4](Release-1-2-4) links exact-commit CI and upgrade requirements.
 
 External recipient ingestion, native Nebula acceptance, other target-store behavior, and production volume were not repeated in this local run. The preset output-limit key mismatch remains a known issue.
 
