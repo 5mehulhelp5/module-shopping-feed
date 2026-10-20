@@ -266,6 +266,7 @@
         </xs:choice>
         <xs:attribute name="name" type="xs:string" />
         <xs:attribute name="allow_output_limit" type="xs:boolean" default="false" />
+        <xs:attribute name="translate" type="xs:string" />
     </xs:complexType>
 
     <xs:complexType name="feedDefaultMapProductColumns">

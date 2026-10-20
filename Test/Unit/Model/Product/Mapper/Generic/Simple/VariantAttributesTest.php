@@ -42,7 +42,6 @@ class VariantAttributesTest extends ModelFramework
         parent::setUp();
         $this->objectManagerHelper = new ObjectManagerHelper($this);
 
-
         $this->expectReturn($this->productMock, 'hasData', true);
         $this->expectAdvencedReturn($this->adapterMock, 'getMapAttribute', $this->returnArgument(0));
         $this->expectReturn($this->feedMock, 'getConfig', '|');

@@ -32,11 +32,17 @@ class MicrosoftMerchantCenterTest extends ModelFramework
         $meta = $types['microsoft_merchant_center'];
         $defaults = $meta['default_feed_config'];
         $columns = $defaults['columns']['product_columns'];
-        foreach (['id', 'title', 'description', 'link', 'image_link', 'price', 'availability', 'condition',
-            'brand', 'gtin', 'mpn', 'identifier_exists', 'item_group_id', 'color', 'size', 'product_category'] as $column) {
+        $present = [
+            'id', 'title', 'description', 'link', 'image_link', 'price', 'availability', 'condition',
+            'brand', 'gtin', 'mpn', 'identifier_exists', 'item_group_id', 'color', 'size', 'product_category',
+        ];
+        foreach ($present as $column) {
             self::assertArrayHasKey($column, $columns);
         }
-        foreach (['promotion_id', 'availability_date', 'item_group_title', 'variant_option', 'google_product_category'] as $column) {
+        $absent = [
+            'promotion_id', 'availability_date', 'item_group_title', 'variant_option', 'google_product_category',
+        ];
+        foreach ($absent as $column) {
             self::assertArrayNotHasKey($column, $columns);
         }
         self::assertSame('new', $columns['condition']['param']);
@@ -60,12 +66,14 @@ class MicrosoftMerchantCenterTest extends ModelFramework
     public function testAvailabilityMappingIsConfiguredOnlyForMicrosoft(): void
     {
         $types = $this->feedTypes();
-        $formatter = $types['microsoft_merchant_center']['directives']['directive_availability']['formatters']['default']['type'];
+        $availability = $types['microsoft_merchant_center']['directives']['directive_availability'];
+        $formatter = $availability['formatters']['default']['type'];
         $document = new \DOMDocument();
         $document->load(dirname(__DIR__, 4) . '/etc/di.xml');
         $xpath = new \DOMXPath($document);
         $values = [];
         foreach ($xpath->query('/config/virtualType[@name="' . $formatter . '"]/arguments/argument/item') as $item) {
+            self::assertInstanceOf(\DOMElement::class, $item);
             $values[$item->getAttribute('name')] = $item->textContent;
         }
         $mapper = new ValueMap($values);
@@ -99,8 +107,14 @@ class MicrosoftMerchantCenterTest extends ModelFramework
         self::assertNotEmpty($validator->validate($row)['errors']);
         unset($row['identifier_exists']);
         self::assertNotEmpty($validator->validate($row)['warnings']);
-        self::assertSame([], $validator->validate(array_replace(self::validRow(), ['availability' => 'preorder']))['errors']);
-        self::assertSame([], $validator->validate(array_replace(self::validRow(), ['title' => str_repeat('é', 150)]))['errors']);
+        self::assertSame(
+            [],
+            $validator->validate(array_replace(self::validRow(), ['availability' => 'preorder']))['errors']
+        );
+        self::assertSame(
+            [],
+            $validator->validate(array_replace(self::validRow(), ['title' => str_repeat('é', 150)]))['errors']
+        );
     }
 
     /** @dataProvider invalidRows */
@@ -120,14 +134,23 @@ class MicrosoftMerchantCenterTest extends ModelFramework
             unset($row[$field]);
             $cases['missing ' . $field] = [$row, $field];
         }
-        foreach (['condition' => 'damaged', 'availability' => 'in_stock', 'price' => '29,99 USD',
-            'sale_price' => 'USD 20', 'link' => 'javascript:alert(1)', 'image_link' => '/image.jpg'] as $field => $value) {
+        $invalidValues = [
+            'condition' => 'damaged', 'availability' => 'in_stock', 'price' => '29,99 USD',
+            'sale_price' => 'USD 20', 'link' => 'javascript:alert(1)', 'image_link' => '/image.jpg',
+        ];
+        foreach ($invalidValues as $field => $value) {
             $cases['invalid ' . $field] = [array_replace(self::validRow(), [$field => $value]), $field];
         }
         $cases['whitespace title'] = [array_replace(self::validRow(), ['title' => '  ']), 'title'];
         $cases['repeated required field'] = [array_replace(self::validRow(), ['price' => ['29.99 USD']]), 'price'];
-        $cases['API-only availability'] = [array_replace(self::validRow(), ['availability' => 'available for order']), 'availability'];
-        $cases['backorder availability'] = [array_replace(self::validRow(), ['availability' => 'backorder']), 'availability'];
+        $cases['API-only availability'] = [
+            array_replace(self::validRow(), ['availability' => 'available for order']),
+            'availability',
+        ];
+        $cases['backorder availability'] = [
+            array_replace(self::validRow(), ['availability' => 'backorder']),
+            'availability',
+        ];
         foreach (['id' => str_repeat('é', 51), 'title' => str_repeat('é', 151), 'mpn' => str_repeat('X', 71),
             'price' => '10000000.01 USD', 'item_group_id' => 'sku-001', 'gtin' => 'invented-gtin',
             'description' => "Text\tcolumn", 'color' => ['blue', 'red']] as $field => $value) {
@@ -152,9 +175,11 @@ class MicrosoftMerchantCenterTest extends ModelFramework
                 $settings[$group . '_' . $key] = $value;
             }
         }
-        $this->feedMock->method('getData')->willReturnCallback(static fn($key) => $key === 'type' ? 'microsoft_merchant_center' : null);
+        $this->feedMock->method('getData')
+            ->willReturnCallback(static fn($key) => $key === 'type' ? 'microsoft_merchant_center' : null);
         $this->feedMock->method('getColumnsMap')->willReturn($columns);
-        $this->feedMock->method('getConfig')->willReturnCallback(static fn($key, $default = '') => $settings[$key] ?? $default);
+        $this->feedMock->method('getConfig')
+            ->willReturnCallback(static fn($key, $default = '') => $settings[$key] ?? $default);
         $written = '';
         $this->fileDriverMock->method('fileWrite')->willReturnCallback(
             static function ($handle, $data) use (&$written) {
@@ -193,7 +218,8 @@ class MicrosoftMerchantCenterTest extends ModelFramework
 
     public function testTestFeedRejectsInvalidConditionAndLogsWhy(): void
     {
-        $this->feedMock->method('getData')->willReturnCallback(static fn($key) => $key === 'type' ? 'microsoft_merchant_center' : null);
+        $this->feedMock->method('getData')
+            ->willReturnCallback(static fn($key) => $key === 'type' ? 'microsoft_merchant_center' : null);
         $this->fileDriverMock->expects(self::never())->method('fileWrite');
         $this->loggerMock->expects(self::once())->method('warning')->with(self::stringContains('condition'));
         $generator = (new ObjectManager($this))->getObject(Generator::class, [
@@ -201,7 +227,8 @@ class MicrosoftMerchantCenterTest extends ModelFramework
             'microsoftMerchantCenterValidator' => new MicrosoftMerchantCenter(), 'testSku' => 'sku-001',
         ]);
         (new \ReflectionMethod($generator, 'writeFeed'))->invoke(
-            $generator, array_replace(self::validRow(), ['condition' => 'damaged'])
+            $generator,
+            array_replace(self::validRow(), ['condition' => 'damaged'])
         );
         self::assertSame(1, (new \ReflectionProperty($generator, 'countProductsSkipped'))->getValue($generator));
         self::assertSame(0, (new \ReflectionProperty($generator, 'countProductsExported'))->getValue($generator));
@@ -211,7 +238,8 @@ class MicrosoftMerchantCenterTest extends ModelFramework
     {
         $meta = $this->feedTypes()['microsoft_merchant_center'];
         $directive = $meta['directives']['directive_availability'];
-        $this->feedMock->method('getData')->willReturnCallback(static fn($key) => $key === 'type' ? 'microsoft_merchant_center' : null);
+        $this->feedMock->method('getData')
+            ->willReturnCallback(static fn($key) => $key === 'type' ? 'microsoft_merchant_center' : null);
         $this->feedMock->method('getColumnsMap')->willReturn([
             ['column' => 'availability', 'attribute' => 'directive_availability'],
         ]);
@@ -229,8 +257,11 @@ class MicrosoftMerchantCenterTest extends ModelFramework
         $formatterFactory = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Formatter\FormatterFactory::class);
         $formatterFactory->method('getFormatterData')->willReturn($directive['formatters']['default']);
         $formatterFactory->method('create')->willReturn(new ValueMap(['in_stock' => 'in stock']));
-        foreach (['feed' => $this->feedMock, 'feedTypesConfig' => $this->feedTypesConfigMock,
-            'mapperFactory' => $this->mapperFactoryMock, 'formatterFactory' => $formatterFactory] as $property => $value) {
+        $dependencies = [
+            'feed' => $this->feedMock, 'feedTypesConfig' => $this->feedTypesConfigMock,
+            'mapperFactory' => $this->mapperFactoryMock, 'formatterFactory' => $formatterFactory,
+        ];
+        foreach ($dependencies as $property => $value) {
             (new \ReflectionProperty($adapter, $property))->setValue($adapter, $value);
         }
         $adapter->expects(self::once())->method('setSkipProduct')->with('filtered by column "availability"');

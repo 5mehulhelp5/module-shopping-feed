@@ -22,6 +22,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class PriceBuckets extends MapperAbstract
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $values = [];
@@ -31,7 +34,9 @@ class PriceBuckets extends MapperAbstract
             $prices = $this->getAdapter()->getPrices();
             $price = $this->getAdapter()->hasSpecialPrice() ? $prices['sp_excl_tax'] : $prices['p_excl_tax'];
             foreach ($buckets as $bucket) {
-                if (floatval($bucket['pricefrom']) <= floatval($price) && floatval($price) < floatval($bucket['priceto'])) {
+                if (floatval($bucket['pricefrom']) <= floatval($price)
+                    && floatval($price) < floatval($bucket['priceto'])
+                ) {
                     array_push($values, $bucket['label']);
                 }
             }

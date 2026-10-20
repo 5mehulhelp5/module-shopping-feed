@@ -27,6 +27,12 @@ class PromotionsId extends MapperAbstract
      */
     protected $promotionsProvider;
 
+    /**
+     * Promotion IDs mapper constructor.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param \MageOS\ShoppingFeed\Model\Promotions\Provider $promotionsProvider
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Logger $logger,
         \MageOS\ShoppingFeed\Model\Promotions\Provider $promotionsProvider
@@ -36,6 +42,9 @@ class PromotionsId extends MapperAbstract
         parent::__construct($logger);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $this->promotionsProvider->setFeed($this->getAdapter()->getFeed());

@@ -23,11 +23,12 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 /**
  * Class Price
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
  */
 class TierPrice extends MapperAbstract
 {
     /**
+     * Lowest single-unit tier price for the customer group in the column param.
+     *
      * @param  array $params
      * @return string
      */
@@ -36,7 +37,9 @@ class TierPrice extends MapperAbstract
         $price = '';
         $product = clone $this->getAdapter()->getProduct();
 
-        $customerGroup = array_key_exists('param', $params) ? $params['param'] : \Magento\Customer\Model\Group::NOT_LOGGED_IN_ID;
+        $customerGroup = array_key_exists('param', $params)
+            ? $params['param']
+            : \Magento\Customer\Model\Group::NOT_LOGGED_IN_ID;
         $groups = [\Magento\Customer\Model\Group::CUST_GROUP_ALL, $customerGroup];
         $rows = $product->setCustomerGroupId($customerGroup)->getTierPrice();
 
@@ -53,6 +56,9 @@ class TierPrice extends MapperAbstract
         return $price;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function filter($cell)
     {
         $above = $this->getAdapter()->getFeed()->getConfig('filters_skip_price_above', false);

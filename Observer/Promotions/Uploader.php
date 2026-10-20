@@ -33,6 +33,10 @@ class Uploader implements ObserverInterface
      */
     protected $gzipCompressor;
 
+    /**
+     * @param \MageOS\ShoppingFeed\Model\Promotions\Provider $provider
+     * @param \MageOS\ShoppingFeed\Model\Uploader\GzipCompressor $gzipCompressor
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Promotions\Provider $provider,
         \MageOS\ShoppingFeed\Model\Uploader\GzipCompressor $gzipCompressor
@@ -43,7 +47,10 @@ class Uploader implements ObserverInterface
     }
 
     /**
+     * Upload the newly created promotions file, gzipped when the upload asks for it
+     *
      * @param EventObserver $observer
+     * @return void
      */
     public function execute(EventObserver $observer)
     {
@@ -62,7 +69,9 @@ class Uploader implements ObserverInterface
                 $result = $uploader->upload($file);
 
                 if ($result) {
-                    $generator->getLogger()->info(sprintf("File %s uploaded to %s:%s", $file, $upload->getHost(), $upload->getPath()));
+                    $generator->getLogger()->info(
+                        sprintf("File %s uploaded to %s:%s", $file, $upload->getHost(), $upload->getPath())
+                    );
                 } else {
                     $generator->getLogger()->warning(sprintf('Failed to upload %s', $file));
                 }

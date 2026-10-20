@@ -1,7 +1,7 @@
 <div>
     <label class="shopping-feed-parameter-label" data-bind="text: parameterLabel, attr: {for: uid}"></label>
     <!-- ko if: kind() === 'input' -->
-    <input class="admin__control-text" type="text" data-bind="value: value, valueUpdate: 'input', disable: disabled, attr: {id: uid}"/>
+    <input class="admin__control-text" type="text" data-bind="value: value, valueUpdate: 'input', disable: disabled, attr: {id: uid}">
     <!-- /ko -->
     <!-- ko if: kind() === 'textarea' -->
     <textarea class="admin__control-textarea" rows="3" data-bind="value: value, valueUpdate: 'input', disable: disabled, attr: {id: uid}"></textarea>

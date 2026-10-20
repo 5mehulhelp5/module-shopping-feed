@@ -29,7 +29,6 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
  *
  * Class Shipping
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
  */
 class Shipping extends MapperAbstract
 {
@@ -48,6 +47,14 @@ class Shipping extends MapperAbstract
      */
     protected $scopeConfig;
 
+    /**
+     * Shipping mapper constructor.
+     *
+     * @param Cache $cache
+     * @param \MageOS\ShoppingFeed\Model\Generator\Cache\ShippingProvider $shippingProvider
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     */
     public function __construct(
         Cache $cache,
         \MageOS\ShoppingFeed\Model\Generator\Cache\ShippingProvider $shippingProvider,
@@ -63,6 +70,8 @@ class Shipping extends MapperAbstract
     }
 
     /**
+     * Shipping value from the class cache, the persistent shipping cache, or freshly computed rates.
+     *
      * @param  array $params
      * @return string
      */
@@ -81,7 +90,7 @@ class Shipping extends MapperAbstract
         // product cache
         $cacheKey = ['shipping', 'map', 'product', 'rate', $this->getAdapter()->getProduct()->getId()];
         $value = $this->cache->getCache($cacheKey, false);
-        if ($value !== false && !is_null($value)) {
+        if ($value !== false && $value !== null) {
             return $value;
         }
 
@@ -90,7 +99,8 @@ class Shipping extends MapperAbstract
             \Magento\Directory\Model\Observer::IMPORT_ENABLE,
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
-        $useShippingCache = $this->getAdapter()->getFeed()->getConfig('shipping_cache_enabled') && !$scheduledCurrencyUpdateEnabled;
+        $useShippingCache = $this->getAdapter()->getFeed()->getConfig('shipping_cache_enabled')
+            && !$scheduledCurrencyUpdateEnabled;
         $cacheTtl = $useShippingCache ? $this->getAdapter()->getFeed()->getConfig('shipping_ttl') : 0;
 
         $this->shippingProvider->prepareCache($this->getAdapter(), $this->getAdapter()->getProduct(), $cacheTtl);

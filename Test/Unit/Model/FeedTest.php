@@ -38,7 +38,7 @@ class FeedTest extends ModelFramework
     protected $feedId = 8;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Serializer
+     * @var \Magento\Framework\Serialize\SerializerInterface
      */
     protected $serializer;
 
@@ -58,7 +58,6 @@ class FeedTest extends ModelFramework
 
         $this->expectSelf($this->scheduleCollectionMock, 'setFeedFilter');
         $this->expectReturn($this->scheduleCollectionFactoryMock, 'create', $this->scheduleCollectionMock);
-
 
         $this->configCollectionMock = $this->objectManagerHelper->getCollectionMock(
             'MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config\Collection',
@@ -255,19 +254,61 @@ class FeedTest extends ModelFramework
     public function testGoogleColumnsMapUpgradesExistingConfiguration(): void
     {
         $variantColumns = [
-            'item_group_title' => ['column' => 'item_group_title', 'attribute' => 'directive_item_group_title', 'order' => 21],
-            'variant_option' => ['column' => 'variant_option', 'attribute' => 'directive_variant_option', 'order' => 22],
-            'color' => ['column' => 'color', 'attribute' => 'directive_variant_attributes', 'order' => 23, 'param' => ['color']],
-            'size' => ['column' => 'size', 'attribute' => 'directive_variant_attributes', 'order' => 24, 'param' => ['size']],
-            'material' => ['column' => 'material', 'attribute' => 'directive_variant_attributes', 'order' => 25, 'param' => ['material']],
-            'pattern' => ['column' => 'pattern', 'attribute' => 'directive_variant_attributes', 'order' => 26, 'param' => ['pattern']],
-            'gender' => ['column' => 'gender', 'attribute' => 'directive_variant_attributes', 'order' => 27, 'param' => ['gender']],
-            'age_group' => ['column' => 'age_group', 'attribute' => 'directive_variant_attributes', 'order' => 28, 'param' => ['age_group']],
+            'item_group_title' => [
+                'column' => 'item_group_title',
+                'attribute' => 'directive_item_group_title',
+                'order' => 21,
+            ],
+            'variant_option' => [
+                'column' => 'variant_option',
+                'attribute' => 'directive_variant_option',
+                'order' => 22,
+            ],
+            'color' => [
+                'column' => 'color',
+                'attribute' => 'directive_variant_attributes',
+                'order' => 23,
+                'param' => ['color'],
+            ],
+            'size' => [
+                'column' => 'size',
+                'attribute' => 'directive_variant_attributes',
+                'order' => 24,
+                'param' => ['size'],
+            ],
+            'material' => [
+                'column' => 'material',
+                'attribute' => 'directive_variant_attributes',
+                'order' => 25,
+                'param' => ['material'],
+            ],
+            'pattern' => [
+                'column' => 'pattern',
+                'attribute' => 'directive_variant_attributes',
+                'order' => 26,
+                'param' => ['pattern'],
+            ],
+            'gender' => [
+                'column' => 'gender',
+                'attribute' => 'directive_variant_attributes',
+                'order' => 27,
+                'param' => ['gender'],
+            ],
+            'age_group' => [
+                'column' => 'age_group',
+                'attribute' => 'directive_variant_attributes',
+                'order' => 28,
+                'param' => ['age_group'],
+            ],
         ];
         $defaultColumns = array_merge(
             [
                 'id' => ['column' => 'id', 'attribute' => 'directive_id', 'order' => 10],
-                'item_group_id' => ['column' => 'item_group_id', 'attribute' => 'directive_item_group_id', 'order' => 20],
+                'item_group_id' => [
+                    'column' => 'item_group_id',
+                    'attribute' => 'directive_item_group_id',
+                    'order' => 20,
+                ],
             ],
             $variantColumns
         );

@@ -18,23 +18,34 @@
 
 namespace MageOS\ShoppingFeed\Plugin;
 
-
-class HideShippingTab {
+class HideShippingTab
+{
 
     /**
-     * Core registry
+     * Registry holding the current feed
      *
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry;
 
+    /**
+     * @param \Magento\Framework\Registry $registry
+     */
     public function __construct(
         \Magento\Framework\Registry $registry
     ) {
         $this->_coreRegistry = $registry;
     }
 
-    public function afterIsHidden(\MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Shipping $subject, $result) {
+    /**
+     * Hide the Shipping tab for local inventory feeds
+     *
+     * @param \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Shipping $subject
+     * @param bool $result
+     * @return bool
+     */
+    public function afterIsHidden(\MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Shipping $subject, $result)
+    {
         $feed = $this->_coreRegistry->registry('feed');
         if ($feed->getType() == 'google_local_inventory') {
             return true;

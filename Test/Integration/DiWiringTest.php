@@ -30,7 +30,10 @@ class DiWiringTest extends TestCase
     {
         $instance = Bootstrap::getObjectManager()->create($service);
         $reflection = new \ReflectionClass($instance);
-        if (method_exists($reflection, 'isUninitializedLazyObject') && $reflection->isUninitializedLazyObject($instance)) {
+        if (method_exists($reflection, 'isUninitializedLazyObject')
+            && method_exists($reflection, 'initializeLazyObject')
+            && $reflection->isUninitializedLazyObject($instance)
+        ) {
             $reflection->initializeLazyObject($instance);
         }
 

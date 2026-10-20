@@ -20,9 +20,11 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\LocalInventory\Simple;
 
 use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperStock;
 
-
 class InventorySource extends MapperStock
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $sourceCode = 'default';
@@ -40,6 +42,8 @@ class InventorySource extends MapperStock
     }
 
     /**
+     * Store codes keyed by inventory source code, from the feed's source map setting.
+     *
      * @return array<string, string>
      */
     private function getStoreCodeMap()

@@ -12,6 +12,9 @@ use MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class VariantOption extends MapperAbstract
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = []): string
     {
         $adapter = $this->getAdapter();
@@ -44,6 +47,12 @@ class VariantOption extends MapperAbstract
         return implode(',', $options);
     }
 
+    /**
+     * Quote a variant option value that contains a separator or quote, doubling inner quotes.
+     *
+     * @param string $value
+     * @return string
+     */
     private function quoteValue(string $value): string
     {
         if (strpbrk($value, ':,"') === false) {

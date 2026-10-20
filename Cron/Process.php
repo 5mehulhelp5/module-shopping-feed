@@ -22,7 +22,7 @@ use MageOS\ShoppingFeed\Model\Logger;
 
 class Process
 {
-    const XML_PATH_ENABLED = 'mageos_shopping_feed/general/cron_enabled';
+    public const XML_PATH_ENABLED = 'mageos_shopping_feed/general/cron_enabled';
 
     /**
      * @var \Magento\Framework\App\Filesystem\DirectoryList
@@ -35,7 +35,7 @@ class Process
     protected $file;
 
     /**
-     * @var resource
+     * @var resource|null
      */
     protected $lockFile;
 
@@ -50,7 +50,7 @@ class Process
     protected $queueCollection;
 
     /**
-     * @var int feedId to force generation of that feed.
+     * @var int|string|null feedId to force generation of that feed.
      */
     protected $feedId = null;
 
@@ -60,12 +60,19 @@ class Process
     protected $scopeConfig;
 
     /**
-     * @var bool.
-     * Is set to you when process is initiated through console and not magento's cron
+     * Is set to true when process is initiated through console and not magento's cron
+     *
+     * @var bool
      */
     protected $detached = false;
 
-
+    /**
+     * @param \Magento\Framework\App\Filesystem\DirectoryList $directoryList
+     * @param \Magento\Framework\Filesystem\Driver\File $file
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Generator\Queue\Collection $queueCollection
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     */
     public function __construct(
         \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
         \Magento\Framework\Filesystem\Driver\File $file,
@@ -82,6 +89,8 @@ class Process
     }
 
     /**
+     * Check whether cron generation is enabled or the process was started from the console
+     *
      * @return bool
      */
     public function isEnabled()
@@ -100,7 +109,7 @@ class Process
             return true;
         }
 
-        if (is_null($this->feedId)) {
+        if ($this->feedId === null) {
             $queue = $this->queueCollection->getQueue();
         } else {
             $queue = $this->queueCollection->getQueue($this->feedId);
@@ -153,7 +162,8 @@ class Process
     /**
      * Fore feed generation for $feedId
      *
-     * @param $feedId
+     * @param int|string $feedId
+     * @return $this
      */
     public function setFeedId($feedId)
     {
@@ -161,15 +171,23 @@ class Process
         return $this;
     }
 
+    /**
+     * Mark the process as started from the console instead of Magento's cron, returning this process
+     */
     public function setDetached()
     {
         $this->detached = true;
         return $this;
     }
 
+    /**
+     * Get the lock file path for the current feed, creating the tmp directory when missing
+     *
+     * @return string
+     */
     protected function getLockFile()
     {
-        $id = !is_null($this->feedId) ? $this->feedId : 0;
+        $id = $this->feedId !== null ? $this->feedId : 0;
         if (!$this->file->isDirectory($this->directoryList->getPath('tmp'))) {
             $this->file->createDirectory($this->directoryList->getPath('tmp'));
         }
@@ -219,6 +237,8 @@ class Process
     }
 
     /**
+     * Release and close the feed lock file
+     *
      * @return $this
      */
     public function releaseLock()

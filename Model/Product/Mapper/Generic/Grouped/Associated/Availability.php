@@ -6,6 +6,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Availability as Sim
 
 class Availability extends SimpleAvailability
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $cell = self::IN_STOCK;

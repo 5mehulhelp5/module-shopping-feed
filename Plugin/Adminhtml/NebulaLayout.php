@@ -10,12 +10,27 @@ use Magento\Framework\View\Layout\ProcessorInterface;
 /** Optional integration: no Nebula PHP classes are required by this module. */
 class NebulaLayout
 {
+    /**
+     * @var \WeakMap<ProcessorInterface, bool>|null Layout processors that already received the grid update
+     */
     private ?\WeakMap $injected = null;
 
+    /**
+     * @param Manager $modules
+     * @param DesignInterface $design
+     * @param Http $request
+     */
     public function __construct(private Manager $modules, private DesignInterface $design, private Http $request)
     {
     }
 
+    /**
+     * Replace the feed grid with the Nebula toolbar and grid when the Nebula theme is active
+     *
+     * @param ProcessorInterface $subject
+     * @param ProcessorInterface $result
+     * @return ProcessorInterface
+     */
     public function afterLoad(ProcessorInterface $subject, ProcessorInterface $result): ProcessorInterface
     {
         if (!$this->modules->isEnabled('Qoliber_NebulaGrid')

@@ -38,9 +38,10 @@ class Edit extends \Magento\Backend\App\Action
     protected $registry;
 
     /**
-     * @param \Magento\Backend\App\Action\Context                        $context
+     * @param \Magento\Backend\App\Action\Context $context
      * @param \MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Builder $feedBuilder
-     * @param \Magento\Framework\View\Result\PageFactory                 $resultPageFactory
+     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
+     * @param \Magento\Framework\Registry $registry
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
@@ -55,7 +56,7 @@ class Edit extends \Magento\Backend\App\Action
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function _isAllowed()
     {

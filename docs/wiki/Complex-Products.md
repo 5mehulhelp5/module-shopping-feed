@@ -2,7 +2,7 @@
 
 Configurable, grouped, and bundle products can produce parent rows, associated rows, or both. Decide the row model first, then configure inheritance, URLs, stock, price, and duplicate handling around it.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
 
 ## Associated-product modes
 
@@ -31,7 +31,7 @@ Google Shopping defaults include item grouping and standard variant columns. Con
 
 With default stock statuses and parent out-of-stock inheritance enabled, the module checks the parent's Magento salability before checking the child's stock. A configurable parent's own quantity can be zero while its children remain purchasable. Since 1.0.0, the module does not treat that zero parent quantity alone as out of stock. Custom stock attributes and disabled inheritance retain their configured behavior.
 
-Google Local Inventory removes the unique-link and attribute-separator controls from the Configurable Products section. Its source-level rows focus on inventory context.
+Google Local Inventory removes the unique-link and attribute-separator controls from the Configurable Products section, the unique-link control from Grouped Products, and Combined weight from Bundle Products. Its source-level rows focus on inventory context.
 
 ## Grouped products
 

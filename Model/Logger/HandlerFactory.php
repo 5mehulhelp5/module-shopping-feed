@@ -35,8 +35,8 @@ class HandlerFactory
     /**
      * Factory constructor
      *
-     * @param \Magento\Framework\ObjectManagerInterface $objectManager
-     * @param string                                    $instanceName
+     * @param \Magento\Framework\App\Filesystem\DirectoryList $directoryList
+     * @param \Magento\Framework\ObjectManagerInterface       $objectManager
      */
     public function __construct(
         \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
@@ -47,8 +47,10 @@ class HandlerFactory
     }
 
     /**
-     * @param  string $filePath
-     * @param  int    $level
+     * Create a file log handler under the Magento root using the default log formatter.
+     *
+     * @param string $filePath
+     * @param int $level
      * @return \Magento\Framework\Logger\Handler\Base
      */
     public function create($filePath = '', $level = \Monolog\Logger::INFO)
@@ -60,7 +62,8 @@ class HandlerFactory
  * @var \Magento\Framework\Logger\Handler\Base $handler
 */
         $handler = $this->_objectManager->create(
-            'Magento\Framework\Logger\Handler\Base', [
+            \Magento\Framework\Logger\Handler\Base::class,
+            [
             'filePath' => $filePath
             ]
         );

@@ -1,24 +1,32 @@
 <?php
-/** @var $block \MageOS\ShoppingFeed\Block\Product\View\Configurable\Selection */
+/**
+ * @var \MageOS\ShoppingFeed\Block\Product\View\Configurable\Selection $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+$jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+$associatedProducts = [];
+foreach ($block->getProducts() as $product) {
+    // The storefront script has always received HTML-escaped SKUs.
+    $associatedProducts[(string) (int) $product->getId()] = (string) $escaper->escapeHtml($product->getSku());
+}
 $tagConfig = [
     'enabled' => $block->isDynamicRemarketingEnabled(),
     'destinationId' => $block->getGoogleAdsDestinationId(),
 ];
-?>
-<script type="text/javascript">
+$script = sprintf(
+    <<<'SCRIPT'
     require(['jquery', 'mageosShoppingFeedConfigurableSelection'], function ($, ShoppingFeedConfigurable) {
         $(function () {
-            var associatedProducts = {
-                <?php foreach ($block->getProducts() as $product): ?>
-                    '<?= (int) $product->getId() ?>': '<?= $block->escapeJs($block->escapeHtml($product->getSku())) ?>',
-                <?php endforeach; ?>
-            };
+            var associatedProducts = %s;
 
-            new ShoppingFeedConfigurable(
-                <?= /* @noEscape */ $block->getScriptJsonConfig() ?>,
-                associatedProducts,
-                <?= /* @noEscape */ json_encode($tagConfig, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>
-            );
+            new ShoppingFeedConfigurable(%s, associatedProducts, %s);
         });
     });
-</script>
+SCRIPT,
+    json_encode((object) $associatedProducts, $jsonFlags),
+    $block->getScriptJsonConfig(),
+    json_encode($tagConfig, $jsonFlags)
+);
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', ['type' => 'text/javascript'], $script, false) ?>

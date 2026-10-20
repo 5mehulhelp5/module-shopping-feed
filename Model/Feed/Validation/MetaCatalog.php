@@ -7,7 +7,9 @@ namespace MageOS\ShoppingFeed\Model\Feed\Validation;
 /** Validate formatted Meta rows for both file generation and Test Feed. */
 class MetaCatalog
 {
-    private const REQUIRED = ['id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand'];
+    private const REQUIRED = [
+        'id', 'title', 'description', 'availability', 'condition', 'price', 'link', 'image_link', 'brand'
+    ];
     private const AVAILABILITY = ['in stock', 'out of stock'];
 
     /**

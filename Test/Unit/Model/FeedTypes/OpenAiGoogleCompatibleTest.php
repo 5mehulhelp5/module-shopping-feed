@@ -35,7 +35,10 @@ class OpenAiGoogleCompatibleTest extends ModelFramework
             'gtin', 'mpn', 'identifier_exists', 'availability_date', 'expiration_date', 'item_group_id'] as $column) {
             self::assertArrayHasKey($column, $columns);
         }
-        foreach (['item_id', 'seller_name', 'is_eligible_search', 'enable_checkout', 'item_group_title', 'variant_option'] as $column) {
+        $absent = [
+            'item_id', 'seller_name', 'is_eligible_search', 'enable_checkout', 'item_group_title', 'variant_option',
+        ];
+        foreach ($absent as $column) {
             self::assertArrayNotHasKey($column, $columns);
         }
         self::assertStringContainsString('beta', $preset['label']);
@@ -73,7 +76,10 @@ class OpenAiGoogleCompatibleTest extends ModelFramework
     #[DataProvider('validRows')]
     public function testAcceptedCompatibilityRows(array $changes): void
     {
-        self::assertSame([], (new OpenAiGoogleCompatible())->validate(array_replace(self::validRow(), $changes))['errors']);
+        self::assertSame(
+            [],
+            (new OpenAiGoogleCompatible())->validate(array_replace(self::validRow(), $changes))['errors']
+        );
     }
 
     public static function validRows(): array
@@ -91,7 +97,10 @@ class OpenAiGoogleCompatibleTest extends ModelFramework
             [['expiration_date' => '2026-10-01T00:00:00-0400']],
             [['sale_price' => '19.99 USD']],
             [['sale_price' => '19.99 USD', 'sale_price_effective_date' => '2026-10-01/2026-10-01']],
-            [['sale_price' => '19.99 USD', 'sale_price_effective_date' => '2026-10-01T12:00Z/2026-10-01T23:59:59+00:00']],
+            [[
+                'sale_price' => '19.99 USD',
+                'sale_price_effective_date' => '2026-10-01T12:00Z/2026-10-01T23:59:59+00:00',
+            ]],
             [['price' => '0.00 USD', 'google_product_category' => '267', 'subscription_cost' => 'month:12:30.00 USD']],
             [['price' => '0.00 USD', 'google_product_category' => '4745', 'subscription_cost' => 'year:1:100.00 USD']],
         ];
@@ -129,18 +138,36 @@ class OpenAiGoogleCompatibleTest extends ModelFramework
         $cases['restricted GTIN'] = [['gtin' => '0201234567899'], 'gtin'];
         $cases['missing preorder date'] = [['availability' => 'preorder'], 'availability_date'];
         $cases['missing backorder date'] = [['availability' => 'backorder'], 'availability_date'];
-        $cases['date without timezone'] = [['availability' => 'preorder', 'availability_date' => '2026-10-15T09:00'], 'availability_date'];
+        $cases['date without timezone'] = [
+            ['availability' => 'preorder', 'availability_date' => '2026-10-15T09:00'],
+            'availability_date',
+        ];
         $cases['equal sale'] = [['sale_price' => '29.99 USD'], 'sale_price'];
         $cases['higher sale'] = [['sale_price' => '30.00 USD'], 'sale_price'];
         $cases['zero sale'] = [['sale_price' => '0.00 USD'], 'sale_price'];
         $cases['other sale currency'] = [['sale_price' => '19.99 EUR'], 'sale_price'];
         $cases['date without sale'] = [['sale_price_effective_date' => '2026-10-01/2026-10-02'], 'sale_price'];
-        $cases['reversed dates'] = [['sale_price' => '19.99 USD', 'sale_price_effective_date' => '2026-10-02/2026-10-01'], 'sale_price_effective_date'];
-        $cases['invalid dates'] = [['sale_price' => '19.99 USD', 'sale_price_effective_date' => '2026-02-30/2026-03-01'], 'sale_price_effective_date'];
+        $cases['reversed dates'] = [
+            ['sale_price' => '19.99 USD', 'sale_price_effective_date' => '2026-10-02/2026-10-01'],
+            'sale_price_effective_date',
+        ];
+        $cases['invalid dates'] = [
+            ['sale_price' => '19.99 USD', 'sale_price_effective_date' => '2026-02-30/2026-03-01'],
+            'sale_price_effective_date',
+        ];
         $cases['zero price'] = [['price' => '0.00 USD'], 'subscription_cost'];
-        $cases['zero nonmobile'] = [['price' => '0.00 USD', 'google_product_category' => '999', 'subscription_cost' => 'month:12:30.00 USD'], 'google_product_category'];
-        $cases['zero subscription periods'] = [['price' => '0.00 USD', 'google_product_category' => '267', 'subscription_cost' => 'month:0:30.00 USD'], 'subscription_cost'];
-        $cases['subscription currency'] = [['price' => '0.00 USD', 'google_product_category' => '267', 'subscription_cost' => 'month:12:30.00 EUR'], 'subscription_cost'];
+        $cases['zero nonmobile'] = [
+            ['price' => '0.00 USD', 'google_product_category' => '999', 'subscription_cost' => 'month:12:30.00 USD'],
+            'google_product_category',
+        ];
+        $cases['zero subscription periods'] = [
+            ['price' => '0.00 USD', 'google_product_category' => '267', 'subscription_cost' => 'month:0:30.00 USD'],
+            'subscription_cost',
+        ];
+        $cases['subscription currency'] = [
+            ['price' => '0.00 USD', 'google_product_category' => '267', 'subscription_cost' => 'month:12:30.00 EUR'],
+            'subscription_cost',
+        ];
         return $cases;
     }
 
@@ -149,11 +176,15 @@ class OpenAiGoogleCompatibleTest extends ModelFramework
         $adapter = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class)
             ->disableOriginalConstructor()->onlyMethods(['getFilter'])->getMock();
         $adapter->setData('store_currency_code', 'USD');
-        $formatter = (new ObjectManager($this))->getObject(\MageOS\ShoppingFeed\Model\Product\Formatter\OpenAi\Price::class);
+        $formatter = (new ObjectManager($this))->getObject(
+            \MageOS\ShoppingFeed\Model\Product\Formatter\OpenAi\Price::class
+        );
         $formatter->setAdapter($adapter);
         self::assertSame('0.00 USD', $formatter->run(0));
         self::assertSame('29.99 USD', $formatter->run(29.99));
-        $generic = (new ObjectManager($this))->getObject(\MageOS\ShoppingFeed\Model\Product\Formatter\Price\Currency::class);
+        $generic = (new ObjectManager($this))->getObject(
+            \MageOS\ShoppingFeed\Model\Product\Formatter\Price\Currency::class
+        );
         $generic->setAdapter($adapter);
         self::assertSame('', $generic->run(0));
     }
@@ -179,9 +210,11 @@ class OpenAiGoogleCompatibleTest extends ModelFramework
                 $settings[$group . '_' . $key] = $value;
             }
         }
-        $this->feedMock->method('getData')->willReturnCallback(static fn($key) => $key === 'type' ? 'openai_google_compatible' : null);
+        $this->feedMock->method('getData')
+            ->willReturnCallback(static fn($key) => $key === 'type' ? 'openai_google_compatible' : null);
         $this->feedMock->method('getColumnsMap')->willReturn($columns);
-        $this->feedMock->method('getConfig')->willReturnCallback(static fn($key, $default = '') => $settings[$key] ?? $default);
+        $this->feedMock->method('getConfig')
+            ->willReturnCallback(static fn($key, $default = '') => $settings[$key] ?? $default);
         $written = '';
         $this->fileDriverMock->method('fileWrite')->willReturnCallback(
             static function ($handle, $data) use (&$written) {
@@ -197,7 +230,11 @@ class OpenAiGoogleCompatibleTest extends ModelFramework
         $write = new \ReflectionMethod($generator, 'writeFeed');
         $headers = array_column($columns, 'column');
         $write->invoke($generator, array_combine($headers, $headers), false);
-        $row = array_replace(self::validRow(), ['gtin' => '', 'identifier_exists' => false]) + ['additional_image_link' => 'https://example.com/a.jpg,https://example.com/b.jpg', 'sale_price' => '19.99 USD', 'sale_price_effective_date' => '2026-09-01/2026-10-31'];
+        $row = array_replace(self::validRow(), ['gtin' => '', 'identifier_exists' => false]) + [
+            'additional_image_link' => 'https://example.com/a.jpg,https://example.com/b.jpg',
+            'sale_price' => '19.99 USD',
+            'sale_price_effective_date' => '2026-09-01/2026-10-31',
+        ];
         $write->invoke($generator, $row);
         $lines = explode(PHP_EOL, $written);
         self::assertCount(2, $lines);
@@ -217,7 +254,8 @@ class OpenAiGoogleCompatibleTest extends ModelFramework
 
     public function testTestFeedRejectsInvalidConditionAndLogsWhy(): void
     {
-        $this->feedMock->method('getData')->willReturnCallback(static fn($key) => $key === 'type' ? 'openai_google_compatible' : null);
+        $this->feedMock->method('getData')
+            ->willReturnCallback(static fn($key) => $key === 'type' ? 'openai_google_compatible' : null);
         $this->fileDriverMock->expects(self::never())->method('fileWrite');
         $this->loggerMock->expects(self::once())->method('warning')->with(self::stringContains('condition'));
         $generator = (new ObjectManager($this))->getObject(Generator::class, [
@@ -225,7 +263,8 @@ class OpenAiGoogleCompatibleTest extends ModelFramework
             'openAiGoogleCompatibleValidator' => new OpenAiGoogleCompatible(), 'testSku' => 'sku-001',
         ]);
         (new \ReflectionMethod($generator, 'writeFeed'))->invoke(
-            $generator, array_replace(self::validRow(), ['condition' => 'damaged'])
+            $generator,
+            array_replace(self::validRow(), ['condition' => 'damaged'])
         );
         self::assertSame(1, (new \ReflectionProperty($generator, 'countProductsSkipped'))->getValue($generator));
         self::assertSame(0, (new \ReflectionProperty($generator, 'countProductsExported'))->getValue($generator));
@@ -233,7 +272,8 @@ class OpenAiGoogleCompatibleTest extends ModelFramework
 
     public function testGeneratorRequiresGroupingForConfigurableOutput(): void
     {
-        $this->feedMock->method('getData')->willReturnCallback(static fn($key) => $key === 'type' ? 'openai_google_compatible' : null);
+        $this->feedMock->method('getData')
+            ->willReturnCallback(static fn($key) => $key === 'type' ? 'openai_google_compatible' : null);
         $this->loggerMock->expects(self::once())->method('warning')->with(self::stringContains('item_group_id'));
         $this->fileDriverMock->expects(self::never())->method('fileWrite');
         $generator = (new ObjectManager($this))->getObject(Generator::class, [
@@ -249,5 +289,4 @@ class OpenAiGoogleCompatibleTest extends ModelFramework
         self::assertSame(1, (new \ReflectionProperty($generator, 'countProductsSkipped'))->getValue($generator));
         self::assertSame(0, (new \ReflectionProperty($generator, 'countProductsExported'))->getValue($generator));
     }
-
 }

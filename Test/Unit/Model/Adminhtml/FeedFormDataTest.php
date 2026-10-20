@@ -37,7 +37,10 @@ class FeedFormDataTest extends TestCase
         self::assertSame(Upload::OBSCURED_VALUE, $data['uploads'][0]['password']);
         self::assertSame('', $data['uploads'][1]['password']);
         self::assertSame([['id' => 8]], $data['schedules']);
-        self::assertSame([['column' => 'zero', 'param' => '0', 'position' => 1]], $data['config']['columns_product_columns']);
+        self::assertSame(
+            [['column' => 'zero', 'param' => '0', 'position' => 1]],
+            $data['config']['columns_product_columns']
+        );
         self::assertStringNotContainsString('secret', json_encode($data));
         self::assertStringNotContainsString('private', json_encode($data));
         self::assertStringNotContainsString('hidden', json_encode($data));
@@ -61,7 +64,8 @@ class FeedFormDataTest extends TestCase
             ['param' => ['zero' => 0, 'flag' => false, 'nested' => ['${ literal }', '<b>text</b>']]]
         ]]];
         $json = (new FeedFormData())->encodeForProvider($data);
-        $sanitized = (new \Magento\Framework\View\Element\UiComponent\DataProvider\Sanitizer())->sanitize(['data' => $json]);
+        $sanitized = (new \Magento\Framework\View\Element\UiComponent\DataProvider\Sanitizer())
+            ->sanitize(['data' => $json]);
         self::assertSame(['data' => $json], $sanitized);
         self::assertSame($data, json_decode($sanitized['data'], true));
         self::assertStringNotContainsString('${', $json);

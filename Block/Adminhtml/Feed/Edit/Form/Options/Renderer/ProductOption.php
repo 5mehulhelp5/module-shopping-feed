@@ -35,6 +35,13 @@ class ProductOption extends Template
      */
     protected $_template = 'feed/edit/form/options/renderer/product-option.phtml';
 
+    /**
+     * ProductOption constructor.
+     *
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Options $sourceOptions
+     * @param array $data
+     */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \MageOS\ShoppingFeed\Model\Feed\Source\Product\Options $sourceOptions,
@@ -44,6 +51,11 @@ class ProductOption extends Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get the product option source options
+     *
+     * @return array<mixed>
+     */
     public function getProductOptions()
     {
         return $this->sourceOptions->toOptionArray();

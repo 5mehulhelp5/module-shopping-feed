@@ -32,6 +32,11 @@ class Filter
      */
     protected $cache;
 
+    /**
+     * Product field filter constructor.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Generator\Cache $cache
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Generator\Cache $cache
     ) {
@@ -42,7 +47,7 @@ class Filter
     /**
      * Setter for Feed
      *
-     * @param  $feed
+     * @param \MageOS\ShoppingFeed\Model\Feed $feed
      * @return $this
      */
     public function setFeed(\MageOS\ShoppingFeed\Model\Feed $feed)
@@ -54,7 +59,8 @@ class Filter
     /**
      * Cleans field.
      *
-     * @param  string $field
+     * @param string $field
+     * @param array<string,mixed>|null $params Column map entry; its column selects find/replace and limit rules
      * @return string
      */
     public function cleanField($field, $params = null)
@@ -119,6 +125,9 @@ class Filter
 
     /**
      * Remove markup and executable block contents while retaining literal comparisons.
+     *
+     * @param string $field
+     * @return string
      */
     private function removeMarkup(string $field): string
     {
@@ -148,8 +157,9 @@ REGEX;
     /**
      * Find a replace logic
      *
-     * @param $string
-     * @param $column
+     * @param mixed $string Cell value, replaced in place
+     * @param string|null $column Column name whose find/replace rules apply, besides the all-column rules
+     * @return void
      */
     public function findAndReplace(&$string, $column)
     {
@@ -189,15 +199,16 @@ REGEX;
     /**
      * Truncate $string by column limit
      *
-     * @param $string
-     * @param $column
+     * @param mixed $string Cell value, truncated in place
+     * @param string|null $column Column name whose output limit applies
+     * @return void
      */
     public function limitOutput(&$string, $column)
     {
         $limitData = $this->feed->getConfig('filters_output_limit');
-        if (!is_null($limitData)) {
+        if ($limitData !== null) {
             foreach ($limitData as $data) {
-                $limit = intval($data['limit']);
+                $limit = (int) $data['limit'];
                 if ($data['column'] == $column) {
                     if (mb_strlen($string, 'UTF-8') > $limit) {
                         $string = mb_substr($string, 0, $limit, 'UTF-8');
@@ -209,7 +220,9 @@ REGEX;
     }
 
     /**
-     * @param  $matches
+     * Decode one matched HTML entity to UTF-8.
+     *
+     * @param string[] $matches
      * @return string
      */
     public function htmlEntitiesToUtf8Callback($matches)

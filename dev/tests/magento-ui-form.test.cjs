@@ -60,7 +60,7 @@ for (const [locale, format] of [['en_US', 'M/d/yy'], ['en_GB', 'dd/MM/y'], ['de_
 const abstract = amd(path.join(ui, 'view/base/web/js/form/element/abstract.js'), [
     {}, {isEmpty: value => value === undefined || value === null || value === ''}, {}, base, {}
 ]);
-const parameter = amd(path.join(root, 'view/adminhtml/web/js/form/parameter.js'), [base, options => options]);
+const parameter = amd(path.join(root, 'view/adminhtml/web/js/form/parameter.js'), [base, options => options, text => text]);
 test('directive parameter initialization preserves null instead of replacing generator defaults', () => {
     for (const original of [null, '', '0', 0, false, ['literal']]) {
         const component = Object.assign({}, abstract, parameter, {

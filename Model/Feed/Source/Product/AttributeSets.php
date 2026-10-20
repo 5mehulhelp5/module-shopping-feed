@@ -30,6 +30,9 @@ class AttributeSets implements OptionSourceInterface
      */
     protected $attributeSetOptions;
 
+    /**
+     * @param \Magento\Catalog\Model\Product\AttributeSet\Options $attributeSetOptions
+     */
     public function __construct(
         \Magento\Catalog\Model\Product\AttributeSet\Options $attributeSetOptions
     ) {

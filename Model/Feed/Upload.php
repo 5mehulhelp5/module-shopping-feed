@@ -21,14 +21,9 @@ namespace MageOS\ShoppingFeed\Model\Feed;
 
 use Magento\Framework\Model\AbstractModel;
 
-/**
- * Class Upload
- *
- * @package MageOS\ShoppingFeed\Model\Feed
- */
 class Upload extends AbstractModel
 {
-    const OBSCURED_VALUE = '******';
+    public const OBSCURED_VALUE = '******';
 
     /**
      * @var \Magento\Framework\Encryption\EncryptorInterface
@@ -75,7 +70,7 @@ class Upload extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('MageOS\ShoppingFeed\Model\ResourceModel\Feed\Upload');
+        $this->_init(\MageOS\ShoppingFeed\Model\ResourceModel\Feed\Upload::class);
     }
 
     /**
@@ -108,7 +103,11 @@ class Upload extends AbstractModel
         return parent::beforeSave();
     }
 
-    /** Restore the in-memory credential for upload and subsequent saves. */
+    /**
+     * Restore the in-memory credential for upload and subsequent saves.
+     *
+     * @return $this
+     */
     public function afterSave()
     {
         $this->setData('password', $this->encryptor->decrypt($this->encryptedPassword));

@@ -4,7 +4,7 @@
 
 **Migrating from Rocket Shopping Feeds?** Use the separate [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb). See the [installation and migration guide](Rocket-Web-Migration) for preview, import, output comparison, activation, and rollback.
 
-[![CI on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml?query=branch%3Amain)
+[![Check Extension on main](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml/badge.svg?branch=main)](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml?query=branch%3Amain)
 
 Version 1.2.0 introduced UI Component forms, five catalog presets, stock and Local Inventory corrections, store-scoped frontend settings, and currency preservation. Read [Release 1.2.0](Release-1-2-0) and its [upgrade checklist](Installation-and-Upgrade#upgrading-from-11-to-120). [Version 1.1.0](Release-1-1-0) remains documented for existing installations.
 

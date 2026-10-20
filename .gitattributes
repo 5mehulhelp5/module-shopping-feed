@@ -1,0 +1,12 @@
+# Composer dist archives carry the module, its tests, tool configuration,
+# license, attribution, and upgrade notes. Repository-only material stays out.
+/.github export-ignore
+/docs export-ignore
+/.mage-os-standards.json export-ignore
+# CI validators, Node harnesses, and the maintainer-reviewed 2.4.7 backport,
+# which the compatibility guide says to copy from the repository.
+/dev export-ignore
+/ACCEPTANCE-TEST-PLAN.md export-ignore
+/CONTRIBUTING.md export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore

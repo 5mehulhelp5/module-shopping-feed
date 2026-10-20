@@ -12,6 +12,9 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class SchemaContractTest extends TestCase
 {
+    /**
+     * @var DOMXPath
+     */
     private DOMXPath $xpath;
 
     protected function setUp(): void
@@ -40,7 +43,10 @@ class SchemaContractTest extends TestCase
 
     public function testEncryptedUploadPasswordUsesTextStorage(): void
     {
-        $column = $this->xpath->query('//table[@name="mageos_shopping_feed_feed_upload"]/column[@name="password"]')->item(0);
+        $column = $this->xpath->query(
+            '//table[@name="mageos_shopping_feed_feed_upload"]/column[@name="password"]'
+        )->item(0);
+        $this->assertInstanceOf(DOMElement::class, $column);
         $this->assertSame('text', $column->getAttribute('xsi:type'));
         $this->assertFalse($column->hasAttribute('length'));
     }
@@ -53,7 +59,9 @@ class SchemaContractTest extends TestCase
         );
 
         $this->assertSame(1, $columns->length);
-        $this->assertSame('name', $columns->item(0)->getAttribute('name'));
+        $column = $columns->item(0);
+        $this->assertInstanceOf(DOMElement::class, $column);
+        $this->assertSame('name', $column->getAttribute('name'));
     }
 
     private function getQueueColumn(string $name): DOMElement

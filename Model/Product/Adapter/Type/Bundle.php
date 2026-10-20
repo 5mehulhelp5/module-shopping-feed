@@ -25,7 +25,6 @@ use \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface;
  *
  * Class Bundle
  *
- * @package MageOS\ShoppingFeed\Model\Product\Adapter\Type
  */
 class Bundle extends Composite implements AdapterInterface
 {
@@ -34,7 +33,9 @@ class Bundle extends Composite implements AdapterInterface
      */
     public function beforeMap()
     {
-        if (!$this->hasData('associated_product_adapters') || !is_array($this->getData('associated_product_adapters'))) {
+        if (!$this->hasData('associated_product_adapters')
+            || !is_array($this->getData('associated_product_adapters'))
+        ) {
             // Get associated products with this one
             $bundleProduct = $this->getProduct();
             /**
@@ -77,14 +78,18 @@ class Bundle extends Composite implements AdapterInterface
         $catalogHelper = $this->catalogHelper;
 
         $prices = [];
-        $price = $product->getPriceInfo()->getPrice('regular_price')->getMinimalPrice()->getValue();
+        /** @var \Magento\Bundle\Pricing\Price\RegularPriceInterface $regularPriceModel Bundle price pool */
+        $regularPriceModel = $product->getPriceInfo()->getPrice('regular_price');
+        $price = $regularPriceModel->getMinimalPrice()->getValue();
         $catalogRulesPrice = $this->getPriceByCatalogRules($price);
         $price = $catalogRulesPrice ? min($catalogRulesPrice, $price) : $price;
         $convertedPrice = $this->convertPrice($price);
         $prices['p_excl_tax'] = $catalogHelper->getTaxPrice($product, $convertedPrice);
         $prices['p_incl_tax'] = $catalogHelper->getTaxPrice($product, $convertedPrice, true);
 
-        $finalPrice = $product->getPriceInfo()->getPrice('final_price')->getMinimalPrice()->getValue();
+        /** @var \Magento\Bundle\Pricing\Price\FinalPriceInterface $finalPriceModel Bundle price pool */
+        $finalPriceModel = $product->getPriceInfo()->getPrice('final_price');
+        $finalPrice = $finalPriceModel->getMinimalPrice()->getValue();
         $catalogRulesPrice = $this->getPriceByCatalogRules($finalPrice);
         $finalPrice = $catalogRulesPrice ? min($catalogRulesPrice, $finalPrice) : $finalPrice;
         $convertedFinalPrice = $this->convertPrice($finalPrice);
@@ -95,14 +100,16 @@ class Bundle extends Composite implements AdapterInterface
     }
 
     /**
-     * @param  bool|true $processRules
-     * @param  null      $product
+     * Whether the bundle sells below its regular price (catalog rule, MSRP or dated special price).
+     *
+     * @param  bool|true                           $processRules
+     * @param  \Magento\Catalog\Model\Product|null $product
      * @return bool
      */
     public function hasSpecialPrice($processRules = true, $product = null)
     {
         $has = false;
-        if (is_null($product)) {
+        if ($product === null) {
             $product = $this->product;
         }
 
@@ -119,11 +126,8 @@ class Bundle extends Composite implements AdapterInterface
             if ($specialPrice > 0 && $specialPrice < $price) {
                 $cDate = $this->timezone->date(null, $locale);
                 $dates = $this->getSpecialPriceEffectiveDates($product, false);
-                /**
-                 * @var \DateTime $start
-                 * @var \DateTime $end
-                 */
-                extract($dates);
+                $start = $dates['start'];
+                $end = $dates['end'];
 
                 if ($start <= $cDate && $end >= $cDate && ($specialPrice < $price || $price == 0)) {
                     $has = true;

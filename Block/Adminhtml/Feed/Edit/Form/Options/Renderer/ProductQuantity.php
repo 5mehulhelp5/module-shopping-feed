@@ -38,9 +38,9 @@ class ProductQuantity extends Template
     /**
      * ProductQuantity constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context                             $context
+     * @param \Magento\Backend\Block\Template\Context $context
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\QuantityHandling $sourceQuantityHandling
-     * @param array                                                               $data
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -51,6 +51,11 @@ class ProductQuantity extends Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get the quantity handling options
+     *
+     * @return array<mixed>
+     */
     public function getQuantityHandlingOptions()
     {
         return $this->sourceQuantityHandling->toOptionArray();

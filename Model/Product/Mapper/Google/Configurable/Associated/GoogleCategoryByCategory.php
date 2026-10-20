@@ -20,6 +20,9 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\Google\Configurable\Associate
 
 class GoogleCategoryByCategory extends \MageOS\ShoppingFeed\Model\Product\Mapper\Google\Simple\GoogleCategoryByCategory
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         // Return parent's value if exists.

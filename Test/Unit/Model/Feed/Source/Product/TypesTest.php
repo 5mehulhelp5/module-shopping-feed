@@ -30,7 +30,7 @@ class TypesTest extends ModelFramework
     protected $sourceTypes;
 
     /**
-     * @var \Magento\Catalog\Model\Product\Type|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Catalog\Model\Product\Type|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $productTypeMock;
 

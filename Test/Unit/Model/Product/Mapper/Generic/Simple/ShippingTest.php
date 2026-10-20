@@ -68,12 +68,17 @@ class ShippingTest extends ModelFramework
         // Set up null cache in shipping Mock, used in ;
         //$this->expectReturn($this->cacheMock, 'getCache', null);
 
-        $shippingMock = $this->getModelMock('MageOS\ShoppingFeed\Model\Product\Shipping',
-            ['setRequest', 'collectRates', 'getFormatedValue', 'getProductWeight']);
+        $shippingMock = $this->getModelMock(
+            'MageOS\ShoppingFeed\Model\Product\Shipping',
+            ['setRequest', 'collectRates', 'getFormatedValue', 'getProductWeight']
+        );
 
         $this->expectReturn($shippingMock, 'getFormatedValue', 'shipping value');
-        $this->expectReturn($shippingMock, 'setRequest',
-            $this->getModelMock('Magento\Quote\Model\Quote\Address\RateRequest'));
+        $this->expectReturn(
+            $shippingMock,
+            'setRequest',
+            $this->getModelMock('Magento\Quote\Model\Quote\Address\RateRequest')
+        );
         $this->expectReturn($shippingMock, 'getProductWeight', 1);
         $this->expectReturn($this->shippingProviderMock, 'getShipping', $shippingMock);
 

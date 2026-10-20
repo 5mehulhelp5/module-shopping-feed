@@ -24,33 +24,33 @@ use Magento\Ui\Component\Listing\Columns\Column;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\AuthorizationInterface;
 
-/**
- * Class FeedActions
- */
 class FeedActions extends Column
 {
     /**
- * Url path
-*/
-    const FEED_URL_PATH_TEST = 'mageos_shopping_feed/feed/test';
-    const FEED_URL_PATH_GENERATE = 'mageos_shopping_feed/feed/generate';
-    const FEED_URL_PATH_VIEWLOG = 'mageos_shopping_feed/feed/viewlog';
-    const FEED_URL_PATH_EDIT = 'mageos_shopping_feed/feed/edit';
+     * Url path
+     */
+    public const FEED_URL_PATH_TEST = 'mageos_shopping_feed/feed/test';
+    public const FEED_URL_PATH_GENERATE = 'mageos_shopping_feed/feed/generate';
+    public const FEED_URL_PATH_VIEWLOG = 'mageos_shopping_feed/feed/viewlog';
+    public const FEED_URL_PATH_EDIT = 'mageos_shopping_feed/feed/edit';
 
     /**
      * @var UrlInterface
      */
     protected $urlBuilder;
 
+    /**
+     * @var AuthorizationInterface
+     */
     private AuthorizationInterface $authorization;
 
     /**
-     * @param ContextInterface   $context
+     * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
-     * @param UrlInterface       $urlBuilder
+     * @param UrlInterface $urlBuilder
      * @param AuthorizationInterface $authorization
-     * @param array              $components
-     * @param array              $data
+     * @param array $components
+     * @param array $data
      */
     public function __construct(
         ContextInterface $context,

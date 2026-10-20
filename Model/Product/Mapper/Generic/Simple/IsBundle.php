@@ -22,9 +22,12 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class IsBundle extends MapperAbstract
 {
-    const IS_BUNDLE     = 'TRUE';
-    const IS_NOT_BUNDLE = 'FALSE';
+    public const IS_BUNDLE     = 'TRUE';
+    public const IS_NOT_BUNDLE = 'FALSE';
 
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $cell = self::IS_NOT_BUNDLE;

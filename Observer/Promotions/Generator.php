@@ -34,7 +34,7 @@ class Generator implements ObserverInterface
     protected $ruleFactory;
 
     /**
-     * @var Provider
+     * @var \MageOS\ShoppingFeed\Model\Promotions\Provider
      */
     protected $provider;
 
@@ -53,7 +53,14 @@ class Generator implements ObserverInterface
      */
     protected $fileDriver;
 
-
+    /**
+     * @param \Magento\Framework\Json\Helper\Data $helper
+     * @param \MageOS\ShoppingFeed\Model\Promotions\Provider $provider
+     * @param \MageOS\ShoppingFeed\Model\Promotions\Provider\Map $map
+     * @param \MageOS\ShoppingFeed\Model\Promotions\Provider\Collection $promotionsCollection
+     * @param \Magento\SalesRule\Model\RuleFactory $ruleFactory
+     * @param \Magento\Framework\Filesystem\Driver\File $fileDriver
+     */
     public function __construct(
         \Magento\Framework\Json\Helper\Data $helper,
         \MageOS\ShoppingFeed\Model\Promotions\Provider $provider,
@@ -72,7 +79,10 @@ class Generator implements ObserverInterface
     }
 
     /**
+     * Write the Google promotions file for the feed when its promotion data changed
+     *
      * @param EventObserver $observer
+     * @return $this
      */
     public function execute(EventObserver $observer)
     {
@@ -124,7 +134,8 @@ class Generator implements ObserverInterface
         if (!empty($fileOutput)) {
             $this->writePromotionFile($file, $fileOutput);
 
-            $linesCount = count($fileLines) > 0 ? count($fileLines) - 1 : 0;
+            // A non-empty output always contains the header line, so exclude it from the count.
+            $linesCount = count($fileLines) - 1;
             if ($linesCount) {
                 // Save the new hash so we don't regenerate the feed if no changes were made.
                 $config['hash'] = $hash;
@@ -196,10 +207,10 @@ class Generator implements ObserverInterface
     /**
      * Create feed line
      *
-     * @param $counter
+     * @param int $counter
      * @param \Magento\SalesRule\Model\Rule $rule
-     * @param array $row
      * @param \MageOS\ShoppingFeed\Model\Promotions\Provider\Map $map
+     * @param array $row
      * @return array
      */
     protected function createFeedLine($counter, \Magento\SalesRule\Model\Rule $rule, $map, $row = [])

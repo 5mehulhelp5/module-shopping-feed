@@ -41,6 +41,7 @@ class ChildOwnershipTest extends TestCase
     {
         $feed = (new \ReflectionClass(Feed::class))->newInstanceWithoutConstructor();
         $feed->setId(8);
+        /** @var class-string<\Magento\Framework\Model\AbstractModel> $childClass */
         $childClass = 'MageOS\\ShoppingFeed\\Model\\Feed\\' . $type;
         $child = $this->getMockBuilder($childClass)->disableOriginalConstructor()
             ->onlyMethods(['load', 'save', 'delete'])->getMock();

@@ -63,6 +63,7 @@ class MassDelete extends \Magento\Backend\App\Action implements \Magento\Framewo
     {
         $collection = $this->filter->getCollection($this->collectionFactory->create());
         $feedDeleted = 0;
+        /** @var \MageOS\ShoppingFeed\Model\Feed $feed */
         foreach ($collection->getItems() as $feed) {
             $feed->delete();
             $feedDeleted++;

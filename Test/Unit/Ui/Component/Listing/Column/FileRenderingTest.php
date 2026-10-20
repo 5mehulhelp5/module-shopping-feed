@@ -17,7 +17,14 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class FileRenderingTest extends TestCase
 {
+    /**
+     * @var string
+     */
     private string $root;
+
+    /**
+     * @var string
+     */
     private string $relative = 'pub/media/mageos-shopping-feed/pub/feed.txt';
 
     protected function setUp(): void
@@ -31,7 +38,8 @@ class FileRenderingTest extends TestCase
     protected function tearDown(): void
     {
         $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(
-            $this->root, \FilesystemIterator::SKIP_DOTS
+            $this->root,
+            \FilesystemIterator::SKIP_DOTS
         ), \RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($files as $file) {
             $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());
@@ -57,7 +65,10 @@ class FileRenderingTest extends TestCase
             }
         }
         $html = $result['data']['items'][0]['file'];
-        self::assertStringContainsString('href="https://cdn.example.test/media/mageos-shopping-feed/pub/feed.txt"', $html);
+        self::assertStringContainsString(
+            'href="https://cdn.example.test/media/mageos-shopping-feed/pub/feed.txt"',
+            $html
+        );
         self::assertStringContainsString('&lt;img src=x onerror=alert(1)&gt;', $html);
         self::assertStringNotContainsString('<img', $html);
         self::assertStringContainsString('rel="noopener"', $html);
@@ -68,7 +79,10 @@ class FileRenderingTest extends TestCase
         $messages = ['promotion_file' => $this->root . '/private.txt', 'promotion_added' => 1];
         $plugin = (new ObjectManager($this))->getObject(Plugin::class, $this->dependencies($messages));
         $input = ['data' => ['items' => [['id' => 1, 'store_id' => 2, 'file' => 'Feed file not ready.']]]];
-        self::assertSame($input, $plugin->afterPrepareDataSource(new \Magento\Framework\DataObject(['name' => 'file']), $input));
+        self::assertSame(
+            $input,
+            $plugin->afterPrepareDataSource(new \Magento\Framework\DataObject(['name' => 'file']), $input)
+        );
     }
 
     public function testPromotionLinkUsesMediaBaseAndEscapesCounts(): void
@@ -76,17 +90,23 @@ class FileRenderingTest extends TestCase
         $messages = ['promotion_file' => $this->root . '/' . $this->relative,
             'promotion_added' => '<img src=x onerror=alert(1)>'];
         $plugin = (new ObjectManager($this))->getObject(Plugin::class, $this->dependencies($messages));
-        $result = $plugin->afterPrepareDataSource(new \Magento\Framework\DataObject(['name' => 'file']),
-            ['data' => ['items' => [['id' => 1, 'store_id' => 2, 'file' => 'Feed']]]]);
+        $result = $plugin->afterPrepareDataSource(
+            new \Magento\Framework\DataObject(['name' => 'file']),
+            ['data' => ['items' => [['id' => 1, 'store_id' => 2, 'file' => 'Feed']]]]
+        );
         $html = $result['data']['items'][0]['file'];
-        self::assertStringContainsString('href="https://cdn.example.test/media/mageos-shopping-feed/pub/feed.txt"', $html);
+        self::assertStringContainsString(
+            'href="https://cdn.example.test/media/mageos-shopping-feed/pub/feed.txt"',
+            $html
+        );
         self::assertStringNotContainsString('<img', $html);
         self::assertStringContainsString('rel="noopener"', $html);
     }
 
     private function dependencies(array $messages): array
     {
-        $feed = $this->getMockBuilder(Feed::class)->disableOriginalConstructor()->onlyMethods(['getMessages'])->getMock();
+        $feed = $this->getMockBuilder(Feed::class)->disableOriginalConstructor()
+            ->onlyMethods(['getMessages'])->getMock();
         $feed->method('getMessages')->willReturn($messages);
         $factory = $this->createMock(FeedFactory::class);
         $factory->method('create')->willReturn($feed);
@@ -100,7 +120,8 @@ class FileRenderingTest extends TestCase
         $directories->method('getPath')->with(DirectoryList::MEDIA)->willReturn($this->root . '/pub/media');
         $escaper = new Escaper();
         (new \ReflectionProperty(Escaper::class, 'translateInline'))->setValue(
-            $escaper, $this->createMock(\Magento\Framework\Translate\InlineInterface::class)
+            $escaper,
+            $this->createMock(\Magento\Framework\Translate\InlineInterface::class)
         );
         return ['feedFactory' => $factory, 'storeManager' => $stores,
             'directoryList' => $directories, 'escaper' => $escaper];

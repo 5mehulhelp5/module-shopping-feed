@@ -20,13 +20,10 @@ namespace MageOS\ShoppingFeed\Model\Feed\Source\Product;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * Class QuantityHandling
- */
 class QuantityHandling implements OptionSourceInterface
 {
-    const ITEM_QTY = 0;
-    const ITEM_SUM_DEFAULT_QTY = 1;
+    public const ITEM_QTY = 0;
+    public const ITEM_SUM_DEFAULT_QTY = 1;
 
     /**
      * Retrieve option array

@@ -3,11 +3,14 @@
 ?>
 
 <div>
-    <span><?php echo $block->escapeHtml(__('Unit of measure:')) ?></span>
+    <span><?= $escaper->escapeHtml(__('Unit of measure:')) ?></span>
     <select name="#{htmlName}[#{index}][param]" class="select">
         <?php foreach ($block->getWeightOptions() as $option): ?>
-            <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>
+            <option value="<?=
+                $escaper->escapeHtml($option['value'])
+            ?>"><?= $escaper->escapeHtml($option['label']) ?></option>
         <?php endforeach; ?>
     </select>
 </div>
-<p><span><?php echo $block->escapeHtml(__('For multi-store ids must be unique across all feeds. Set to \'Yes\' will concatenate the product id and the store code.')) ?></span></p>
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase ?>
+<p><span><?= $escaper->escapeHtml(__('For multi-store ids must be unique across all feeds. Set to \'Yes\' will concatenate the product id and the store code.')) ?></span></p>

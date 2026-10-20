@@ -70,8 +70,11 @@ class ConverterTest extends TestCase
         $feed->setData('config', new DataObject(['vendor_setting' => ['private' => false]]));
         $builder = $this->createMock(\MageOS\ShoppingFeed\Controller\Adminhtml\Feed\Builder::class);
         $builder->method('build')->willReturn($feed);
-        return [new Converter($this->createMock(\Magento\Framework\App\RequestInterface::class), $builder,
-            new \Magento\Framework\Json\Decoder(new \Magento\Framework\Serialize\Serializer\Json())), $feed];
+        return [new Converter(
+            $this->createMock(\Magento\Framework\App\RequestInterface::class),
+            $builder,
+            new \Magento\Framework\Json\Decoder(new \Magento\Framework\Serialize\Serializer\Json())
+        ), $feed];
     }
 
     public function testLegacyGroupingKeepsSkuIdentityWhenOpeningAndSaving(): void

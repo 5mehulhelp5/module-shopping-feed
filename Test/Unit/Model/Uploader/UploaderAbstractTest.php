@@ -31,7 +31,13 @@ class UploaderAbstractTest extends TestCase
     {
         foreach (['upload', 'checkConnection'] as $operation) {
             $config = $this->createMock(\MageOS\ShoppingFeed\Model\Feed\Upload::class);
-            $config->method('getData')->willReturn(['host' => 'example.invalid', 'port' => 22, 'username' => 'test', 'password' => 'dummy', 'path' => '/missing']);
+            $config->method('getData')->willReturn([
+                'host' => 'example.invalid',
+                'port' => 22,
+                'username' => 'test',
+                'password' => 'dummy',
+                'path' => '/missing',
+            ]);
             $connection = $this->createMock(\Magento\Framework\Filesystem\Io\Sftp::class);
             $connection->method('open')->willReturn(true);
             $connection->method('cd')->with('/missing')->willReturn(false);
@@ -49,7 +55,13 @@ class UploaderAbstractTest extends TestCase
     public function testSuccessfulDirectoryChangeAllowsUpload(): void
     {
         $config = $this->createMock(\MageOS\ShoppingFeed\Model\Feed\Upload::class);
-        $config->method('getData')->willReturn(['host' => 'example.invalid', 'port' => 22, 'username' => 'test', 'password' => 'dummy', 'path' => '/feeds']);
+        $config->method('getData')->willReturn([
+            'host' => 'example.invalid',
+            'port' => 22,
+            'username' => 'test',
+            'password' => 'dummy',
+            'path' => '/feeds',
+        ]);
         $connection = $this->createMock(\Magento\Framework\Filesystem\Io\Sftp::class);
         $connection->method('open')->willReturn(true);
         $connection->method('cd')->with('/feeds')->willReturn(true);
@@ -57,5 +69,4 @@ class UploaderAbstractTest extends TestCase
         $subject = new \MageOS\ShoppingFeed\Model\Uploader\Mode\Sftp($config, $connection);
         $this->assertTrue($subject->upload('/tmp/feed.txt'));
     }
-
 }

@@ -38,6 +38,9 @@ class OptionTest extends ModelFramework
      */
     protected $model;
 
+    /**
+     * @var \Magento\Catalog\Model\Product\Option\Value[]|\PHPUnit\Framework\MockObject\MockObject[]
+     */
     protected $valueMockArray = [];
 
     /**
@@ -63,7 +66,9 @@ class OptionTest extends ModelFramework
 
         $this->expectReturn($this->adapterMock, 'getFeed', $this->feedMock);
         $this->expectReturn(
-            $this->feedMock, 'getColumnsMap', [[
+            $this->feedMock,
+            'getColumnsMap',
+            [[
                 'column' => 'Column',
                 'attribute' => 'directive_product_option',
                 'param' => 'Option name'

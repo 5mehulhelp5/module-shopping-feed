@@ -21,6 +21,9 @@ namespace MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
+/**
+ * @method \MageOS\ShoppingFeed\Model\Generator\Process[] getItems()
+ */
 class Collection extends AbstractCollection
 {
     /**
@@ -35,9 +38,17 @@ class Collection extends AbstractCollection
      */
     protected function _construct()
     {
-        $this->_init('MageOS\ShoppingFeed\Model\Generator\Process', 'MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process');
+        $this->_init(
+            \MageOS\ShoppingFeed\Model\Generator\Process::class,
+            \MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process::class
+        );
     }
 
+    /**
+     * Filter processed items by feed, once. Returns $this.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Feed $feed
+     */
     public function setFeedFilter(\MageOS\ShoppingFeed\Model\Feed $feed)
     {
         if (!$this->hasFlag('feed_filter')) {
@@ -47,6 +58,12 @@ class Collection extends AbstractCollection
         return $this;
     }
 
+    /**
+     * Filter processed items by product, once.
+     *
+     * @param \Magento\Catalog\Model\Product $product
+     * @return $this
+     */
     public function setProductFilter(\Magento\Catalog\Model\Product $product)
     {
         if (!$this->hasFlag('product_filter')) {
@@ -56,9 +73,15 @@ class Collection extends AbstractCollection
         return $this;
     }
 
+    /**
+     * Delete processed item records, optionally only for one feed.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Feed|null $feed
+     * @return $this
+     */
     public function truncate($feed = null)
     {
-        if (!is_null($feed)) {
+        if ($feed !== null) {
             $this->setFeedFilter($feed);
         }
 

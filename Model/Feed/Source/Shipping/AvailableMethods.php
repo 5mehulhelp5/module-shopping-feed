@@ -19,14 +19,13 @@
 namespace MageOS\ShoppingFeed\Model\Feed\Source\Shipping;
 
 use Magento\Framework\Data\OptionSourceInterface;
+use Magento\Shipping\Model\Carrier\AbstractCarrierInterface;
+use Magento\Shipping\Model\Carrier\CarrierInterface;
 
-/**
- * Class AvailableMethods
- */
 class AvailableMethods implements OptionSourceInterface
 {
     /**
-     * Core registry
+     * Registry holding the feed being edited
      *
      * @var \Magento\Framework\Registry
      */
@@ -84,6 +83,8 @@ class AvailableMethods implements OptionSourceInterface
 
         $carriersRealtime = $this->getRealtimeCarriers();
 
+        // Configured carriers expose getAllowedMethods(); core's Allmethods source relies on the same contract.
+        /** @var CarrierInterface&AbstractCarrierInterface $carrier */
         foreach ($this->shippingMethodConfig->getActiveCarriers() as $carrier) {
             $carrierCode = $carrier->getCarrierCode();
 
@@ -134,7 +135,7 @@ class AvailableMethods implements OptionSourceInterface
     /**
      * Get carrier name by code
      *
-     * @param  $carrierCode
+     * @param string $carrierCode
      * @return mixed
      */
     protected function getCarrierName($carrierCode)

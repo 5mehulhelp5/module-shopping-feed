@@ -25,7 +25,6 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
  *
  * Class ProductReviewAverage
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
  */
 class ProductReviewAverage extends MapperAbstract
 {
@@ -46,16 +45,14 @@ class ProductReviewAverage extends MapperAbstract
         $this->summary = $summary;
     }
 
-
     /**
+     * Average review rating on a five-point scale.
+     *
      * @param  array $params
      * @return string
      */
     public function map(array $params = [])
     {
-        /**
- * @var \Magento\Catalog\Model\Product $product
-*/
         if ($this->getAdapter()->hasParentAdapter()) {
             $product = $this->getAdapter()->getParentAdapter()->getProduct();
         } else {
@@ -65,8 +62,10 @@ class ProductReviewAverage extends MapperAbstract
         $avg = 0;
         $summary = $this->summary->setData('store_id', $this->getAdapter()->getData('store_id'))
             ->load($product->getId());
-        if (!is_null($summary->getRatingSummary()) && $summary->getRatingSummary() > 0) {
-            $avg = $summary->getRatingSummary() * 5 / 100;
+        // rating_summary is a numeric DB column that Magento returns as a string.
+        $ratingSummary = $summary->getRatingSummary();
+        if (is_numeric($ratingSummary) && $ratingSummary > 0) {
+            $avg = $ratingSummary * 5 / 100;
         }
 
         return $this->getAdapter()->getFilter()->cleanField($avg, $params);

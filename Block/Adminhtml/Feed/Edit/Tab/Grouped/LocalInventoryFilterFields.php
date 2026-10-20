@@ -24,6 +24,8 @@ use Magento\Framework\Event\ObserverInterface;
 class LocalInventoryFilterFields implements ObserverInterface
 {
     /**
+     * Remove the unique associated link option from local inventory feeds
+     *
      * @param EventObserver $observer
      * @return void
      */

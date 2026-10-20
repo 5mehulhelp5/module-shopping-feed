@@ -26,10 +26,10 @@ use MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Element\AbstractArrayElem
  */
 class ColumnsMap extends AbstractArrayElement implements RendererInterface
 {
-    const DEFAULT_COLUMN = 'id';
+    public const DEFAULT_COLUMN = 'id';
 
     /**
-     * Core registry
+     * Registry holding the current feed
      *
      * @var \Magento\Framework\Registry
      */
@@ -46,7 +46,7 @@ class ColumnsMap extends AbstractArrayElement implements RendererInterface
     protected $sourceDirectivesAndAttributes;
 
     /**
-     * @var null|\Magento\Framework\Json\Encoder
+     * @var \Magento\Framework\Json\EncoderInterface
      */
     protected $jsonEncoder;
 
@@ -59,6 +59,11 @@ class ColumnsMap extends AbstractArrayElement implements RendererInterface
      * @var \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\OptionsRendererFactory
      */
     protected $optionRendererFactory;
+
+    /**
+     * @var \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\OptionsRendererFactory
+     */
+    protected $optionsRendererFactory;
 
     /**
      * @var string
@@ -92,14 +97,14 @@ class ColumnsMap extends AbstractArrayElement implements RendererInterface
     /**
      * ColumnsMap constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context                                                $context
-     * @param \Magento\Framework\Registry                                                            $coreRegistry
-     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns                             $sourceProductColumns
-     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\DirectivesAndAttributes             $sourceDirectivesAndAttributes
-     * @param \Magento\Framework\Json\EncoderInterface                                               $jsonEncoder
-     * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config                                        $feedTypesConfig
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $coreRegistry
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns $sourceProductColumns
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\DirectivesAndAttributes $sourceDirectivesAndAttributes
+     * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
+     * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config $feedTypesConfig
      * @param \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Options\OptionsRendererFactory $optionsRendererFactory
-     * @param array                                                                                  $data
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -155,9 +160,9 @@ class ColumnsMap extends AbstractArrayElement implements RendererInterface
     }
 
     /**
-     * Retrieve form element instance
+     * Retrieve control name
      *
-     * @return bool
+     * @return string
      */
     public function getControlName()
     {
@@ -170,7 +175,7 @@ class ColumnsMap extends AbstractArrayElement implements RendererInterface
      * @param                                   array $a
      * @param                                   array $b
      * @return                                  int
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function sortValuesCallback($a, $b)
     {
@@ -201,6 +206,11 @@ class ColumnsMap extends AbstractArrayElement implements RendererInterface
         return $this->sourceDirectivesAndAttributes->toOptionArray();
     }
 
+    /**
+     * Encode the directive renderers of the current feed type as JSON
+     *
+     * @return string
+     */
     public function configToJson()
     {
         $directivesConfig = [];
@@ -238,7 +248,7 @@ class ColumnsMap extends AbstractArrayElement implements RendererInterface
     /**
      * Retrieve default value for column
      *
-     * @return int
+     * @return string
      */
     public function getDefaultColumn()
     {
@@ -254,7 +264,7 @@ class ColumnsMap extends AbstractArrayElement implements RendererInterface
     {
         $buttonLabel = $this->getMapExistingColumns() ? __('Add Rule') : __('Add Column');
         $button = $this->getLayout()->createBlock(
-            'Magento\Backend\Block\Widget\Button'
+            \Magento\Backend\Block\Widget\Button::class
         )->setData(
             [
                 'label' => $buttonLabel,

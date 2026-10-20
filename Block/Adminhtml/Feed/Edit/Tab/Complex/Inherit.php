@@ -26,7 +26,7 @@ use MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Element\AbstractArrayElem
  */
 class Inherit extends AbstractArrayElement implements RendererInterface
 {
-    const DEFAULT_COLUMN = 'id';
+    public const DEFAULT_COLUMN = 'id';
 
     /**
      * @var \MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns
@@ -58,9 +58,11 @@ class Inherit extends AbstractArrayElement implements RendererInterface
     /**
      * FindReplace constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context                    $context
+     * @param \Magento\Backend\Block\Template\Context $context
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns $sourceProductColumns
-     * @param array                                                      $data
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Inheritance $sourceInheritance
+     * @param \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate $concatenateMapper
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -81,7 +83,7 @@ class Inherit extends AbstractArrayElement implements RendererInterface
      * @param                                   array $a
      * @param                                   array $b
      * @return                                  int
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function sortValuesCallback($a, $b)
     {
@@ -107,6 +109,11 @@ class Inherit extends AbstractArrayElement implements RendererInterface
         return $options;
     }
 
+    /**
+     * Get the inheritance mode options
+     *
+     * @return array<mixed>
+     */
     public function getOptions()
     {
         return $this->sourceInheritance->toOptionArray();
@@ -115,7 +122,7 @@ class Inherit extends AbstractArrayElement implements RendererInterface
     /**
      * Retrieve default value for column
      *
-     * @return int
+     * @return string
      */
     public function getDefaultColumn()
     {
@@ -130,7 +137,7 @@ class Inherit extends AbstractArrayElement implements RendererInterface
     public function getAddButtonHtml()
     {
         $button = $this->getLayout()->createBlock(
-            'Magento\Backend\Block\Widget\Button'
+            \Magento\Backend\Block\Widget\Button::class
         )->setData(
             [
                 'label' => __('Add Rule'),

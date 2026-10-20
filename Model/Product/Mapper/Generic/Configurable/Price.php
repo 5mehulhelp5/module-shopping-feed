@@ -20,16 +20,13 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable;
 
 use \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Price as SimplePrice;
 
-/**
- * Class Price
- *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
- */
 class Price extends SimplePrice
 {
     /**
+     * Lowest price among the associated products.
+     *
      * @param  array $params
-     * @return string
+     * @return float|int Lowest associated price, 0 when there are no associated products
      */
     public function map(array $params = [])
     {
@@ -38,6 +35,12 @@ class Price extends SimplePrice
         return $this->getPrice($key);
     }
 
+    /**
+     * Lowest associated price for the price key; records the products that have it.
+     *
+     * @param string $key Price array key
+     * @return float|int 0 when there are no associated products
+     */
     protected function getPrice($key)
     {
         $minPrice = PHP_FLOAT_MAX;
@@ -64,7 +67,12 @@ class Price extends SimplePrice
         $this->getAdapter()->setData('min_price_product_ids', $theProductIds);
 
         if ($minPrice == PHP_FLOAT_MAX) {
-            $this->getAdapter()->setSkipProduct(sprintf('Product skipped - no associated products found, price = 0. Product SKU #%s', $this->getAdapter()->getProduct()->getSku()));
+            $this->getAdapter()->setSkipProduct(
+                sprintf(
+                    'Product skipped - no associated products found, price = 0. Product SKU #%s',
+                    $this->getAdapter()->getProduct()->getSku()
+                )
+            );
             return 0;
         }
         return $minPrice;

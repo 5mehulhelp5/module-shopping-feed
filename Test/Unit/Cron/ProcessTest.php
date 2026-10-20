@@ -14,6 +14,7 @@ use MageOS\ShoppingFeed\Model\Generator\Queue;
 use MageOS\ShoppingFeed\Model\Logger;
 use MageOS\ShoppingFeed\Model\ResourceModel\Generator\Queue\Collection;
 use MageOS\ShoppingFeed\Test\Unit\CompatibilityTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class ProcessTest extends CompatibilityTestCase
@@ -54,7 +55,8 @@ class ProcessTest extends CompatibilityTestCase
 
     public function testCompletedQueueIsNotRunAgainAfterAcquiringTheLock(): void
     {
-        $generator = $this->getMockBuilder(Generator::class)->disableOriginalConstructor()->onlyMethods(['run'])->getMock();
+        $generator = $this->getMockBuilder(Generator::class)->disableOriginalConstructor()
+            ->onlyMethods(['run'])->getMock();
         $generator->expects($this->never())->method('run');
         $queue = $this->createCompatibleMock(Queue::class, ['load', 'getGenerator', 'setRunning', 'getFeedId']);
         $queue->setId(42);
@@ -88,6 +90,10 @@ class ProcessTest extends CompatibilityTestCase
         $this->assertNull($property->getValue($subject));
     }
 
+    /**
+     * @param (Queue&MockObject)|null $queue
+     * @return Process&object{released: bool}
+     */
     private function createProcess(Generator $generator, Logger $logger, ?Queue $queue = null): Process
     {
         $queue = $queue ?? $this->createCompatibleMock(
@@ -114,6 +120,11 @@ class ProcessTest extends CompatibilityTestCase
             $collection,
             $scopeConfig
         ) extends Process {
+            /**
+             * Whether releaseLock() was called
+             *
+             * @var bool
+             */
             public bool $released = false;
 
             public function acquireLock()

@@ -24,7 +24,8 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab;
 /**
  * Feed edit form Product Options tab
  */
-class Options extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class Options extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements
+    \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
      * @var \MageOS\ShoppingFeed\Model\Feed\Source\Product\OptionHandling
@@ -32,12 +33,12 @@ class Options extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
     protected $sourceOptionHandling;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context                           $context
-     * @param \Magento\Framework\Registry                                       $registry
-     * @param \Magento\Framework\Data\FormFactory                               $formFactory
-     * @param \MageOS\ShoppingFeed\Model\Feed\Converter                     $feedConverter
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
+     * @param \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\OptionHandling $sourceOptionHandling
-     * @param array                                                             $data
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -55,7 +56,7 @@ class Options extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
      * Prepare form
      *
      * @return                                        $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function _prepareForm()
     {
@@ -95,7 +96,7 @@ class Options extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
 
         $fieldset->addType(
             'options_vary_categories',
-            'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Options\Category'
+            \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Options\Category::class
         );
         $fieldset->addField(
             'config_options_vary_categories',
@@ -110,7 +111,8 @@ class Options extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
         );
 
         $this->_eventManager->dispatch(
-            sprintf('mageos_shopping_feed_feed_edit_tab_categories_prepare_form_%s', $model->getType()), [
+            sprintf('mageos_shopping_feed_feed_edit_tab_categories_prepare_form_%s', $model->getType()),
+            [
             'form' => $form,
             'feed' => $model,
             'is_element_disabled' => $isElementDisabled,
@@ -154,6 +156,7 @@ class Options extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
      */
     public function getTabNotice()
     {
+        // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
         return __('In order for the feed to vary products by their options, the <strong>Feed Columns</strong> needs to have the variant columns (i.e. size and color) mapped to the <strong>Product Options</strong> directive.<br />Use the <strong>Product Option</strong> directive parameter to specify which options should be pulled.');
     }
 }

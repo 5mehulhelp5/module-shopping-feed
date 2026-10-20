@@ -24,9 +24,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Ui\Component\Listing\Columns\Column;
 use MageOS\ShoppingFeed\Model\FeedFactory;
 
-/**
- * Class File
- */
 class File extends Column
 {
     /**
@@ -49,11 +46,14 @@ class File extends Column
     /**
      * Constructor
      *
-     * @param ContextInterface   $context
+     * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
-     * @param FeedFactory        $feedFactory
-     * @param array              $components
-     * @param array              $data
+     * @param StoreManagerInterface $storeManager
+     * @param FeedFactory $feedFactory
+     * @param \Magento\Framework\App\Filesystem\DirectoryList $directoryList
+     * @param \Magento\Framework\Escaper $escaper
+     * @param array $components
+     * @param array $data
      */
     public function __construct(
         ContextInterface $context,
@@ -93,18 +93,25 @@ class File extends Column
                         continue;
                     }
                     $absolute = rtrim($mageRootPath, '/') . '/' . ltrim($filepath, '/');
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction -- realpath() media containment check; a filesystem driver needs a constructor change
                     $path = realpath($absolute);
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction -- realpath() media containment check; a filesystem driver needs a constructor change
                     $temporary = realpath($absolute . '.tmp');
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction -- realpath() media containment check; a filesystem driver needs a constructor change
                     $media = realpath($this->directoryList->getPath('media'));
                     $existing = $path ?: $temporary;
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction -- is_file() on the contained path; a filesystem driver needs a constructor change
                     if (!$media || !$existing || !is_file($existing) || !str_starts_with($existing, $media . '/')) {
                         continue;
                     }
                     if ($path) {
-                        $store = $this->storeManager->getStore((int) ($fileInformation['store_id'] ?? $feed->getStoreId()));
+                        $store = $this->storeManager->getStore(
+                            (int) ($fileInformation['store_id'] ?? $feed->getStoreId())
+                        );
                         $url = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)
                             . substr($path, strlen($media) + 1);
-                        $item[$name] = '<a href="' . $this->escaper->escapeUrl($url) . '" target="_blank" rel="noopener">'
+                        $item[$name] = '<a href="' . $this->escaper->escapeUrl($url)
+                            . '" target="_blank" rel="noopener">'
                             . $this->escaper->escapeHtml($url) . '</a>';
                     }
                     $item[$name] .= '<br />' . $this->escaper->escapeHtml((string) __(

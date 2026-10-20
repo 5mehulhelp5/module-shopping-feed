@@ -25,16 +25,20 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
  *
  * Class Quantity
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
  */
 class Quantity extends MapperAbstract
 {
     /**
-     * @var MageOS\ShoppingFeed\Model\Inventory\Api
+     * @var \MageOS\ShoppingFeed\Model\Inventory\Api
      */
     protected $sourceInventoryApi;
 
-
+    /**
+     * Quantity mapper constructor.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param \MageOS\ShoppingFeed\Model\Inventory\Api $sourceInventoryApi
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Logger $logger,
         \MageOS\ShoppingFeed\Model\Inventory\Api $sourceInventoryApi
@@ -44,6 +48,8 @@ class Quantity extends MapperAbstract
     }
 
     /**
+     * Saleable stock quantity.
+     *
      * @param  array $params
      * @return string
      */

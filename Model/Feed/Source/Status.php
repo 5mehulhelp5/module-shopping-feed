@@ -20,17 +20,14 @@ namespace MageOS\ShoppingFeed\Model\Feed\Source;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * Class Status
- */
 class Status implements OptionSourceInterface
 {
-    const STATUS_DISABLED       = 0;
-    const STATUS_SCHEDULED      = 1;
-    const STATUS_PENDING        = 2;
-    const STATUS_PROCESSING     = 3;
-    const STATUS_COMPLETED      = 4;
-    const STATUS_ERROR          = 5;
+    public const STATUS_DISABLED       = 0;
+    public const STATUS_SCHEDULED      = 1;
+    public const STATUS_PENDING        = 2;
+    public const STATUS_PROCESSING     = 3;
+    public const STATUS_COMPLETED      = 4;
+    public const STATUS_ERROR          = 5;
 
     /**
      * Retrieve option array

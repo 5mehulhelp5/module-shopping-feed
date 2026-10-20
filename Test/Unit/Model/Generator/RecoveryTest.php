@@ -57,7 +57,13 @@ class RecoveryTest extends TestCase
         $feed = $this->getMockBuilder(\MageOS\ShoppingFeed\Model\Feed::class)
             ->disableOriginalConstructor()->onlyMethods([])->getMock();
         $feed->setData('type', 'google_shopping');
-        foreach (['batch' => $batch, 'queue' => $queue, 'feed' => $feed, 'fileDriver' => new \Magento\Framework\Filesystem\Driver\File()] as $key => $value) {
+        $dependencies = [
+            'batch' => $batch,
+            'queue' => $queue,
+            'feed' => $feed,
+            'fileDriver' => new \Magento\Framework\Filesystem\Driver\File(),
+        ];
+        foreach ($dependencies as $key => $value) {
             (new \ReflectionProperty($generator, $key))->setValue($generator, $value);
         }
         return $generator;

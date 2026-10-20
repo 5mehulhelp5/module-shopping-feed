@@ -20,21 +20,32 @@ namespace MageOS\ShoppingFeed\Model\Product\Adapter\Type;
 
 use \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract;
 use \MageOS\ShoppingFeed\Model\Feed\Source\Product\Inheritance;
+use Magento\Catalog\Model\ResourceModel\Product\Link\Product\CollectionFactory as LinkedProductCollectionFactory;
+use Magento\CatalogRule\Model\ResourceModel\Rule\Product\Price\CollectionFactory as RulePriceCollectionFactory;
 
 /**
  * Composite Adapter, holds business logic between Product, Config and Mapper
  *
  * Class Composite
  *
- * @package MageOS\ShoppingFeed\Model\Product\Adapter\Type
  */
 class Composite extends AdapterAbstract
 {
+    /**
+     * Associated-products modes that output the parent product row
+     *
+     * @var int[]
+     */
     protected $allowed_parent = [
         \MageOS\ShoppingFeed\Model\Feed\Source\Product\AssociatedMode::ONLY_PARENT,
         \MageOS\ShoppingFeed\Model\Feed\Source\Product\AssociatedMode::BOTH_PARENT_ASSOCIATED
     ];
 
+    /**
+     * Associated-products modes that output the associated product rows
+     *
+     * @var int[]
+     */
     protected $allowed_assoc = [
         \MageOS\ShoppingFeed\Model\Feed\Source\Product\AssociatedMode::ONLY_ASSOCIATED,
         \MageOS\ShoppingFeed\Model\Feed\Source\Product\AssociatedMode::BOTH_PARENT_ASSOCIATED
@@ -53,7 +64,39 @@ class Composite extends AdapterAbstract
     /** @var \Magento\Catalog\Model\ResourceModel\Product\Link\Product\CollectionFactory */
     protected $linkedProductCollectionFactory;
 
-
+    /**
+     * Composite adapter constructor.
+     *
+     * @param \Magento\Framework\Filesystem $filesystem
+     * @param \MageOS\ShoppingFeed\Model\Feed $feed
+     * @param \Magento\Catalog\Model\Product $product
+     * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config $feedTypesConfig
+     * @param \MageOS\ShoppingFeed\Model\Product\Mapper\MapperFactory $mapperFactory
+     * @param \MageOS\ShoppingFeed\Model\Product\Helper $helper
+     * @param \Magento\Weee\Helper\Data $weeeData
+     * @param \Magento\Tax\Helper\Data $taxData
+     * @param \MageOS\ShoppingFeed\Model\Product\Helper\Catalog $catalogHelper
+     * @param RulePriceCollectionFactory $catalogRuleCollectionFactory
+     * @param \Magento\Catalog\Model\Product\Type\Price $productTypePrice
+     * @param \Magento\CatalogInventory\Model\StockState $stockState
+     * @param \MageOS\ShoppingFeed\Model\Product\Filter $filter
+     * @param \Magento\Framework\Locale\Resolver $localeResolver
+     * @param \Magento\Framework\Stdlib\DateTime\Timezone $timezone
+     * @param \Magento\Framework\Stdlib\DateTime $date
+     * @param \MageOS\ShoppingFeed\Model\Product\Processors\OptionFactory $optionFactory
+     * @param \MageOS\ShoppingFeed\Model\Generator\ProcessFactory $processFactory
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process\CollectionFactory $processCollectionFactory
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param \MageOS\ShoppingFeed\Model\Generator\Cache $cache
+     * @param \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterFactory $adapterFactory
+     * @param \MageOS\ShoppingFeed\Model\Product\Formatter\FormatterFactory $formatterFactory
+     * @param \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory
+     * @param \MageOS\ShoppingFeed\Model\Inventory\Api $sourceInventoryApi
+     * @param \Magento\Framework\Serialize\SerializerInterface $jsonSerializer
+     * @param \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate $concatenateMapper
+     * @param LinkedProductCollectionFactory $linkedProductCollectionFactory
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\Filesystem $filesystem,
         \MageOS\ShoppingFeed\Model\Feed $feed,
@@ -89,15 +132,39 @@ class Composite extends AdapterAbstract
         $this->linkedProductCollectionFactory = $linkedProductCollectionFactory;
 
         parent::__construct(
-            $filesystem, $feed, $product, $feedTypesConfig, $mapperFactory, $helper,
-            $weeeData, $taxData, $catalogHelper, $catalogRuleCollectionFactory, $productTypePrice,
-            $stockState, $filter, $localeResolver, $timezone, $date, $optionFactory, $processFactory,
-            $processCollectionFactory, $logger, $cache, $adapterFactory, $formatterFactory, $categoryCollectionFactory,
-            $sourceInventoryApi, $jsonSerializer, $data
+            $filesystem,
+            $feed,
+            $product,
+            $feedTypesConfig,
+            $mapperFactory,
+            $helper,
+            $weeeData,
+            $taxData,
+            $catalogHelper,
+            $catalogRuleCollectionFactory,
+            $productTypePrice,
+            $stockState,
+            $filter,
+            $localeResolver,
+            $timezone,
+            $date,
+            $optionFactory,
+            $processFactory,
+            $processCollectionFactory,
+            $logger,
+            $cache,
+            $adapterFactory,
+            $formatterFactory,
+            $categoryCollectionFactory,
+            $sourceInventoryApi,
+            $jsonSerializer,
+            $data
         );
     }
 
     /**
+     * Build an adapter for each enabled associated product, linked to this parent adapter.
+     *
      * @param  \Magento\Catalog\Model\ResourceModel\Product\Collection $associatedProductCollection
      * @return array
      */
@@ -130,6 +197,7 @@ class Composite extends AdapterAbstract
 
     /**
      * Internal method to pull feed config for specific product type
+     *
      * This needs to be overwritten in child class
      *
      * @return int
@@ -141,6 +209,7 @@ class Composite extends AdapterAbstract
 
     /**
      * Internal method to pull feed config for specific product type
+     *
      * This needs to be overwritten in child class
      *
      * @return array
@@ -165,11 +234,8 @@ class Composite extends AdapterAbstract
             // Map current product
             $fields = [];
             foreach ($this->feed->getColumnsMap() as $arr) {
-                $row = false;
                 $column = $arr['column'];
-                if (!$row) {
-                    $row = $this->getMapValue($arr);
-                }
+                $row = $this->getMapValue($arr);
 
                 if (isset($fields[$column])) {
                     if (is_array($fields[$column])) {
@@ -191,9 +257,16 @@ class Composite extends AdapterAbstract
         return $rows;
     }
 
+    /**
+     * Collect the skip reason locally; afterMap() logs the skipped associated products per parent.
+     *
+     * @param string $reason
+     * @param int|string|null $productId
+     * @return $this
+     */
     public function setSkipProduct($reason, $productId = null)
     {
-        if (is_null($productId)) {
+        if ($productId === null) {
             $productId = $this->getProduct()->getId();
         }
 
@@ -270,12 +343,15 @@ class Composite extends AdapterAbstract
         return $rows;
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function afterMap(array $rows)
     {
         $rows = parent::afterMap($rows);
 
         // Log skipped
-        foreach($this->skippedData as $message => $ids) {
+        foreach ($this->skippedData as $message => $ids) {
             $this->logger->info(
                 sprintf(
                     "Skipped associated product id(s) [%s], parent %s - %s",
@@ -296,9 +372,10 @@ class Composite extends AdapterAbstract
     public function getChildrenCount()
     {
         $associatedAdapters = $this->getData('associated_product_adapters');
-        return is_array($associatedAdapters) ? self::DEFAULT_CHILDREN_COUNT + count($associatedAdapters) : self::DEFAULT_CHILDREN_COUNT;
+        return is_array($associatedAdapters)
+            ? self::DEFAULT_CHILDREN_COUNT + count($associatedAdapters)
+            : self::DEFAULT_CHILDREN_COUNT;
     }
-
 
     /**
      * @inheritdoc
@@ -321,15 +398,27 @@ class Composite extends AdapterAbstract
         return $has;
     }
 
-    protected function mapByInheritance(\MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter, $column = [])
-    {
+    /**
+     * Map a column of an associated product through the feed's parent/associated inheritance rules.
+     *
+     * @param AdapterAbstract $adapter Associated product adapter
+     * @param array<string,mixed> $column Column map entry
+     * @return mixed False when no inheritance rule covers the column
+     */
+    // phpcs:ignore Generic.Metrics.NestingLevel.TooHigh -- legacy feed logic; refactor deferred to keep output identical
+    protected function mapByInheritance(
+        \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter,
+        $column = []
+    ) {
         if (array_key_exists('column', $column)) {
             $column_name = $column['column'];
             $map = $this->getAssociatedMapInheritance();
 
             foreach ($map as $row) {
                 if ($row['column'] == $column_name) {
-                    if (in_array($column['attribute'], $this->concatenateMapper->getDirectiveNames()) && !empty($row['extra'])) {
+                    if (in_array($column['attribute'], $this->concatenateMapper->getDirectiveNames())
+                        && !empty($row['extra'])
+                    ) {
                         $attributes = explode(',', $row['extra']);
                         // for concatenation, map each attribute individually as defined in inheritance rule
                         foreach ($attributes as $code) {
@@ -356,36 +445,50 @@ class Composite extends AdapterAbstract
         return false;
     }
 
-    protected function mapByInheritanceFrom(\MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter, $column = [], $from = Inheritance::ASSOCIATED_FIRST)
-    {
+    /**
+     * Column value from the parent, the associated product, or the first non-empty of both.
+     *
+     * @param AdapterAbstract $adapter Associated product adapter
+     * @param array<string,mixed> $column Column map entry
+     * @param int|string $from Inheritance mode
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    protected function mapByInheritanceFrom(
+        \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter,
+        $column = [],
+        $from = Inheritance::ASSOCIATED_FIRST
+    ) {
         switch ($from) {
-        case Inheritance::PARENT_ONLY:
-            $value = $this->getMapValue($column);
-            break;
-        case Inheritance::ASSOCIATED_ONLY:
-            $value = $adapter->getMapValue($column);
-            break;
-        case Inheritance::PARENT_FIRST:
-            $value = $this->getMapValue($column);
-            if (empty($value)) {
-                $value = $adapter->getMapValue($column);
-            }
-            break;
-        case Inheritance::ASSOCIATED_FIRST:
-            $value = $adapter->getMapValue($column);
-            if (empty($value)) {
+            case Inheritance::PARENT_ONLY:
                 $value = $this->getMapValue($column);
-            }
-            break;
-        default:
-            throw new \Magento\Framework\Exception\LocalizedException(__('Unknown product inheritance mode.'));
+                break;
+            case Inheritance::ASSOCIATED_ONLY:
+                $value = $adapter->getMapValue($column);
+                break;
+            case Inheritance::PARENT_FIRST:
+                $value = $this->getMapValue($column);
+                if (empty($value)) {
+                    $value = $adapter->getMapValue($column);
+                }
+                break;
+            case Inheritance::ASSOCIATED_FIRST:
+                $value = $adapter->getMapValue($column);
+                if (empty($value)) {
+                    $value = $this->getMapValue($column);
+                }
+                break;
+            default:
+                throw new \Magento\Framework\Exception\LocalizedException(__('Unknown product inheritance mode.'));
         }
         return $value;
     }
 
     /**
-     * @param  $rows
-     * @return $this
+     * Apply the "skip products with empty column" filters to a row and count a skip when one matches.
+     *
+     * @param  array $row
+     * @return bool False when the row has a column the feed requires to be non-empty
      */
     protected function checkEmptyColumns($row)
     {

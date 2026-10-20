@@ -8,32 +8,40 @@ $element     = $block->getElement();
 $rules       = $block->getMagentoCartRules();
 $values      = $block->getPromotionData('promotion');
 $counter     = 0;
+$couponRequiredTitle = __('Shipping without coupon is not allowed');
 ?>
 
-<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
-     data-apply-to="<?php echo $block->escapeHtml(
-         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+<div class="field" id="attribute-<?= $escaper->escapeHtml($htmlId) ?>-container"
+     data-attribute-code="<?= $escaper->escapeHtml($htmlId) ?>"
+     data-apply-to="<?= $escaper->escapeHtml(
+         $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode(
              $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
          )
      )?>">
 </div>
 
-<div class="field google_promotions" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
-     data-apply-to="<?php echo $block->escapeHtml(
-         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+<div class="field google_promotions" id="attribute-<?= $escaper->escapeHtml($htmlId) ?>-container"
+     data-attribute-code="<?= $escaper->escapeHtml($htmlId) ?>"
+     data-apply-to="<?= $escaper->escapeHtml(
+         $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode(
              $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
          )
      )?>">
     <div id="increment-label">
-        <?= $escaper->escapeHtml(__('If you already have an approved Google Promotions feed, and you need to update promotions,
-                       <br /> use <b>Submit new promotion</b> to increment promotions IDs with next feed file.'), ['br', 'b']) ?>
+        <?= $escaper->escapeHtml(
+            // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
+            __('If you already have an approved Google Promotions feed, and you need to update promotions, <br /> use <b>Submit new promotion</b> to increment promotions IDs with next feed file.'),
+            ['br', 'b']
+        ) ?>
     </div>
-    <span id="increment-counter"><?php echo $block->escapeHtml(__('Submit as new promotion')); ?></span>
-    <input type="hidden" name="<?= $escaper->escapeHtmlAttr($element->getName()) ?>[counter]" value="<?= $escaper->escapeHtmlAttr($block->getPromotionData('counter', '0')) ?>" />
+    <span id="increment-counter"><?= $escaper->escapeHtml(__('Submit as new promotion')); ?></span>
+    <input type="hidden" name="<?= $escaper->escapeHtmlAttr($element->getName()) ?>[counter]"
+           value="<?= $escaper->escapeHtmlAttr($block->getPromotionData('counter', '0')) ?>" />
     <div style="clear: both; height: 10px;"></div>
     <div class="entry-edit form-inline">
         <div id="increment-success" class="messages">
             <div class="message message-success">
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase ?>
                 <div><?= $escaper->escapeHtml(__('Promotion ID has been incremented. Please <b>Save Config</b> for changes to take effect with next feed generation.'), ['b']) ?></div>
             </div>
         </div>
@@ -51,21 +59,33 @@ $counter     = 0;
         });
     </script>
     <br />
-    <p><?php echo $block->escapeHtml(__('Select which promotion cart rules should be included with the feed.')); ?></p>
+    <p><?= $escaper->escapeHtml(__('Select which promotion cart rules should be included with the feed.')); ?></p>
     <div class="control">
-        <table class="data-grid admin__control-table <?php echo $block->escapeHtml($block->getControlName()); ?>_table" id="<?php echo $block->escapeHtml($block->getControlName()) ?>_table">
+        <table class="data-grid admin__control-table <?= $escaper->escapeHtml($block->getControlName()); ?>_table"
+               id="<?= $escaper->escapeHtml($block->getControlName()) ?>_table">
             <thead>
                 <tr>
-                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Include')); ?></th>
-                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Cart Promotion Rule Name')); ?></th>
-                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Promotion Title')); ?>
-                        <div id="title-helper">? <span>Promotion Title must follow <a href="https://support.google.com/merchants/answer/2877578" target="_blank">strict editorial requirements</a>!</span></div></th>
-                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Effective From / To (yyyy/mm/dd)')); ?></th>
-                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Display From / To (yyyy/mm/dd)')); ?></th>
-                    <th class="data-grid-th"><?php echo $block->escapeHtml(__('Coupon Code')); ?></th>
+                    <th class="data-grid-th"><?= $escaper->escapeHtml(__('Include')); ?></th>
+                    <th class="data-grid-th"><?= $escaper->escapeHtml(__('Cart Promotion Rule Name')); ?></th>
+                    <th class="data-grid-th"><?= $escaper->escapeHtml(__('Promotion Title')); ?>
+                        <div id="title-helper">? <span><?= /* @noEscape */ strtr(
+                            $escaper->escapeHtml(__(
+                                'Promotion Title must follow %1strict editorial requirements%2!',
+                                '{link}',
+                                '{/link}'
+                            )),
+                            [
+                                '{link}' => '<a href="https://support.google.com/merchants/answer/2877578"'
+                                    . ' target="_blank">',
+                                '{/link}' => '</a>',
+                            ]
+                        ) ?></span></div></th>
+                    <th class="data-grid-th"><?= $escaper->escapeHtml(__('Effective From / To (yyyy/mm/dd)')); ?></th>
+                    <th class="data-grid-th"><?= $escaper->escapeHtml(__('Display From / To (yyyy/mm/dd)')); ?></th>
+                    <th class="data-grid-th"><?= $escaper->escapeHtml(__('Coupon Code')); ?></th>
                 </tr>
             </thead>
-            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container">
+            <tbody id="<?= $escaper->escapeHtml($htmlId) ?>_container">
             <?php if (!count($rules)): ?>
                 <tr><td colspan="5"><?= $escaper->escapeHtml(__('Save feed in order to set up pomotions.')) ?></td></tr>
             <?php endif; ?>
@@ -73,24 +93,31 @@ $counter     = 0;
                 <?php
                 $id = $rule->getId();
                 $name = $element->getName() . '[promotion][' . $id . ']';
-                $row = isset($values[$id]) ? $values[$id] : array();
+                $row = isset($values[$id]) ? $values[$id] : [];
                 $row = $block->getPromotionRow($rule, $row);
                 $isShippingWithoutCupon = $block->isShippingWithoutCoupon($rule);
                 $counter++;
                 ?>
-                <tr<?php echo $row['include'] ? ' class="disabled-check"' : ''; ?>>
-                    <td><input type="checkbox" name="<?= $escaper->escapeHtmlAttr($name) ?>[include]" value="1" <?= $escaper->escapeHtml($row['include'] ? ' checked="checked"' : '') ?> onclick="addRowClass(this)"/></td>
+                <tr<?= $row['include'] ? ' class="disabled-check"' : ''; ?>>
+                    <td><input type="checkbox" name="<?= $escaper->escapeHtmlAttr($name) ?>[include]" value="1"
+                               <?= $escaper->escapeHtml($row['include'] ? ' checked="checked"' : '') ?>
+                               onclick="addRowClass(this)"/></td>
                     <td>
-                        <p<?php if($isShippingWithoutCupon):?> title="Shipping without cupon is not allowed"<?php endif; ?>>
-                            <?php echo $block->escapeHtml($rule->getName()); ?>
+                        <p<?php if ($isShippingWithoutCupon):?>
+                            title="<?= $escaper->escapeHtmlAttr($couponRequiredTitle) ?>"<?php endif; ?>>
+                            <?= $escaper->escapeHtml($rule->getName()); ?>
                         </p>
                     </td>
                     <td class="promotion-title">
-                        <input type="text" name="<?= $escaper->escapeHtmlAttr($name) ?>[title]" value="<?= $escaper->escapeHtmlAttr($row['title']) ?>" class="input-text" style="width:400px" maxlength="60" onblur="validateText(this)">
+                        <input type="text" name="<?= $escaper->escapeHtmlAttr($name) ?>[title]"
+                               value="<?= $escaper->escapeHtmlAttr($row['title']) ?>" class="input-text"
+                               style="width:400px" maxlength="60" onblur="validateText(this)">
                     </td>
                     <td class="date-cell">
-                        <input type="text" class="input-text first" id="start-effective-<?= $escaper->escapeHtmlAttr($counter) ?>"
-                               name="<?= $escaper->escapeHtmlAttr($name) ?>[date][from]" value="<?= $escaper->escapeHtmlAttr($row['date']['from']) ?>" aria-required="true"
+                        <input type="text" class="input-text first"
+                               id="start-effective-<?= $escaper->escapeHtmlAttr($counter) ?>"
+                               name="<?= $escaper->escapeHtmlAttr($name) ?>[date][from]"
+                               value="<?= $escaper->escapeHtmlAttr($row['date']['from']) ?>" aria-required="true"
                                onchange="checkDate(this);">
                         <script>
                             require([
@@ -104,8 +131,10 @@ $counter     = 0;
                             });
                         </script>
                         <br>
-                        <input type="text" class="input-text second" id="end-effective-<?= $escaper->escapeHtmlAttr($counter) ?>"
-                               name="<?= $escaper->escapeHtmlAttr($name) ?>[date][to]" value="<?= $escaper->escapeHtmlAttr($row['date']['to']) ?>" aria-required="true"
+                        <input type="text" class="input-text second"
+                               id="end-effective-<?= $escaper->escapeHtmlAttr($counter) ?>"
+                               name="<?= $escaper->escapeHtmlAttr($name) ?>[date][to]"
+                               value="<?= $escaper->escapeHtmlAttr($row['date']['to']) ?>" aria-required="true"
                                onchange="checkDate(this);">
                         <script>
                             require([
@@ -120,8 +149,10 @@ $counter     = 0;
                         </script>
                     </td>
                     <td class="date-cell">
-                        <input type="text" class="input-text first" id="start-display-<?= $escaper->escapeHtmlAttr($counter) ?>"
-                               name="<?= $escaper->escapeHtmlAttr($name) ?>[display][from]" value="<?= $escaper->escapeHtmlAttr($row['display']['from']) ?>" aria-required="true"
+                        <input type="text" class="input-text first"
+                               id="start-display-<?= $escaper->escapeHtmlAttr($counter) ?>"
+                               name="<?= $escaper->escapeHtmlAttr($name) ?>[display][from]"
+                               value="<?= $escaper->escapeHtmlAttr($row['display']['from']) ?>" aria-required="true"
                                onchange="checkDate(this);">
                         <script>
                             require([
@@ -135,8 +166,10 @@ $counter     = 0;
                             });
                         </script>
                         <br>
-                        <input type="text" class="input-text second" id="end-display-<?= $escaper->escapeHtmlAttr($counter) ?>"
-                               name="<?= $escaper->escapeHtmlAttr($name) ?>[display][to]" value="<?= $escaper->escapeHtmlAttr($row['display']['to']) ?>" aria-required="true"
+                        <input type="text" class="input-text second"
+                               id="end-display-<?= $escaper->escapeHtmlAttr($counter) ?>"
+                               name="<?= $escaper->escapeHtmlAttr($name) ?>[display][to]"
+                               value="<?= $escaper->escapeHtmlAttr($row['display']['to']) ?>" aria-required="true"
                                onchange="checkDate(this);">
                         <script>
                             require([
@@ -150,8 +183,10 @@ $counter     = 0;
                             });
                         </script>
                     </td>
-                    <?php $code = $block->escapeHtml($rule->getCode()); ?>
-                    <td <?= $escaper->escapeHtml(empty($code) ? 'class="no-cupon"' : '') ?>><?= $escaper->escapeHtml($code) ?></td>
+                    <?php $code = $escaper->escapeHtml($rule->getCode()); ?>
+                    <td <?=
+                        $escaper->escapeHtml(empty($code) ? 'class="no-cupon"' : '')
+                    ?>><?= $escaper->escapeHtml($code) ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -211,6 +246,7 @@ $counter     = 0;
                     el[0].parentNode.removeChild(el[0]);
                 }
                 var duplicateCharParagraph = document.createElement("P");
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS validation message ?>
                 var duplicateCharText = document.createTextNode('The following characters can\'t be duplicated: * , . ?');
                 var duplicateStringLink = document.createElement('a');
                 var duplicateStringLinkText = document.createTextNode('See Google Editorial Requirements');
@@ -287,6 +323,7 @@ $counter     = 0;
                     el[0].parentNode.removeChild(el[0]);
                 }
                 var uppercaseParagraph = document.createElement("P");
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS validation message ?>
                 var uppercaseText = document.createTextNode("You can't have two or more consecutive uppercase letters.");
                 var uppercaseLink = document.createElement('a');
                 var uppercaseLinkText = document.createTextNode('See Google Editorial Requirements');
@@ -345,6 +382,7 @@ $counter     = 0;
                     }else{
                         numCount++;
                     }
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS validation logic ?>
                     if(wordsFromSenteces[d].charAt(0) == wordsFromSenteces[d].charAt(0).toUpperCase() && /^[a-zA-Z]+$/.test(wordsFromSenteces[d].charAt(0))){
                         if(wordsFromSenteces[d].charAt(0) == ''){
                             charCount = 0;
@@ -352,12 +390,14 @@ $counter     = 0;
                             charCount++;
                         }
                     }
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS validation logic ?>
                     if(d == wordsFromSenteces.length-1 && charCount+numCount > 1+numCount && charCount+numCount < wordsFromSenteces.length){
                         if(parentEl.getElementsByClassName("camelcase").length){
                             var el = parentEl.getElementsByClassName("camelcase");
                             el[0].parentNode.removeChild(el[0]);
                         }
                         var wordsParagraph = document.createElement("P");
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS validation message ?>
                         var wordsText = document.createTextNode("The words in a sentence must be all capitalized or only the first word should be capitalized.");
                         var wordsLink = document.createElement('a');
                         var wordsLinkText = document.createTextNode('See Google Editorial Requirements');

@@ -25,11 +25,12 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
  *
  * Class StaticValue
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
  */
 class StaticValue extends MapperAbstract
 {
     /**
+     * Static value from the column param.
+     *
      * @param  array $params
      * @return string
      */

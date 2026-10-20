@@ -108,19 +108,25 @@ class PinterestCatalog
             }
         }
         if (($row['video_link'] ?? '') !== ''
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- URL path extension check; no framework equivalent injected
             && !preg_match('/\.(?:mp4|mov|m4v)$/iD', (string)parse_url($row['video_link'], PHP_URL_PATH))
         ) {
             $errors[] = 'video_link must use an MP4, MOV, or M4V path';
         }
         if (($row['additional_image_link'] ?? '') !== '') {
             $images = array_map('trim', explode(',', $row['additional_image_link']));
-            if (count($images) > 10 || array_filter($images, fn($url) => !$this->validUrl($url) || mb_strlen($url) > 2000)) {
-                $errors[] = 'additional_image_link must contain up to 10 comma-separated HTTP(S) URLs of at most 2000 characters each';
+            if (count($images) > 10
+                || array_filter($images, fn($url) => !$this->validUrl($url) || mb_strlen($url) > 2000)
+            ) {
+                $errors[] =
+                    // phpcs:ignore Generic.Files.LineLength.TooLong -- single validation message literal kept whole
+                    'additional_image_link must contain up to 10 comma-separated HTTP(S) URLs of at most 2000 characters each';
             }
         }
         $category = $row['product_type'] ?? '';
         if (($row['google_product_category'] ?? '') === '') {
-            $warnings[] = 'google_product_category is empty; map a reviewed taxonomy category for better product matching';
+            $warnings[] =
+                'google_product_category is empty; map a reviewed taxonomy category for better product matching';
         }
         if (count(explode('>', $category)) > 5 || preg_match('/(?<! )>|>(?! )/', $category)) {
             $errors[] = 'product_type supports at most five levels separated by space, >, space';
@@ -139,7 +145,12 @@ class PinterestCatalog
         return ['errors' => $errors, 'warnings' => $warnings];
     }
 
-    /** Validate links locally without fetching merchant resources. */
+    /**
+     * Validate links locally without fetching merchant resources.
+     *
+     * @param string $value
+     * @return bool
+     */
     private function validUrl(string $value): bool
     {
         return filter_var($value, FILTER_VALIDATE_URL) !== false
@@ -147,7 +158,12 @@ class PinterestCatalog
             && !str_contains($value, '|');
     }
 
-    /** Accept ISO timestamps with or without an explicit timezone, including fractional seconds. */
+    /**
+     * Accept ISO timestamps with or without an explicit timezone, including fractional seconds.
+     *
+     * @param string $value
+     * @return bool
+     */
     private function validSaleInterval(string $value): bool
     {
         $parts = explode('/', $value);
@@ -156,7 +172,10 @@ class PinterestCatalog
         }
         $dates = [];
         foreach ($parts as $part) {
-            if (!preg_match('/^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,6})?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/D', $part)) {
+            if (!preg_match(
+                '/^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,6})?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/D',
+                $part
+            )) {
                 return false;
             }
             try {

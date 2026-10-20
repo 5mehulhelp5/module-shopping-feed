@@ -25,6 +25,15 @@ class Logger extends \Monolog\Logger
      */
     protected $handlerFactory;
 
+    /**
+     * Create the feed logger without Magento's default system.log handlers.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Logger\HandlerFactory $handlerFactory
+     * @param string $logPrefix
+     * @param \Monolog\Handler\HandlerInterface[] $handlers
+     * @param callable[] $processors
+     * @phpstan-param list<\Monolog\Handler\HandlerInterface> $handlers
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Logger\HandlerFactory $handlerFactory,
         $logPrefix = 'MAGEOS_SHOPPING_FEED',
@@ -42,8 +51,8 @@ class Logger extends \Monolog\Logger
     /**
      * Adds log handler (file to log into)
      *
-     * @param  $path
-     * @param  int $level
+     * @param string $path
+     * @param int $level
      * @return $this
      */
     public function addHandler($path, $level = \Monolog\Logger::INFO)
@@ -59,8 +68,9 @@ class Logger extends \Monolog\Logger
     /**
      * Sets log handler only to default + given
      *
-     * @param $path
+     * @param string $path
      * @param int $level
+     * @return $this
      */
     public function setHandler($path, $level = \Monolog\Logger::INFO)
     {
@@ -70,6 +80,11 @@ class Logger extends \Monolog\Logger
         return $this;
     }
 
+    /**
+     * Remove all log handlers.
+     *
+     * @return $this
+     */
     public function resetHandler()
     {
         $this->handlers = [];

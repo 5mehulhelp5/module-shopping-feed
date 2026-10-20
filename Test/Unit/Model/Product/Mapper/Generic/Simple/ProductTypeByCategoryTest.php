@@ -33,7 +33,6 @@ class ProductTypeByCategoryTest extends ModelFramework
      */
     protected $model;
 
-
     /**
      * @inheritdoc
      */

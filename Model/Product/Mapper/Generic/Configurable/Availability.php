@@ -22,6 +22,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Availability as Sim
 
 class Availability extends SimpleAvailability
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $parentCell = parent::map($params);
@@ -51,6 +54,9 @@ class Availability extends SimpleAvailability
         return $this->getAdapter()->getFilter()->cleanField($parentCell, $params);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function isStockManaged($stockItem)
     {
         if ($stockItem && $stockItem->getItemId()) {

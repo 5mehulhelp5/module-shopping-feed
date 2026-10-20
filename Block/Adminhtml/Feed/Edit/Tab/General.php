@@ -26,7 +26,8 @@ use MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Element\DelimiterElement;
 /**
  * Feed edit form General Configuration tab
  */
-class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements
+    \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
      * @var \Magento\Store\Model\System\Store
@@ -61,17 +62,17 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
     /**
      * General constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context                                  $context
-     * @param \Magento\Framework\Registry                                              $registry
-     * @param \Magento\Framework\Data\FormFactory                                      $formFactory
-     * @param \MageOS\ShoppingFeed\Model\Feed\Converter                            $feedConverter
-     * @param \Magento\Store\Model\System\Store                                        $systemStore
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
+     * @param \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter
+     * @param \Magento\Store\Model\System\Store $systemStore
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Directory\AvailableCurrencies $currencies
-     * @param \Magento\Config\Model\Config\Source\Yesno                                $sourceYesno
-     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Attributes            $sourceAttributes
-     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Delimiter                     $sourceDelimiter
-     *
-     * @param array                                                                    $data
+     * @param \Magento\Config\Model\Config\Source\Yesno $sourceYesno
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Attributes $sourceAttributes
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Delimiter $sourceDelimiter
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Encoding $encodings
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -99,7 +100,7 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
      * Prepare form
      *
      * @return                                        $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function _prepareForm()
     {
@@ -125,30 +126,35 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
         if ($model->getType() === 'meta_catalog') {
             $fieldset->addField('meta_catalog_setup', 'note', [
                 'label' => __('Connect to Meta'),
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'text' => __('Generate and review the TSV file, then add its public URL as a scheduled data feed in Meta Commerce Manager. Schedule generation before Meta fetches it. Review condition, brand, GTIN/MPN, and variant mappings in Columns Map. Match feed IDs to your Meta Pixel or Conversions API content IDs. This template does not configure tracking or synchronize orders.'),
             ]);
         }
         if ($model->getType() === 'microsoft_merchant_center') {
             $fieldset->addField('microsoft_merchant_center_setup', 'note', [
                 'label' => __('Connect to Microsoft'),
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'text' => __('Generate and review the tab-delimited TXT file. In Microsoft Merchant Center, create an online product feed and choose Automatically download file from URL. Use a public URL and schedule generation before the fetch. Match the store domain and target currency. Review identifiers, tax treatment, apparel fields, and shipping requirements for your target country; shipping is required for Austria and Germany. This template does not configure UET tracking or synchronize orders.'),
             ]);
         }
         if ($model->getType() === 'tiktok_catalog') {
             $fieldset->addField('tiktok_catalog_setup', 'note', [
                 'label' => __('Connect to TikTok'),
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'text' => __('Generate and review the CSV file, then add its public URL through Data Feed Schedule in TikTok Ads Manager > Assets > Catalog. Match the catalog currency and targeting location. Schedule generation before the fetch and keep sale prices current; TikTok does not use sale_price_effective_date to expire discounts. Match sku_id values to your TikTok Pixel content IDs. Review brand, identifiers, images, and variant mappings. This template does not configure tracking or synchronize TikTok Shop orders.'),
             ]);
         }
         if ($model->getType() === 'openai_google_compatible') {
             $fieldset->addField('openai_google_compatible_setup', 'note', [
                 'label' => __('OpenAI / ChatGPT beta setup'),
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'text' => __('Confirm the Google-compatible profile with OpenAI before uploading. Register the merchant name and supported markets, map brand and real GTIN/MPN identifiers, and supply availability_date for preorders and backorders. Upload only products intended for discovery: search opt-out columns do not work in this profile. Generate full snapshots at least daily and use the agreed SFTP destination with a stable filename. Expiration and sale dates are metadata, not automatic removal or sale scheduling. This template does not enable checkout or account access.'),
             ]);
         }
         if ($model->getType() === 'pinterest_catalog') {
             $fieldset->addField('pinterest_catalog_setup', 'note', [
                 'label' => __('Connect to Pinterest'),
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'text' => __('Generate and review the TSV file. In Pinterest Catalogs and product groups, add a data source with its public URL and choose TSV. Review country, language, currency, and claimed website before creating Pins. Schedule generation before the daily fetch; hosted URLs must use port 80 or 443. Use clear primary images at least 1000 by 1500 pixels and change image URLs when replacing images. Keep variant group IDs and tracking IDs consistent. This template does not configure the Pinterest tag or synchronize orders.'),
             ]);
         }
@@ -214,6 +220,7 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'required' => true,
                 'values' => $this->currencies->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('This lists only allowed currencies on the store view.<br />WARNING: Changing to a currency which is not displayed on frontend can lead to feed being rejected with provider!<br />Don\'t forget to update rates when adding new currency to the store.'),
             ]
         );
@@ -234,7 +241,12 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
             \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Form\Fieldset\Element::class
         );
         $renderer->setTemplate('feed/edit/tab/general/filepath.phtml');
-        $renderer->setData('filename', array_key_exists('id', $values) ? sprintf($values['config_file_feed'], $values['id']) : $values['config_file_feed']);
+        $renderer->setData(
+            'filename',
+            array_key_exists('id', $values)
+                ? sprintf($values['config_file_feed'], $values['id'])
+                : $values['config_file_feed']
+        );
         $field->setRenderer($renderer);
 
         $field = $fieldset->addField(
@@ -254,14 +266,28 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
         );
 
         $renderer->setTemplate('feed/edit/tab/general/delimiter.phtml');
-        $renderer->setData('delimiter_other_value', array_key_exists('config_output_params_delimiter_other', $values) ? $values['config_output_params_delimiter_other'] : '');
+        $renderer->setData(
+            'delimiter_other_value',
+            array_key_exists('config_output_params_delimiter_other', $values)
+                ? $values['config_output_params_delimiter_other']
+                : ''
+        );
         $field->setRenderer($renderer);
 
         if ($model->getType() === 'generic') {
             foreach ([
-                'enclose_cell' => [__('Cell Enclosure'), __('Leave blank for double quotes with a comma delimiter, or no enclosure with other delimiters.')],
-                'enclose_escape' => [__('Enclosure Escape'), __('Character placed before an enclosure inside a value. Leave blank to double the enclosure.')],
-                'default_value' => [__('Empty Cell Value'), __('Value used for empty cells. Leave blank to keep them empty.')],
+                'enclose_cell' => [
+                    __('Cell Enclosure'),
+                    __('Leave blank for double quotes with a comma delimiter, or no enclosure with other delimiters.'),
+                ],
+                'enclose_escape' => [
+                    __('Enclosure Escape'),
+                    __('Character placed before an enclosure inside a value. Leave blank to double the enclosure.'),
+                ],
+                'default_value' => [
+                    __('Empty Cell Value'),
+                    __('Value used for empty cells. Leave blank to keep them empty.'),
+                ],
             ] as $key => [$label, $note]) {
                 $options = [
                     'name' => 'config[output_params_' . $key . ']',
@@ -333,11 +359,17 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'values' => $this->sourceAttributes->toOptionArray(true),
                 'disabled' => $isElementDisabled,
                 'note' => match ($model->getType()) {
+                    // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                     'meta_catalog' => __('Use in_stock, out_of_stock, backorder, or preorder. Meta product feeds support in stock and out of stock. Backorders and preorders export as out of stock until available.'),
+                    // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                     'microsoft_merchant_center' => __('Use in_stock, out_of_stock, backorder, or preorder. Microsoft supports in stock, out of stock, and preorder. Backorders export as out of stock until available.'),
+                    // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                     'tiktok_catalog' => __('Use in_stock, out_of_stock, backorder, or preorder. TikTok exports these as in stock, out of stock, available for order, and preorder respectively.'),
+                    // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                     'openai_google_compatible' => __('Use in_stock, out_of_stock, preorder, or backorder. Map a real availability_date for preorder and backorder. The OpenAI native spelling pre_order is not accepted by this profile.'),
+                    // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                     'pinterest_catalog' => __('Use in_stock, out_of_stock, backorder, or preorder. Pinterest supports in stock, out of stock, and preorder. Backorders export as out of stock until available.'),
+                    // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                     default => __('To fill \'availability\'. The attribute\'s values can be: \'in stock\', \'available for order\', \'out of stock\', \'preorder\'. Other values will be replaced by \'out of stock\'.'),
                 },
             ]
@@ -381,15 +413,19 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'required' => true,
                 'values' => $this->sourceYesno->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Simple products "visible in catalog" are been prioritized to be processed in context of complex products if they are attached to configurable, grouped or bundle. It may slow down processing.'),
             ]
         );
 
-        $this->_eventManager->dispatch(sprintf('mageos_shopping_feed_feed_edit_tab_general_prepare_form_%s', $model->getType()), [
-            'form' => $form,
-            'feed' => $model,
-            'is_element_disabled' => $isElementDisabled,
-        ]);
+        $this->_eventManager->dispatch(
+            sprintf('mageos_shopping_feed_feed_edit_tab_general_prepare_form_%s', $model->getType()),
+            [
+                'form' => $form,
+                'feed' => $model,
+                'is_element_disabled' => $isElementDisabled,
+            ]
+        );
 
         $this->setChild(
             'form_after',
@@ -407,7 +443,6 @@ class General extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 0
             )
         );
-
 
         $form->setValues($values);
         $this->setForm($form);

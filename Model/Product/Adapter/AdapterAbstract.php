@@ -20,23 +20,15 @@ namespace MageOS\ShoppingFeed\Model\Product\Adapter;
 
 use Magento\Framework\Filesystem;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\CatalogRule\Model\ResourceModel\Rule\Product\Price\CollectionFactory as RulePriceCollectionFactory;
 use MageOS\ShoppingFeed\Model\Exception as FeedException;
 
-/**
- * Class AdapterAbstract
- *
- * @package MageOS\ShoppingFeed\Model\Product\Adapter
- *
- * @method boolean hasParentAdapter()
- * @method $this   setParentAdapter($adapter)
- * @method $this   getParentAdapter()
- */
 class AdapterAbstract extends \Magento\Framework\DataObject
 {
-    const DEFAULT_CHILDREN_COUNT = 1;
+    public const DEFAULT_CHILDREN_COUNT = 1;
 
     /**
-     * Store object
+     * Store the feed is generated for
      *
      * @var null|\Magento\Store\Model\Store
      */
@@ -101,7 +93,9 @@ class AdapterAbstract extends \Magento\Framework\DataObject
      */
     protected $productTypePrice;
 
-
+    /**
+     * @var \MageOS\ShoppingFeed\Model\Logger
+     */
     protected $logger;
 
     /**
@@ -139,7 +133,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     protected $optionFactory;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Option
+     * @var \MageOS\ShoppingFeed\Model\Product\Processors\Option|null
      */
     protected $option;
 
@@ -179,12 +173,12 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     protected $categoryCollectionFactory;
 
     /**
-     * @var MageOS\ShoppingFeed\Model\Inventory/Api
+     * @var \MageOS\ShoppingFeed\Model\Inventory\Api
      */
     protected $sourceInventoryApi;
 
     /**
-     * @var \Magento\Framework\Serialize\Serializer\Json
+     * @var \Magento\Framework\Serialize\SerializerInterface
      */
     protected $jsonSerializer;
 
@@ -194,45 +188,50 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     protected $skippedData;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $eavLinkField;
 
     /**
-     * @var \Magento\Framework\DB\Adapter\AdapterInterface
+     * @var \Magento\Framework\DB\Adapter\AdapterInterface|null
      */
     protected $dbConnection;
 
     /**
+     * @var \Magento\Framework\App\ResourceConnection|null
+     */
+    private $dbResource;
+
+    /**
      * AdapterAbstract constructor.
      *
-     * @param  Filesystem                                                                       $filesystem
-     * @param  \MageOS\ShoppingFeed\Model\Feed                                              $feed
-     * @param  \Magento\Catalog\Model\Product                                                   $product
-     * @param  \MageOS\ShoppingFeed\Model\FeedTypes\Config                                  $feedTypesConfig
-     * @param  \MageOS\ShoppingFeed\Model\Product\Mapper\MapperFactory                      $mapperFactory
-     * @param  \MageOS\ShoppingFeed\Model\Product\Helper                                    $helper
-     * @param  \Magento\Weee\Helper\Data                                                        $weeeData
-     * @param  \Magento\Tax\Helper\Data                                                         $taxData
-     * @param  \MageOS\ShoppingFeed\Model\Product\Helper\Catalog                            $catalogHelper
-     * @param  \Magento\CatalogRule\Model\ResourceModel\Rule\Product\Price\CollectionFactory    $catalogRuleCollectionFactory
-     * @param  \Magento\Catalog\Model\Product\Type\Price                                        $productTypePrice
-     * @param  \Magento\CatalogInventory\Model\StockState                                       $stockState
-     * @param  \MageOS\ShoppingFeed\Model\Product\Filter                                    $filter
-     * @param  \Magento\Framework\Locale\Resolver                                               $localeResolver
-     * @param  \Magento\Framework\Stdlib\DateTime\Timezone                                      $timezone
-     * @param  \Magento\Framework\Stdlib\DateTime                                               $date
-     * @param  \MageOS\ShoppingFeed\Model\Product\Processors\OptionFactory                  $optionFactory
-     * @param  \MageOS\ShoppingFeed\Model\Generator\ProcessFactory                          $processFactory
-     * @param  \MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process\CollectionFactory $processCollectionFactory
-     * @param  \MageOS\ShoppingFeed\Model\Logger                                            $logger
-     * @param  \MageOS\ShoppingFeed\Model\Generator\Cache                                   $cache
-     * @param  AdapterFactory                                                                   $adapterFactory
-     * @param  \MageOS\ShoppingFeed\Model\Product\Formatter\FormatterFactory                $formatterFactory
-     * @param  \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory                  $categoryCollectionFactory
-     * @param  \MageOS\ShoppingFeed\Model\Inventory\Api                                     $sourceInventoryApi
-     * @param  \Magento\Framework\Serialize\SerializerInterface                                 $jsonSerializer
-     * @param  array                                                                            $data
+     * @param Filesystem $filesystem
+     * @param \MageOS\ShoppingFeed\Model\Feed $feed
+     * @param \Magento\Catalog\Model\Product $product
+     * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config $feedTypesConfig
+     * @param \MageOS\ShoppingFeed\Model\Product\Mapper\MapperFactory $mapperFactory
+     * @param \MageOS\ShoppingFeed\Model\Product\Helper $helper
+     * @param \Magento\Weee\Helper\Data $weeeData
+     * @param \Magento\Tax\Helper\Data $taxData
+     * @param \MageOS\ShoppingFeed\Model\Product\Helper\Catalog $catalogHelper
+     * @param RulePriceCollectionFactory $catalogRuleCollectionFactory
+     * @param \Magento\Catalog\Model\Product\Type\Price $productTypePrice
+     * @param \Magento\CatalogInventory\Model\StockState $stockState
+     * @param \MageOS\ShoppingFeed\Model\Product\Filter $filter
+     * @param \Magento\Framework\Locale\Resolver $localeResolver
+     * @param \Magento\Framework\Stdlib\DateTime\Timezone $timezone
+     * @param \Magento\Framework\Stdlib\DateTime $date
+     * @param \MageOS\ShoppingFeed\Model\Product\Processors\OptionFactory $optionFactory
+     * @param \MageOS\ShoppingFeed\Model\Generator\ProcessFactory $processFactory
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process\CollectionFactory $processCollectionFactory
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param \MageOS\ShoppingFeed\Model\Generator\Cache $cache
+     * @param AdapterFactory $adapterFactory
+     * @param \MageOS\ShoppingFeed\Model\Product\Formatter\FormatterFactory $formatterFactory
+     * @param \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory
+     * @param \MageOS\ShoppingFeed\Model\Inventory\Api $sourceInventoryApi
+     * @param \Magento\Framework\Serialize\SerializerInterface $jsonSerializer
+     * @param array $data
      * @throws FeedException
      */
     public function __construct(
@@ -298,13 +297,29 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         $this->setAdapterData();
     }
 
+    /**
+     * Store the currency code and media URL/path prefixes the mappers read from adapter data.
+     *
+     * @return void
+     */
     protected function setAdapterData()
     {
         $this->setData('store_currency_code', $this->getStore()->getCurrentCurrency()->getCode());
-        $this->setData('images_url_prefix', $this->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA, false) . 'catalog/product');
-        $this->setData('images_path_prefix', $this->filesystem->getDirectoryRead(DirectoryList::MEDIA)->getAbsolutePath());
+        $this->setData(
+            'images_url_prefix',
+            $this->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA, false) . 'catalog/product'
+        );
+        $this->setData(
+            'images_path_prefix',
+            $this->filesystem->getDirectoryRead(DirectoryList::MEDIA)->getAbsolutePath()
+        );
     }
 
+    /**
+     * Feed generation logger.
+     *
+     * @return \MageOS\ShoppingFeed\Model\Logger
+     */
     public function getLogger()
     {
         return $this->logger;
@@ -318,7 +333,16 @@ class AdapterAbstract extends \Magento\Framework\DataObject
      */
     public function getMapValue(array $column = [])
     {
-        $cacheKey = ['row', 'map', 'product', $this->getProduct()->getId(), 'column', $column['column'], 'attribute', $column['attribute']];
+        $cacheKey = [
+            'row',
+            'map',
+            'product',
+            $this->getProduct()->getId(),
+            'column',
+            $column['column'],
+            'attribute',
+            $column['attribute'],
+        ];
         if (array_key_exists('cache_key', $column)) {
             array_push($cacheKey, $column['cache_key']);
         }
@@ -429,14 +453,16 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
-     * @param  bool|true $processRules
-     * @param  null      $product
+     * Whether the product sells below its regular price (catalog rule, MSRP, special or tier price).
+     *
+     * @param  bool|true                           $processRules
+     * @param  \Magento\Catalog\Model\Product|null $product
      * @return bool
      */
     public function hasSpecialPrice($processRules = true, $product = null)
     {
         $has = false;
-        if (is_null($product)) {
+        if ($product === null) {
             $product = $this->product;
         }
 
@@ -450,11 +476,8 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             if ($specialPrice > 0) {
                 $dates = $this->getSpecialPriceEffectiveDates($product, false);
                 $cDate = $this->timezone->date(null, $locale);
-                /**
-                 * @var \DateTime $start
-                 * @var \DateTime $end
-                 */
-                extract($dates);
+                $start = $dates['start'];
+                $end = $dates['end'];
 
                 if ($start <= $cDate && $end >= $cDate && $specialPrice < $product->getPrice()) {
                     $has = true;
@@ -465,7 +488,12 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         return $has || $this->getSingleUnitTierPrice($product) !== null;
     }
 
-    /** Return a discounted tier available to a guest buying one unit, in the store's base currency. */
+    /**
+     * Return a discounted tier available to a guest buying one unit, in the store's base currency.
+     *
+     * @param \Magento\Catalog\Model\Product $product
+     * @return float|null
+     */
     protected function getSingleUnitTierPrice(\Magento\Catalog\Model\Product $product): ?float
     {
         $guestProduct = clone $product;
@@ -475,6 +503,9 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
+     * Saleable quantity for the feed's website, or for one inventory source when a source code is given.
+     *
+     * @param string|null $sourceCode
      * @return float|int
      */
     public function getInventoryCount($sourceCode = null)
@@ -492,7 +523,9 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             // Reservations belong to the website stock, never to an individual physical source.
             if ($sourceCode === null && $this->getFeed()->getConfig('general_use_stock_reservations')) {
                 $stockQty += $this->sourceInventoryApi->getReservations(
-                    $this->getProduct()->getSku(), null, $websiteCode
+                    $this->getProduct()->getSku(),
+                    null,
+                    $websiteCode
                 );
             }
         } else {
@@ -500,7 +533,9 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             $stockQty = $stockState->getStockQty($this->product->getId(), $this->feed->getStore()->getWebsiteId());
             if ($this->getFeed()->getConfig('general_use_stock_reservations')) {
                 $reservationCount = $this->sourceInventoryApi->getReservations(
-                    $this->getProduct()->getSku(), null, $this->feed->getStore()->getWebsite()->getCode()
+                    $this->getProduct()->getSku(),
+                    null,
+                    $this->feed->getStore()->getWebsite()->getCode()
                 );
                 $stockQty += $reservationCount;
             }
@@ -512,7 +547,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     /**
      * Get an array of sale price effective dates from catalog rules or product's special price
      *
-     * @return false|array(\DateTime, \DateTime)
+     * @return false|array<string, \DateTime> Keyed 'start' and 'end'
      */
     public function getSalePriceEffectiveDates()
     {
@@ -551,32 +586,67 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         // Compute equivalent to default/template/catalog/product/price.phtml
         $price = $product->getPrice();
         $convertedPrice = $this->convertPrice($price);
-        $prices['p_excl_tax'] = $catalogHelper->getTaxPrice($product, $convertedPrice, null, null, null, null, $product->getStore());
-        $prices['p_incl_tax'] = $catalogHelper->getTaxPrice($product, $convertedPrice, true, null, null, null, $product->getStore());
+        $prices['p_excl_tax'] = $catalogHelper->getTaxPrice(
+            $product,
+            $convertedPrice,
+            null,
+            null,
+            null,
+            null,
+            $product->getStore()
+        );
+        $prices['p_incl_tax'] = $catalogHelper->getTaxPrice(
+            $product,
+            $convertedPrice,
+            true,
+            null,
+            null,
+            null,
+            $product->getStore()
+        );
 
         $catalogRulesPrice = $this->getPriceByCatalogRules();
-        $finalPrice = $catalogRulesPrice ? min($catalogRulesPrice, $product->getFinalPrice()) : $product->getFinalPrice();
+        $finalPrice = $catalogRulesPrice
+            ? min($catalogRulesPrice, $product->getFinalPrice())
+            : $product->getFinalPrice();
         $tierPrice = $this->getSingleUnitTierPrice($product);
         if ($tierPrice !== null) {
             $finalPrice = min($finalPrice, $tierPrice);
         }
         $convertedFinalPrice = $this->convertPrice($finalPrice);
 
-        $prices['sp_excl_tax'] = $catalogHelper->getTaxPrice($product, $convertedFinalPrice, null, null, null, null, $product->getStore());
-        $prices['sp_incl_tax'] = $catalogHelper->getTaxPrice($product, $convertedFinalPrice, true, null, null, null, $product->getStore());
+        $prices['sp_excl_tax'] = $catalogHelper->getTaxPrice(
+            $product,
+            $convertedFinalPrice,
+            null,
+            null,
+            null,
+            null,
+            $product->getStore()
+        );
+        $prices['sp_incl_tax'] = $catalogHelper->getTaxPrice(
+            $product,
+            $convertedFinalPrice,
+            true,
+            null,
+            null,
+            null,
+            $product->getStore()
+        );
 
         return $prices;
     }
 
-
     /**
-     * @param  null| $product
+     * Whether a catalog price rule changes the product price and is not beaten by its special price.
+     *
+     * @param  \Magento\Catalog\Model\Product|null $product
      * @return bool
      */
     public function hasPriceByCatalogRules($product = null)
     {
         $has = false;
-        if (is_null($product)) {
+        if ($product === null) {
             $product = $this->product;
         }
 
@@ -603,7 +673,8 @@ class AdapterAbstract extends \Magento\Framework\DataObject
      *
      * @see self::hasSpecialPrice() - you should check to see if the product is using a special price
      *
-     * @param  \Magento\Catalog\Model\Product $product
+     * @param \Magento\Catalog\Model\Product $product
+     * @param bool $returnEmpty
      * @return false|array
      */
     protected function getSpecialPriceEffectiveDates($product, $returnEmpty = true)
@@ -629,9 +700,6 @@ class AdapterAbstract extends \Magento\Framework\DataObject
 */
         $fromDate = $this->timezone->date($fromDate, $locale);
 
-        /**
- * @var \DateTime $toDate
-*/
         if (!$this->date->isEmptyDate($specialToDate)) {
             $toDate = \DateTime::createFromFormat('Y-m-d H:i:s', $specialToDate);
         } else {
@@ -647,11 +715,12 @@ class AdapterAbstract extends \Magento\Framework\DataObject
 
     /**
      * Retrieves the start and end date for the catalog rule that applies to the product.
+     *
      * If there's no rule, or if the rule doesn't have dates, it defaults 365 days
      *
      * @see self::hasPriceByCatalogRules() - you should first check if the product has catalog rules
      *
-     * @param  \Magento\Catalog\Model\Product $product
+     * @param \Magento\Catalog\Model\Product $product
      * @return false|\DateTime[]
      */
     protected function getCatalogRuleEffectiveDates($product)
@@ -701,11 +770,11 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             $toDate = null;
         }
 
-        if (is_null($fromDate)) {
+        if ($fromDate === null) {
             $fromDate = $date;
         }
 
-        if (is_null($toDate)) {
+        if ($toDate === null) {
             $toDate = clone $date;
             $toDate->add(new \DateInterval('P1Y'));
         }
@@ -719,11 +788,12 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     /**
      * When computing the special price, we send the $price parameter from associated items
      *
+     * @param float|null $price
      * @return mixed
      */
     protected function getPriceByCatalogRules($price = null)
     {
-        if (is_null($price)) {
+        if ($price === null) {
             $price = $this->product->getPrice();
         }
 
@@ -740,7 +810,9 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
-     * @param  array $column
+     * Resolve the product attribute a column map entry reads.
+     *
+     * @param  array|string $column Column map entry, or a bare attribute code
      * @return false|\Magento\Eav\Model\Entity\Attribute\AbstractAttribute
      * @throws FeedException
      */
@@ -751,25 +823,29 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         }
 
         $attributeCode = $column['attribute'];
+        /** @var \Magento\Catalog\Model\ResourceModel\Product $resource Set by Product::_construct() */
         $resource = $this->product->getResource();
         $attribute = $resource->getAttribute($attributeCode);
 
         if ($attribute === false) {
             throw new FeedException(
-                new \Magento\Framework\Phrase(sprintf('Couldn\'t find attribute \'%s\'.', $column['attribute']))
+                new \Magento\Framework\Phrase('Couldn\'t find attribute \'%1\'.', [$column['attribute']])
             );
         }
         return $attribute;
     }
 
     /**
-     * @param  \Magento\Catalog\Model\Product      $product
-     * @param  \Magento\Eav\Model\Entity\Attribute $attribute
+     * Product attribute value as feed text: Yes/No for booleans, option labels for selects.
+     *
+     * @param  \Magento\Catalog\Model\Product                        $product
+     * @param  \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute
      * @throws FeedException
      * @return string
      */
     public function getAttributeValue($product, $attribute)
     {
+        // phpcs:ignore Magento2.PHP.LiteralNamespaces.LiteralClassUsage -- compared with the stored source_model string
         if ($attribute->getSourceModel() == 'Magento\Eav\Model\Entity\Attribute\Source\Boolean') {
             $attributeCode = $attribute->getAttributeCode();
             $value = $product->getData($attributeCode) ? 'Yes' : 'No';
@@ -785,18 +861,6 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             $value = (string) $value;
         }
 
-        if (!is_string($value)) {
-            throw new FeedException(
-                new \Magento\Framework\Phrase(
-                    sprintf(
-                        'Attribute %s returned non-string value for product SKU #%s',
-                        $attribute->getAttributeCode(),
-                        $product->getSku()
-                    )
-                )
-            );
-        }
-
         return $value;
     }
 
@@ -805,16 +869,17 @@ class AdapterAbstract extends \Magento\Framework\DataObject
      * Multiselect values are by default imploded with comma.
      * By default gets option text from admin store (recommended - english values in feed).
      *
-     * @param \Magento\Catalog\Model\Product      $product
-     * @param \Magento\Eav\Model\Entity\Attribute $attribute
-     * @param int|null                            $store_id
+     * @param \Magento\Catalog\Model\Product                        $product
+     * @param \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute
+     * @param int|null                                              $storeId
      *
      * @return string
      */
     protected function getAttributeSelectValue($product, $attribute, $storeId = null)
     {
         $attrValue = $product->getData($attribute->getAttributeCode());
-        if (!$attrValue) { return '';
+        if (!$attrValue) {
+            return '';
         }
 
         if (is_array($attrValue)) {
@@ -828,7 +893,10 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             $options = [];
             foreach ($data as $item) {
                 if ($item->getValue()) {
-                    $options[$item->getValue()] = ['label' => $item->getLabel(), 'store_labels' => $item->getStoreLabels()];
+                    $options[$item->getValue()] = [
+                        'label' => $item->getLabel(),
+                        'store_labels' => $item->getStoreLabels(),
+                    ];
                 }
             }
             $this->cache->setCache($cacheKey, $this->jsonSerializer->serialize($options));
@@ -851,7 +919,9 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
-     * @param  $args
+     * Value from the first matching "replace empty column" rule for the given column.
+     *
+     * @param array<string,mixed> $args Column map entry
      * @return mixed|string
      */
     public function mapEmptyValues($args)
@@ -892,13 +962,14 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             }
         }
 
-
         return $value;
     }
 
     /**
-     * @param  $rows
-     * @return $this
+     * Apply the "skip products with empty column" filters to a row.
+     *
+     * @param  array $row
+     * @return bool False when the row has a column the feed requires to be non-empty
      */
     protected function checkEmptyColumns($row)
     {
@@ -918,6 +989,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
 
     /**
      * Generates feed row(s) based on the given product
+     *
      * This is called for each Enabled & Visible (Catalog & Search) product
      *
      * @return array
@@ -982,8 +1054,8 @@ class AdapterAbstract extends \Magento\Framework\DataObject
      */
     protected function canAddProductOptions()
     {
-        $multipleRowsEnabled =
-            $this->getFeed()->getConfig('options_mode') == \MageOS\ShoppingFeed\Model\Feed\Source\Product\OptionHandling::MULTIPLE_ROWS;
+        $multipleRowsEnabled = $this->getFeed()->getConfig('options_mode')
+            == \MageOS\ShoppingFeed\Model\Feed\Source\Product\OptionHandling::MULTIPLE_ROWS;
         if ($multipleRowsEnabled) {
             $categories = $this->getFeed()->getConfig('options_vary_categories', []);
             $matchingCategories = array_intersect($categories, $this->getProduct()->getCategoryIds());
@@ -994,6 +1066,12 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         return false;
     }
 
+    /**
+     * Run the column filters and formatters of the feed's directives over the mapped rows.
+     *
+     * @param array<mixed> $rows
+     * @return array<mixed>
+     */
     protected function filterAndFormatRows(array $rows)
     {
         $feedType = $this->feed->getData('type');
@@ -1020,7 +1098,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
                 }
             }
 
-            $hasFormat = !is_null($this->formatterFactory->getFormatterData($directive, $feedType));
+            $hasFormat = $this->formatterFactory->getFormatterData($directive, $feedType) !== null;
             if ($hasFormat) {
                 $formatter = $this->formatterFactory->create($directive, $this);
                 foreach ($rows as &$row) {
@@ -1033,7 +1111,9 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
-     * @param  $rows
+     * Run additional processors, filters, formatters and empty-column checks over the mapped rows.
+     *
+     * @param array $rows
      * @return array
      */
     protected function afterMap(array $rows)
@@ -1064,7 +1144,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     /**
      * Catch any undefined currency rate
      *
-     * @param  $price
+     * @param float $price
      * @return float
      */
     public function convertPrice($price)
@@ -1078,9 +1158,16 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         }
     }
 
+    /**
+     * Record why the product (the adapter's own product by default) was left out of the feed.
+     *
+     * @param string $reason
+     * @param int|string|null $productId
+     * @return $this
+     */
     public function setSkipProduct($reason, $productId = null)
     {
-        if (is_null($productId)) {
+        if ($productId === null) {
             $productId = $this->getProduct()->getId();
         }
 
@@ -1139,8 +1226,11 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             if (!empty($parent_ids)) {
                 $first_parent_id = min(array_keys($parent_ids));
                 $this->setSkipProduct(
-                    sprintf('simple product scheduled to be processed as part of the complex product (ID: %s %s)',
-                        $first_parent_id, $parent_ids[$first_parent_id]),
+                    sprintf(
+                        'simple product scheduled to be processed as part of the complex product (ID: %s %s)',
+                        $first_parent_id,
+                        $parent_ids[$first_parent_id]
+                    ),
                     $this->getProduct()->getId()
                 );
                 return true;
@@ -1193,6 +1283,8 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
+     * Store of the feed set on this adapter.
+     *
      * @return \Magento\Store\Model\Store
      * @throws FeedException
      */
@@ -1217,6 +1309,8 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
+     * Feed being generated.
+     *
      * @return \MageOS\ShoppingFeed\Model\Feed
      */
     public function getFeed()
@@ -1225,6 +1319,8 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
+     * Timezone used for price effective dates.
+     *
      * @return \Magento\Framework\Stdlib\DateTime\Timezone
      */
     public function getTimezone()
@@ -1232,8 +1328,9 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         return $this->timezone;
     }
 
-
     /**
+     * Set the feed and its store on this adapter.
+     *
      * @param  \MageOS\ShoppingFeed\Model\Feed $feed
      * @return $this
      */
@@ -1245,6 +1342,8 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
+     * Enable test mode, which skips the duplicate-product check.
+     *
      * @return $this
      */
     public function setTestMode()
@@ -1254,6 +1353,8 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
+     * Whether the adapter runs in test mode.
+     *
      * @return mixed
      */
     public function isTestMode()
@@ -1280,6 +1381,8 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
+     * Product being mapped.
+     *
      * @return \Magento\Catalog\Model\Product|null
      */
     public function getProduct()
@@ -1288,13 +1391,15 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     }
 
     /**
+     * Row processors to run after mapping; adds the product options processor when it applies.
+     *
      * @param  array $processors
      * @return array
      */
     public function getAdditionalProcessors($processors = [])
     {
         if ($this->canAddProductOptions()) {
-            if (is_null($this->option)) {
+            if ($this->option === null) {
                 $this->option = $this->optionFactory->create();
             }
             array_push($processors, $this->option);
@@ -1302,27 +1407,57 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         return $processors;
     }
 
+    /**
+     * Product options processor bound to this adapter, created on first use.
+     *
+     * @return \MageOS\ShoppingFeed\Model\Product\Processors\Option
+     */
     public function getOptionProcessor()
     {
-        if (is_null($this->option)) {
+        if ($this->option === null) {
             $this->option = $this->optionFactory->create()->setAdapter($this);
         }
         return $this->option;
     }
 
+    /**
+     * Default database connection, resolved on first use.
+     *
+     * @return \Magento\Framework\DB\Adapter\AdapterInterface
+     */
     public function getDbConnection()
     {
-        if (is_null($this->dbConnection)) {
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $resource = $objectManager->get(\Magento\Framework\App\ResourceConnection::class);
-            $this->dbConnection = $resource->getConnection();
+        if ($this->dbConnection === null) {
+            $this->dbConnection = $this->getDbResource()->getConnection();
         }
         return $this->dbConnection;
     }
 
+    /**
+     * Resource connection used to resolve table names, including the store's table prefix.
+     *
+     * @return \Magento\Framework\App\ResourceConnection
+     */
+    private function getDbResource()
+    {
+        if ($this->dbResource === null) {
+            // The object manager always returns a shared instance for a concrete class name.
+            /** @var \Magento\Framework\App\ResourceConnection $resource */
+            $resource = \Magento\Framework\App\ObjectManager::getInstance()
+                ->get(\Magento\Framework\App\ResourceConnection::class);
+            $this->dbResource = $resource;
+        }
+        return $this->dbResource;
+    }
+
+    /**
+     * Product entity link field (row_id on staging editions, entity_id otherwise), resolved on first use.
+     *
+     * @return string
+     */
     private function getEavLinkField()
     {
-        if (is_null($this->eavLinkField)) {
+        if ($this->eavLinkField === null) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $metadataPool = $objectManager->get(\Magento\Framework\EntityManager\MetadataPool::class);
             $metadata = $metadataPool->getMetadata(\Magento\Catalog\Api\Data\ProductInterface::class);
@@ -1334,7 +1469,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     /**
      * Check if the current product is a simple product that's part of an enabled complex product
      * (configurable, bundle, or grouped) and is individually visible
-     * Optimized version using raw SQL queries for better performance
+     * One single-row lookup per enabled complex type, resolved through prefixed table names
      *
      * @return array
      */
@@ -1365,76 +1500,54 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         // Work around column migration from 'row_id' to 'entity_id'
         $linkField = $this->getEavLinkField();
         $connection = $this->getDbConnection();
+        $resource = $this->getDbResource();
 
-
-        // Check configurable parents
-        if ($this->getFeed()->isProductTypeEnabled('configurable')) {
-            $configurableSql = "
-                SELECT parent.entity_id
-                FROM catalog_product_entity parent
-                INNER JOIN catalog_product_super_link csl ON parent.entity_id = csl.parent_id
-                INNER JOIN catalog_product_entity_int status_attr ON parent.{$linkField} = status_attr.{$linkField}
-                INNER JOIN eav_attribute ea_status ON status_attr.attribute_id = ea_status.attribute_id
-                INNER JOIN catalog_product_website cpw ON parent.entity_id = cpw.product_id
-                WHERE csl.product_id = ?
-                    AND ea_status.attribute_code = 'status'
-                    AND status_attr.value = 1
-                    AND (status_attr.store_id = 0 OR status_attr.store_id = ?)
-                    AND cpw.website_id = ?
-                ORDER BY status_attr.store_id DESC
-                LIMIT 1
-            ";
-            $parentId = $connection->fetchOne($configurableSql, [$productId, $storeId, $websiteId]);
-            if ($parentId) {
-                $complexParents[$parentId] = 'configurable';
+        // Link table, parent column and child column for each complex type, in lookup order.
+        $parentLinks = [
+            'configurable' => ['catalog_product_super_link', 'parent_id', 'product_id'],
+            'bundle' => ['catalog_product_bundle_selection', 'parent_product_id', 'product_id'],
+            'grouped' => ['catalog_product_link', 'product_id', 'linked_product_id'],
+        ];
+        foreach ($parentLinks as $type => [$linkTable, $parentColumn, $childColumn]) {
+            if (!$this->getFeed()->isProductTypeEnabled($type)) {
+                continue;
             }
-        }
-
-        // Check bundle parents
-        if ($this->getFeed()->isProductTypeEnabled('bundle')) {
-            $bundleSql = "
-                SELECT parent.entity_id
-                FROM catalog_product_entity parent
-                INNER JOIN catalog_product_bundle_selection cbs ON parent.entity_id = cbs.parent_product_id
-                INNER JOIN catalog_product_entity_int status_attr ON parent.{$linkField} = status_attr.{$linkField}
-                INNER JOIN eav_attribute ea_status ON status_attr.attribute_id = ea_status.attribute_id
-                INNER JOIN catalog_product_website cpw ON parent.entity_id = cpw.product_id
-                WHERE cbs.product_id = ?
-                    AND ea_status.attribute_code = 'status'
-                    AND status_attr.value = 1
-                    AND (status_attr.store_id = 0 OR status_attr.store_id = ?)
-                    AND cpw.website_id = ?
-                ORDER BY status_attr.store_id DESC
-                LIMIT 1
-            ";
-            $parentId = $connection->fetchOne($bundleSql, [$productId, $storeId, $websiteId]);
-            if ($parentId) {
-                $complexParents[$parentId] = 'bundle';
+            $select = $connection->select()
+                ->from(['parent' => $resource->getTableName('catalog_product_entity')], ['entity_id'])
+                ->joinInner(
+                    ['link' => $resource->getTableName($linkTable)],
+                    'parent.entity_id = link.' . $parentColumn,
+                    []
+                );
+            if ($type === 'grouped') {
+                $select->joinInner(
+                    ['cplt' => $resource->getTableName('catalog_product_link_type')],
+                    'link.link_type_id = cplt.link_type_id',
+                    []
+                )->where('cplt.code = ?', 'super');
             }
-        }
-
-        // Check grouped parents
-        if ($this->getFeed()->isProductTypeEnabled('grouped')) {
-            $groupedSql = "
-                SELECT parent.entity_id
-                FROM catalog_product_entity parent
-                INNER JOIN catalog_product_link cpl ON parent.entity_id = cpl.product_id
-                INNER JOIN catalog_product_link_type cplt ON cpl.link_type_id = cplt.link_type_id
-                INNER JOIN catalog_product_entity_int status_attr ON parent.{$linkField} = status_attr.{$linkField}
-                INNER JOIN eav_attribute ea_status ON status_attr.attribute_id = ea_status.attribute_id
-                INNER JOIN catalog_product_website cpw ON parent.entity_id = cpw.product_id
-                WHERE cpl.linked_product_id = ?
-                    AND cplt.code = 'super'
-                    AND ea_status.attribute_code = 'status'
-                    AND status_attr.value = 1
-                    AND (status_attr.store_id = 0 OR status_attr.store_id = ?)
-                    AND cpw.website_id = ?
-                ORDER BY status_attr.store_id DESC
-                LIMIT 1
-            ";
-            $parentId = $connection->fetchOne($groupedSql, [$productId, $storeId, $websiteId]);
+            $select->joinInner(
+                ['status_attr' => $resource->getTableName('catalog_product_entity_int')],
+                'parent.' . $linkField . ' = status_attr.' . $linkField,
+                []
+            )->joinInner(
+                ['ea_status' => $resource->getTableName('eav_attribute')],
+                'status_attr.attribute_id = ea_status.attribute_id',
+                []
+            )->joinInner(
+                ['cpw' => $resource->getTableName('catalog_product_website')],
+                'parent.entity_id = cpw.product_id',
+                []
+            )->where('link.' . $childColumn . ' = ?', $productId)
+                ->where('ea_status.attribute_code = ?', 'status')
+                ->where('status_attr.value = ?', 1)
+                ->where('status_attr.store_id = 0 OR status_attr.store_id = ?', $storeId)
+                ->where('cpw.website_id = ?', $websiteId)
+                ->order('status_attr.store_id DESC')
+                ->limit(1);
+            $parentId = $connection->fetchOne($select);
             if ($parentId) {
-                $complexParents[$parentId] = 'grouped';
+                $complexParents[$parentId] = $type;
             }
         }
 

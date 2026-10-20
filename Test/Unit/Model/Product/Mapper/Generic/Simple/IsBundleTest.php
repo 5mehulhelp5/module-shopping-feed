@@ -38,7 +38,6 @@ class IsBundleTest extends ModelFramework
      */
     protected $objectManagerHelper;
 
-
     /**
      * @inheritdoc
      */

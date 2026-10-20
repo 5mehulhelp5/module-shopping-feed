@@ -18,10 +18,19 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class OutputPathTest extends TestCase
 {
+    /**
+     * @var File
+     */
     private File $driver;
 
+    /**
+     * @var string
+     */
     private string $root;
 
+    /**
+     * @var OutputPath
+     */
     private OutputPath $subject;
 
     protected function setUp(): void

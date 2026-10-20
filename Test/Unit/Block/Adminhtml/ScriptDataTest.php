@@ -36,26 +36,93 @@ class ScriptDataTest extends TestCase
     private function render(string $template, string $payload): string
     {
         $block = new class($payload) {
-            public function __construct(private string $payload) {}
-            public function getElement() {return new \Magento\Framework\DataObject(['html_id'=>'fixture','class'=>'fixture','name'=>'fixture','note'=>'']);}
-            public function getValues() {return [['find'=>$this->payload,'replace'=>$this->payload,'column'=>'title','attribute'=>'name','order'=>1,'param'=>[$this->payload]]];}
-            public function getSelectorOptions() {return ['source'=>[['label'=>$this->payload,'id'=>1]]];}
-            public function isTaxonomyAutocompleteEnabled() {return true;}
-            public function getControlName() {return 'columns';}
-            public function getMapExistingColumns() {return false;}
-            public function configToJson() {return '{}';}
-            public function __call($name, $arguments) {
-                if (in_array($name, ['getColumns','getDirectivesAndAttributes','getCategories'], true)) {return [];}
-                if ($name === 'escapeQuote') {return str_replace('"', '&quot;', (string)$arguments[0]);}
-                if (str_starts_with($name, 'escape')) {return (new \Magento\Framework\Escaper())->$name(...$arguments);}
+            public function __construct(private string $payload)
+            {
+            }
+
+            public function getElement()
+            {
+                return new \Magento\Framework\DataObject(
+                    ['html_id' => 'fixture', 'class' => 'fixture', 'name' => 'fixture', 'note' => '']
+                );
+            }
+
+            public function getValues()
+            {
+                return [[
+                    'find' => $this->payload,
+                    'replace' => $this->payload,
+                    'column' => 'title',
+                    'attribute' => 'name',
+                    'order' => 1,
+                    'param' => [$this->payload],
+                ]];
+            }
+
+            public function getSelectorOptions()
+            {
+                return ['source' => [['label' => $this->payload, 'id' => 1]]];
+            }
+
+            public function isTaxonomyAutocompleteEnabled()
+            {
+                return true;
+            }
+
+            public function getControlName()
+            {
+                return 'columns';
+            }
+
+            public function getMapExistingColumns()
+            {
+                return false;
+            }
+
+            public function configToJson()
+            {
+                return '{}';
+            }
+
+            public function __call($name, $arguments)
+            {
+                if (in_array($name, ['getColumns', 'getDirectivesAndAttributes', 'getCategories'], true)) {
+                    return [];
+                }
+                if ($name === 'escapeQuote') {
+                    return str_replace('"', '&quot;', (string)$arguments[0]);
+                }
+                if (str_starts_with($name, 'escape')) {
+                    return (new \Magento\Framework\Escaper())->$name(...$arguments);
+                }
                 return '';
             }
-            public function helper($name) {return new class {public function jsonEncode($value) {return json_encode($value);}};}
-            public function render($path) {
+
+            public function helper($name)
+            {
+                return new class {
+                    /**
+                     * @param mixed $value
+                     * @return string|false
+                     */
+                    public function jsonEncode($value)
+                    {
+                        return json_encode($value);
+                    }
+                };
+            }
+
+            public function render($path)
+            {
                 $block = $this;
                 $escaper = new \Magento\Framework\Escaper();
                 ob_start();
-                try {include $path; return ob_get_contents();} finally {ob_end_clean();}
+                try {
+                    include $path;
+                    return ob_get_contents();
+                } finally {
+                    ob_end_clean();
+                }
             }
         };
         return $block->render(dirname(__DIR__, 4) . '/view/adminhtml/templates/feed/edit/tab/' . $template . '.phtml');

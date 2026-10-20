@@ -2,7 +2,7 @@
 
 Google Promotions is a companion file generated from an enabled Google Shopping feed. It maps selected Magento cart price rules into promotion rows and can add matching promotion IDs to product rows.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
 
 **Date persistence in 1.2.0:** localized date display is separate from `Y/m/d` storage. All four effective/display dates pass two saves and companion generation in disposable Mage-OS, Magento 2.4.8/2.4.9 Docker, and the updated `mageos-latest` deployment. Already-erased dates require recovery from a configuration backup; the fix does not reconstruct them. See [Admin UI Component forms](Admin-UI-Component-Forms).
 
@@ -40,7 +40,7 @@ Open **Google Promotions**, a tab in 1.1 and a collapsible section in 1.2.0:
 
 Version 1.1 preserves all selected included rule IDs rather than treating a list as one ID. Test a product eligible for more than one selected rule.
 
-The Admin validates several title rules and warns when a shipping promotion has no coupon. Google remains the authority for final policy and editorial acceptance.
+The Admin limits titles to 60 characters and notes when a shipping promotion has no coupon code; it does not check Google's other editorial rules. Google remains the authority for final policy and editorial acceptance.
 
 ## Generated file
 

@@ -30,7 +30,7 @@ use MageOS\ShoppingFeed\Test\Unit\Model\ModelFramework;
 class UrlTest extends ModelFramework
 {
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Url
+     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\Associated\Url
      */
     protected $model;
 

@@ -22,6 +22,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class ItemGroupId extends MapperAbstract
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $cell = '';

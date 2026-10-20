@@ -24,6 +24,8 @@ use Magento\Framework\Event\ObserverInterface;
 class LocalInventoryFilterFields implements ObserverInterface
 {
     /**
+     * Remove the combined weight field from local inventory feeds
+     *
      * @param EventObserver $observer
      * @return void
      */

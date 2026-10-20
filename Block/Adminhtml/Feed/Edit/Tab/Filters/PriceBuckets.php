@@ -37,7 +37,7 @@ class PriceBuckets extends AbstractArrayElement implements RendererInterface
      * @param array $a
      * @param array $b
      * @return int
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function sortValuesCallback($a, $b)
     {
@@ -56,7 +56,7 @@ class PriceBuckets extends AbstractArrayElement implements RendererInterface
     public function getAddButtonHtml()
     {
         $button = $this->getLayout()->createBlock(
-            'Magento\Backend\Block\Widget\Button'
+            \Magento\Backend\Block\Widget\Button::class
         )->setData(
             [
                 'label' => __('Add Price Range'),

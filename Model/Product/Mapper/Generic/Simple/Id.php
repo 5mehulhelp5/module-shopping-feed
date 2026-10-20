@@ -22,6 +22,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class Id extends MapperAbstract
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $cell = $this->getAdapter()->getProduct()->getId();

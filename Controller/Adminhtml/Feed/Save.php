@@ -29,7 +29,9 @@ class Save extends \Magento\Backend\App\Action implements \Magento\Framework\App
 
     /**
      * @param \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter
-     * @param \Magento\Backend\App\Action\Context           $context
+     * @param \Magento\Backend\App\Action\Context $context
+     * @param \MageOS\ShoppingFeed\Model\Adminhtml\FeedFormData $formData
+     * @param \Magento\Framework\App\Request\DataPersistorInterface $dataPersistor
      */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter,
@@ -42,7 +44,7 @@ class Save extends \Magento\Backend\App\Action implements \Magento\Framework\App
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function _isAllowed()
     {
@@ -101,7 +103,9 @@ class Save extends \Magento\Backend\App\Action implements \Magento\Framework\App
                 $this->formData->redact($formData)
             );
             if (!empty($formData['uploads'])) {
-                $this->messageManager->addNoticeMessage(__('Re-enter any new or changed upload passwords before saving again.'));
+                $this->messageManager->addNoticeMessage(
+                    __('Re-enter any new or changed upload passwords before saving again.')
+                );
             }
             $redirect = [];
             foreach (['id', 'type', 'store_id'] as $key) {
@@ -109,7 +113,10 @@ class Save extends \Magento\Backend\App\Action implements \Magento\Framework\App
                     $redirect[$key] = $formData[$key];
                 }
             }
-            return $resultRedirect->setPath(!empty($redirect['id']) || !empty($redirect['type']) ? '*/*/edit' : '*/*/', $redirect);
+            return $resultRedirect->setPath(
+                !empty($redirect['id']) || !empty($redirect['type']) ? '*/*/edit' : '*/*/',
+                $redirect
+            );
         }
         return $resultRedirect->setPath('*/*/');
     }

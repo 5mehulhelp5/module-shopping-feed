@@ -27,7 +27,8 @@ class TierPriceTest extends TestCase
         (new \ReflectionProperty(Simple::class, 'product'))->setValue($adapter, $product);
         (new \ReflectionProperty(Simple::class, 'helper'))->setValue($adapter, $this->createMock(Helper::class));
         (new \ReflectionProperty(Simple::class, 'localeResolver'))->setValue(
-            $adapter, $this->createMock(\Magento\Framework\Locale\Resolver::class)
+            $adapter,
+            $this->createMock(\Magento\Framework\Locale\Resolver::class)
         );
         $tax = $this->createMock(\MageOS\ShoppingFeed\Model\Product\Helper\Catalog::class);
         $tax->method('getTaxPrice')->willReturnArgument(1);
@@ -38,7 +39,11 @@ class TierPriceTest extends TestCase
         $this->assertEquals($expected, $prices['sp_excl_tax']);
         $this->assertEquals(117, $prices['p_excl_tax']);
         $this->assertFalse($adapter->getSalePriceEffectiveDates(), 'Tier-only discounts have no invented date range');
-        $this->assertSame(2, $product->getCustomerGroupId(), 'Guest pricing must not change another directive\'s group');
+        $this->assertSame(
+            2,
+            $product->getCustomerGroupId(),
+            'Guest pricing must not change another directive\'s group'
+        );
     }
 
     public static function tierCases(): array

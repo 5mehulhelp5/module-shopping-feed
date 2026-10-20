@@ -24,7 +24,8 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab;
 /**
  * Feed edit form Bundle Products tab
  */
-class Bundle extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class Bundle extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements
+    \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
      * @var \MageOS\ShoppingFeed\Model\Feed\Source\Product\AssociatedMode
@@ -37,13 +38,13 @@ class Bundle extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic 
     protected $sourceYesno;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context                           $context
-     * @param \Magento\Framework\Registry                                       $registry
-     * @param \Magento\Framework\Data\FormFactory                               $formFactory
-     * @param \MageOS\ShoppingFeed\Model\Feed\Converter                     $feedConverter
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
+     * @param \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\AssociatedMode $sourceAssociatedMode
-     * @param \Magento\Config\Model\Config\Source\Yesno                         $sourceYesno
-     * @param array                                                             $data
+     * @param \Magento\Config\Model\Config\Source\Yesno $sourceYesno
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -63,7 +64,7 @@ class Bundle extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic 
      * Prepare form
      *
      * @return                                        $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function _prepareForm()
     {
@@ -97,7 +98,9 @@ class Bundle extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic 
                 'required' => true,
                 'values' => $this->sourceAssociatedMode->toOptionArray(),
                 'disabled' => $isElementDisabled,
-                'note' => __('Bundle products are usually added as one item in the feed. Bundle sub-items could also be added.'),
+                'note' => __(
+                    'Bundle products are usually added as one item in the feed. Bundle sub-items could also be added.'
+                ),
             ]
         );
 
@@ -111,12 +114,14 @@ class Bundle extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic 
                 'required' => true,
                 'values' => $this->sourceYesno->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Bundle items can be defined as Dynamic or Fixed weight. This feature overwrites the bundle defintition and goes for Dynamic weight by computing weight as sum of all sub-items.'),
             ]
         );
 
         $this->_eventManager->dispatch(
-            sprintf('mageos_shopping_feed_feed_edit_tab_bundle_prepare_form_%s', $model->getType()), [
+            sprintf('mageos_shopping_feed_feed_edit_tab_bundle_prepare_form_%s', $model->getType()),
+            [
             'form' => $form,
             'feed' => $model,
             'is_element_disabled' => $isElementDisabled,
@@ -156,6 +161,7 @@ class Bundle extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic 
      */
     public function getTabNotice()
     {
+        // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
         return __('This section applies to all bundle products in your catalog. Bundle type should be enabled under <a href="#feed_tabs_filters">Filters</a> section.');
     }
 }

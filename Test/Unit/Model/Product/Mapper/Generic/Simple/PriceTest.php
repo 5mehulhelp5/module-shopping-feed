@@ -53,7 +53,9 @@ class PriceTest extends ModelFramework
     public function testMap()
     {
         $this->expectReturn(
-            $this->adapterMock, 'getPrices', [
+            $this->adapterMock,
+            'getPrices',
+            [
                 'p_excl_tax' => 100,
                 'p_incl_tax' => 122
             ]

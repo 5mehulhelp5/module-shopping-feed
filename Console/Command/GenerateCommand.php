@@ -21,8 +21,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
-use MageOS\ShoppingFeed\Cron\Process;
-use MageOS\ShoppingFeed\Cron\Schedule;
 use MageOS\ShoppingFeed\Model\Generator\QueueFactory;
 use MageOS\ShoppingFeed\Cron\ProcessFactory;
 
@@ -31,17 +29,17 @@ class GenerateCommand extends Command
     /**
      * Feed_id name option
      */
-    const INPUT_KEY_FEED_ID = 'feed_id';
+    public const INPUT_KEY_FEED_ID = 'feed_id';
 
     /**
      * Test sku name option
      */
-    const INPUT_KEY_TEST_SKU = 'test_sku';
+    public const INPUT_KEY_TEST_SKU = 'test_sku';
 
     /**
      * Delimiter char length
      */
-    const DELIMITER_LENGTH = 80;
+    public const DELIMITER_LENGTH = 80;
 
     /**
      * @var \MageOS\ShoppingFeed\Model\Logger\Handler\Console
@@ -71,8 +69,11 @@ class GenerateCommand extends Command
     /**
      * Constructor
      *
-     * @param Process  $process
-     * @param Schedule $schedule
+     * @param \Magento\Framework\App\State                      $state
+     * @param ProcessFactory                                    $processFactory
+     * @param QueueFactory                                      $queueFactory
+     * @param \MageOS\ShoppingFeed\Model\Logger                 $logger
+     * @param \MageOS\ShoppingFeed\Model\Logger\Handler\Console $consoleHandler
      */
     public function __construct(
         \Magento\Framework\App\State $state,
@@ -101,8 +102,11 @@ class GenerateCommand extends Command
     }
 
     /**
+     * Generate the queued feeds, one feed, or a test run for one feed and SKU
+     *
      * @param InputInterface                                           $input
      * @param OutputInterface|\Symfony\Component\Console\Output\Output $output
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -165,8 +169,11 @@ class GenerateCommand extends Command
     }
 
     /**
-     * @param $output
-     * @param $data
+     * Write the test output rows to the console
+     *
+     * @param OutputInterface $output
+     * @param array $data
+     * @return void
      */
     protected function outputTestProduct(OutputInterface $output, array $data = [])
     {
@@ -208,11 +215,21 @@ class GenerateCommand extends Command
         ];
     }
 
+    /**
+     * Get the line printed between test output fields
+     *
+     * @return string
+     */
     protected function addFieldDelimiter()
     {
         return str_repeat('-', self::DELIMITER_LENGTH);
     }
 
+    /**
+     * Get the line printed between test output rows
+     *
+     * @return string
+     */
     protected function addRowDelimiter()
     {
         return str_repeat('-_', round(self::DELIMITER_LENGTH/2, 0));

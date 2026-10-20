@@ -14,12 +14,14 @@ class NameTest extends TestCase
         $factory=$this->createMock(\MageOS\ShoppingFeed\Model\FeedFactory::class);
         $factory->method('create')->willReturn($feed);
         $column=(new \ReflectionClass(Name::class))->newInstanceWithoutConstructor();
-        $column->setData('name','name');
-        (new \ReflectionProperty(Name::class,'feedFactory'))->setValue($column,$factory);
-        $data=$column->prepareDataSource(['data'=>['items'=>[['id'=>7,'name'=>'<img src=x onerror="alert(1)">','use_microdata'=>1]]]]);
+        $column->setData('name', 'name');
+        (new \ReflectionProperty(Name::class, 'feedFactory'))->setValue($column, $factory);
+        $data=$column->prepareDataSource(
+            ['data'=>['items'=>[['id'=>7,'name'=>'<img src=x onerror="alert(1)">','use_microdata'=>1]]]]
+        );
         $cell=$data['data']['items'][0]['name'];
-        self::assertStringNotContainsString('<img',$cell);
-        self::assertStringContainsString('&lt;img',$cell);
-        self::assertStringContainsString('[microdata]',$cell);
+        self::assertStringNotContainsString('<img', $cell);
+        self::assertStringContainsString('&lt;img', $cell);
+        self::assertStringContainsString('[microdata]', $cell);
     }
 }

@@ -15,8 +15,10 @@ trait CompatibilityMockTrait
      * PHPUnit 10 removed setMethods(). Its generator still accepts explicit
      * virtual method names, which preserves Magento DataObject test doubles.
      *
-     * @param class-string $className
+     * @template T of object
+     * @param class-string<T> $className
      * @param list<string> $methods
+     * @return T&MockObject
      */
     protected function createCompatibleMock(string $className, array $methods = []): MockObject
     {
@@ -41,12 +43,12 @@ trait CompatibilityMockTrait
                 $generatorParameters['markAsMockObject'] = true;
             }
             $mock = $generatorMethod->invokeArgs($generator, $generatorParameters);
+            // PHPUnit 12.5 added the class name to registerMockObject().
             $registration = new \ReflectionMethod(TestCase::class, 'registerMockObject');
-            if ($registration->getNumberOfParameters() === 1) {
-                $this->registerMockObject($mock);
-            } else {
-                $this->registerMockObject($className, $mock);
-            }
+            $registration->invokeArgs(
+                $this,
+                $registration->getNumberOfParameters() === 1 ? [$mock] : [$className, $mock]
+            );
 
             return $mock;
         }
@@ -54,7 +56,8 @@ trait CompatibilityMockTrait
         $builder = $this->getMockBuilder($className)->disableOriginalConstructor();
 
         if ($methods !== []) {
-            $builder->setMethods($methods);
+            // setMethods() exists only on the PHPUnit 9 MockBuilder this branch runs on.
+            (new \ReflectionMethod($builder, 'setMethods'))->invoke($builder, $methods);
         }
 
         return $builder->getMock();

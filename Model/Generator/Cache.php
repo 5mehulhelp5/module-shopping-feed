@@ -30,14 +30,19 @@ class Cache
      */
     protected $cacheFailureString = '';
 
+    /**
+     * Create the sentinel value that marks a cache miss.
+     */
     public function __construct()
     {
         $this->cacheFailureString = hash('sha256', time());
     }
 
     /**
-     * @param  $arguments
-     * @param  $value
+     * Store a value under a key path built from the arguments.
+     *
+     * @param mixed $arguments key or list of keys; "/" separates path segments
+     * @param mixed $value
      * @return $this
      */
     public function setCache($arguments, $value)
@@ -49,9 +54,11 @@ class Cache
     }
 
     /**
-     * @param  $arguments
-     * @param  null $defaultValue
-     * @return mixed|null|string
+     * Read the value stored under a key path built from the arguments.
+     *
+     * @param mixed $arguments key or list of keys; "/" separates path segments
+     * @param mixed $defaultValue returned when nothing is cached under $arguments
+     * @return mixed
      */
     public function getCache($arguments, $defaultValue = null)
     {
@@ -64,6 +71,13 @@ class Cache
         return $value;
     }
 
+    /**
+     * Walk the nested cache along the path; return the miss sentinel when absent.
+     *
+     * @param array $cache
+     * @param array $path
+     * @return mixed
+     */
     protected function getInternalCache(array &$cache, array $path)
     {
         $partial = array_shift($path);
@@ -78,6 +92,14 @@ class Cache
         return $this->cacheFailureString;
     }
 
+    /**
+     * Write the value into the nested cache along the path.
+     *
+     * @param array $cache
+     * @param array $path
+     * @param mixed $value
+     * @return void
+     */
     protected function setInternalCache(array &$cache, array $path, $value)
     {
         $partial = array_shift($path);
@@ -95,7 +117,9 @@ class Cache
     }
 
     /**
-     * @param  mixed $argv
+     * Split the arguments into cache path segments.
+     *
+     * @param mixed $arguments
      * @return array
      */
     protected function preparePath($arguments)

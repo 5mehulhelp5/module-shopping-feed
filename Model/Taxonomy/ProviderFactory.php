@@ -45,7 +45,7 @@ class ProviderFactory
     /**
      * Factory constructor
      *
-     * @param \Magento\Framework\ObjectManagerInterface       $objectManager
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config $feedTypesConfig
      */
     public function __construct(
@@ -60,7 +60,8 @@ class ProviderFactory
      * Create class instance with specified parameters
      *
      * @param  \MageOS\ShoppingFeed\Model\Feed $feed
-     * @return \MageOS\ShoppingFeed\Model\Taxonomy\ProviderInterface
+     * @param  bool                            $singleton
+     * @return \MageOS\ShoppingFeed\Model\Taxonomy\ProviderInterface|false false when the provider cannot be created
      */
     public function create(\MageOS\ShoppingFeed\Model\Feed $feed, $singleton = true)
     {
@@ -71,11 +72,12 @@ class ProviderFactory
                 $className = $this->feedTypesConfig->getTaxonomyProvider($feedType);
 
                 if (!class_exists($className)) {
-                    $className = 'MageOS\ShoppingFeed\Model\Taxonomy\Type\Generic';
+                    $className = \MageOS\ShoppingFeed\Model\Taxonomy\Type\Generic::class;
                 }
 
                 $object = $this->_objectManager->create(
-                    $className, [
+                    $className,
+                    [
                     'feed'    => $feed
                     ]
                 );

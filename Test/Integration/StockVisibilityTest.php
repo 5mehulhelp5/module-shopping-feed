@@ -31,8 +31,11 @@ class StockVisibilityTest extends TestCase
         $item->setQty(0)->setIsInStock(false);
         $registry->updateStockItemBySku($product->getSku(), $item);
         $db = $om->get(ResourceConnection::class)->getConnection();
-        $db->update($db->getTableName('cataloginventory_stock_status'), ['qty' => 0, 'stock_status' => 0],
-            ['product_id = ?' => (int) $product->getId()]);
+        $db->update(
+            $db->getTableName('cataloginventory_stock_status'),
+            ['qty' => 0, 'stock_status' => 0],
+            ['product_id = ?' => (int) $product->getId()]
+        );
 
         $feed = $om->create(Feed::class)->setType('generic')->setStoreId(1)
             ->setName('Grouped stock visibility regression')->setStatus(0)->setUseMicrodata(0)
@@ -72,8 +75,11 @@ class StockVisibilityTest extends TestCase
 
         // Set the default-stock index explicitly so the fixture does not depend on an async indexer.
         $db = $om->get(ResourceConnection::class)->getConnection();
-        $db->update($db->getTableName('cataloginventory_stock_status'), ['qty' => 0, 'stock_status' => 0],
-            ['product_id = ?' => (int) $product->getId()]);
+        $db->update(
+            $db->getTableName('cataloginventory_stock_status'),
+            ['qty' => 0, 'stock_status' => 0],
+            ['product_id = ?' => (int) $product->getId()]
+        );
 
         foreach ([1 => ['simple_10', 'simple_20'], 0 => ['simple_10']] as $allow => $expected) {
             $feed = $om->create(Feed::class)->setType('generic')->setStoreId(1)

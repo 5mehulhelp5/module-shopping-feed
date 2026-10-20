@@ -50,12 +50,16 @@ class AdapterFactory
     /**
      * Create class instance with specified parameters
      *
-     * @param  \MageOS\ShoppingFeed\Model\Feed $feed
-     * @param  \Magento\Catalog\Model\Product      $product
-     * @return \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface
+     * @param \Magento\Catalog\Model\Product $product
+     * @param \MageOS\ShoppingFeed\Model\Feed $feed
+     * @param bool $singleton
+     * @return \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface|false False when the adapter fails to build
      */
-    public function create(\Magento\Catalog\Model\Product $product, \MageOS\ShoppingFeed\Model\Feed $feed, $singleton = true)
-    {
+    public function create(
+        \Magento\Catalog\Model\Product $product,
+        \MageOS\ShoppingFeed\Model\Feed $feed,
+        $singleton = true
+    ) {
         try {
             $productType = $product->getTypeId();
 
@@ -63,10 +67,11 @@ class AdapterFactory
                 $className = sprintf('MageOS\ShoppingFeed\Model\Product\Adapter\Type\%s', ucfirst($productType));
                 if (!class_exists($className)) {
                     //We switch to Simple adapter
-                    $className = sprintf('MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple');
+                    $className = \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple::class;
                 }
                 $object = $this->_objectManager->create(
-                    $className, [
+                    $className,
+                    [
                     'product' => $product,
                     'feed'    => $feed
                     ]

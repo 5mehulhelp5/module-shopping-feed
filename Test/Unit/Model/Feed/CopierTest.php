@@ -33,12 +33,12 @@ class CopierTest extends ModelFramework
     protected $_model;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\FeedFactory&\PHPUnit\Framework\MockObject\MockObject
      */
     protected $feedFactoryMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Feed&\PHPUnit\Framework\MockObject\MockObject
      */
     protected $feedMock;
 

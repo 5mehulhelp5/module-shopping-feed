@@ -20,17 +20,27 @@ namespace MageOS\ShoppingFeed\Model\Logger\Handler;
 
 class MemoryStream extends \Monolog\Handler\StreamHandler
 {
+    /**
+     * Log into an in-memory stream with the memory log formatter.
+     */
     public function __construct()
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- php://memory stream for Monolog; not a filesystem path
         $stream = fopen('php://memory', 'w');
         parent::__construct($stream);
 
         $this->setFormatter(new \MageOS\ShoppingFeed\Model\Logger\Formatter\MemoryLog());
     }
 
+    /**
+     * Return everything written to the in-memory stream so far.
+     *
+     * @return string|false
+     */
     public function getLogContent()
     {
         rewind($this->stream);
+        // phpcs:ignore Magento2.Exceptions.TryProcessSystemResources,Magento2.Functions.DiscouragedFunction -- reads the handler's own php://memory stream
         return stream_get_contents($this->stream);
     }
 }

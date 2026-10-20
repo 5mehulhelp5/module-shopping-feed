@@ -3,11 +3,14 @@
 ?>
 
 <div>
-    <span><?php echo $block->escapeHtml(__('Attribute:')) ?></span>
+    <span><?= $escaper->escapeHtml(__('Attribute:')) ?></span>
     <select name="#{htmlName}[#{index}][param]" class="select">
         <?php foreach ($block->getAttributeOptions() as $option): ?>
-            <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>
+            <option value="<?=
+                $escaper->escapeHtml($option['value'])
+            ?>"><?= $escaper->escapeHtml($option['label']) ?></option>
         <?php endforeach; ?>
     </select>
 </div>
-<p class="note"><?php echo $block->escapeHtml(__("Select an attribute like UPC, EAN or ISBN. When the attribute's value is missing for a configurable or grouped item, will fetch the value from lowest priced associated item, and if empty for a bundle, will go for the higherst priced sub-item.")) ?></p>
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase ?>
+<p class="note"><?= $escaper->escapeHtml(__("Select an attribute like UPC, EAN or ISBN. When the attribute's value is missing for a configurable or grouped item, will fetch the value from lowest priced associated item, and if empty for a bundle, will go for the higherst priced sub-item.")) ?></p>

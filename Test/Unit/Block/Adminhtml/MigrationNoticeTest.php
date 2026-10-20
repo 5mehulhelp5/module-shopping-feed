@@ -18,7 +18,8 @@ class MigrationNoticeTest extends TestCase
     {
         $block = (new \ReflectionClass(MigrationNotice::class))->newInstanceWithoutConstructor();
         $modules = $this->createMock(Manager::class);
-        $modules->expects(self::once())->method('isEnabled')->with('RocketWeb_ShoppingFeedMigration')->willReturn($installed);
+        $modules->expects(self::once())->method('isEnabled')
+            ->with('RocketWeb_ShoppingFeedMigration')->willReturn($installed);
         $auth = $this->createMock(AuthorizationInterface::class);
         $auth->expects($installed ? self::once() : self::never())->method('isAllowed')
             ->with('RocketWeb_ShoppingFeedMigration::migration')->willReturn($authorized);
@@ -30,10 +31,17 @@ class MigrationNoticeTest extends TestCase
             ->with('rw_shoppingfeeds_feed')->willReturn('store_prefix_rw_shoppingfeeds_feed');
         if ($table !== null) {
             $db = $this->createMock(AdapterInterface::class);
-            $db->expects(self::once())->method('isTableExists')->with('store_prefix_rw_shoppingfeeds_feed')->willReturn($table);
+            $db->expects(self::once())->method('isTableExists')
+                ->with('store_prefix_rw_shoppingfeeds_feed')->willReturn($table);
             $resource->expects(self::once())->method('getConnection')->willReturn($db);
         }
-        foreach (['modules' => $modules, 'authorization' => $auth, 'registrar' => $registrar, 'resource' => $resource] as $key => $value) {
+        $dependencies = [
+            'modules' => $modules,
+            'authorization' => $auth,
+            'registrar' => $registrar,
+            'resource' => $resource,
+        ];
+        foreach ($dependencies as $key => $value) {
             (new \ReflectionProperty(MigrationNotice::class, $key))->setValue($block, $value);
         }
         return $block;

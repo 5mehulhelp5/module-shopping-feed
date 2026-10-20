@@ -21,23 +21,10 @@ namespace MageOS\ShoppingFeed\Model\Feed;
 
 use Magento\Framework\Model\AbstractModel;
 
-/**
- * Class Schedule
- *
- * @package MageOS\ShoppingFeed\Model\Feed
- *
- * @method $this   setFeedId(int $feedId)
- * @method int     getFeedId()
- * @method $this   setBatchLimit(int $limit)
- * @method int     getBatchLimit()
- * @method boolean getBatchMode()
- * @method $this   setBatchMode(boolean $mode)
- * @method $this   setProcessedAt(string $dateTime)
- */
 class Schedule extends AbstractModel
 {
-    const BATCH_MODE_ENABLED = 1;
-    const BATCH_MODE_DISABLE = 0;
+    public const BATCH_MODE_ENABLED = 1;
+    public const BATCH_MODE_DISABLE = 0;
 
     /**
      * Event prefix for observer
@@ -86,10 +73,12 @@ class Schedule extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('MageOS\ShoppingFeed\Model\ResourceModel\Feed\Schedule');
+        $this->_init(\MageOS\ShoppingFeed\Model\ResourceModel\Feed\Schedule::class);
     }
 
     /**
+     * Human-readable schedule: daily start time and batch size when batching is enabled.
+     *
      * @return \Magento\Framework\Phrase
      */
     public function getFormattedSchedule()

@@ -1,4 +1,6 @@
-define(['Magento_Ui/js/form/element/abstract', './preserve-options'], function (Element, preserve) {
+define([
+    'Magento_Ui/js/form/element/abstract', './preserve-options', 'mage/translate'
+], function (Element, preserve, $t) {
     'use strict';
     return Element.extend({
         defaults: {
@@ -33,7 +35,7 @@ define(['Magento_Ui/js/form/element/abstract', './preserve-options'], function (
             if (!known && value !== '' && value !== null && value !== undefined) {
                 definition = {
                     kind: 'unsupported',
-                    notice: 'This saved parameter is preserved. Its extension needs a UI component parameter definition to edit it.'
+                    notice: $t('This saved parameter is preserved. Its extension needs a UI component parameter definition to edit it.')
                 };
             }
             this.previousAttribute = attribute;

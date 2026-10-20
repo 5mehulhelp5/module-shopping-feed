@@ -24,13 +24,14 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab;
 /**
  * Feed edit form Schedule tab
  */
-class Schedule extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class Schedule extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements
+    \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
      * Prepare form
      *
      * @return                                        $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function _prepareForm()
     {
@@ -67,12 +68,13 @@ class Schedule extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
         );
 
         $renderer = $this->getLayout()->createBlock(
-            'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Schedule\ManageSchedules'
+            \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Schedule\ManageSchedules::class
         );
         $field->setRenderer($renderer);
 
         $this->_eventManager->dispatch(
-            sprintf('mageos_shopping_feed_feed_edit_tab_schedule_prepare_form_%s', $model->getType()), [
+            sprintf('mageos_shopping_feed_feed_edit_tab_schedule_prepare_form_%s', $model->getType()),
+            [
             'form' => $form,
             'feed' => $model,
             'is_element_disabled' => $isElementDisabled,
@@ -112,6 +114,7 @@ class Schedule extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generi
      */
     public function getTabNotice()
     {
+        // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
         return __('Generating feed takes time. Make sure you allow enough between the schedules. <br />First schedule Batch Mode setting will be used when using the <strong>Run now</strong> button.');
     }
 }

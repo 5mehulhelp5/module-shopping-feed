@@ -26,8 +26,13 @@ class InvalidIdentityTest extends TestCase
         $queues->expects(self::never())->method('walk');
         $queueFactory = $this->createMock(\MageOS\ShoppingFeed\Model\Generator\QueueFactory::class);
         $queueFactory->expects(self::never())->method('create');
-        $controller = new Generate($context, $builder, $queues, $queueFactory,
-            $this->createMock(\Magento\Framework\Registry::class));
+        $controller = new Generate(
+            $context,
+            $builder,
+            $queues,
+            $queueFactory,
+            $this->createMock(\Magento\Framework\Registry::class)
+        );
         self::assertSame($redirect, $controller->execute());
     }
 

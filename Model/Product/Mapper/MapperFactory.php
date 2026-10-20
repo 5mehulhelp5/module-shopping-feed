@@ -25,7 +25,6 @@ use MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface;
  *
  * Class MapperFactory
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper
  */
 class MapperFactory
 {
@@ -45,7 +44,6 @@ class MapperFactory
      * Factory constructor
      *
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
-     * @param string                                    $instanceName
      */
     public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
     {
@@ -55,8 +53,8 @@ class MapperFactory
     /**
      * Create class instance with specified parameters
      *
-     * @param array                                                                           $directive
-     * @param \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract|AdapterInterface $adapter
+     * @param array            $directive
+     * @param AdapterInterface $adapter
      *
      * @return \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract
      */
@@ -87,16 +85,24 @@ class MapperFactory
         return $this->objectCache[$instanceName];
     }
 
+    /**
+     * Mapper config of a directive: the parent-specific, product-type or default entry, in that order.
+     *
+     * @param array<string,mixed> $directive Feed type directive config
+     * @param mixed $productType Product type ID (or feed type) to look up
+     * @param mixed $parentProductType Parent product type ID, null for a standalone product
+     * @return mixed Mapper config with its type and configuration
+     */
     public function getMapperData($directive, $productType, $parentProductType = null)
     {
         $mapper = $directive['mappers']['default'];
 
         $parentKey = null;
-        if (!is_null($parentProductType)) {
+        if ($parentProductType !== null) {
             $parentKey = sprintf('%s_child', $parentProductType);
         }
 
-        if (!is_null($parentProductType) && isset($directive['mappers'][$parentKey])) {
+        if ($parentProductType !== null && isset($directive['mappers'][$parentKey])) {
             $mapper = $directive['mappers'][$parentKey];
         } elseif (isset($directive['mappers'][$productType])) {
             $mapper = $directive['mappers'][$productType];

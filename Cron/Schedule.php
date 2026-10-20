@@ -24,7 +24,7 @@ use MageOS\ShoppingFeed\Model\ResourceModel\Generator\Queue\CollectionFactory as
 
 class Schedule
 {
-    const XML_PATH_ENABLED = 'mageos_shopping_feed/general/cron_enabled';
+    public const XML_PATH_ENABLED = 'mageos_shopping_feed/general/cron_enabled';
 
     /**
      * @var \MageOS\ShoppingFeed\Model\Generator\BatchFactory
@@ -62,12 +62,20 @@ class Schedule
     protected $localeDate;
 
     /**
-     * @var bool.
-     * Is set to you when process is initiated through console and not magento's cron
+     * Is set to true when process is initiated through console and not magento's cron
+     *
+     * @var bool
      */
     protected $detached = false;
 
-
+    /**
+     * @param \MageOS\ShoppingFeed\Model\Generator\BatchFactory $batchFactory
+     * @param \MageOS\ShoppingFeed\Model\FeedFactory $feedFactory
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Schedule\CollectionFactory $scheduleCollectionFactory
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Generator\Queue\CollectionFactory $queueCollectionFactory
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Generator\BatchFactory $batchFactory,
         \MageOS\ShoppingFeed\Model\FeedFactory $feedFactory,
@@ -86,6 +94,8 @@ class Schedule
     }
 
     /**
+     * Check whether cron scheduling is enabled or the process was started from the console
+     *
      * @return bool
      */
     public function isEnabled()
@@ -147,11 +157,21 @@ class Schedule
         }
     }
 
+    /**
+     * Get the number of queues created by the last run
+     *
+     * @return int
+     */
     public function getCounter()
     {
         return $this->counter;
     }
 
+    /**
+     * Mark the process as started from the console instead of Magento's cron
+     *
+     * @return $this
+     */
     public function setDetached()
     {
         $this->detached = true;

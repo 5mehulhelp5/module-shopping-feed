@@ -13,14 +13,42 @@ class ResultTest extends TestCase
     {
         $renderer = Phrase::getRenderer();
         $translator = $this->createMock(\Magento\Framework\Phrase\RendererInterface::class);
-        $translator->method('render')->willReturnCallback(static fn($source, $arguments) => 'translated ' . end($source));
+        $translator->method('render')
+            ->willReturnCallback(static fn($source, $arguments) => 'translated ' . end($source));
         Phrase::setRenderer($translator);
         $block = new class {
-            public function getMessages() { return []; }
-            public function getTestOutput() { return [[['label' => 'custom_%1', 'value' => 'Product %1 <tag>']]]; }
-            public function getLogOutput() { return ''; }
-            public function escapeHtml($value) { return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8'); }
+            /**
+             * @return array<mixed>
+             */
+            public function getMessages()
+            {
+                return [];
+            }
+            /**
+             * @return array<int, array<int, array<string, string>>>
+             */
+            public function getTestOutput()
+            {
+                return [[['label' => 'custom_%1', 'value' => 'Product %1 <tag>']]];
+            }
+            /**
+             * @return string
+             */
+            public function getLogOutput()
+            {
+                return '';
+            }
+            /**
+             * @param mixed $value
+             * @return string
+             */
+            public function escapeHtml($value)
+            {
+                return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+            }
         };
+        // Magento's template engine also provides $escaper to every template.
+        $escaper = $block;
         ob_start();
         try {
             include dirname(__DIR__, 6) . '/view/adminhtml/templates/feed/test/result.phtml';

@@ -32,8 +32,8 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         $this->_init(
-            'MageOS\ShoppingFeed\Model\Feed\Schedule',
-            'MageOS\ShoppingFeed\Model\ResourceModel\Feed\Schedule'
+            \MageOS\ShoppingFeed\Model\Feed\Schedule::class,
+            \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Schedule::class
         );
     }
 
@@ -50,6 +50,12 @@ class Collection extends AbstractCollection
         return $this;
     }
 
+    /**
+     * Filter schedules by start hour.
+     *
+     * @param string $hour two-digit hour, as DateTime::format('H')
+     * @return $this
+     */
     public function setHourFilter($hour)
     {
         $this->addFieldToFilter('start_at', $hour);
@@ -57,6 +63,12 @@ class Collection extends AbstractCollection
         return $this;
     }
 
+    /**
+     * Filter schedules last processed before the given date.
+     *
+     * @param string $date
+     * @return $this
+     */
     public function setDateFilter($date)
     {
         $this->addFieldToFilter('processed_at', ['lt' => $date]);

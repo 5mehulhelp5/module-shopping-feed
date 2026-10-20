@@ -26,11 +26,12 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
  *
  * Class SalePriceEffectiveDate
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable
  */
 class SalePriceEffectiveDate extends MapperAbstract
 {
     /**
+     * Widest sale price date range across the associated products, in ISO 8601.
+     *
      * @param  array $params
      * @return string
      */
@@ -52,7 +53,7 @@ class SalePriceEffectiveDate extends MapperAbstract
             $dates = $associatedProductAdapter->getSalePriceEffectiveDates();
             if (is_array($dates)) {
                 if (isset($dates['start'])) {
-                    if (is_null($start)) {
+                    if ($start === null) {
                         $start = $dates['start'];
                     } else {
                         $start = $dates['start'] < $start ? $dates['start'] : $start;
@@ -60,7 +61,7 @@ class SalePriceEffectiveDate extends MapperAbstract
                 }
 
                 if (isset($dates['end'])) {
-                    if (is_null($end)) {
+                    if ($end === null) {
                         $end = $dates['end'];
                     } else {
                         $end = $dates['end'] > $end ? $dates['end'] : $end;
@@ -69,7 +70,7 @@ class SalePriceEffectiveDate extends MapperAbstract
             }
         }
 
-        if (!is_null($start) && !is_null($end)) {
+        if ($start !== null && $end !== null) {
             $cell = $start->format('c') . "/" . $end->format('c');
             $this->getAdapter()->getFilter()->findAndReplace($cell, $params['column']);
         }

@@ -18,10 +18,11 @@
 
 namespace MageOS\ShoppingFeed\Model\Product\Mapper\LocalInventory\Simple;
 
-
 class Quantity extends \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Quantity
 {
-
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $sourceItem = $this->getAdapter()->getData('inventory_source_item');
@@ -36,5 +37,4 @@ class Quantity extends \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\
             $params
         );
     }
-
 }

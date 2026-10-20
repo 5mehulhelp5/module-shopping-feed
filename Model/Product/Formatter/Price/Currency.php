@@ -20,15 +20,12 @@ namespace MageOS\ShoppingFeed\Model\Product\Formatter\Price;
 
 use MageOS\ShoppingFeed\Model\Product\Formatter\FormatterAbstract;
 
-/**
- * Class Currency
- *
- * @package MageOS\ShoppingFeed\Model\Product\Formatter\Price
- */
 class Currency extends FormatterAbstract
 {
     /**
-     * @param  $var
+     * Format a positive numeric price with two decimals and the store currency; anything else becomes empty.
+     *
+     * @param mixed $var Cell value
      * @return mixed
      */
     public function run($var)
@@ -36,7 +33,7 @@ class Currency extends FormatterAbstract
         $val = is_numeric($var) && (float)$var > 0
             ? sprintf("%.2F %s", $var, $this->getAdapter()->getData('store_currency_code'))
             : '';
-        if (!empty($val) && !is_null($this->getColumn())) {
+        if (!empty($val) && $this->getColumn() !== null) {
             $this->getAdapter()->getFilter()->findAndReplace($val, $this->getColumn());
         }
         return $val;

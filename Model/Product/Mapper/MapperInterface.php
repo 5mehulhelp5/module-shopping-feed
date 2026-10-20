@@ -24,6 +24,8 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper;
 interface MapperInterface
 {
     /**
+     * Map the product's value for a column map entry.
+     *
      * @param  array $params
      * @return mixed
      */

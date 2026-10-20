@@ -21,7 +21,8 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab;
 /**
  * Feed edit form Categories Map tab block
  */
-class Categories extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class Categories extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements
+    \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
      * @var \MageOS\ShoppingFeed\Model\Feed\Source\Locale
@@ -39,14 +40,14 @@ class Categories extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Gene
     protected $sourcePriorityMode;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context                          $context
-     * @param \Magento\Framework\Registry                                      $registry
-     * @param \Magento\Framework\Data\FormFactory                              $formFactory
-     * @param \MageOS\ShoppingFeed\Model\Feed\Converter                    $feedConverter
-     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Locale                $sourceLocale
-     * @param \Magento\Config\Model\Config\Source\Yesno                        $sourceYesno
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
+     * @param \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Locale $sourceLocale
+     * @param \Magento\Config\Model\Config\Source\Yesno $sourceYesno
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Category\PriorityMode $sourcePriorityMode
-     * @param array                                                            $data
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -68,7 +69,7 @@ class Categories extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Gene
      * Prepare form
      *
      * @return                                        $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function _prepareForm()
     {
@@ -102,6 +103,7 @@ class Categories extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Gene
                 'required' => true,
                 'values' => $this->sourceLocale->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Changing the language of your feed affects how Apparels are matched using Google taxonomies. Your products should also be in the same language. Refer to \'Google Category of the Item\' attribute. This setting does not affect price formatting, assure proper store language for that.'),
             ]
         );
@@ -116,6 +118,7 @@ class Categories extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Gene
                 'required' => true,
                 'values' => $this->sourceYesno->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('If enabled, products that do not belog to a category will be added to the feed along with ones from disabled categories. Note that the taxonomy will be missing in this case, so you can capture that in a Replace Empty rule under Filters.'),
             ]
         );
@@ -130,6 +133,7 @@ class Categories extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Gene
                 'required' => true,
                 'values' => $this->sourcePriorityMode->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('If set to use priority of categories of the same level, deeper level categories are mateched first, than apply the priority of categories at the same level to detemine which one will be matched for a product with multiple categories.'),
             ]
         );
@@ -147,12 +151,13 @@ class Categories extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Gene
         );
 
         $renderer = $this->getLayout()->createBlock(
-            'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Categories\CategoryTaxonomy'
+            \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Categories\CategoryTaxonomy::class
         );
         $field->setRenderer($renderer);
 
         $this->_eventManager->dispatch(
-            sprintf('mageos_shopping_feed_feed_edit_tab_categories_prepare_form_%s', $model->getType()), [
+            sprintf('mageos_shopping_feed_feed_edit_tab_categories_prepare_form_%s', $model->getType()),
+            [
             'form' => $form,
             'feed' => $model,
             'is_element_disabled' => $isElementDisabled,
@@ -192,6 +197,7 @@ class Categories extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Gene
      */
     public function getTabNotice()
     {
+        // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
         return __('Category definitions here, apply to the directive called <strong>Taxonomy By Magento Category</strong> and <strong>Type By Magento Category</strong>.');
     }
 }

@@ -62,7 +62,9 @@ class AddGoogleFiltersFieldsObserver implements ObserverInterface
                     'title' => __('Skip Products with Price above'),
                     'required' => false,
                     'disabled' => $isElementDisabled,
-                    'note' => __('Products with price above value specified would be skipped. Filter does not apply when empty'),
+                    'note' => __(
+                        'Products with price above value specified would be skipped. Filter does not apply when empty'
+                    ),
                 ]
             );
 
@@ -75,7 +77,9 @@ class AddGoogleFiltersFieldsObserver implements ObserverInterface
                     'title' => __('Skip Products with Price below'),
                     'required' => false,
                     'disabled' => $isElementDisabled,
-                    'note' => __('Products with price below value specified would be skipped. Filter does not apply when empty'),
+                    'note' => __(
+                        'Products with price below value specified would be skipped. Filter does not apply when empty'
+                    ),
                 ]
             );
 
@@ -88,12 +92,13 @@ class AddGoogleFiltersFieldsObserver implements ObserverInterface
                     'title' => __('Adwords Price Buckets'),
                     'required' => false,
                     'disabled' => $isElementDisabled,
+                    // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                     'note' => __('This grid is used to build a value in the column assigned to the "Adwords Price Buckets" directive, under <a href="#feed_tabs_columns">Columns Map</a>. Values with empty order are matched last.'),
                 ]
             );
 
             $renderer = $this->layout->createBlock(
-                'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Filters\PriceBuckets'
+                \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Filters\PriceBuckets::class
             );
             $field->setRenderer($renderer);
         }

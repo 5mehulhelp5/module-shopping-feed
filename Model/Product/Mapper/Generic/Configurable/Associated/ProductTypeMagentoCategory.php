@@ -18,10 +18,14 @@
 
 namespace MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\Associated;
 
-use \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductTypeMagentoCategory as SimpleProductTypeMagentoCategory;
+use \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductTypeMagentoCategory
+    as SimpleProductTypeMagentoCategory;
 
 class ProductTypeMagentoCategory extends SimpleProductTypeMagentoCategory
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         // Return parent's value if exists.

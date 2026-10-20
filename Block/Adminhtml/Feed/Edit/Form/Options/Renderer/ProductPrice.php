@@ -51,6 +51,11 @@ class ProductPrice extends Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get the Yes/No options
+     *
+     * @return array<mixed>
+     */
     public function getYesNoOptions()
     {
         return $this->sourceYesno->toOptionArray();

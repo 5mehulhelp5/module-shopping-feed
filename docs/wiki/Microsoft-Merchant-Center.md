@@ -1,6 +1,6 @@
 # Microsoft Merchant Center
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
 
 When using the 1.2.0 UI Component editor, read [Admin UI Component forms](Admin-UI-Component-Forms). The repairs are now deployed and tested on `mageos-latest`; the guide records the tested runtime, follow-up fixes, and remaining limits. Template generation checks do not establish provider ingestion acceptance.
 
@@ -23,7 +23,7 @@ The preset emits UTF-8 without a byte-order mark (BOM) and places the required `
 | Stock | `in_stock` becomes `in stock`; `out_of_stock` and `backorder` become `out of stock`; `preorder` remains `preorder` |
 | Prices | Regular price includes currency, such as `49.95 USD`; sale price is numeric, such as `39.95`, in the same feed currency |
 | Sales | Map a dated offer; active sale values require an ISO 8601 start/end interval. Values at or above the regular price are omitted with their dates |
-| Text | Title defaults to a 150-character output limit and description to 10,000; IDs and group IDs are validated against a 50-character limit |
+| Text | The preset declares 150-character title and 10,000-character description limits, but they are not applied automatically; add them under [Limit column output](Filters-and-Transformations#limit-column-output). IDs and group IDs are validated against a 50-character limit |
 | Identifiers | Missing all identifiers on a new product requires explicit absence confirmation; incomplete manufacturer data produces warnings |
 | Variants | Children are exported with parent context, distinct URLs, and their variant attributes |
 

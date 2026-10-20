@@ -11,16 +11,22 @@ $element = $block->getElement();
 <?php $value_other = $block->getData('delimiter_other_value'); ?>
 
 <div class="admin__field field field-config_<?= $escaper->escapeHtmlAttr($htmlName)?> _required required">
-    <?php echo $block->getElement()->getLabelHtml(); ?>
+    <?= $block->getElement()->getLabelHtml(); ?>
     <div class="admin__field-control control">
-        <select id="<?= $escaper->escapeHtmlAttr($htmlId)?>" name="config[<?= $escaper->escapeHtmlAttr($htmlName)?>]" style="float: left;" title="<?= $escaper->escapeHtmlAttr($htmlName)?>" class=" _required select admin__control-select">
+        <select id="<?= $escaper->escapeHtmlAttr($htmlId)?>" name="config[<?= $escaper->escapeHtmlAttr($htmlName)?>]"
+                style="float: left;" title="<?= $escaper->escapeHtmlAttr($htmlName)?>"
+                class=" _required select admin__control-select">
             <?php if (is_array($options) && count($options)): ?>
-            <?php foreach ($options as $k => $v): ?>
-                <option <?php if($value == $k) echo 'selected';?> value="<?= $escaper->escapeHtmlAttr($k)?>"><?= $escaper->escapeHtml($v)?></option>
+                <?php foreach ($options as $k => $v): ?>
+                <option <?php if ($value == $k) { echo 'selected';}?>
+                        value="<?= $escaper->escapeHtmlAttr($k)?>"><?= $escaper->escapeHtml($v)?></option>
             <?php endforeach; ?>
             <?php endif; ?>
         </select>
-        <input id="<?= $escaper->escapeHtmlAttr($htmlId)?>_other" style="<?php if($value != 'other') echo 'display:none;';?>width:120px;margin-left:20px;clear:right;" name="config[<?= $escaper->escapeHtmlAttr($htmlName)?>_other]" value="<?= $escaper->escapeHtmlAttr($value_other)?>" type="text" class="input-text admin__control-text">
+        <input id="<?= $escaper->escapeHtmlAttr($htmlId)?>_other"
+               style="<?php if ($value != 'other') { echo 'display:none;';}?>width:120px;margin-left:20px;clear:right;"
+               name="config[<?= $escaper->escapeHtmlAttr($htmlName)?>_other]"
+               value="<?= $escaper->escapeHtmlAttr($value_other)?>" type="text" class="input-text admin__control-text">
     </div>
 </div>
 <script>

@@ -20,15 +20,12 @@ namespace MageOS\ShoppingFeed\Model\Feed\Source\Shipping;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * Class Weight
- */
 class Weight implements OptionSourceInterface
 {
-    const WEIGHT_UNIT_GRAM = 'g';
-    const WEIGHT_UNIT_KILOGRAM = 'kg';
-    const WEIGHT_UNIT_OUNCE = 'oz';
-    const WEIGHT_UNIT_POUND = 'lb';
+    public const WEIGHT_UNIT_GRAM = 'g';
+    public const WEIGHT_UNIT_KILOGRAM = 'kg';
+    public const WEIGHT_UNIT_OUNCE = 'oz';
+    public const WEIGHT_UNIT_POUND = 'lb';
 
     /**
      * @var array

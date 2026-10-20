@@ -95,8 +95,12 @@ class ApiTest extends TestCase
         $manager->method('isEnabled')->willReturn(false);
         $resource = $this->createMock(ResourceConnection::class);
         $resource->expects(self::never())->method('getConnection');
-        $api = new Api($manager, $this->createMock(ObjectManagerInterface::class),
-            $this->createMock(SearchCriteriaBuilder::class), $resource);
+        $api = new Api(
+            $manager,
+            $this->createMock(ObjectManagerInterface::class),
+            $this->createMock(SearchCriteriaBuilder::class),
+            $resource
+        );
         self::assertEquals(0, $api->getReservations('SKU'));
     }
 }

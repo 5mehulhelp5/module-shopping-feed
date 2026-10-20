@@ -24,11 +24,11 @@ class LocalInventoryTest extends CompatibilityTestCase
 {
     /** @dataProvider sourceStates */
     #[\PHPUnit\Framework\Attributes\DataProvider('sourceStates')]
+    // phpcs:ignore Generic.Metrics.NestingLevel.TooHigh -- depth comes from nested anonymous MSI stock-link fixtures
     public function testRemapsSourcesWithoutTestModeOrLosingAssociatedAdapters(
         bool $enabled,
         bool $parentHasSourceItems
-    ): void
-    {
+    ): void {
         $sourceItem = new class extends DataObject {
             public function getSourceItemId(): int
             {
@@ -86,7 +86,10 @@ class LocalInventoryTest extends CompatibilityTestCase
                     return [['parent']];
                 }
             );
-        $adapter->expects($this->exactly($enabled ? 1 : 0))->method('mapAssociatedProducts')->with(false)->willReturn([['associated']]);
+        $adapter->expects($this->exactly($enabled ? 1 : 0))
+            ->method('mapAssociatedProducts')
+            ->with(false)
+            ->willReturn([['associated']]);
         $adapter->expects($this->never())->method('setTestMode');
 
         $associatedAdapter->method('getFeed')->willReturn($feed);
@@ -117,6 +120,9 @@ class LocalInventoryTest extends CompatibilityTestCase
             public function execute(): object
             {
                 return new class {
+                    /**
+                     * @return object[]
+                     */
                     public function getItems(): array
                     {
                         return [new class {

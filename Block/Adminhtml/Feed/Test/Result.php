@@ -96,6 +96,7 @@ class Result extends \Magento\Backend\Block\Widget\Form\Renderer\Fieldset\Elemen
                 $this->setLogOutput($logOutput);
 
                 if (is_array($output) && count($output) == 0) {
+                    // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                     $messages[] = __('No output found. Maybe product SKU #%1 is not visible/searchable or is associated product? See Log Output for more information.', $product->getSku());
                 }
 

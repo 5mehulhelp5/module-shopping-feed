@@ -5,8 +5,10 @@
 <div>
     <select name="#{htmlName}[#{index}][param][]" class="select" multiple="multiple" size="5">
         <?php foreach ($block->getAttributes() as $option): ?>
-            <option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeHtml($option['label']) ?></option>
+            <option value="<?=
+                $escaper->escapeHtml($option['value'])
+            ?>"><?= $escaper->escapeHtml($option['label']) ?></option>
         <?php endforeach; ?>
     </select>
 </div>
-<p><span><?php echo $block->escapeHtml(__('Select all possible attributes building this value.')) ?></span></p>
+<p><span><?= $escaper->escapeHtml(__('Select all possible attributes building this value.')) ?></span></p>

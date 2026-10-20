@@ -27,7 +27,7 @@ use Magento\Framework\Data\Tree\Node;
 class Tree extends \Magento\Catalog\Block\Adminhtml\Category\Tree
 {
     /**
-     * Store manager
+     * Store manager used to find the feed store's root category
      *
      * @var \Magento\Store\Model\StoreManagerInterface
      */
@@ -54,7 +54,16 @@ class Tree extends \Magento\Catalog\Block\Adminhtml\Category\Tree
         array $data = []
     ) {
         $this->storeManager = $context->getStoreManager();
-        parent::__construct($context, $categoryTree, $registry, $categoryFactory, $jsonEncoder, $resourceHelper, $backendSession, $data);
+        parent::__construct(
+            $context,
+            $categoryTree,
+            $registry,
+            $categoryFactory,
+            $jsonEncoder,
+            $resourceHelper,
+            $backendSession,
+            $data
+        );
     }
 
     /**
@@ -67,7 +76,7 @@ class Tree extends \Magento\Catalog\Block\Adminhtml\Category\Tree
     {
         $storeId = $this->getRequest()->getParam('store', $this->_getDefaultStoreId());
 
-        /* @var $collection Collection */
+        /** @var Collection $collection */
         $collection = $this->_categoryFactory->create()->getCollection();
 
         $matchingNamesCollection = clone $collection;
@@ -89,7 +98,9 @@ class Tree extends \Magento\Catalog\Block\Adminhtml\Category\Tree
 
         // customization to get categories for feed store view only
         if ($storeId) {
-            $parentId = $this->storeManager->getStore($storeId)->getRootCategoryId();
+            /** @var \Magento\Store\Model\Store $store */
+            $store = $this->storeManager->getStore($storeId);
+            $parentId = $store->getRootCategoryId();
             $matchingNamesCollection->addPathFilter(
                 sprintf('^1/%s/.*', $parentId)
             );

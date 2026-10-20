@@ -75,5 +75,4 @@ class FeedActionsTest extends TestCase
     {
         return [[false, false], [true, false], [false, true], [true, true]];
     }
-
 }

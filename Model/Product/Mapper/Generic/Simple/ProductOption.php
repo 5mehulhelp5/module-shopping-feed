@@ -20,14 +20,11 @@ namespace MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple;
 
 use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
-/**
- * Class ProductOption
- *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
- */
 class ProductOption extends MapperAbstract
 {
     /**
+     * Titles of the product's custom option values named in the column param.
+     *
      * @param  array $params
      * @return string
      */

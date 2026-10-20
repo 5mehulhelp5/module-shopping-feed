@@ -12,6 +12,9 @@ use MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class ItemGroupTitle extends MapperAbstract
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = []): string
     {
         $adapter = $this->getAdapter();

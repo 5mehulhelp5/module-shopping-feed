@@ -21,8 +21,7 @@ namespace MageOS\ShoppingFeed\Block\Product\View;
 class Microdata extends \Magento\Catalog\Block\Product\AbstractProduct
 {
 
-    const XML_PATH_ENABLED              = 'mageos_shopping_feed/google/microdata_enabled';
-
+    public const XML_PATH_ENABLED = 'mageos_shopping_feed/google/microdata_enabled';
 
     /**
      * @var \MageOS\ShoppingFeed\Model\MicrodataFactory
@@ -44,9 +43,9 @@ class Microdata extends \Magento\Catalog\Block\Product\AbstractProduct
     protected $taxHelper;
 
     /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Magento\Catalog\Model\ProductFactory $productFactory
-     * @param \MageOS\ShoppingFeed\Model\Microdata $microData
+     * @param \MageOS\ShoppingFeed\Model\MicrodataFactory $microdataFactory
      * @param array $data
      */
     public function __construct(
@@ -63,6 +62,8 @@ class Microdata extends \Magento\Catalog\Block\Product\AbstractProduct
     }
 
     /**
+     * Check whether product microdata is enabled for the current store
+     *
      * @return bool
      */
     public function isEnabled()
@@ -73,9 +74,10 @@ class Microdata extends \Magento\Catalog\Block\Product\AbstractProduct
         );
     }
 
-
     /**
-     * @return \Magento\Framework\DataObject[]
+     * Get the microdata row for the current product, or null when there is none
+     *
+     * @return \Magento\Framework\DataObject|null
      */
     public function getMicrodata()
     {
@@ -93,6 +95,11 @@ class Microdata extends \Magento\Catalog\Block\Product\AbstractProduct
         return $microdata;
     }
 
+    /**
+     * Create the microdata model for the product, or for a requested enabled child of a configurable
+     *
+     * @return \MageOS\ShoppingFeed\Model\Microdata
+     */
     protected function getModel()
     {
         $store = $this->_storeManager->getStore();
@@ -112,7 +119,8 @@ class Microdata extends \Magento\Catalog\Block\Product\AbstractProduct
                 }
                 $child = $this->productFactory->create()->setStoreId($store->getId())->load((int)$requestedId);
                 if ($child->getId()
-                    && (int)$child->getStatus() === \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED
+                    && (int)$child->getStatus()
+                        === \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED
                     && in_array((int)$store->getWebsiteId(), array_map('intval', $child->getWebsiteIds()), true)
                 ) {
                     $product = $child;

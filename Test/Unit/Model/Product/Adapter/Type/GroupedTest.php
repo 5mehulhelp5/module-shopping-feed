@@ -177,7 +177,6 @@ class GroupedTest extends ModelFramework
         $this->assertEquals($expected, $this->model->map());
     }
 
-
     public function testGetGroupedUrlOptions()
     {
         $this->expectReturn($this->feedMock, 'getConfig', true);

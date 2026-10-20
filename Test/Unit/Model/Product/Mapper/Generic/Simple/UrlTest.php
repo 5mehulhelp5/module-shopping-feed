@@ -92,7 +92,10 @@ class UrlTest extends ModelFramework
             throw new \ErrorException($message, 0, $severity, $file, $line);
         }, E_DEPRECATED);
         try {
-            self::assertSame('http://base.url/some/product/url/', $this->model->map(['column' => 'link', 'param' => null]));
+            self::assertSame(
+                'http://base.url/some/product/url/',
+                $this->model->map(['column' => 'link', 'param' => null])
+            );
         } finally {
             restore_error_handler();
         }
@@ -109,7 +112,10 @@ class UrlTest extends ModelFramework
         $adapter->method('getProduct')->willReturn($product);
         $adapter->method('getFilter')->willReturn($this->createMock(\MageOS\ShoppingFeed\Model\Product\Filter::class));
         $this->model->addAdapter($adapter);
-        $this->assertSame('https://store.example:8443/product.html?source=feed', $this->model->map(['column' => 'link', 'param' => 'source=feed']));
+        $this->assertSame(
+            'https://store.example:8443/product.html?source=feed',
+            $this->model->map(['column' => 'link', 'param' => 'source=feed'])
+        );
     }
 
     /** @dataProvider invalidUrls */
@@ -133,5 +139,4 @@ class UrlTest extends ModelFramework
         return [['http://shop.test:invalid/', '/item'], ['invalid', '/item'],
             ['https://shop.test/', 'http://shop.test:invalid/item'], ['https://shop.test/', '']];
     }
-
 }

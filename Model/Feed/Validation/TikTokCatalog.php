@@ -84,8 +84,11 @@ class TikTokCatalog
                 continue;
             }
             if (!$this->validUrl($row[$field] ?? '', $field === 'image_link')) {
-                $errors[] = sprintf('%s must be an absolute HTTP(S) URL%s', $field,
-                    $field === 'image_link' ? ' with a JPG, JPEG, or PNG path' : '');
+                $errors[] = sprintf(
+                    '%s must be an absolute HTTP(S) URL%s',
+                    $field,
+                    $field === 'image_link' ? ' with a JPG, JPEG, or PNG path' : ''
+                );
             }
         }
         if (($row['additional_image_link'] ?? '') !== '') {
@@ -100,7 +103,8 @@ class TikTokCatalog
             }
         }
         if (($row['google_product_category'] ?? '') === '') {
-            $warnings[] = 'google_product_category is empty; map a reviewed taxonomy category for better product matching';
+            $warnings[] =
+                'google_product_category is empty; map a reviewed taxonomy category for better product matching';
         }
         if (($row['gtin'] ?? '') !== '' && !preg_match('/^(?:\d{8}|\d{12,14})$/D', $row['gtin'])) {
             $errors[] = 'gtin must be an 8, 12, 13, or 14-digit identifier; convert ISBN-10 to ISBN-13';
@@ -114,16 +118,28 @@ class TikTokCatalog
         return ['errors' => $errors, 'warnings' => $warnings];
     }
 
-    /** Validate links locally without fetching merchant resources. */
+    /**
+     * Validate links locally without fetching merchant resources.
+     *
+     * @param string $value
+     * @param bool $image
+     * @return bool
+     */
     private function validUrl(string $value, bool $image): bool
     {
         return filter_var($value, FILTER_VALIDATE_URL) !== false
             && preg_match('#^https?://#i', $value)
             && !str_contains($value, '|')
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- URL path extension check; no framework equivalent injected
             && (!$image || preg_match('/\.(?:jpe?g|png)$/iD', (string)parse_url($value, PHP_URL_PATH)));
     }
 
-    /** Accept ISO timestamps with or without an explicit timezone, as documented by TikTok. */
+    /**
+     * Accept ISO timestamps with or without an explicit timezone, as documented by TikTok.
+     *
+     * @param string $value
+     * @return bool
+     */
     private function validSaleInterval(string $value): bool
     {
         $parts = explode('/', $value);

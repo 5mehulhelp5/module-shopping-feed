@@ -32,7 +32,7 @@ class Feed extends AbstractDb
     protected $date;
 
     /**
-     * @var
+     * @var bool
      */
     protected $unsUpdatedAt = false;
 

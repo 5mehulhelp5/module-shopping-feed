@@ -23,7 +23,6 @@ namespace MageOS\ShoppingFeed\Model\Generator;
  *
  * Class MapperFactory
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper
  */
 class Factory
 {
@@ -38,7 +37,6 @@ class Factory
      * Factory constructor
      *
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
-     * @param string                                    $instanceName
      */
     public function __construct(\Magento\Framework\ObjectManagerInterface $objectManager)
     {
@@ -46,19 +44,26 @@ class Factory
     }
 
     /**
-     * @param  \MageOS\ShoppingFeed\Model\Generator\Queue $queue
-     * @param  \MageOS\ShoppingFeed\Model\Feed|int|null   $feed
-     * @param  string                                         $instanceName
+     * Create a generator for the feed, optionally bound to a queue item or a single test SKU.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Feed|int|null $feed
+     * @param \MageOS\ShoppingFeed\Model\Generator\Queue|null $queue
+     * @param string|null $testSku
+     * @param string $instanceName
      * @return mixed
      */
-    public function create($feed, $queue = null, $testSku = null, $instanceName = 'MageOS\ShoppingFeed\Model\Generator')
-    {
+    public function create(
+        $feed,
+        $queue = null,
+        $testSku = null,
+        $instanceName = \MageOS\ShoppingFeed\Model\Generator::class
+    ) {
         $parameters = ['feed' => $feed];
-        if (!is_null($queue)) {
+        if ($queue !== null) {
             $parameters['queue'] = $queue;
         }
 
-        if (!is_null($testSku)) {
+        if ($testSku !== null) {
             $parameters['testSku'] = $testSku;
         }
         return $this->_objectManager->create($instanceName, $parameters);

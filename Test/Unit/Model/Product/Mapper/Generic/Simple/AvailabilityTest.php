@@ -29,7 +29,7 @@ use MageOS\ShoppingFeed\Test\Unit\Model\ModelFramework;
 class AvailabilityTest extends ModelFramework
 {
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Id
+     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Availability
      */
     protected $model;
 
@@ -37,7 +37,6 @@ class AvailabilityTest extends ModelFramework
      * @var ObjectManagerHelper
      */
     protected $objectManagerHelper;
-
 
     /**
      * @inheritdoc

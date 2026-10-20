@@ -44,8 +44,8 @@ class Config extends \Magento\Framework\Config\Data
     /**
      * Check if directive is allowed for feed type.
      *
-     * @param  $typeId
-     * @param  $code
+     * @param string $typeId
+     * @param string $code
      * @return bool
      */
     public function isAllowedDirective($typeId, $code)
@@ -58,11 +58,24 @@ class Config extends \Magento\Framework\Config\Data
         return false;
     }
 
+    /**
+     * Get one directive definition of a feed type, or an empty array.
+     *
+     * @param string $typeId
+     * @param string $code
+     * @return mixed
+     */
     public function getDirective($typeId, $code)
     {
         return $this->get('feed/' . $typeId . '/directives/' . $code, []);
     }
 
+    /**
+     * Get all directive definitions of a feed type keyed by code, or an empty array.
+     *
+     * @param string $typeId
+     * @return mixed
+     */
     public function getDirectives($typeId)
     {
         return $this->get('feed/' . $typeId . '/directives', []);
@@ -71,7 +84,7 @@ class Config extends \Magento\Framework\Config\Data
     /**
      * Get taxonomy provider class for given feed type
      *
-     * @param  $typeId
+     * @param string $typeId
      * @return array|mixed|null
      */
     public function getTaxonomyProvider($typeId)

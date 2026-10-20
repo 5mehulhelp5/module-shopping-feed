@@ -24,11 +24,11 @@
                     <button type="button" data-bind="visible: children, click: $parent.toggle.bind($parent), text: expanded() ? '−' : '+', attr: {'aria-expanded': expanded(), 'aria-label': name}"></button>
                     <span data-bind="text: name"></span>
                 </td>
-                <td><input type="checkbox" data-bind="checked: enabled, disable: $parent.disabled() || !store_active, attr: {'aria-label': name + ' include'}"/></td>
+                <td><input type="checkbox" data-bind="checked: enabled, disable: $parent.disabled() || !store_active, attr: {'aria-label': $parent.rowLabel($data, 'include')}"></td>
                 <!-- ko ifnot: $parent.localInventory -->
-                <td><input type="number" min="0" class="admin__control-text" data-bind="value: priority, disable: $parent.disabled() || !store_active, attr: {'aria-label': name + ' priority'}"/></td>
-                <td><input type="text" class="admin__control-text" data-bind="value: taxonomy, disable: $parent.disabled() || !store_active, attr: {list: $parent.uid + '-taxonomy', 'aria-label': name + ' taxonomy'}"/></td>
-                <td><input type="text" class="admin__control-text" data-bind="value: productType, disable: $parent.disabled() || !store_active, attr: {'aria-label': name + ' product type'}"/></td>
+                <td><input type="number" min="0" class="admin__control-text" data-bind="value: priority, disable: $parent.disabled() || !store_active, attr: {'aria-label': $parent.rowLabel($data, 'priority')}"></td>
+                <td><input type="text" class="admin__control-text" data-bind="value: taxonomy, disable: $parent.disabled() || !store_active, attr: {list: $parent.uid + '-taxonomy', 'aria-label': $parent.rowLabel($data, 'taxonomy')}"></td>
+                <td><input type="text" class="admin__control-text" data-bind="value: productType, disable: $parent.disabled() || !store_active, attr: {'aria-label': $parent.rowLabel($data, 'productType')}"></td>
                 <!-- /ko -->
             </tr>
         </tbody>

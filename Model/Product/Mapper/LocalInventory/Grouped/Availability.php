@@ -22,6 +22,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\LocalInventory\Configurable\Availa
 
 class Availability extends ConfigurableAvailability
 {
+    /**
+     * @inheritdoc
+     */
     public function filter($cell)
     {
         if (!$this->getAdapter()->getFeed()->getConfig('grouped_add_out_of_stock')) {

@@ -1,6 +1,6 @@
 # TikTok Catalog
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-19.
 
 The **TikTok Catalog** preset produces a quoted UTF-8 CSV file for product catalogs in TikTok Ads Manager. It shares the module's generation, Test Feed, scheduling, and upload tools. An actual TikTok catalog import has not been verified.
 
@@ -22,7 +22,7 @@ Map `google_product_category` to a reviewed taxonomy value. An empty value produ
 | Stock | `in_stock` becomes `in stock`; `out_of_stock` becomes `out of stock`; `backorder` becomes `available for order`; `preorder` stays `preorder` |
 | Prices | Regular and sale prices include currency, such as `49.95 USD` |
 | Sales | Sale prices at or above regular price are omitted with their dates. A discount may have no end date; a supplied date must be a valid ISO 8601 start/end interval |
-| Text | Title defaults to 150 characters and description to 20,000; CSV quoting preserves commas, quotation marks, and Unicode |
+| Text | The preset declares 150-character title and 20,000-character description limits, but they are not applied automatically; add them under [Limit column output](Filters-and-Transformations#limit-column-output). CSV quoting preserves commas, quotation marks, and Unicode |
 | Categories | The first product category path and mapped Google taxonomy are limited to the first three levels |
 | Images | Primary and additional image links must use JPG, JPEG, or PNG paths. Up to ten additional URLs are separated by commas inside a quoted CSV cell |
 | Variants | Children export with parent context and their mapped color, size, and other attributes |

@@ -34,7 +34,7 @@ class LoggerTest extends CompatibilityTestCase
     protected $model;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Logger\HandlerFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Logger\HandlerFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $handlerFactoryMock;
 

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://raw.githubusercontent.com/graycoreio/github-actions-magento2/4de1565d1732187111b6d2eeb23c0ee3a9fc23b7/resolve-check-config/check-extension.schema.json",
+  "jobs": {
+    "phpstan": true
+  }
+}

@@ -63,6 +63,7 @@ class MassEnable extends \Magento\Backend\App\Action implements \Magento\Framewo
     public function execute()
     {
         $collection = $this->filter->getCollection($this->collectionFactory->create());
+        /** @var \MageOS\ShoppingFeed\Model\Feed $feed */
         foreach ($collection->getItems() as $feed) {
             $feed->setStatus(Status::STATUS_SCHEDULED);
             $feed->save();

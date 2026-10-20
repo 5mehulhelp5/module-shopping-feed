@@ -3,10 +3,11 @@
 ?>
 
 <div>
-    <span><?php echo $block->escapeHtml(__('Identifier status:')) ?></span>
+    <span><?= $escaper->escapeHtml(__('Identifier status:')) ?></span>
     <select name="#{htmlName}[#{index}][param]" class="select">
-        <option value=""><?php echo $block->escapeHtml(__('Identifiers exist or are unknown')) ?></option>
-        <option value="no_identifiers"><?php echo $block->escapeHtml(__('Confirmed: no assigned identifiers')) ?></option>
+        <option value=""><?= $escaper->escapeHtml(__('Identifiers exist or are unknown')) ?></option>
+        <option value="no_identifiers"><?= $escaper->escapeHtml(__('Confirmed: no assigned identifiers')) ?></option>
     </select>
 </div>
-<p class="note"><?php echo $block->escapeHtml(__('Returns FALSE only when you confirm that no identifiers were assigned and brand, GTIN, and MPN are all empty. Otherwise leaves the field blank (Google defaults to yes). Missing mappings do not prove that identifiers are absent.')) ?></p>
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase ?>
+<p class="note"><?= $escaper->escapeHtml(__('Returns FALSE only when you confirm that no identifiers were assigned and brand, GTIN, and MPN are all empty. Otherwise leaves the field blank (Google defaults to yes). Missing mappings do not prove that identifiers are absent.')) ?></p>

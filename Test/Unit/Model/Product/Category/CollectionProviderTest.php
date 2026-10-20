@@ -33,7 +33,6 @@ class CollectionProviderTest extends ModelFramework
      */
     protected $model;
 
-
     /**
      * @inheritdoc
      */
@@ -46,7 +45,6 @@ class CollectionProviderTest extends ModelFramework
         $this->expectReturn($storeManager, 'getStore', $this->storeMock);
         $this->expectReturn($this->feedMock, 'getConfig', true);
         $this->expectReturn($this->feedMock, 'getStoreId', 1);
-
 
         $categoryMock = $this->getModelMock(
             'Magento\Catalog\Model\Category',

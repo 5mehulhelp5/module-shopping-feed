@@ -31,10 +31,15 @@ class MemoryTest extends ModelFramework
     /**
      * Value to mock ini_get('memory_limit') and memory_get_usage()
      *
-     * @var string
+     * @var bool
      */
     public static $returnNormalLimit = false;
 
+    /**
+     * Value returned by the mocked ini_get('memory_limit') when set
+     *
+     * @var string|null
+     */
     public static ?string $memoryLimitOverride = null;
 
     /** @dataProvider invalidMemoryLimits */
@@ -68,7 +73,7 @@ class MemoryTest extends ModelFramework
     protected $objectManagerHelper;
 
     /**
-     * @var
+     * @var \Magento\Framework\Stdlib\DateTime\DateTime&\PHPUnit\Framework\MockObject\MockObject
      */
     protected $dateTimeMock;
 

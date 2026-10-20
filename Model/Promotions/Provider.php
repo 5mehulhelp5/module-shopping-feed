@@ -4,7 +4,7 @@ namespace MageOS\ShoppingFeed\Model\Promotions;
 
 class Provider
 {
-    const MAX_PROMOTION_DAYS = 183;
+    public const MAX_PROMOTION_DAYS = 183;
 
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
@@ -57,7 +57,7 @@ class Provider
     private $feed = null;
 
     /**
-     * @var string
+     * @var array|null
      */
     protected $hashCache = null;
 
@@ -66,7 +66,14 @@ class Provider
      */
     protected $hashCacheKey = null;
 
+    /**
+     * @var bool
+     */
     private bool $promotionCacheDirty = false;
+
+    /**
+     * @var int
+     */
     private int $cacheBatchDepth = 0;
 
     /**
@@ -74,7 +81,17 @@ class Provider
      */
     protected $fileCreated = false;
 
-
+    /**
+     * @param \Magento\Framework\Json\Helper\Data $helper
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Quote\Model\Quote\ItemFactory $quoteItem
+     * @param \Magento\Framework\App\Filesystem\DirectoryList $directoryList
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \MageOS\ShoppingFeed\Model\Promotions\Provider\Map $map
+     * @param \MageOS\ShoppingFeed\Model\Promotions\Provider\Collection $promotionsCollection
+     * @param \MageOS\ShoppingFeed\Model\Feed\OutputPath $outputPath
+     * @param \Magento\Framework\Filesystem\Driver\File $fileDriver
+     */
     public function __construct(
         \Magento\Framework\Json\Helper\Data $helper,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
@@ -99,6 +116,8 @@ class Provider
     }
 
     /**
+     * Switch to another feed, flushing pending cache writes and resetting per-feed state.
+     *
      * @param \MageOS\ShoppingFeed\Model\Feed $feed
      * @return $this
      */
@@ -116,6 +135,8 @@ class Provider
     }
 
     /**
+     * Current feed.
+     *
      * @return mixed
      */
     public function getFeed()
@@ -124,6 +145,8 @@ class Provider
     }
 
     /**
+     * Date format of promotion display dates in feed rows.
+     *
      * @return string
      */
     public function getDateFormat()
@@ -132,6 +155,8 @@ class Provider
     }
 
     /**
+     * Date format of cart rule from/to dates.
+     *
      * @return string
      */
     public function getPromotionDateFormat()
@@ -140,6 +165,8 @@ class Provider
     }
 
     /**
+     * Whether the promotions file was created in this run.
+     *
      * @return bool
      */
     public function isFileCreated()
@@ -148,6 +175,8 @@ class Provider
     }
 
     /**
+     * Mark the promotions file as created in this run.
+     *
      * @return $this
      */
     public function setFileCreated()
@@ -157,6 +186,8 @@ class Provider
     }
 
     /**
+     * Absolute path of the current feed's promotions file.
+     *
      * @return string
      */
     public function getPromotionFile()
@@ -165,10 +196,10 @@ class Provider
     }
 
     /**
-     * Compare magento collection & saved data collection - if saved row doesn't exists
-     * in magento collection, it should be removed!
+     * Compare magento collection & saved data collection.
      *
-     * @param \MageOS\ShoppingFeed\Model\Feed $feed
+     * If saved row doesn't exists in magento collection, it should be removed!
+     *
      * @return $this
      */
     public function validateGooglePromotions()
@@ -194,7 +225,7 @@ class Provider
      *
      * @param int $productId
      * @param string $hash
-     * @return bool
+     * @return array|false
      */
     protected function getPromotionCache($productId = 0, $hash = '')
     {
@@ -228,11 +259,21 @@ class Provider
         return $this;
     }
 
+    /**
+     * Defer promotion cache file writes until the outermost batch ends.
+     *
+     * @return void
+     */
     public function beginCacheBatch(): void
     {
         $this->cacheBatchDepth++;
     }
 
+    /**
+     * End a cache batch; the outermost end writes pending cache changes.
+     *
+     * @return void
+     */
     public function endCacheBatch(): void
     {
         if ($this->cacheBatchDepth > 0) {
@@ -243,6 +284,12 @@ class Provider
         }
     }
 
+    /**
+     * Write pending promotion cache changes to the cache file atomically.
+     *
+     * @return void
+     * @throws \Throwable
+     */
     public function flushPromotionCache(): void
     {
         if (!$this->promotionCacheDirty) {
@@ -256,6 +303,7 @@ class Provider
             'cache' => $this->hashCache,
             'hash' => $this->hashCacheKey
         ];
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- local cache path; driver getParentDirectory() is mocked away in unit tests
         $this->fileDriver->createDirectory(dirname($cacheFile));
         if ($this->fileDriver->isExists($temporaryFile)) {
             $this->fileDriver->deleteFile($temporaryFile);
@@ -276,6 +324,7 @@ class Provider
 
     /**
      * Removes cache file
+     *
      * Not used currently (it should be in the observer)
      *
      * @return $this
@@ -306,7 +355,11 @@ class Provider
             if ($this->fileDriver->isExists($cacheFile) && $this->fileDriver->isReadable($cacheFile)) {
                 $fileContent = $this->fileDriver->fileGetContents($cacheFile);
                 $tmpCache = $this->helper->jsonDecode($fileContent);
-                if (is_array($tmpCache) && isset($tmpCache['hash']) && $tmpCache['hash'] == $hash && isset($tmpCache['cache'])) {
+                if (is_array($tmpCache)
+                    && isset($tmpCache['hash'])
+                    && $tmpCache['hash'] == $hash
+                    && isset($tmpCache['cache'])
+                ) {
                     $cache = $tmpCache['cache'];
                 }
             }
@@ -321,9 +374,6 @@ class Provider
      *
      * @return string
      */
-    /**
-     * @return string
-     */
     protected function getHashFile()
     {
         return rtrim($this->directoryList->getPath('var'), '/') .'/cache/mageos_shopping_feed_promotions.cache';
@@ -332,21 +382,20 @@ class Provider
     /**
      * Prepare date for output
      *
-     * @param \MageOS\ShoppingFeed\Model\Feed $feed
-     * @param $promotionDate
-     * @param $rowDate
-     * @param bool $addDays
-     * @param bool $format
+     * @param string|null $promotionDate cart rule date in getPromotionDateFormat()
+     * @param string|null $rowDate saved row date in getDateFormat(); takes precedence
+     * @param string|false $addDaysFrom
+     * @param string|false $format
      * @return string
      */
     public function prepareDate($promotionDate, $rowDate, $addDaysFrom = false, $format = false)
     {
         /** @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezoneObject */
-        $timezoneObject = $this->objectManager->create('\Magento\Framework\Stdlib\DateTime\Timezone');
+        $timezoneObject = $this->objectManager->create(\Magento\Framework\Stdlib\DateTime\Timezone::class);
         $store = $this->storeManager->getStore($this->getFeed()->getStoreId());
 
         $timezone = $timezoneObject->getConfigTimezone(\Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
-        $timezone = $timezone ? new \DateTimeZone($timezone) : new \DateTimeZone(\DateTimeZone::UTC);
+        $timezone = new \DateTimeZone($timezone ?: 'UTC');
 
         $add = true;
         $date = $timezoneObject->date();
@@ -370,8 +419,6 @@ class Provider
             $date->add(new \DateInterval('P'.self::MAX_PROMOTION_DAYS. 'D'));
         }
 
-        //$date->setTimezone($timezone);
-
         if ($format === false) {
             $format = $this->getDateFormat();
         }
@@ -380,6 +427,8 @@ class Provider
     }
 
     /**
+     * Ids of included promotions whose actions apply to the product, using the promotion cache.
+     *
      * @param \Magento\Catalog\Model\Product $product
      * @return array
      */
@@ -389,7 +438,7 @@ class Provider
         $activeIds = [];
         $productId = $product->getId();
 
-        if (is_null($this->getFeed())) {
+        if ($this->getFeed() === null) {
             return $ids;
         }
 
@@ -421,10 +470,7 @@ class Provider
 
                 /** @var \Magento\SalesRule\Model\ResourceModel\Rule\Quote\Collection $cartRulesCollection */
                 $cartRulesCollection = $this->promotionsCollection->getPromotionRules($this->getFeed());
-
-                if (count($activeIds)) {
-                    $cartRulesCollection->addFieldToFilter('rule_id', ['in' => $activeIds]);
-                }
+                $cartRulesCollection->addFieldToFilter('rule_id', ['in' => $activeIds]);
 
                 /** @var \Magento\SalesRule\Model\Rule $rule */
                 foreach ($cartRulesCollection as $rule) {
@@ -433,7 +479,9 @@ class Provider
                      * the following manipulation is needed
                      */
                     $quoteItem = $this->quoteItem->create()->setProduct($product);
-                    if ($rule->getActions()->validate($quoteItem)) {
+                    /** @var \Magento\SalesRule\Model\Rule\Condition\Product\Combine $actions */
+                    $actions = $rule->getActions();
+                    if ($actions->validate($quoteItem)) {
                         $ids[$rule->getId()] = $this->map->mapPromotionId($config['counter'], $rule);
                     }
                 }

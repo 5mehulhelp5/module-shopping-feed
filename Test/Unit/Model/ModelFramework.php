@@ -4,40 +4,36 @@ namespace MageOS\ShoppingFeed\Test\Unit\Model;
 
 use MageOS\ShoppingFeed\Test\Unit\CompatibilityTestCase;
 
-/**
- * Class ModelFramework
- */
 class ModelFramework extends CompatibilityTestCase
 {
     /****
      * A
      ****/
     /**
-     * @var \MageOS\ShoppingFeed\Model\Generator\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Generator|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $generatorMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $adapterMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $parentAdapterMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\MageOS\ShoppingFeed\Model\Product\Adapter\AdapterFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|\MageOS\ShoppingFeed\Model\Product\Adapter\AdapterFactory
      */
     protected $adapterFactoryMock;
-
 
     /****
      * B
      ****/
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\MageOS\ShoppingFeed\Model\Generator\Batch
+     * @var \PHPUnit\Framework\MockObject\MockObject|\MageOS\ShoppingFeed\Model\Generator\Batch
      */
     protected $batchMock;
 
@@ -46,27 +42,27 @@ class ModelFramework extends CompatibilityTestCase
      ****/
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Generator\Cache|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Generator\Cache|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $cacheMock;
 
     /**
-     * @var \Magento\Catalog\Helper\Data|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Catalog\Helper\Data|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $catalogHelperMock;
 
     /**
-     * @var \Magento\Catalog\Model\Product\Type\Price|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Catalog\Model\Product\Type\Price|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $catalogProductPriceMock;
 
     /**
-     * @var \Magento\CatalogRule\Model\Rule\Product\Price|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\CatalogRule\Model\Rule\Product\Price|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $catalogRuleMock;
 
     /**
-     * @var \Magento\CatalogRule\Model\ResourceModel\Rule\Product\Price\CollectionFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\CatalogRule\Model\ResourceModel\Rule\Product\Price\CollectionFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $catalogRuleCollectionFactoryMock;
 
@@ -76,64 +72,62 @@ class ModelFramework extends CompatibilityTestCase
     protected $catalogRuleCollectionMock;
 
     /**
-     * @var \Magento\Catalog\Model\CategoryFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Catalog\Model\CategoryFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $categoryFactoryMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Category\CollectionProvider|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Product\Category\CollectionProvider|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $categoryCollectionProvider;
 
     /**
-     * @var \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $categoryCollectionFactoryMock;
 
     /**
-     * @var \Magento\Catalog\Model\ResourceModel\Category\Collection|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Catalog\Model\ResourceModel\Category\Collection|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $categoryCollectionMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Feed\Config|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Feed\Config|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $configMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Feed\ConfigFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Feed\ConfigFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $configFactoryMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config\Collection|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config\Collection|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $configCollectionMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config\CollectionFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config\CollectionFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $configCollectionFactoryMock;
 
     /**
-     * @var \Magento\Framework\Model\Context|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\Model\Context|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $contextMock;
-
 
     /****
      * D
      ****/
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Stdlib\DateTime\Timezone
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Framework\Stdlib\DateTime\Timezone
      */
     protected $dateTimeMock;
 
     /**
-     * @var \Magento\Framework\Stdlib\DateTime|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\Stdlib\DateTime|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $dateMock;
-
 
     /****
      * F
@@ -144,22 +138,22 @@ class ModelFramework extends CompatibilityTestCase
     protected $feed;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Feed|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Feed|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $feedMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\FeedTypes\Config|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\FeedTypes\Config|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $feedTypesConfigMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Filesystem\Driver\File
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Framework\Filesystem\Driver\File
      */
     protected $fileDriverMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Filter|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Product\Filter|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $filterMock;
 
@@ -167,7 +161,7 @@ class ModelFramework extends CompatibilityTestCase
      * H
      ****/
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Helper|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Product\Helper|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $helperMock;
 
@@ -175,73 +169,69 @@ class ModelFramework extends CompatibilityTestCase
      * I
      ****/
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Model\ResourceModel\Iterator
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Framework\Model\ResourceModel\Iterator
      */
     protected $iteratorMock;
-
 
     /****
      * L
      ****/
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\MageOS\ShoppingFeed\Model\Logger
+     * @var \PHPUnit\Framework\MockObject\MockObject|\MageOS\ShoppingFeed\Model\Logger
      */
     protected $loggerMock;
 
     /**
-     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\Stdlib\DateTime\TimezoneInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $localeDateMock;
-
 
     /****
      * M
      ****/
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\MapperFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\MapperFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $mapperFactoryMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $mapperMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\MageOS\ShoppingFeed\Model\FeedFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|\MageOS\ShoppingFeed\Model\FeedFactory
      */
     protected $memoryMock;
-
 
     /****
      * O
      ****/
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Processors\OptionFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Product\Processors\OptionFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $optionFactoryMock;
 
     /**
-     * @var \Magento\Catalog\Model\Product\Option|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Catalog\Model\Product\Option|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $optionMock;
-
 
     /****
      * P
      ****/
     /**
-     * @var \Magento\Directory\Model\PriceCurrency|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Directory\Model\PriceCurrency|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $priceCurrencyMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Catalog\Model\Product
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Catalog\Model\Product
      */
     protected $productMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Catalog\Model\ProductFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Catalog\Model\ProductFactory
      */
     protected $productFactoryMock;
 
@@ -251,32 +241,32 @@ class ModelFramework extends CompatibilityTestCase
     protected $productRepositoryMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory
      */
     protected $productCollectionProviderMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Catalog\Model\ResourceModel\Product\Collection
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Catalog\Model\ResourceModel\Product\Collection
      */
     protected $productCollectionMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process\Collection
+     * @var \PHPUnit\Framework\MockObject\MockObject|\MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process\Collection
      */
     protected $processCollectionMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process\CollectionFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|\MageOS\ShoppingFeed\Model\ResourceModel\Generator\Process\CollectionFactory
      */
     protected $processCollectionFactoryMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\MageOS\ShoppingFeed\Model\Generator\Process
+     * @var \PHPUnit\Framework\MockObject\MockObject|\MageOS\ShoppingFeed\Model\Generator\Process
      */
     protected $processMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\MageOS\ShoppingFeed\Model\Generator\ProcessFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|\MageOS\ShoppingFeed\Model\Generator\ProcessFactory
      */
     protected $processFactoryMock;
 
@@ -285,17 +275,17 @@ class ModelFramework extends CompatibilityTestCase
      ****/
 
     /**
-     * @var \Magento\Framework\Registry|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\Registry|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $registryMock;
 
     /**
-     * @var \Magento\Framework\Model\ResourceModel\Db\AbstractDb|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\Model\ResourceModel\Db\AbstractDb|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $resource;
 
     /**
-     * @var \Magento\Framework\Data\Collection\AbstractDb|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\Data\Collection\AbstractDb|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $resourceCollection;
 
@@ -303,7 +293,7 @@ class ModelFramework extends CompatibilityTestCase
      * Q
      ****/
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\MageOS\ShoppingFeed\Model\Generator\Queue
+     * @var \PHPUnit\Framework\MockObject\MockObject|\MageOS\ShoppingFeed\Model\Generator\Queue
      */
     protected $queueMock;
 
@@ -311,70 +301,68 @@ class ModelFramework extends CompatibilityTestCase
      * S
      ****/
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $scopeConfigMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Feed\Schedule|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Feed\Schedule|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $scheduleMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Feed\ScheduleFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Feed\ScheduleFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $scheduleFactoryMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Schedule\Collection|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Schedule\Collection|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $scheduleCollectionMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Schedule\CollectionFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Schedule\CollectionFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $scheduleCollectionFactoryMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Generator\Cache\ShippingProvider|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Generator\Cache\ShippingProvider|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $shippingProviderMock;
 
     /**
-     * @var \Magento\CatalogInventory\Model\Stock\Status|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\CatalogInventory\Model\Stock\Status|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $statusMock;
 
     /**
-     * @var \Magento\CatalogInventory\Model\StockState|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\CatalogInventory\Model\StockState|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $stockStateMock;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\CatalogInventory\Helper\Stock
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\CatalogInventory\Helper\Stock
      */
     protected $stockMock;
 
     /**
-     * @var \Magento\Store\Model\Store|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Store\Model\Store|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $storeMock;
-
 
     /****
      * T
      ****/
     /**
-     * @var \Magento\Tax\Helper\Data|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Tax\Helper\Data|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $taxHelperMock;
-
 
     /****
      * U
      ****/
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\MageOS\ShoppingFeed\Model\ResourceModel\Feed\Upload\CollectionFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject|\MageOS\ShoppingFeed\Model\ResourceModel\Feed\Upload\CollectionFactory
      */
     protected $uploadCollectionFactoryMock;
 
@@ -382,7 +370,7 @@ class ModelFramework extends CompatibilityTestCase
      * W
      ****/
     /**
-     * @var \Magento\Weee\Helper\Data|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Weee\Helper\Data|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $weeHelperMock;
 
@@ -448,7 +436,6 @@ class ModelFramework extends CompatibilityTestCase
         $this->expectReturn($this->catalogRuleCollectionMock, 'getFirstItem', $this->catalogRuleMock);
         $this->expectSelf($this->catalogRuleCollectionMock, ['addFieldToFilter', 'addFieldToSelect']);
 
-
         $this->categoryFactoryMock = $this->getModelMock(
             'Magento\Catalog\Model\CategoryFactory',
             ['create','load', 'setStoreId', 'getName']
@@ -497,8 +484,8 @@ class ModelFramework extends CompatibilityTestCase
 
         $this->feedMock = $this->getModelMock(
             'MageOS\ShoppingFeed\Model\Feed',
-            ['getId', 'getConfig', 'getFile', 'getColumnsMap', 'getData', 'hasData', 'setData', 'saveMessages', 'saveStatus',
-                'getStore', 'getUploadCollection', 'getType', 'getStoreId', 'getSchedules']
+            ['getId', 'getConfig', 'getFile', 'getColumnsMap', 'getData', 'hasData', 'setData', 'saveMessages',
+                'saveStatus', 'getStore', 'getUploadCollection', 'getType', 'getStoreId', 'getSchedules']
         );
 
         $this->feedTypesConfigMock = $this->getModelMock(
@@ -579,14 +566,18 @@ class ModelFramework extends CompatibilityTestCase
                 'getCategoryIds', 'getProductUrl', 'getStore', 'getCategoryCollection', 'getSku',
                 'getResource', 'getPrice', 'getSpecialPrice', 'getFinalPrice', 'getSpecialFromDate',
                 'getSpecialToDate', 'getQty', 'getTypeInstance', 'getUsedProductCollection',
-                'addAttributeToSelect', 'setFlag', 'getConfigurableAttributes', 'getOptionsIds', 'getSelectionsCollection',
-                'getPriceModel', 'setData', 'setSpecialPrice', 'setFinalPrice', 'getTotalPrices',
-                'getAssociatedProductCollection', 'getLinkInstance', 'setLinkModel', 'setIsStrongMode',
+                'addAttributeToSelect', 'setFlag', 'getConfigurableAttributes', 'getOptionsIds',
+                'getSelectionsCollection', 'getPriceModel', 'setData', 'setSpecialPrice', 'setFinalPrice',
+                'getTotalPrices', 'getAssociatedProductCollection', 'getLinkInstance', 'setLinkModel',
+                'setIsStrongMode',
                 'setProduct', 'addFilterByRequiredOptions', 'setPositionOrder',
                 'addStoreFilter', 'getOptions', 'hasSpecialPrice', 'calculatePrice', 'setStoreId', 'getStoreId',
                 'getPriceInfo', 'getTierPrice', 'load']
         );
-        $this->expectSelf($this->productMock, ['setData', 'setSpecialPrice', 'setFinalPrice', 'getPriceModel', 'setStoreId', 'load']);
+        $this->expectSelf(
+            $this->productMock,
+            ['setData', 'setSpecialPrice', 'setFinalPrice', 'getPriceModel', 'setStoreId', 'load']
+        );
 
         $this->productFactoryMock = $this->getModelMock(
             'Magento\Catalog\Model\ProductFactory',
@@ -618,7 +609,8 @@ class ModelFramework extends CompatibilityTestCase
             'setFeedId', 'setItemId', 'setStatus', 'save']
         );
         $this->expectSelf(
-            $this->processMock, [
+            $this->processMock,
+            [
             'load', 'setParentItemId',
             'setFeedId', 'setItemId', 'setStatus', 'save'
             ]
@@ -730,7 +722,7 @@ class ModelFramework extends CompatibilityTestCase
         $this->expectReturn($this->statusMock, 'getQty', 1);
 
         /**
- * @var \DateTime $dateTimeMock
+ * @var \DateTime&\PHPUnit\Framework\MockObject\MockObject $datetimeMock
 */
         $datetimeMock = $this->getMockBuilder('\DateTime')
             ->disableOriginalConstructor()
@@ -748,12 +740,11 @@ class ModelFramework extends CompatibilityTestCase
             ->will($this->returnValue($datetimeMock));
     }
 
-
-
     /**
-     * @param  string $className
-     * @param  array  $methods
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @template T of object
+     * @param  class-string<T> $className
+     * @param  list<string>    $methods
+     * @return T&\PHPUnit\Framework\MockObject\MockObject
      */
     public function getModelMock($className, array $methods = [])
     {
@@ -763,11 +754,11 @@ class ModelFramework extends CompatibilityTestCase
     /**
      * Advanced return expection method, passing Stub object
      *
-     * @param \PHPUnit_Framework_MockObject_MockObject $mock
+     * @param \PHPUnit\Framework\MockObject\MockObject $mock
      * @param string                                   $method
-     * @param \PHPUnit_Framework_MockObject_Stub       $return
+     * @param \PHPUnit\Framework\MockObject\Stub\Stub  $return
      */
-    public function expectAdvencedReturn(&$mock, $method, $return)
+    public function expectAdvencedReturn($mock, $method, $return)
     {
         $mock->expects($this->any())
             ->method($method)
@@ -775,11 +766,11 @@ class ModelFramework extends CompatibilityTestCase
     }
 
     /**
-     * @param \PHPUnit_Framework_MockObject_MockObject $mock
+     * @param \PHPUnit\Framework\MockObject\MockObject $mock
      * @param string                                   $method
      * @param mixed                                    $return
      */
-    public function expectReturn(&$mock, $method, $return)
+    public function expectReturn($mock, $method, $return)
     {
         $mock->expects($this->any())
             ->method($method)
@@ -787,10 +778,10 @@ class ModelFramework extends CompatibilityTestCase
     }
 
     /**
-     * @param \PHPUnit_Framework_MockObject_MockObject $mock
-     * @param string                                   $method
+     * @param \PHPUnit\Framework\MockObject\MockObject $mock
+     * @param string|string[]                          $methods
      */
-    public function expectSelf(&$mock, $methods)
+    public function expectSelf($mock, $methods)
     {
         if (!is_array($methods)) {
             $methods = [$methods];

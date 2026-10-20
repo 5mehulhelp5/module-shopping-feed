@@ -23,11 +23,12 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\TierPrice as Simple
 /**
  * Class Price
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
  */
 class TierPrice extends SimpleTierPrice
 {
     /**
+     * Lowest tier price among the associated products.
+     *
      * @param  array $params
      * @return string
      */
@@ -44,7 +45,12 @@ class TierPrice extends SimpleTierPrice
         }
 
         if (count($allPrices) == 0) {
-            $this->getAdapter()->setSkipProduct(sprintf('Product skipped - no associated products found, price = 0. Product SKU #%s', $this->getAdapter()->getProduct()->getSku()));
+            $this->getAdapter()->setSkipProduct(
+                sprintf(
+                    'Product skipped - no associated products found, price = 0. Product SKU #%s',
+                    $this->getAdapter()->getProduct()->getSku()
+                )
+            );
             return '';
         }
 

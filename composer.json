@@ -42,6 +42,17 @@
         "psr/log": "^1.0 || ^2.0 || ^3.0",
         "symfony/console": "^5.4 || ^6.0 || ^7.0"
     },
+    "require-dev": {
+        "bitexpert/phpstan-magento": "0.44.0",
+        "magento/magento-coding-standard": "41",
+        "magento/magento2-base": "^2.4.6-p15",
+        "magento/module-fedex": ">=100.0 <200.0",
+        "magento/module-inventory-api": "^1.2",
+        "magento/module-inventory-sales-api": "^1.2",
+        "magento/module-offline-shipping": ">=100.0 <200.0",
+        "phpstan/phpstan": "2.3.1",
+        "phpunit/phpunit": "^10.5 || ^12.5"
+    },
     "suggest": {
         "magento/module-inventory-api": "Enables Multi-Source Inventory support and Google Local Inventory feeds.",
         "magento/module-inventory-sales-api": "Enables stock resolution and reservation-aware quantities.",

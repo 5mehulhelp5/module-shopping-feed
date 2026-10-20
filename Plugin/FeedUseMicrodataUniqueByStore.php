@@ -18,7 +18,6 @@
 
 namespace MageOS\ShoppingFeed\Plugin;
 
-
 class FeedUseMicrodataUniqueByStore
 {
     /**
@@ -34,6 +33,7 @@ class FeedUseMicrodataUniqueByStore
     /**
      * FeedUseForMicrodataUniqueByStore constructor.
      * @param \MageOS\ShoppingFeed\Model\ResourceModel\Feed\CollectionFactory $feedCollectionFactory
+     * @param \Magento\Framework\Message\ManagerInterface                     $messageManager
      */
     public function __construct(
         \MageOS\ShoppingFeed\Model\ResourceModel\Feed\CollectionFactory $feedCollectionFactory,
@@ -44,7 +44,10 @@ class FeedUseMicrodataUniqueByStore
     }
 
     /**
-     * @param \MageOS\ShoppingFeed\Model\Feed
+     * Keep one microdata feed per store by turning the flag off when another feed already has it
+     *
+     * @param \MageOS\ShoppingFeed\Model\Feed $subject
+     * @return void
      */
     public function beforeSave(\MageOS\ShoppingFeed\Model\Feed $subject)
     {
@@ -60,9 +63,14 @@ class FeedUseMicrodataUniqueByStore
 
         if ($count) {
             $subject->setData('use_microdata', 0);
-            $this->messageManager->addWarningMessage(__('Only one feed per store may be used for microdata. ("Use for microdata" = Yes)'));
-            $this->messageManager->addSuccessMessage(__('To set microdata for "{store}" to use this feed\'s mapping,
-            edit the other feeds and set "Use for microdata" = No', [ 'store' => $subject->getStore()->getName()]));
+            $this->messageManager->addWarningMessage(
+                __('Only one feed per store may be used for microdata. ("Use for microdata" = Yes)')
+            );
+            $this->messageManager->addSuccessMessage(__(
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
+                'To set microdata for "%1" to use this feed\'s mapping, edit the other feeds and set "Use for microdata" = No',
+                $subject->getStore()->getName()
+            ));
         }
     }
 }

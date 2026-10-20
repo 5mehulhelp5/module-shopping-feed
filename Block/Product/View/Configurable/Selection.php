@@ -8,14 +8,29 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
 
 class Selection extends \Magento\ConfigurableProduct\Block\Product\View\Type\Configurable
 {
-    const GOOGLE_ADS_DESTINATION_ID_PATH = 'mageos_shopping_feed/google/google_ads_destination_id';
-    const DYNAMIC_REMARKETING_ENABLED_PATH = 'mageos_shopping_feed/google/dynamic_remarketing_enabled';
+    public const GOOGLE_ADS_DESTINATION_ID_PATH = 'mageos_shopping_feed/google/google_ads_destination_id';
+    public const DYNAMIC_REMARKETING_ENABLED_PATH = 'mageos_shopping_feed/google/dynamic_remarketing_enabled';
 
     /**
      * @var \Magento\ConfigurableProduct\Model\Product\Type\Configurable
      */
     protected $configurableProductType;
 
+    /**
+     * @param \Magento\Catalog\Block\Product\Context $context
+     * @param \Magento\Framework\Stdlib\ArrayUtils $arrayUtils
+     * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
+     * @param \Magento\ConfigurableProduct\Helper\Data $helper
+     * @param \Magento\Catalog\Helper\Product $catalogProduct
+     * @param CurrentCustomer $currentCustomer
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param ConfigurableAttributeData $configurableAttributeData
+     * @param \Magento\ConfigurableProduct\Model\Product\Type\Configurable $configurableProductType
+     * @param array $data
+     * @param \Magento\Framework\Locale\Format|null $localeFormat
+     * @param \Magento\Customer\Model\Session|null $customerSession
+     * @param \Magento\ConfigurableProduct\Model\Product\Type\Configurable\Variations\Prices|null $variationPrices
+     */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
         \Magento\Framework\Stdlib\ArrayUtils $arrayUtils,
@@ -49,6 +64,8 @@ class Selection extends \Magento\ConfigurableProduct\Block\Product\View\Type\Con
     }
 
     /**
+     * Get the configured Google Ads destination ID for the current store
+     *
      * @return string
      */
     public function getGoogleAdsDestinationId()
@@ -60,6 +77,8 @@ class Selection extends \Magento\ConfigurableProduct\Block\Product\View\Type\Con
     }
 
     /**
+     * Check whether dynamic remarketing is enabled for the current store
+     *
      * @return bool
      */
     public function isDynamicRemarketingEnabled()
@@ -70,7 +89,11 @@ class Selection extends \Magento\ConfigurableProduct\Block\Product\View\Type\Con
         );
     }
 
-    /** Encode the core configuration for an inline script without changing its object/array shape. */
+    /**
+     * Encode the core configuration for an inline script without changing its object/array shape.
+     *
+     * @return string
+     */
     public function getScriptJsonConfig(): string
     {
         return json_encode(
@@ -80,6 +103,8 @@ class Selection extends \Magento\ConfigurableProduct\Block\Product\View\Type\Con
     }
 
     /**
+     * Get the used products of the current configurable product, cached in block data
+     *
      * @return array
      */
     public function getProducts()

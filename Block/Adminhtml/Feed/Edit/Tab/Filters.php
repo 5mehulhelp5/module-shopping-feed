@@ -24,7 +24,8 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab;
 /**
  * Feed edit form Product Filters tab
  */
-class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements
+    \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
      * @var \Magento\Config\Model\Config\Source\Yesno
@@ -49,15 +50,15 @@ class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
     /**
      * Filters constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context                          $context
-     * @param \Magento\Framework\Registry                                      $registry
-     * @param \Magento\Framework\Data\FormFactory                              $formFactory
-     * @param \MageOS\ShoppingFeed\Model\Feed\Converter                    $feedConverter
-     * @param \Magento\Config\Model\Config\Source\Yesno                        $sourceYesno
-     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Types         $sourceProductTypes
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
+     * @param \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter
+     * @param \Magento\Config\Model\Config\Source\Yesno $sourceYesno
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Types $sourceProductTypes
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\AttributeSets $attributeSetOptions
-     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns       $sourceProductColumns
-     * @param array                                                            $data
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns $sourceProductColumns
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -81,7 +82,7 @@ class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
      * Prepare form
      *
      * @return                                        $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function _prepareForm()
     {
@@ -128,6 +129,7 @@ class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'required' => true,
                 'values' => $this->sourceProductTypes->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Products submitted to the feed have to be visible in Catalog, meaning visibility "Catalog", "Search", "Catalog, Search", but also "Not Visible Individually if they are part of a visible configurable".'),
             ]
         );
@@ -154,12 +156,13 @@ class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'title' => __('Replace empty values'),
                 'required' => false,
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Columns must exist in <a href="#feed_tabs_columns">Columns Map</a>. <strong>Save you config before looking for a new columns here.</strong> Grid has similar functions as <a href="#feed_tabs_columns">Columns Map</a>'),
             ]
         );
 
         $renderer = $this->getLayout()->createBlock(
-            'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Columns\ColumnsMap'
+            \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Columns\ColumnsMap::class
         )->setMapExistingColumns(true)
             ->setControlName('replaceEmptyControl');
         $field->setRenderer($renderer);
@@ -173,12 +176,13 @@ class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'title' => __('Find And Replace'),
                 'required' => false,
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Save your colums before adding rules here. The find & replace will apply at column output. The more rules you apply the slower your feed will be, not recommended for large catalogs.'),
             ]
         );
 
         $renderer = $this->getLayout()->createBlock(
-            'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Filters\FindReplace'
+            \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Filters\FindReplace::class
         );
         $field->setRenderer($renderer);
 
@@ -191,12 +195,13 @@ class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'title' => __('Limit column output'),
                 'required' => false,
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Set character limit by column output string, Over the limit chars get truncated. If you set more than one limit per column, only first rule will have effect.'),
             ]
         );
 
         $renderer = $this->getLayout()->createBlock(
-            'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Filters\OutputLimit'
+            \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Filters\OutputLimit::class
         );
         $field->setRenderer($renderer);
 
@@ -210,12 +215,14 @@ class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'required' => true,
                 'values' => $this->sourceProductColumns->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('Avoid having empty values for your items in the feed. Columns must exist in <a href="#feed_tabs_columns">Columns Map</a>, save your config before looking for columns here.')
             ]
         );
 
         $this->_eventManager->dispatch(
-            sprintf('mageos_shopping_feed_feed_edit_tab_filters_prepare_form_%s', $model->getType()), [
+            sprintf('mageos_shopping_feed_feed_edit_tab_filters_prepare_form_%s', $model->getType()),
+            [
             'form' => $form,
             'feed' => $model,
             'is_element_disabled' => $isElementDisabled,
@@ -255,6 +262,7 @@ class Filters extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
      */
     public function getTabNotice()
     {
+        // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
         return __('Filters here apply in the order as listed on the screen. Replace empty values rules use the order column for processing, and they can be set to create nested fill rules.');
     }
 }

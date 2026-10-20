@@ -19,11 +19,8 @@
 namespace MageOS\ShoppingFeed\Model\Feed\Source\Product;
 
 use Magento\Framework\Data\OptionSourceInterface;
-use Magento\Catalog\Model\Product\Type as ProductType;
+use Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory as AttributeCollectionFactory;
 
-/**
- * Class ImageAttributes
- */
 class ImageAttributes implements OptionSourceInterface
 {
     /**
@@ -46,7 +43,8 @@ class ImageAttributes implements OptionSourceInterface
     /**
      * Types constructor.
      *
-     * @param ProductType $productType
+     * @param \Magento\Catalog\Model\ResourceModel\ProductFactory $productFactory
+     * @param AttributeCollectionFactory                          $productAttributeCollectionFactory
      */
     public function __construct(
         \Magento\Catalog\Model\ResourceModel\ProductFactory $productFactory,

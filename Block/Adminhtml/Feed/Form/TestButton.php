@@ -6,10 +6,21 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Form;
 
 class TestButton implements \Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface
 {
-    public function __construct(private \Magento\Backend\Model\UrlInterface $url, private \Magento\Framework\Registry $registry)
-    {
+    /**
+     * @param \Magento\Backend\Model\UrlInterface $url
+     * @param \Magento\Framework\Registry $registry
+     */
+    public function __construct(
+        private \Magento\Backend\Model\UrlInterface $url,
+        private \Magento\Framework\Registry $registry
+    ) {
     }
 
+    /**
+     * Get the Test Feed button that opens the test popup for a saved feed
+     *
+     * @return array<string, mixed>
+     */
     public function getButtonData(): array
     {
         $feed = $this->registry->registry('feed');

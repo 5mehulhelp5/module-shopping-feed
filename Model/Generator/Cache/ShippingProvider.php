@@ -20,11 +20,6 @@ namespace MageOS\ShoppingFeed\Model\Generator\Cache;
 
 use Magento\Framework\Model\AbstractModel;
 
-/**
- * Class ShippingProvider
- *
- * @package MageOS\ShoppingFeed\Model\Generator\Cache
- */
 class ShippingProvider
 {
     /**
@@ -57,6 +52,11 @@ class ShippingProvider
      */
     protected $cacheTemporaryData = [];
 
+    /**
+     * @param \MageOS\ShoppingFeed\Model\Generator\Cache $cache
+     * @param \MageOS\ShoppingFeed\Model\ResourceModel\Shipping\CollectionFactory $shippingCollectionFactory
+     * @param \MageOS\ShoppingFeed\Model\Product\ShippingFactory $shippingFactory
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Generator\Cache $cache,
         \MageOS\ShoppingFeed\Model\ResourceModel\Shipping\CollectionFactory $shippingCollectionFactory,
@@ -68,20 +68,32 @@ class ShippingProvider
         $this->cache = $cache;
     }
 
+    /**
+     * Shipping calculator (Model\Product\Shipping) for the adapter's class, created once per run.
+     *
+     * @param object $adapter product adapter
+     */
     public function getShipping($adapter)
     {
         $adapterClassName = get_class($adapter);
         $adapterCacheKey = ['shipping', 'adapter', $adapterClassName];
-        /**
- * @var \MageOS\ShoppingFeed\Model\Product\Shipping $shipping
-*/
-        if (($shipping = $this->cache->getCache($adapterCacheKey, false)) === false) {
+        /** @var \MageOS\ShoppingFeed\Model\Product\Shipping|false $shipping */
+        $shipping = $this->cache->getCache($adapterCacheKey, false);
+        if ($shipping === false) {
             $shipping = $this->shippingFactory->create(['adapter' => $adapter]);
             $this->cache->setCache($adapterCacheKey, $shipping);
         }
         return $shipping;
     }
 
+    /**
+     * Scope the shipping cache lookup to the adapter's feed and store and to the product.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface $adapter
+     * @param \Magento\Catalog\Model\Product $product
+     * @param int $cacheTtl cache lifetime in days; 0 disables saving
+     * @return $this
+     */
     public function prepareCache(
         \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface $adapter,
         \Magento\Catalog\Model\Product $product,
@@ -99,6 +111,13 @@ class ShippingProvider
         return $this;
     }
 
+    /**
+     * Remember the adapter and product the next cache read or write applies to.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface $adapter
+     * @param \Magento\Catalog\Model\Product $product
+     * @return $this
+     */
     public function setTemporaryCacheData(
         \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface $adapter,
         \Magento\Catalog\Model\Product $product
@@ -111,6 +130,11 @@ class ShippingProvider
         return $this;
     }
 
+    /**
+     * Cached shipping value newer than the cache lifetime, or false.
+     *
+     * @return mixed
+     */
     public function getCache()
     {
         /**
@@ -130,6 +154,12 @@ class ShippingProvider
         return false;
     }
 
+    /**
+     * Save the shipping value when the cache lifetime is positive.
+     *
+     * @param mixed $value
+     * @return $this
+     */
     public function setCache($value)
     {
         // We only save cache if its enabled & longer then 0
@@ -140,11 +170,8 @@ class ShippingProvider
             $cacheItem = $this->shippingCollection->setPageSize(1)
                 ->getFirstItem();
             if (!$cacheItem->getId()) {
-                /**
-                 * @var \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface $adapter
-                 * @var \Magento\Catalog\Model\Product $product
-                 */
-                extract($this->cacheTemporaryData);
+                $adapter = $this->cacheTemporaryData['adapter'];
+                $product = $this->cacheTemporaryData['product'];
                 $cacheItem->setProductId($product->getId())
                     ->setStoreId($adapter->getStore()->getStoreId())
                     ->setFeedId($adapter->getFeed()->getId())

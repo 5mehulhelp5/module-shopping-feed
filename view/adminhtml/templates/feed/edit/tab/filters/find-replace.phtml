@@ -8,29 +8,30 @@ $element = $block->getElement();
 <?php $htmlName    = $block->getElement()->getName() ?>
 <?php $readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled() ?>
 
-<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
-     data-apply-to="<?php echo $block->escapeHtml(
-         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+<div class="field" id="attribute-<?= $escaper->escapeHtml($htmlId) ?>-container"
+     data-attribute-code="<?= $escaper->escapeHtml($htmlId) ?>"
+     data-apply-to="<?= $escaper->escapeHtml(
+         $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode(
              $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
          )
      )?>">
     <div class="label-w-space">
-        <label class="label"><span><?php echo $block->escapeHtml($block->getElement()->getLabel()) ?></span></label>
+        <label class="label"><span><?= $escaper->escapeHtml($block->getElement()->getLabel()) ?></span></label>
     </div>
     <div class="control">
         <table class="admin__control-table find_replace_table data-grid" id="find_replace_table">
             <thead>
                 <tr>
-                    <th class="data-grid-th col-find required"><?php echo $block->escapeHtml(__('Find')) ?></th>
-                    <th class="data-grid-th col-replace"><?php echo $block->escapeHtml(__('Replace')) ?></th>
-                    <th class="data-grid-th col-column"><?php echo $block->escapeHtml(__('Map Columns')) ?></th>
-                    <th class="data-grid-th col-delete"><?php echo $block->escapeHtml(__('Action')) ?></th>
+                    <th class="data-grid-th col-find required"><?= $escaper->escapeHtml(__('Find')) ?></th>
+                    <th class="data-grid-th col-replace"><?= $escaper->escapeHtml(__('Replace')) ?></th>
+                    <th class="data-grid-th col-column"><?= $escaper->escapeHtml(__('Map Columns')) ?></th>
+                    <th class="data-grid-th col-delete"><?= $escaper->escapeHtml(__('Action')) ?></th>
                 </tr>
             </thead>
-            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container"></tbody>
+            <tbody id="<?= $escaper->escapeHtml($htmlId) ?>_container"></tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="col-actions-add"><?php echo $block->getAddButtonHtml() ?></td>
+                    <td colspan="4" class="col-actions-add"><?= /* @noEscape */ $block->getAddButtonHtml() ?></td>
                 </tr>
             </tfoot>
         </table>
@@ -45,20 +46,31 @@ require([
 //<![CDATA[
 var findReplaceRowTemplate = '<tr>'
     + '<td class="col-find">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> find required-entry" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][find]" value="<%- data.find %>" id="find_replace_row_<%- data.index %>_find" />'
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> find required-entry" type="text" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][find]" value="<%- data.find %>" id="find_replace_row_<%- data.index %>_find" />'
     + '</td>'
     + '<td class="col-replace">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> replace" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][replace]" value="<%- data.replace %>" id="find_replace_row_<%- data.index %>_replace" />'
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> replace" type="text" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][replace]" value="<%- data.replace %>" id="find_replace_row_<%- data.index %>_replace" />'
     + '</td>'
     + '<td class="col-column">'
-    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?> required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][column]" id="find_replace_row_<%- data.index %>_column">'
+    + '<select class="<?= $escaper->escapeHtml($htmlClass) ?> required-entry" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][column]" id="find_replace_row_<%- data.index %>_column">'
     <?php foreach ($block->getColumns() as $column): ?>
-    + '<option value="<?php echo $block->escapeQuote($block->escapeHtml($column['value'])) ?>"><?php echo $block->escapeHtml($column['label']) ?></option>'
+    + '<option value="<?=
+        $escaper->escapeQuote($escaper->escapeHtml($column['value']))
+    ?>"><?= $escaper->escapeHtml($column['label']) ?></option>'
     <?php endforeach ?>
     + '</select></td>'
-    + '<td class="col-delete"><input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][delete]" class="delete" value="" id="find_replace_row_<%- data.index %>_delete" />'
-    + '<button title="<?php echo $block->escapeHtml(__('Delete')) ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="find_replace_row_<%- data.index %>_delete_button" onclick="return findReplaceControl.deleteItem(event);">'
-    + '<span><?php echo $block->escapeHtml(__("Delete")) ?></span></button></td>'
+    + '<td class="col-delete"><input type="hidden" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][delete]" class="delete" value="" id="find_replace_row_<%- data.index %>_delete" />'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<button title="<?= $escaper->escapeHtml(__('Delete')) ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="find_replace_row_<%- data.index %>_delete_button" onclick="return findReplaceControl.deleteItem(event);">'
+    + '<span><?= $escaper->escapeHtml(__("Delete")) ?></span></button></td>'
     + '</tr>';
 
 var findReplaceControl = {
@@ -73,7 +85,7 @@ var findReplaceControl = {
         var data = {
             find: '',
             replace: '',
-            column: '<?php echo $block->escapeHtml($block->getDefaultColumn()) ?>',
+            column: '<?= $escaper->escapeHtml($block->getDefaultColumn()) ?>',
             readOnly: false,
             index: this.itemsCount++
         };
@@ -85,7 +97,7 @@ var findReplaceControl = {
             data.readOnly  = arguments[3];
         }
 
-        Element.insert($('<?php echo $block->escapeHtml($htmlId) ?>_container'), {
+        Element.insert($('<?= $escaper->escapeHtml($htmlId) ?>_container'), {
             bottom : this.template({
                 data: data
             })
@@ -102,10 +114,12 @@ var findReplaceControl = {
         }
 
         <?php if ($readonly): ?>
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
         <?php else: ?>
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+        $('<?=
+            $escaper->escapeHtml($htmlId)
+        ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
         <?php endif; ?>
     },
     disableElement: function(el) {
@@ -128,11 +142,11 @@ var findReplaceControl = {
         '<?= $escaper->escapeJs($item['find']) ?>',
         '<?= $escaper->escapeJs($item['replace']) ?>',
         '<?= $escaper->escapeJs($item['column']) ?>',
-        <?php echo (int) !empty($item['readonly'])?>
+        <?= (int) !empty($item['readonly'])?>
     );
 <?php endforeach; ?>
 <?php if ($readonly): ?>
-$('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button')
+$('<?= $escaper->escapeHtml($htmlId) ?>_container').up('table').select('button')
     .each(findReplaceControl.disableElement);
 <?php endif; ?>
 
@@ -143,7 +157,7 @@ window.findReplaceControl = findReplaceControl;
 </script>
         <?php if (strlen($block->getElement()->getNote())): ?>
         <div class="note">
-            <span><?php echo $block->escapeHtml($block->getElement()->getNote()); ?></span>
+            <span><?= $escaper->escapeHtml($block->getElement()->getNote()); ?></span>
         </div>
         <?php endif; ?>
     </div>

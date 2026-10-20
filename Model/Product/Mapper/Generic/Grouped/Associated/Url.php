@@ -25,11 +25,12 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
  *
  * Class Url
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Grouped\Associated
  */
 class Url extends MapperAbstract
 {
     /**
+     * Parent product URL with the configured query and the associated product ID.
+     *
      * @param  array $params
      * @return string
      */
@@ -45,6 +46,7 @@ class Url extends MapperAbstract
         }
 
         $url = $product->getProductUrl();
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- splits the store base URL; no URL parser is injected here
         $pieces = parse_url($product->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK));
 
         $uniqueParams = ['prod_id' => $this->getAdapter()->getProduct()->getId()];
@@ -54,6 +56,7 @@ class Url extends MapperAbstract
             $url = $pieces['scheme'] . '://' . $pieces['host']
                 . (isset($pieces['port']) ? ':' . $pieces['port'] : '') . $url;
         } else {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- splits the product URL; no URL parser is injected here
             $pieces = parse_url($url);
             $url = $pieces['scheme'] . '://' . $pieces['host']
                 . (isset($pieces['port']) ? ':' . $pieces['port'] : '') . $pieces['path'];

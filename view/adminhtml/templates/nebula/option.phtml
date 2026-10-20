@@ -4,4 +4,4 @@ $column = $block->getData('column');
 $item = $block->getData('item');
 $value = $item[$block->getData('key')] ?? '';
 ?>
-<?= $block->escapeHtml((string) ($column['filterOptions'][(string) $value] ?? $value)) ?>
+<?= $escaper->escapeHtml((string) ($column['filterOptions'][(string) $value] ?? $value)) ?>

@@ -24,7 +24,8 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab;
 /**
  * Feed edit form Grouped Products tab
  */
-class Grouped extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class Grouped extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements
+    \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
      * @var \MageOS\ShoppingFeed\Model\Feed\Source\Product\Grouped\PriceType
@@ -47,15 +48,15 @@ class Grouped extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
     protected $sourceProductColumns;
 
     /**
-     * @param \Magento\Backend\Block\Template\Context                              $context
-     * @param \Magento\Framework\Registry                                          $registry
-     * @param \Magento\Framework\Data\FormFactory                                  $formFactory
-     * @param \MageOS\ShoppingFeed\Model\Feed\Converter                        $feedConverter
-     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\AssociatedMode    $sourceAssociatedMode
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
+     * @param \MageOS\ShoppingFeed\Model\Feed\Converter $feedConverter
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\AssociatedMode $sourceAssociatedMode
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Grouped\PriceType $sourcePriceType
-     * @param \Magento\Config\Model\Config\Source\Yesno                            $sourceYesno
-     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns           $sourceProductColumns
-     * @param array                                                                $data
+     * @param \Magento\Config\Model\Config\Source\Yesno $sourceYesno
+     * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\Columns $sourceProductColumns
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -79,7 +80,7 @@ class Grouped extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
      * Prepare form
      *
      * @return                                        $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function _prepareForm()
     {
@@ -140,6 +141,7 @@ class Grouped extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'required' => true,
                 'values' => $this->sourceYesno->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('The new unique url will be formed from grouped product url and the ids of the associated product. I.e http://example.com/grouped.html?prod_id=123'),
             ]
         );
@@ -154,6 +156,7 @@ class Grouped extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
                 'required' => true,
                 'values' => $this->sourcePriceType->toOptionArray(),
                 'disabled' => $isElementDisabled,
+                // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
                 'note' => __('"Minimal price" is the lowest associated product price.<br />"Sum of associated products prices" is the default quantity of each associated product multiplied with the price of the associated product and than summed together. If no default quantity is defined, it will output minimal price.'),
             ]
         );
@@ -172,12 +175,13 @@ class Grouped extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
         );
 
         $renderer = $this->getLayout()->createBlock(
-            'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Complex\Inherit'
+            \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Complex\Inherit::class
         );
         $field->setRenderer($renderer);
 
         $this->_eventManager->dispatch(
-            sprintf('mageos_shopping_feed_feed_edit_tab_grouped_prepare_form_%s', $model->getType()), [
+            sprintf('mageos_shopping_feed_feed_edit_tab_grouped_prepare_form_%s', $model->getType()),
+            [
             'form' => $form,
             'feed' => $model,
             'is_element_disabled' => $isElementDisabled,
@@ -217,6 +221,7 @@ class Grouped extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
      */
     public function getTabNotice()
     {
+        // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
         return __('This section applies to all grouped and their associated products in your catalog. Grouped type should be enabled under <a href="#feed_tabs_filters">Filters</a> section.');
     }
 }

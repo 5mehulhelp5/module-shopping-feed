@@ -68,13 +68,17 @@ class Name extends Column
                 $name = $this->getData('name');
                 if (isset($item['id'])) {
                     $feed = $this->feedFactory->create()->setData($item);
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction -- no injected Escaper; adding one changes the constructor
                     $item[$name] = htmlspecialchars(
                         (string) $feed->getData('name'),
                         ENT_QUOTES | ENT_SUBSTITUTE,
                         'UTF-8'
                     );
                     if ($feed->getData('use_microdata') == '1') {
-                        $item[$name] .= "</br><p style='color: #185b00'>[microdata]</p>";
+                        $item[$name] .= "</br><p style='color: #185b00'>"
+                            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- no injected Escaper; adding one changes the constructor
+                            . htmlspecialchars((string) __('[microdata]'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                            . '</p>';
                     }
                 }
             }

@@ -172,7 +172,8 @@ class ProviderTest extends TestCase
         ];
         $feed->method('getConfig')->willReturnCallback(static fn($key) => $config[$key] ?? null);
         $rules = $this->createMock(\Magento\SalesRule\Model\ResourceModel\Rule\Quote\Collection::class);
-        $rules->expects($this->once())->method('addFieldToFilter')->with('rule_id', ['in' => [12, 34]])->willReturnSelf();
+        $rules->expects($this->once())->method('addFieldToFilter')
+            ->with('rule_id', ['in' => [12, 34]])->willReturnSelf();
         $rules->method('getIterator')->willReturn(new \ArrayIterator([]));
         $collection = $this->createMock(Collection::class);
         $collection->method('getPromotionRules')->with($feed)->willReturn($rules);

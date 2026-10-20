@@ -22,19 +22,32 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
 
 class Concatenate extends MapperAbstract
 {
+    /**
+     * Directive codes this mapper handles.
+     *
+     * @return string[]
+     */
     public function getDirectiveNames()
     {
         return ['directive_concatenate'];
     }
 
-
+    /**
+     * Expand the {{attribute}} placeholders of the column param with the product's mapped values.
+     *
+     * @param array $params
+     * @return mixed
+     */
     public function map(array $params = [])
     {
         $expr = $params['param'];
         preg_match_all('/\{\{(.*?)\}\}/is', $expr, $attributes);
 
-        if (!isset($attributes[1]) || empty($attributes[1])) {
-            $this->logger->warning('Invalid expression in Concatenate directive. Could not find product attributes', $params);
+        if (empty($attributes[1])) {
+            $this->logger->warning(
+                'Invalid expression in Concatenate directive. Could not find product attributes',
+                $params
+            );
             return $expr;
         }
 
@@ -61,6 +74,12 @@ class Concatenate extends MapperAbstract
         return $this->getAdapter()->getFilter()->cleanField($expr, $params);
     }
 
+    /**
+     * Column map entry for a placeholder: the matching feed column, else the attribute itself.
+     *
+     * @param string $attributeColumn Placeholder name
+     * @return array<string,mixed>
+     */
     protected function buildMapParameters($attributeColumn)
     {
         $column = $this->getColumn($attributeColumn);
@@ -83,11 +102,26 @@ class Concatenate extends MapperAbstract
         return $params;
     }
 
+    /**
+     * Column name a placeholder refers to.
+     *
+     * @param string $attributeColumn Placeholder name
+     * @return string
+     */
     protected function getColumn($attributeColumn)
     {
         return $attributeColumn;
     }
 
+    /**
+     * Add the mapped value of one placeholder to the collected values.
+     *
+     * @param int|string $key Placeholder index
+     * @param string $attributeColumn Placeholder name
+     * @param array<mixed> $values Values collected so far
+     * @param array<string,mixed> $params Column map entry for the placeholder
+     * @return array<mixed>
+     */
     protected function getAttributeValue($key, $attributeColumn, $values = [], $params = [])
     {
         $values[$key] = $this->getAdapter()->getMapValue($params);

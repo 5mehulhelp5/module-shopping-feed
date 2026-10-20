@@ -24,12 +24,9 @@ use Magento\Ui\Component\Listing\Columns\Column;
 use MageOS\ShoppingFeed\Model\FeedFactory;
 use MageOS\ShoppingFeed\Model\Feed\Source;
 
-/**
- * Class Status
- */
 class Status extends Column
 {
-    const MAP_STATUS_CLASS = [
+    public const MAP_STATUS_CLASS = [
         Source\Status::STATUS_COMPLETED     => 'grid-severity-notice',
         Source\Status::STATUS_DISABLED      => 'grid-severity-minor',
         Source\Status::STATUS_SCHEDULED     => 'grid-severity-minor',
@@ -55,11 +52,13 @@ class Status extends Column
     /**
      * Constructor
      *
-     * @param ContextInterface                                  $context
-     * @param UiComponentFactory                                $uiComponentFactory
+     * @param ContextInterface $context
+     * @param UiComponentFactory $uiComponentFactory
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Status $sourceStatus
-     * @param array                                             $components
-     * @param array                                             $data
+     * @param FeedFactory $feedFactory
+     * @param \Magento\Framework\Escaper $escaper
+     * @param array $components
+     * @param array $data
      */
     public function __construct(
         ContextInterface $context,
@@ -76,7 +75,9 @@ class Status extends Column
     }
 
     /**
-     * @param  $status
+     * Get the grid severity CSS class for a feed status.
+     *
+     * @param int|string $status
      * @return string
      */
     protected function getClassByStatus($status)
@@ -113,8 +114,11 @@ class Status extends Column
                     }
 
                     $statusClass = $this->getClassByStatus($item[$name]);
-                    $item[$name] = sprintf('<span class="%s"><span>%s</span></span>',
-                        $statusClass, $this->escaper->escapeHtml((string) $statusText));
+                    $item[$name] = sprintf(
+                        '<span class="%s"><span>%s</span></span>',
+                        $statusClass,
+                        $this->escaper->escapeHtml((string) $statusText)
+                    );
                 }
             }
         }

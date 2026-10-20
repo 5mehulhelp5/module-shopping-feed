@@ -26,11 +26,12 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
  *
  * Class VariantAttributes
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable
  */
 class VariantAttributes extends MapperAbstract
 {
     /**
+     * Variant attribute values of the product, else the distinct values of its associated products.
+     *
      * @param  array $map
      * @return mixed|string
      * @throws \MageOS\ShoppingFeed\Model\Exception
@@ -55,7 +56,8 @@ class VariantAttributes extends MapperAbstract
             $separator = $this->getAdapter()->getFeed()->getConfig('configurable_attribute_merge_value_separator');
             foreach ($associatedProductAdapters as $associatedProductAdapter) {
                 $val = $this->getAttributeValue($map, $associatedProductAdapter);
-                if (!in_array($val, $values)) { array_push($values, $val);
+                if (!in_array($val, $values)) {
+                    array_push($values, $val);
                 }
             }
             $cell = implode($separator, $values);
@@ -65,8 +67,10 @@ class VariantAttributes extends MapperAbstract
     }
 
     /**
-     * @param  array                                                          $map
-     * @param  \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter
+     * Values of the listed attributes the adapter's product has loaded, joined with the merge separator.
+     *
+     * @param array $map
+     * @param \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter
      * @return string
      * @throws \MageOS\ShoppingFeed\Model\Exception
      */

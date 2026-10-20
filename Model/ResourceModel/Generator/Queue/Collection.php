@@ -21,6 +21,9 @@ namespace MageOS\ShoppingFeed\Model\ResourceModel\Generator\Queue;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
+/**
+ * @method \MageOS\ShoppingFeed\Model\Generator\Queue getFirstItem()
+ */
 class Collection extends AbstractCollection
 {
     /**
@@ -33,6 +36,15 @@ class Collection extends AbstractCollection
      */
     protected $date;
 
+    /**
+     * @param \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param \Magento\Framework\Stdlib\DateTime\DateTime $date
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface|null $connection
+     * @param \Magento\Framework\Model\ResourceModel\Db\AbstractDb|null $resource
+     */
     public function __construct(
         \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory,
         \Psr\Log\LoggerInterface $logger,
@@ -54,13 +66,16 @@ class Collection extends AbstractCollection
      */
     protected function _construct()
     {
-        $this->_init('MageOS\ShoppingFeed\Model\Generator\Queue', 'MageOS\ShoppingFeed\Model\ResourceModel\Generator\Queue');
+        $this->_init(
+            \MageOS\ShoppingFeed\Model\Generator\Queue::class,
+            \MageOS\ShoppingFeed\Model\ResourceModel\Generator\Queue::class
+        );
     }
 
     /**
      * Use an independent query so repeated lookups retain neither items nor criteria.
      *
-     * @param  $feedId int
+     * @param  int $feedId
      * @return \MageOS\ShoppingFeed\Model\Generator\Queue
      */
     public function getQueue($feedId = 0)
@@ -70,9 +85,10 @@ class Collection extends AbstractCollection
         $lookup = clone $this;
         $lookup->clear();
 
+        // We proccess manual requests first!
         $lookup->setOrder('is_read', \Magento\Framework\Data\Collection::SORT_ORDER_ASC)
             ->setOrder('created_at', \Magento\Framework\Data\Collection::SORT_ORDER_ASC)
-            ->setOrder('schedule_id', \Magento\Framework\Data\Collection::SORT_ORDER_ASC); // We proccess manual requests first!
+            ->setOrder('schedule_id', \Magento\Framework\Data\Collection::SORT_ORDER_ASC);
 
         if ($feedId > 0) {
             $lookup->getSelect()
@@ -98,13 +114,20 @@ class Collection extends AbstractCollection
         return $this;
     }
 
+    /**
+     * Delete queue rows whose feed no longer exists.
+     *
+     * @return $this
+     */
     public function clean()
     {
-        $this->getConnection()->query(
-            'DELETE q FROM '. $this->getMainTable(). ' q
-            LEFT JOIN '. $this->getTable('mageos_shopping_feed_feed'). ' f ON f.id = q.feed_id
-            WHERE f.id IS NULL'
-        );
+        // Remove queue rows whose feed no longer exists.
+        $connection = $this->getConnection();
+        $orphans = $connection->select()
+            ->from(['q' => $this->getMainTable()], [])
+            ->joinLeft(['f' => $this->getTable('mageos_shopping_feed_feed')], 'f.id = q.feed_id', [])
+            ->where('f.id IS NULL');
+        $connection->query($connection->deleteFromSelect($orphans, 'q'));
 
         return $this;
     }

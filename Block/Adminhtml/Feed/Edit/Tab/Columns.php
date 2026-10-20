@@ -24,13 +24,14 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab;
 /**
  * Feed edit form Columns Map tab
  */
-class Columns extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class Columns extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements
+    \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
      * Prepare form
      *
      * @return                                        $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function _prepareForm()
     {
@@ -67,12 +68,13 @@ class Columns extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
         );
 
         $renderer = $this->getLayout()->createBlock(
-            'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Columns\ColumnsMap'
+            \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Columns\ColumnsMap::class
         )->setMapExistingColumns(false)->setControlName('columnsMapControl');
         $field->setRenderer($renderer);
 
         $this->_eventManager->dispatch(
-            sprintf('mageos_shopping_feed_feed_edit_tab_columns_prepare_form_%s', $model->getType()), [
+            sprintf('mageos_shopping_feed_feed_edit_tab_columns_prepare_form_%s', $model->getType()),
+            [
             'form' => $form,
             'feed' => $model,
             'is_element_disabled' => $isElementDisabled,
@@ -112,6 +114,7 @@ class Columns extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic
      */
     public function getTabNotice()
     {
+        // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
         return __('Feed output depends on your store configuration, types of products, available data stored in your products and others.');
     }
 }

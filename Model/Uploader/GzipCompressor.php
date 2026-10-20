@@ -14,6 +14,9 @@ class GzipCompressor
      */
     private $fileDriver;
 
+    /**
+     * @param File $fileDriver
+     */
     public function __construct(File $fileDriver)
     {
         $this->fileDriver = $fileDriver;
@@ -38,6 +41,7 @@ class GzipCompressor
 
         try {
             $sourceHandle = $this->fileDriver->fileOpen($sourcePath, 'rb');
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- streaming gzip; Magento has no gzip file driver
             $gzipHandle = gzopen($temporaryPath, 'wb9');
             if ($gzipHandle === false) {
                 throw new LocalizedException(__('Unable to create gzip file %1.', $temporaryPath));
@@ -45,6 +49,7 @@ class GzipCompressor
 
             while (!$this->fileDriver->endOfFile($sourceHandle)) {
                 $chunk = $this->fileDriver->fileRead($sourceHandle, self::CHUNK_SIZE);
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction -- streaming gzip; Magento has no gzip file driver
                 if ($chunk !== '' && gzwrite($gzipHandle, $chunk) === false) {
                     throw new LocalizedException(__('Unable to write gzip file %1.', $temporaryPath));
                 }
@@ -52,6 +57,7 @@ class GzipCompressor
 
             $this->fileDriver->fileClose($sourceHandle);
             $sourceHandle = null;
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction -- streaming gzip; Magento has no gzip file driver
             gzclose($gzipHandle);
             $gzipHandle = null;
             $this->fileDriver->rename($temporaryPath, $targetPath);
@@ -60,6 +66,7 @@ class GzipCompressor
                 $this->fileDriver->fileClose($sourceHandle);
             }
             if (is_resource($gzipHandle)) {
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction -- streaming gzip; Magento has no gzip file driver
                 gzclose($gzipHandle);
             }
             $this->remove($temporaryPath);

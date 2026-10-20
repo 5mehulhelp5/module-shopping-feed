@@ -26,10 +26,15 @@ use \MageOS\ShoppingFeed\Model\Taxonomy\ProviderAbstract;
  */
 class GoogleShopping extends ProviderAbstract implements ProviderInterface
 {
-    const URL_FORMAT = 'https://www.google.com/basepages/producttype/taxonomy.%s.txt';
+    public const URL_FORMAT = 'https://www.google.com/basepages/producttype/taxonomy.%s.txt';
 
-    const DEFAULT_LOCALE = 'en-US';
+    public const DEFAULT_LOCALE = 'en-US';
 
+    /**
+     * Loaded taxonomy list: the unserialized cache entry or the parsed download
+     *
+     * @var mixed
+     */
     protected $taxonomy;
 
     /**
@@ -38,7 +43,7 @@ class GoogleShopping extends ProviderAbstract implements ProviderInterface
     protected $curlFactory;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Serializer
+     * @var \Magento\Framework\Serialize\SerializerInterface
      */
     protected $serializer;
 
@@ -48,6 +53,7 @@ class GoogleShopping extends ProviderAbstract implements ProviderInterface
      * @param \MageOS\ShoppingFeed\Model\Feed $feed
      * @param \Magento\Framework\App\CacheInterface $cache
      * @param \Magento\Framework\HTTP\Adapter\CurlFactory $curlFactory
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
      */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Feed $feed,
@@ -67,7 +73,7 @@ class GoogleShopping extends ProviderAbstract implements ProviderInterface
      */
     public function getTaxonomyList()
     {
-        if (!is_null($this->taxonomy)) {
+        if ($this->taxonomy !== null) {
             return $this->taxonomy;
         }
 

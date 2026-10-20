@@ -38,9 +38,9 @@ class ProductImage extends Template
     /**
      * ProductImage constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context                            $context
+     * @param \Magento\Backend\Block\Template\Context $context
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Product\ImageAttributes $sourceImageAttributes
-     * @param array                                                              $data
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -51,6 +51,11 @@ class ProductImage extends Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get the image attribute options
+     *
+     * @return array<mixed>
+     */
     public function getImageAttributes()
     {
         return $this->sourceImageAttributes->toOptionArray();

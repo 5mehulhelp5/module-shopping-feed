@@ -28,18 +28,20 @@ namespace MageOS\ShoppingFeed\Model\Product\Formatter;
 abstract class FormatterAbstract implements FormatterInterface
 {
     /**
-     * Holds the mapper object
+     * Holds the adapter object; an empty array until setAdapter() is called
      *
-     * @var array
+     * @var \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract|array
      */
     protected $adapter = [];
 
     /**
-     * @var null
+     * @var string|null
      */
     protected $column = null;
 
     /**
+     * Adapter of the product being formatted.
+     *
      * @return \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract
      */
     public function getAdapter()
@@ -48,7 +50,9 @@ abstract class FormatterAbstract implements FormatterInterface
     }
 
     /**
-     * @param  \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract
+     * Bind the adapter of the product being formatted.
+     *
+     * @param  \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract $adapter
      * @return \MageOS\ShoppingFeed\Model\Product\Formatter\FormatterAbstract
      */
     public function setAdapter($adapter)
@@ -58,7 +62,9 @@ abstract class FormatterAbstract implements FormatterInterface
     }
 
     /**
-     * @param  $column
+     * Set the column being formatted, used to apply its find/replace rules.
+     *
+     * @param string|null $column
      * @return $this
      */
     public function setColumn($column)
@@ -68,7 +74,9 @@ abstract class FormatterAbstract implements FormatterInterface
     }
 
     /**
-     * @return |null
+     * Column being formatted.
+     *
+     * @return string|null
      */
     public function getColumn()
     {
@@ -76,7 +84,9 @@ abstract class FormatterAbstract implements FormatterInterface
     }
 
     /**
-     * @param  $var
+     * Return the value unchanged; formatters override this.
+     *
+     * @param mixed $var Cell value
      * @return mixed
      */
     public function run($var)

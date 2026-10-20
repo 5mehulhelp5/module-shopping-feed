@@ -27,6 +27,8 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit;
 class Tabs extends \Magento\Backend\Block\Widget\Tabs
 {
     /**
+     * Initialize the feed edit tabs
+     *
      * @return void
      */
     protected function _construct()

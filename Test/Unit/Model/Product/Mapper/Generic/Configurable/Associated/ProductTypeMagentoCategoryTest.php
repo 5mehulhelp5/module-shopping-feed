@@ -32,7 +32,6 @@ class ProductTypeMagentoCategoryTest extends ModelFramework
      */
     protected $model;
 
-
     /**
      * @inheritdoc
      */

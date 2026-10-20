@@ -78,8 +78,11 @@ class NebulaDefinitionTest extends TestCase
             ['label'=>'Clone','url'=>'mageos_shopping_feed/feed/massClone','acl'=>'MageOS_ShoppingFeed::save'],
             ['label'=>'Delete','url'=>'mageos_shopping_feed/feed/massDelete','acl'=>'MageOS_ShoppingFeed::delete'],
         ]]];
-        $result=(new NebulaDefinition($auth))->afterGetDefinition($subject,$definition);
-        self::assertCount(1,$result['settings']['massActions']);
-        self::assertSame('https://local.test/admin/mageos_shopping_feed/feed/massClone/key/example/',$result['settings']['massActions'][0]['url']);
+        $result=(new NebulaDefinition($auth))->afterGetDefinition($subject, $definition);
+        self::assertCount(1, $result['settings']['massActions']);
+        self::assertSame(
+            'https://local.test/admin/mageos_shopping_feed/feed/massClone/key/example/',
+            $result['settings']['massActions'][0]['url']
+        );
     }
 }

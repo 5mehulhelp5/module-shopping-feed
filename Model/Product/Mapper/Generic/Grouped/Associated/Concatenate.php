@@ -22,6 +22,9 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Concatenate as Simp
 
 class Concatenate extends SimpleConcatenate
 {
+    /**
+     * @inheritdoc
+     */
     protected function getAttributeValue($key, $attributeColumn, $values = [], $params = [])
     {
         $inheritColumnsFromParent = $this->getAdapter()

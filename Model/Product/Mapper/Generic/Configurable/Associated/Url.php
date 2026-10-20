@@ -25,14 +25,22 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperAbstract;
  *
  * Class Url
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Configurable\Associated;
  */
 class Url extends MapperAbstract
 {
-    const XML_PATH_MICRODATA_ENABLED = 'mageos_shopping_feed/google/microdata_enabled';
+    public const XML_PATH_MICRODATA_ENABLED = 'mageos_shopping_feed/google/microdata_enabled';
 
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
     protected $scopeConfig;
 
+    /**
+     * Associated product URL mapper constructor.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Logger $logger,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -43,6 +51,8 @@ class Url extends MapperAbstract
     }
 
     /**
+     * Parent product URL with the configured query, a microdata aid and the variant options as fragment.
+     *
      * @param  array $params
      * @return string
      */
@@ -53,6 +63,7 @@ class Url extends MapperAbstract
         $product = $adapter->getProduct();
 
         $url = $product->getProductUrl();
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- scheme check on the product URL; no URL parser is injected here
         if (parse_url($url, PHP_URL_SCHEME) === null) {
             $baseUrl = $product->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK);
             $url = rtrim($baseUrl, '/') . '/' . ltrim($url, '/');
@@ -63,9 +74,14 @@ class Url extends MapperAbstract
 
         $uniqueParams = $adapter->getUrlOptions($this->getAdapter()->getProduct());
         if (is_array($uniqueParams)) {
-            $microdataEnabled = $this->scopeConfig->getValue(self::XML_PATH_MICRODATA_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $adapter->getFeed()->getStoreId());
+            $microdataEnabled = $this->scopeConfig->getValue(
+                self::XML_PATH_MICRODATA_ENABLED,
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+                $adapter->getFeed()->getStoreId()
+            );
             if ($microdataEnabled) {
-                $query .= ($query === '' ? '' : '&') . 'aid=' . rawurlencode((string) $this->getAdapter()->getProduct()->getId());
+                $query .= ($query === '' ? '' : '&') . 'aid='
+                    . rawurlencode((string) $this->getAdapter()->getProduct()->getId());
             }
         }
 

@@ -18,11 +18,12 @@
 
 namespace MageOS\ShoppingFeed\Model\Product\Mapper\LocalInventory\Simple;
 
-
 class Availability extends \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\Availability
 {
     /**
-     * @param $adapter
+     * Stock status at the current inventory source, falling back to the website stock status.
+     *
+     * @param mixed $adapter Product adapter (AdapterAbstract)
      * @return mixed|string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -46,5 +47,4 @@ class Availability extends \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Sim
 
         return $cell;
     }
-
 }

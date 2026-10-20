@@ -26,17 +26,20 @@ use \MageOS\ShoppingFeed\Model\Exception as FeedException;
  *
  * Class ShippingWeight
  *
- * @package MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple
  */
 class ShippingWeight extends MapperAbstract
 {
     /**
+     * Product weight with unit.
+     *
      * @param array $params
      */
     public function map(array $params = [])
     {
         $params['attribute'] = 'weight';
-        $unit = isset($params['param']) ? $params['param'] : \MageOS\ShoppingFeed\Model\Feed\Source\Shipping\Weight::WEIGHT_UNIT_KILOGRAM;
+        $unit = isset($params['param'])
+            ? $params['param']
+            : \MageOS\ShoppingFeed\Model\Feed\Source\Shipping\Weight::WEIGHT_UNIT_KILOGRAM;
 
         // @var $product Mage_Catalog_Model_Product
         $product = $this->getAdapter()->getProduct();
@@ -45,7 +48,7 @@ class ShippingWeight extends MapperAbstract
         $weightAttribute = $this->getAdapter()->getMapAttribute($params);
         if ($weightAttribute === false) {
             throw new FeedException(
-                new \Magento\Framework\Phrase(sprintf('Couldn\'t find attribute \'%s\'.', $params['attribute']))
+                new \Magento\Framework\Phrase('Couldn\'t find attribute \'%1\'.', [$params['attribute']])
             );
         }
 

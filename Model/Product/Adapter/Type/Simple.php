@@ -26,7 +26,6 @@ use \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterInterface;
  *
  * Class Simple
  *
- * @package MageOS\ShoppingFeed\Model\Product\Adapter
  */
 class Simple extends AdapterAbstract implements AdapterInterface
 {
@@ -36,6 +35,7 @@ class Simple extends AdapterAbstract implements AdapterInterface
      * @param  \Magento\Catalog\Model\Product $product
      * @return array
      */
+    // phpcs:ignore Generic.Metrics.NestingLevel.TooHigh -- legacy feed logic; refactor deferred to keep output identical
     protected function getProductPrices(\Magento\Catalog\Model\Product $product)
     {
         if ($this->getParentAdapter()) {

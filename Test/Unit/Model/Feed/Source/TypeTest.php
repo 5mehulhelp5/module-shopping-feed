@@ -32,7 +32,7 @@ class TypeTest extends ModelFramework
     protected $type;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\FeedTypes\Config|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\FeedTypes\Config|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $feedTypesConfigMock;
 

@@ -21,7 +21,8 @@ namespace MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab;
 /**
  * Feed edit form Categories Map tab block
  */
-class Promotions extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements \Magento\Backend\Block\Widget\Tab\TabInterface
+class Promotions extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Generic implements
+    \Magento\Backend\Block\Widget\Tab\TabInterface
 {
     /**
      * @var string
@@ -70,7 +71,7 @@ class Promotions extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Gene
      * Prepare form
      *
      * @return $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
     protected function _prepareForm()
     {
@@ -90,7 +91,6 @@ class Promotions extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Gene
         $form->setHtmlIdPrefix('feed_');
 
         $fieldset = $form->addFieldset('google_promotions', ['legend' => __('Google Promotions')]);
-
 
         $fieldset->addField(
             'config_promotions_enabled',
@@ -119,15 +119,18 @@ class Promotions extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Gene
         );
 
         $renderer = $this->getLayout()->createBlock(
-            'MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Promotions\Widget'
+            \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Promotions\Widget::class
         );
         $field->setRenderer($renderer);
 
-        $this->_eventManager->dispatch(sprintf('mageos_shopping_feed_feed_edit_tab_promotions_prepare_form_%s', $model->getType()), [
-            'form' => $form,
-            'feed' => $model,
-            'is_element_disabled' => $isElementDisabled,
-        ]);
+        $this->_eventManager->dispatch(
+            sprintf('mageos_shopping_feed_feed_edit_tab_promotions_prepare_form_%s', $model->getType()),
+            [
+                'form' => $form,
+                'feed' => $model,
+                'is_element_disabled' => $isElementDisabled,
+            ]
+        );
 
         $form->setValues($this->prepareValues($model));
         $this->setForm($form);
@@ -162,6 +165,7 @@ class Promotions extends \MageOS\ShoppingFeed\Block\Adminhtml\Feed\Edit\Tab\Gene
      */
     public function getTabNotice()
     {
+        // phpcs:ignore Generic.Files.LineLength.TooLong -- translatable phrase
         return __('Defines google promotions feed. When enabled, the promotions ids generated with this feed would also be listed in products feed through <strong>Promotions IDs</strong> directive. Make sure you have a column promotion_id defined in <strong>Columns Map</strong> with this directive.');
     }
 }

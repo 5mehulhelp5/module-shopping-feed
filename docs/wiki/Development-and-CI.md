@@ -2,7 +2,7 @@
 
 The repository validates module identity, configuration integrity, PHP behavior, and supported Magento-family platforms. Run focused checks before requesting review.
 
-> Documentation baseline: release 1.2.3 (`v1.2.3`); earlier acceptance is identified by version. Last reviewed: 2026-10-13.
+> Documentation baseline: release 1.2.3 (`v1.2.3`) plus the unreleased module-standards changes listed under Unreleased in CHANGELOG.md; earlier acceptance is identified by version. Last reviewed: 2026-10-19.
 
 ## 1.2.3 hardening and compatibility
 
@@ -28,11 +28,27 @@ From the module repository root:
 
 ```bash
 composer validate --strict --no-check-publish
-find . -path './.git' -prune -o -type f \( -name '*.php' -o -name '*.phtml' \) -print0 | xargs -0 -n1 php -l
+find . -path './.git' -prune -o -path './vendor' -prune -o -type f \( -name '*.php' -o -name '*.phtml' \) -print0 | xargs -0 -n1 php -l
 php dev/tests/validate.php
 php dev/tests/validate-wiki.php
-node --test dev/tests/frontend/*.test.cjs
+node --test dev/tests/frontend/*.test.cjs dev/tests/ci/*.test.cjs
 ```
+
+The coding standard and static analysis run from the module's own development install. `composer update` installs the pinned tools from `require-dev` (PHPStan 2.3.1, bitexpert/phpstan-magento 0.44.0, magento/magento-coding-standard 41) together with the Magento packages they analyse; `vendor/` and `composer.lock` stay untracked. Use the newest PHP the module supports, as CI does:
+
+```bash
+composer update
+vendor/bin/phpcs
+vendor/bin/phpstan analyse --memory-limit=-1
+```
+
+PHPCS warnings fail the run. PHPStan runs at level 8 with `phpstan-baseline.neon`, the reviewed debt carried over from earlier releases. The baseline may only shrink: never regenerate it to absorb new findings. When a change fixes baselined debt, PHPStan reports the now-unmatched pattern; delete that entry by hand. Check a baseline against the base branch with:
+
+```bash
+php dev/tests/check-phpstan-baseline.php --git-ref=origin/main phpstan-baseline.neon
+```
+
+The baseline is the debt list: every entry names the message, identifier, count and file, and `php dev/tests/check-phpstan-baseline.php phpstan-baseline.neon phpstan-baseline.neon` prints its totals. To see that debt as PHPStan output, comment out the `phpstan-baseline.neon` include in `phpstan.neon.dist` for a local run and restore it afterwards. Lower `--level` values show which levels are already clean.
 
 Run the unit suite with the PHPUnit installation from an existing Magento or Mage-OS checkout:
 
@@ -57,18 +73,22 @@ Stop and remove the disposable container afterward. The tests check raw cipherte
 
 ## CI coverage
 
-The GitHub Actions workflow runs:
+The `.github/workflows/check-extension.yaml` workflow runs on pushes to `main` and `feat/**` and on every pull request, whatever its base branch. Releases up to 1.2.3 ran the same checks from the earlier `ci.yml` workflow, whose run history stays under that name. It runs:
 
 * Composer metadata validation
-* PHP syntax checks across supported PHP versions
+* PHP syntax checks across PHP 8.1 to 8.5
 * Consolidated module and wiki validation
-* Hyva and Luma storefront auto-selection checks
-* Magento Open Source compatibility checks
-* Mage-OS 3.5.0 compatibility checks in the 1.2.3 release
+* Hyva and Luma storefront auto-selection checks and the CI-policy script tests
+* The pinned Magento coding standard, PHPStan level 8 with the reviewed baseline, and a check that the baseline did not grow compared with the base commit
+* Graycore's reusable check-extension workflow for the supported Magento Open Source releases and for Mage-OS 3.5.0 and 3.6.0: installation, unit and integration tests, DI compilation, the coding standard and PHPStan (enabled in `.github/check-extension.json`)
+* A locked `composer audit` of each normal platform project with the module installed, and of the module's own runtime and development dependencies on PHP 8.1 and 8.5. Any advisory, ignored advisory or filter-list match fails the job; abandoned packages are reported
+* The dedicated Magento 2.4.7-p10 profile described below
+
+Dependabot proposes weekly Composer and GitHub Actions updates.
 
 The exact supported PHP constraint remains authoritative in `composer.json`. The current [Status and compatibility](Status-and-Compatibility) page translates that metadata for users.
 
-The earlier Google/custom-feed acceptance profile on Mage-OS 3.5.0 passed 413 unit tests with 955 assertions, 10 application integration tests with 26 assertions, 14 frontend tests, and 33 generation checks. See [Release 1.1.0](Release-1-1-0) for the separate earlier Nebula, no-Nebula, and storefront runs. PHPUnit 9, 10, and 12 use the same data-provider coverage; compatibility fixtures explicitly configure optional arguments and date modification. The follow-up issue review passed 433 unit tests, 19 JavaScript tests, and 42 feed/stock checks and is recorded in the [issue acceptance report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.1.0/docs/reviews/2026-09-28-github-issues.md). Those historical local results do not establish CI or recipient acceptance for the current release. Use the [CI run history](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml) for the status of the exact release commit.
+The earlier Google/custom-feed acceptance profile on Mage-OS 3.5.0 passed 413 unit tests with 955 assertions, 10 application integration tests with 26 assertions, 14 frontend tests, and 33 generation checks. See [Release 1.1.0](Release-1-1-0) for the separate earlier Nebula, no-Nebula, and storefront runs. PHPUnit 9, 10, and 12 use the same data-provider coverage; compatibility fixtures explicitly configure optional arguments and date modification. The follow-up issue review passed 433 unit tests, 19 JavaScript tests, and 42 feed/stock checks and is recorded in the [issue acceptance report](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.1.0/docs/reviews/2026-09-28-github-issues.md). Those historical local results do not establish CI or recipient acceptance for the current release. Use the [Check Extension run history](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/check-extension.yaml) for the status of an exact commit; releases up to 1.2.3 are in the [earlier CI history](https://github.com/mage-os-lab/module-shopping-feed/actions/workflows/ci.yml).
 
 ## Documentation changes
 

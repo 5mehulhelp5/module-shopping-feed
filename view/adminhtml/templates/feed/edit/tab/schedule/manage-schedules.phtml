@@ -8,9 +8,10 @@ $element = $block->getElement();
 <?php $htmlName    = $block->getElement()->getName() ?>
 <?php $readonly    = $block->getElement()->getReadonly() || $block->getElement()->getDisabled() ?>
 
-<div class="field" id="attribute-<?php echo $block->escapeHtml($htmlId) ?>-container" data-attribute-code="<?php echo $block->escapeHtml($htmlId) ?>"
-     data-apply-to="<?php echo $block->escapeHtml(
-         $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode(
+<div class="field" id="attribute-<?= $escaper->escapeHtml($htmlId) ?>-container"
+     data-attribute-code="<?= $escaper->escapeHtml($htmlId) ?>"
+     data-apply-to="<?= $escaper->escapeHtml(
+         $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode(
              $element->hasEntityAttribute() ? $element->getEntityAttribute()->getApplyTo() : []
          )
      )?>">
@@ -18,16 +19,16 @@ $element = $block->getElement();
         <table class="admin__control-table manage_schedules_table data-grid" id="manage_schedules_table">
             <thead>
                 <tr>
-                    <th class="data-grid-th col-start-at required"><?php echo $block->escapeHtml(__('Start At')) ?></th>
-                    <th class="data-grid-th col-batch-mode required"><?php echo $block->escapeHtml(__('Batch Mode')) ?></th>
-                    <th class="data-grid-th col-batch-limit"><?php echo $block->escapeHtml(__('Batch Limit')) ?></th>
-                    <th class="data-grid-th col-delete"><?php echo $block->escapeHtml(__('Action')) ?></th>
+                    <th class="data-grid-th col-start-at required"><?= $escaper->escapeHtml(__('Start At')) ?></th>
+                    <th class="data-grid-th col-batch-mode required"><?= $escaper->escapeHtml(__('Batch Mode')) ?></th>
+                    <th class="data-grid-th col-batch-limit"><?= $escaper->escapeHtml(__('Batch Limit')) ?></th>
+                    <th class="data-grid-th col-delete"><?= $escaper->escapeHtml(__('Action')) ?></th>
                 </tr>
             </thead>
-            <tbody id="<?php echo $block->escapeHtml($htmlId) ?>_container"></tbody>
+            <tbody id="<?= $escaper->escapeHtml($htmlId) ?>_container"></tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="col-actions-add"><?php echo $block->getAddButtonHtml() ?></td>
+                    <td colspan="4" class="col-actions-add"><?= /* @noEscape */ $block->getAddButtonHtml() ?></td>
                 </tr>
             </tfoot>
         </table>
@@ -42,27 +43,41 @@ require([
 //<![CDATA[
 var manageSchedulesRowTemplate = '<tr>'
     + '<td class="col-start-at">'
-    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?> start-at required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][start_at]" id="manage_schedules_row_<%- data.index %>_start_at">'
+    + '<select class="<?= $escaper->escapeHtml($htmlClass) ?> start-at required-entry" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][start_at]" id="manage_schedules_row_<%- data.index %>_start_at">'
     <?php foreach ($block->getStartAtOptions() as $option): ?>
-    + '<option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeJsQuote($block->escapeHtml($option['label'])) ?></option>'
+    + '<option value="<?= $escaper->escapeHtml($option['value']) ?>"><?=
+        $escaper->escapeJsQuote($escaper->escapeHtml($option['label']))
+    ?></option>'
     <?php endforeach ?>
     + '</select>'
     + '</td>'
     + '<td class="col-batch-mode">'
-    + '<select class="<?php echo $block->escapeHtml($htmlClass) ?> required-entry" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][batch_mode]" id="manage_schedules_row_<%- data.index %>_batch_mode">'
+    + '<select class="<?= $escaper->escapeHtml($htmlClass) ?> required-entry" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][batch_mode]" id="manage_schedules_row_<%- data.index %>_batch_mode">'
     <?php foreach ($block->getYesnoOptions() as $option): ?>
-    + '<option value="<?php echo $block->escapeHtml($option['value']) ?>"><?php echo $block->escapeJsQuote($block->escapeHtml($option['label'])) ?></option>'
+    + '<option value="<?= $escaper->escapeHtml($option['value']) ?>"><?=
+        $escaper->escapeJsQuote($escaper->escapeHtml($option['label']))
+    ?></option>'
     <?php endforeach ?>
     + '</select>'
     + '</td>'
     + '<td class="col-batch-limit">'
-    + '<input class="<?php echo $block->escapeHtml($htmlClass) ?> batch-limit" type="text" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][batch_limit]" value="<%- data.batch_limit %>" id="manage_schedules_row_<%- data.index %>_batch_limit" />'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<input class="<?= $escaper->escapeHtml($htmlClass) ?> batch-limit" type="text" name="<?= $escaper->escapeHtml($htmlName) ?>[<%- data.index %>][batch_limit]" value="<%- data.batch_limit %>" id="manage_schedules_row_<%- data.index %>_batch_limit" />'
     + '</td>'
     + '<td class="col-delete">'
-    + '<input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][id]" value="" id="manage_schedules_row_<%- data.index %>_id" />'
-    + '<input type="hidden" name="<?php echo $block->escapeHtml($htmlName) ?>[<%- data.index %>][delete]" class="delete" value="" id="manage_schedules_row_<%- data.index %>_delete" />'
-    + '<button title="<?php echo $block->escapeHtml(__('Delete')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="manage_schedules_row_<%- data.index %>_delete_button" onclick="return manageSchedulesControl.deleteItem(event);">'
-    + '<span><?php echo $block->escapeHtml(__("Delete")) ?></span></button></td>'
+    + '<input type="hidden" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][id]" value="" id="manage_schedules_row_<%- data.index %>_id" />'
+    + '<input type="hidden" name="<?=
+        $escaper->escapeHtml($htmlName)
+    ?>[<%- data.index %>][delete]" class="delete" value="" id="manage_schedules_row_<%- data.index %>_delete" />'
+<?php // phpcs:ignore Generic.Files.LineLength.TooLong -- legacy JS row template markup ?>
+    + '<button title="<?= $escaper->escapeHtml(__('Delete')); ?>" type="button" class="action- scalable delete icon-btn delete-product-option" id="manage_schedules_row_<%- data.index %>_delete_button" onclick="return manageSchedulesControl.deleteItem(event);">'
+    + '<span><?= $escaper->escapeHtml(__("Delete")) ?></span></button></td>'
     + '</tr>';
 
 var manageSchedulesControl = {
@@ -76,8 +91,8 @@ var manageSchedulesControl = {
         <?php endif; ?>
         var data = {
             id: '',
-            start_at: '<?php echo $block->escapeHtml($block->getDefaultStartAt()) ?>',
-            batch_mode: '<?php echo $block->escapeHtml($block->getDefaultBatchMode()) ?>',
+            start_at: '<?= $escaper->escapeHtml($block->getDefaultStartAt()) ?>',
+            batch_mode: '<?= $escaper->escapeHtml($block->getDefaultBatchMode()) ?>',
             batch_limit: '',
             readOnly: false,
             index: this.itemsCount++
@@ -91,7 +106,7 @@ var manageSchedulesControl = {
             data.readOnly    = arguments[4];
         }
 
-        Element.insert($('<?php echo $block->escapeHtml($htmlId) ?>_container'), {
+        Element.insert($('<?= $escaper->escapeHtml($htmlId) ?>_container'), {
             bottom : this.template({
                 data: data
             })
@@ -110,10 +125,12 @@ var manageSchedulesControl = {
         }
 
         <?php if ($readonly): ?>
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').select('input').each(this.disableElement);
+        $('<?= $escaper->escapeHtml($htmlId) ?>_container').up('table').select('button').each(this.disableElement);
         <?php else: ?>
-        $('<?php echo $block->escapeHtml($htmlId) ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
+        $('<?=
+            $escaper->escapeHtml($htmlId)
+        ?>_container').select('input').each(function(el){ Event.observe(el, 'change', el.setHasChanges.bind(el)); });
         <?php endif; ?>
 
         var el = $('manage_schedules_row_' + data.index + '_batch_mode');
@@ -151,15 +168,15 @@ var manageSchedulesControl = {
 };
 <?php foreach ($block->getValues() as $item): ?>
     manageSchedulesControl.addItem(
-        '<?php echo (int) $item['id'] ?>',
-        '<?php echo $block->escapeHtml($item['start_at']) ?>',
-        '<?php echo $block->escapeHtml($item['batch_mode']) ?>',
-        '<?php echo (int) $item['batch_limit'] ?>',
-        <?php echo (int) !empty($item['readonly']) ?>
+        '<?= (int) $item['id'] ?>',
+        '<?= $escaper->escapeHtml($item['start_at']) ?>',
+        '<?= $escaper->escapeHtml($item['batch_mode']) ?>',
+        '<?= (int) $item['batch_limit'] ?>',
+        <?= (int) !empty($item['readonly']) ?>
     );
 <?php endforeach; ?>
 <?php if ($readonly): ?>
-$('<?php echo $block->escapeHtml($htmlId) ?>_container').up('table').select('button')
+$('<?= $escaper->escapeHtml($htmlId) ?>_container').up('table').select('button')
     .each(manageSchedulesControl.disableElement);
 <?php endif; ?>
 
@@ -170,7 +187,7 @@ window.manageSchedulesControl = manageSchedulesControl;
 </script>
         <?php if ($block->getElement()->getNote() && strlen($block->getElement()->getNote())): ?>
         <div class="note">
-            <span><?php echo $block->escapeHtml($block->getElement()->getNote()) ?></span>
+            <span><?= $escaper->escapeHtml($block->getElement()->getNote()) ?></span>
         </div>
         <?php endif; ?>
     </div>

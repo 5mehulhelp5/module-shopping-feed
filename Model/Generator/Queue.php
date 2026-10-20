@@ -7,15 +7,6 @@ use MageOS\ShoppingFeed\Model\Feed;
 use MageOS\ShoppingFeed\Model\FeedFactory;
 use MageOS\ShoppingFeed\Model\Generator;
 
-/**
- * Class Queue
- *
- * @package MageOS\ShoppingFeed\Model\Generator
- *
- * @method $this   setFeedId(int $feedId)
- * @method int     getFeedId()
- * @method $this   setIsRead(boolean $isRead)
- */
 class Queue extends AbstractModel
 {
     /**
@@ -28,13 +19,25 @@ class Queue extends AbstractModel
      */
     protected $generatorFactory;
 
+    // phpcs:ignore Magento2.Commenting.ClassPropertyPHPDocFormatting -- typing it as FeedFactory surfaces unbaselined Feed::load() service-contract debt
     protected $feedFactory;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Serializer
+     * @var \Magento\Framework\Serialize\SerializerInterface
      */
     protected $serializer;
 
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \MageOS\ShoppingFeed\Model\Generator\BatchFactory $batchFactory
+     * @param \MageOS\ShoppingFeed\Model\FeedFactory $feedFactory
+     * @param \MageOS\ShoppingFeed\Model\Generator\Factory $generatorFactory
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -62,10 +65,12 @@ class Queue extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('MageOS\ShoppingFeed\Model\ResourceModel\Generator\Queue');
+        $this->_init(\MageOS\ShoppingFeed\Model\ResourceModel\Generator\Queue::class);
     }
 
     /**
+     * Load this item's feed and create a generator bound to this queue item.
+     *
      * @return \MageOS\ShoppingFeed\Model\Generator
      */
     public function getGenerator()
@@ -74,6 +79,11 @@ class Queue extends AbstractModel
         return $this->generatorFactory->create($feed, $this);
     }
 
+    /**
+     * Mark a saved queue item as being read; a stale read item restarts from offset 0.
+     *
+     * @return $this
+     */
     public function setRunning()
     {
         if ($this->getId()) {
@@ -89,8 +99,10 @@ class Queue extends AbstractModel
     }
 
     /**
-     * @param  \MageOS\ShoppingFeed\Model\Feed|int $feed
-     * @param  \MageOS\ShoppingFeed\Model\
+     * Save a new unread queue item for the feed, linked to the schedule when it has an id.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Feed|int $feed
+     * @param \MageOS\ShoppingFeed\Model\Feed\Schedule|null $schedule
      * @return $this
      */
     public function add($feed, $schedule = null)
@@ -107,7 +119,7 @@ class Queue extends AbstractModel
             'feed_id'       => $feed,
             'is_read'       => 0
         ];
-        if (!is_null($schedule) && !is_null($schedule->getId())) {
+        if ($schedule !== null && $schedule->getId() !== null) {
             $data['schedule_id'] = $schedule->getId();
         }
 
@@ -117,6 +129,11 @@ class Queue extends AbstractModel
         return $this;
     }
 
+    /**
+     * Unserialize the stored message and restore the batch state from it.
+     *
+     * @return $this
+     */
     protected function _afterLoad()
     {
         $message = $this->getMessage();
@@ -132,6 +149,11 @@ class Queue extends AbstractModel
         return parent::_afterLoad();
     }
 
+    /**
+     * Serialize the batch state into the message before saving.
+     *
+     * @return $this
+     */
     public function beforeSave()
     {
         $message = $this->getMessage();
@@ -149,6 +171,8 @@ class Queue extends AbstractModel
     }
 
     /**
+     * Batch state of this queue item.
+     *
      * @return Batch
      */
     public function getBatch()
@@ -157,7 +181,9 @@ class Queue extends AbstractModel
     }
 
     /**
-     * @param  Batch $batch
+     * Replace the batch state of this queue item.
+     *
+     * @param Batch $batch
      * @return $this
      */
     public function setBatch(Batch $batch)

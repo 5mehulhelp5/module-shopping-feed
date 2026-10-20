@@ -22,11 +22,16 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\MapperStock;
 
 class Availability extends MapperStock
 {
-    const OUT_OF_STOCK = 'out_of_stock';
-    const IN_STOCK     = 'in_stock';
-    const BACKORDER    = 'backorder';
-    const PREORDER     = 'preorder';
+    public const OUT_OF_STOCK = 'out_of_stock';
+    public const IN_STOCK     = 'in_stock';
+    public const BACKORDER    = 'backorder';
+    public const PREORDER     = 'preorder';
 
+    /**
+     * Stock statuses a custom stock attribute value may map to
+     *
+     * @var string[]
+     */
     public static $allowedStockStatuses = [self::OUT_OF_STOCK, self::IN_STOCK, self::BACKORDER, self::PREORDER];
 
     /**
@@ -35,7 +40,7 @@ class Availability extends MapperStock
     protected $status;
 
     /**
-     * @var MageOS\ShoppingFeed\Model\Inventory\Api
+     * @var \MageOS\ShoppingFeed\Model\Inventory\Api
      */
     protected $sourceInventoryApi;
 
@@ -44,7 +49,14 @@ class Availability extends MapperStock
      */
     protected $stockRegistryProvider;
 
-
+    /**
+     * Availability mapper constructor.
+     *
+     * @param \MageOS\ShoppingFeed\Model\Logger $logger
+     * @param \Magento\CatalogInventory\Model\Stock\Status $status
+     * @param \MageOS\ShoppingFeed\Model\Inventory\Api $sourceInventoryApi
+     * @param \Magento\CatalogInventory\Model\StockRegistryProvider $stockRegistryProvider
+     */
     public function __construct(
         \MageOS\ShoppingFeed\Model\Logger $logger,
         \Magento\CatalogInventory\Model\Stock\Status $status,
@@ -57,6 +69,9 @@ class Availability extends MapperStock
         parent::__construct($logger);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $cell = $this->getStockStatus($this->getAdapter());
@@ -64,7 +79,9 @@ class Availability extends MapperStock
     }
 
     /**
-     * @param  $adapter
+     * Stock status of the adapter's product from MSI, the stock index, or the custom stock attribute.
+     *
+     * @param mixed $adapter Product adapter (AdapterAbstract)
      * @return mixed|string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -119,6 +136,12 @@ class Availability extends MapperStock
         return $cell;
     }
 
+    /**
+     * Whether the stock item's stock is managed; true when there is no saved stock item.
+     *
+     * @param \Magento\CatalogInventory\Api\Data\StockItemInterface|null $stockItem
+     * @return bool
+     */
     public function isStockManaged($stockItem)
     {
         if ($stockItem && $stockItem->getItemId()) {
@@ -127,6 +150,9 @@ class Availability extends MapperStock
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function filter($cell)
     {
         if (!$this->getAdapter()->getFeed()->getConfig('filters_add_out_of_stock')) {

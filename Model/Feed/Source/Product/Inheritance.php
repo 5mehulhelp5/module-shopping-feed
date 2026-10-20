@@ -25,10 +25,10 @@ use Magento\Framework\Data\OptionSourceInterface;
  */
 class Inheritance implements OptionSourceInterface
 {
-    const ASSOCIATED_ONLY = 0;
-    const ASSOCIATED_FIRST = 1;
-    const PARENT_ONLY = 2;
-    const PARENT_FIRST = 3;
+    public const ASSOCIATED_ONLY = 0;
+    public const ASSOCIATED_FIRST = 1;
+    public const PARENT_ONLY = 2;
+    public const PARENT_FIRST = 3;
 
     /**
      * Retrieve option array

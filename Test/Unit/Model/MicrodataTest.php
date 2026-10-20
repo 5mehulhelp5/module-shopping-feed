@@ -31,15 +31,15 @@ use MageOS\ShoppingFeed\Test\Unit\CompatibilityTestCase;
 #[\PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations]
 class MicrodataTest extends CompatibilityTestCase
 {
-    const MAPPED_PROD_SKU = 'SKU-729';
-    const MAPPED_PROD_NAME = 'test Product';
-    const MAPPED_PROD_PRICE = '29.95';
-    const MAPPED_PROD_SALE_PRICE = '19.95';
-    const MAPPED_PROD_AVAILABILITY = Availability::IN_STOCK;
-    const CONDITION_ATTR_CODE = 'condition';
-    const CONDITION_SCHEMA = 'https://schema.org/NewCondition';
-    const AVAILABILITY_SCHEMA = 'https://schema.org/InStock';
-    const STORE_CURRENCY = 'USD';
+    public const MAPPED_PROD_SKU = 'SKU-729';
+    public const MAPPED_PROD_NAME = 'test Product';
+    public const MAPPED_PROD_PRICE = '29.95';
+    public const MAPPED_PROD_SALE_PRICE = '19.95';
+    public const MAPPED_PROD_AVAILABILITY = Availability::IN_STOCK;
+    public const CONDITION_ATTR_CODE = 'condition';
+    public const CONDITION_SCHEMA = 'https://schema.org/NewCondition';
+    public const AVAILABILITY_SCHEMA = 'https://schema.org/InStock';
+    public const STORE_CURRENCY = 'USD';
 
     /**
      * @var \MageOS\ShoppingFeed\Model\Microdata
@@ -52,50 +52,55 @@ class MicrodataTest extends CompatibilityTestCase
     protected $objectManagerHelper;
 
     /**
-     * @var \Magento\Framework\Model\Context|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\Model\Context|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $contextMock;
 
     /**
-     * @var \Magento\Framework\Registry|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\Registry|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $registryMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\FeedFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\FeedFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $feedFactoryMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Feed|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Feed|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $feedMock;
 
     /**
-     * @var \Magento\Catalog\Model\Product|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Catalog\Model\Product|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $productMock;
 
     /**
-     * @var \Magento\Store\Model\Store|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Store\Model\Store|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $storeMock;
 
     /**
-     * @var \Magento\Framework\App\Request\Http|\PHPUnit_Framework_MockObject_MockObject
+     * @var \Magento\Framework\App\Request\Http|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $requestMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Product\Adapter\Type\Configurable|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $adapterMock;
 
     /**
-     * @var \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterFactory|\PHPUnit_Framework_MockObject_MockObject
+     * @var \MageOS\ShoppingFeed\Model\Product\Adapter\AdapterFactory|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $adapterFactoryMock;
 
+    /**
+     * Whether the mocked feed collection reports a selected microdata feed
+     *
+     * @var bool
+     */
     private bool $hasSelectedFeed = true;
 
     /**
@@ -113,9 +118,6 @@ class MicrodataTest extends CompatibilityTestCase
 
         /** Store Mock */
         $this->setupStoreMock();
-
-        /** Request Mock */
-        //$this->setupRequestMock();
 
         /** Request Mock */
         $this->setupAdapterMock();
@@ -303,8 +305,14 @@ class MicrodataTest extends CompatibilityTestCase
             [['attribute' => 'sku', 'column' => 'sku', 'param' => ''], self::MAPPED_PROD_SKU],
             [['attribute' => 'name', 'column' => 'title', 'param' => ''], self::MAPPED_PROD_NAME],
             [['attribute' => 'directive_price', 'column' => 'price', 'param' => false], self::MAPPED_PROD_PRICE],
-            [['attribute' => 'directive_sale_price', 'column' => 'sale_price', 'param' => false], self::MAPPED_PROD_SALE_PRICE],
-            [['attribute' => 'directive_availability', 'column' => 'availability', 'param' => ''], self::MAPPED_PROD_AVAILABILITY]
+            [
+                ['attribute' => 'directive_sale_price', 'column' => 'sale_price', 'param' => false],
+                self::MAPPED_PROD_SALE_PRICE,
+            ],
+            [
+                ['attribute' => 'directive_availability', 'column' => 'availability', 'param' => ''],
+                self::MAPPED_PROD_AVAILABILITY,
+            ]
         ];
 
         $this->adapterMock->expects($this->any())
@@ -319,7 +327,10 @@ class MicrodataTest extends CompatibilityTestCase
             [['attribute' => 'name', 'column' => 'title', 'param' => ''], self::MAPPED_PROD_NAME],
             [['attribute' => 'directive_price', 'column' => 'price', 'param' => false], self::MAPPED_PROD_PRICE],
             [['attribute' => 'directive_sale_price', 'column' => 'sale_price', 'param' => false], ''],
-            [['attribute' => 'directive_availability', 'column' => 'availability', 'param' => ''], self::MAPPED_PROD_AVAILABILITY]
+            [
+                ['attribute' => 'directive_availability', 'column' => 'availability', 'param' => ''],
+                self::MAPPED_PROD_AVAILABILITY,
+            ]
         ];
 
         $this->adapterMock->expects($this->any())

@@ -26,11 +26,9 @@ use MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config\CollectionFactory as Con
 use MageOS\ShoppingFeed\Model\ResourceModel\Feed\ConfigFactory;
 
 /**
- * Class Feed
+ * Feed model
  *
- * @package MageOS\ShoppingFeed\Model
- *
- * @method int getStoreId()
+ * @method \MageOS\ShoppingFeed\Model\ResourceModel\Feed getResource()
  */
 class Feed extends AbstractModel
 {
@@ -90,7 +88,7 @@ class Feed extends AbstractModel
     /**
      * Columns map cache
      *
-     * @var array
+     * @var array|null
      */
     protected $columnsMap;
 
@@ -100,7 +98,7 @@ class Feed extends AbstractModel
     protected $priceCurrency;
 
     /**
-     * Store object
+     * Store the feed is generated for
      *
      * @var null|\Magento\Store\Model\Store
      */
@@ -139,26 +137,27 @@ class Feed extends AbstractModel
     /**
      * Feed constructor.
      *
-     * @param \Magento\Framework\Model\Context                             $context
-     * @param \Magento\Framework\Registry                                  $registry
-     * @param \Magento\Framework\Pricing\PriceCurrencyInterface            $priceCurrency
-     * @param \Magento\Store\Model\Store                                   $storeObject
-     * @param ScheduleFactory                                              $scheduleCollectionFactory
-     * @param UploadCollectionFactory                                      $uploadCollectionFactory
-     * @param ConfigCollectionFactory                                      $configCollectionFactory
-     * @param Feed\ConfigFactory                                           $configFactory
-     * @param Feed\ScheduleFactory                                         $scheduleFactory
-     * @param Feed\UploadFactory                                           $uploadFactory
-     * @param FeedTypes\Config                                             $feedTypesConfig
-     * @param Generator\Cache\ShippingProvider                             $shippingProvider
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface           $scopeConfig
-     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface         $localeDate
-     * @param \Magento\Framework\Serialize\SerializerInterface           $serializer
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Store\Model\Store $storeObject
+     * @param ScheduleFactory $scheduleCollectionFactory
+     * @param UploadCollectionFactory $uploadCollectionFactory
+     * @param ConfigCollectionFactory $configCollectionFactory
+     * @param Feed\ConfigFactory $configFactory
+     * @param Feed\ScheduleFactory $scheduleFactory
+     * @param Feed\UploadFactory $uploadFactory
+     * @param FeedTypes\Config $feedTypesConfig
+     * @param Generator\Cache\ShippingProvider $shippingProvider
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param Feed\OutputPath $outputPath
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
-     * @param \Magento\Store\Model\StoreManagerInterface                   $storeManager
-     * @param string                                                       $feedType
-     * @param array                                                        $data
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param string $feedType
+     * @param array $data
      */
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -213,7 +212,7 @@ class Feed extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('MageOS\ShoppingFeed\Model\ResourceModel\Feed');
+        $this->_init(\MageOS\ShoppingFeed\Model\ResourceModel\Feed::class);
     }
 
     /**
@@ -231,7 +230,7 @@ class Feed extends AbstractModel
      */
     public function getColumnsMap()
     {
-        if (!is_null($this->columnsMap) && is_array($this->columnsMap)) {
+        if (is_array($this->columnsMap)) {
             return $this->columnsMap;
         }
 
@@ -254,6 +253,12 @@ class Feed extends AbstractModel
         return $this->columnsMap;
     }
 
+    /**
+     * Rename legacy promotions_id and add missing Google variant columns when item_group_id is mapped.
+     *
+     * @param array $columns
+     * @return array
+     */
     private function upgradeGoogleColumns(array $columns): array
     {
         $columnNames = [];
@@ -280,12 +285,24 @@ class Feed extends AbstractModel
         return $columns;
     }
 
+    /**
+     * Replace the cached columns map.
+     *
+     * @param array<mixed> $columnsMap
+     * @return $this
+     */
     public function setColumnsMap($columnsMap = [])
     {
         $this->columnsMap = $columnsMap;
         return $this;
     }
 
+    /**
+     * Set the feed type and, for a feed without config, load that type's default config.
+     *
+     * @param string $type
+     * @return $this
+     */
     public function setType($type)
     {
         $this->setData('type', $type);
@@ -317,7 +334,7 @@ class Feed extends AbstractModel
     /**
      * Use resource to save the feed so that config is not saved.
      *
-     * @param  $value
+     * @param array<string,mixed> $value messages to merge into the stored messages
      * @return $this
      */
     public function saveMessages($value)
@@ -333,6 +350,7 @@ class Feed extends AbstractModel
             $this->setData('messages', $data);
 
             $this->beforeSave();
+            // phpcs:ignore Magento2.Methods.DeprecatedModelMethod -- saves without config; injecting the resource model needs a constructor change
             $this->getResource()->save($this);
         } finally {
             $this->setData('no_after_save', $skipConfigSave);
@@ -343,7 +361,7 @@ class Feed extends AbstractModel
     /**
      * Use resource to save the feed so that config is not saved.
      *
-     * @param  $value
+     * @param int $status one of Feed\Source\Status::STATUS_*
      * @return $this
      */
     public function saveStatus($status)
@@ -393,7 +411,7 @@ class Feed extends AbstractModel
         }
         if (count($config)) {
             /**
- * @var |MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config\Collection $configCollection
+ * @var \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config\Collection $configCollection
 */
             $configCollection = $this->getConfigCollection();
             foreach ($configCollection as $configObject) {
@@ -491,7 +509,10 @@ class Feed extends AbstractModel
                 }
 
                 if (!$scheduleObject->hasData('processed_at')) {
-                    $scheduleObject->setData('processed_at', $this->localeDate->date()->format(\Magento\Framework\DB\Adapter\Pdo\Mysql::DATETIME_FORMAT));
+                    $scheduleObject->setData(
+                        'processed_at',
+                        $this->localeDate->date()->format(\Magento\Framework\DB\Adapter\Pdo\Mysql::DATETIME_FORMAT)
+                    );
                 }
 
                 if (!$scheduleObject->getId()) {
@@ -520,7 +541,7 @@ class Feed extends AbstractModel
      * @param                                   array $a
      * @param                                   array $b
      * @return                                  int
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     protected function sortByIdCallback($a, $b)
     {
@@ -599,6 +620,7 @@ class Feed extends AbstractModel
 
     /**
      * Unserialize messages after load if needed
+     *
      * Loads all saved config into getConfig && adds default ones if any missing
      *
      * @return $this
@@ -635,7 +657,7 @@ class Feed extends AbstractModel
      * Its aware of already existing data and it will fill in only missing ones!
      * It also adds the feed output parameters (delimiter, default cell value, ...)
      *
-     * @param  $type
+     * @param string $type
      * @return $this
      */
     protected function setDefaultConfig($type)
@@ -658,7 +680,7 @@ class Feed extends AbstractModel
     /**
      * Unserialize messages if needed
      *
-     * @return $this
+     * @return array|false false when no messages are stored
      */
     public function getMessages()
     {
@@ -671,7 +693,9 @@ class Feed extends AbstractModel
     }
 
     /**
-     * @return |MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config\Collection
+     * Return config collection for a current feed.
+     *
+     * @return \MageOS\ShoppingFeed\Model\ResourceModel\Feed\Config\Collection
      */
     public function getConfigCollection()
     {
@@ -720,7 +744,9 @@ class Feed extends AbstractModel
     }
 
     /**
-     * @param  $type
+     * Whether the product type is selected in the feed's product type filter.
+     *
+     * @param string $type
      * @return bool
      */
     public function isProductTypeEnabled($type)
@@ -729,6 +755,8 @@ class Feed extends AbstractModel
     }
 
     /**
+     * Whether taxonomy autocomplete is enabled for the category map.
+     *
      * @return bool
      */
     public function isTaxonomyAutocompleteEnabled()
@@ -737,15 +765,17 @@ class Feed extends AbstractModel
     }
 
     /**
-     * @param null|string        $param
-     * @param null|boolean|mixed $default
+     * Config object, or one config value with a default for missing (or loosely equal) values.
      *
+     * @param null|string $param
+     * @param null|boolean|mixed $default
+     * @param mixed $notFoundUseDefault value that, compared loosely, also returns $default
      * @return \Magento\Framework\DataObject|mixed|null
      */
     public function getConfig($param = null, $default = null, $notFoundUseDefault = null)
     {
         $data = $this->getData('config', $param);
-        if (is_null($data) || $data == $notFoundUseDefault) {
+        if ($data === null || $data == $notFoundUseDefault) {
             $data = $default;
         }
         return $data;
@@ -813,6 +843,8 @@ class Feed extends AbstractModel
     }
 
     /**
+     * Feed store id, or the default store view id when none is set.
+     *
      * @return int|mixed
      */
     public function getFeedStoreId()

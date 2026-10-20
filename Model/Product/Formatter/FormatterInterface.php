@@ -24,7 +24,9 @@ namespace MageOS\ShoppingFeed\Model\Product\Formatter;
 interface FormatterInterface
 {
     /**
-     * @param  $var
+     * Format a cell value.
+     *
+     * @param mixed $var Cell value
      * @return mixed
      */
     public function run($var);

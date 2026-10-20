@@ -50,7 +50,8 @@ class UploaderFactory
     /**
      * Create class instance with specified parameters
      *
-     * @param  \MageOS\ShoppingFeed\Model\Feed\Upload $feedUpload
+     * @param \MageOS\ShoppingFeed\Model\Feed\Upload $feedUpload
+     * @param bool $singleton
      * @return \MageOS\ShoppingFeed\Model\Uploader\UploaderInterface
      */
     public function create(
@@ -62,10 +63,11 @@ class UploaderFactory
         if (!isset($this->instances[$mode]) || !$singleton) {
             $className = sprintf('MageOS\ShoppingFeed\Model\Uploader\Mode\%s', ucfirst($mode));
             if (!class_exists($className)) {
-                $className = 'MageOS\ShoppingFeed\Model\Uploader\Mode\Ftp';
+                $className = \MageOS\ShoppingFeed\Model\Uploader\Mode\Ftp::class;
             }
             $object = $this->objectManager->create(
-                $className, [
+                $className,
+                [
                 'feedUpload'    => $feedUpload
                 ]
             );

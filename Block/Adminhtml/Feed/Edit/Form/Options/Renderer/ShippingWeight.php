@@ -25,6 +25,9 @@ use Magento\Framework\View\Element\Template;
  */
 class ShippingWeight extends Template
 {
+    /**
+     * @var \MageOS\ShoppingFeed\Model\Feed\Source\Shipping\Weight
+     */
     protected $sourceWeight;
 
     /**
@@ -35,9 +38,9 @@ class ShippingWeight extends Template
     /**
      * ShippingWeight constructor.
      *
-     * @param \Magento\Backend\Block\Template\Context                    $context
+     * @param \Magento\Backend\Block\Template\Context $context
      * @param \MageOS\ShoppingFeed\Model\Feed\Source\Shipping\Weight $sourceWeight
-     * @param array                                                      $data
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,

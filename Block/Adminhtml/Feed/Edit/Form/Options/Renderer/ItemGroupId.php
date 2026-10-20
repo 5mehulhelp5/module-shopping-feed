@@ -51,6 +51,11 @@ class ItemGroupId extends Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get the item group attribute options
+     *
+     * @return array<mixed>
+     */
     public function getAttributeOptions()
     {
         return $this->sourceAttributes->toOptionArray();

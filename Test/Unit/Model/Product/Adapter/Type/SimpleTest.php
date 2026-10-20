@@ -39,7 +39,6 @@ class SimpleTest extends ModelFramework
      */
     protected $modelArguments = [];
 
-
     /**
      * @inheritdoc
      */
@@ -108,7 +107,9 @@ class SimpleTest extends ModelFramework
     public function testMap($value, $expectedValue)
     {
         $this->expectReturn(
-            $this->feedMock, 'getColumnsMap', [
+            $this->feedMock,
+            'getColumnsMap',
+            [
                 'column' => [
                     'attribute' => 'some_attribute',
                     'column'    => 'column'
@@ -121,12 +122,12 @@ class SimpleTest extends ModelFramework
             $this->returnCallback(
                 function ($key, $default = '') {
                     switch ($key) {
-                    case 'filters_skip_column_empty':
-                        return ['column'];
-                    case 'options_mode':
-                        return 1;
-                    default:
-                        return $default;
+                        case 'filters_skip_column_empty':
+                            return ['column'];
+                        case 'options_mode':
+                            return 1;
+                        default:
+                            return $default;
                     }
                 }
             )
@@ -159,7 +160,9 @@ class SimpleTest extends ModelFramework
     public function testMapRowFormat($value, $expectedValue)
     {
         $this->expectReturn(
-            $this->feedMock, 'getColumnsMap', [
+            $this->feedMock,
+            'getColumnsMap',
+            [
                 'column' => [
                     'attribute' => 'some_attribute',
                     'column'    => 'column'
@@ -173,12 +176,12 @@ class SimpleTest extends ModelFramework
             $this->returnCallback(
                 function ($key, $default = '') {
                     switch ($key) {
-                    case 'filters_skip_column_empty':
-                return ['column'];
-                    case 'options_mode':
-                return 1;
-                    default:
-            return $default;
+                        case 'filters_skip_column_empty':
+                            return ['column'];
+                        case 'options_mode':
+                            return 1;
+                        default:
+                            return $default;
                     }
                 }
             )
@@ -218,10 +221,10 @@ class SimpleTest extends ModelFramework
             $this->returnCallback(
                 function ($key, $default = '') {
                     switch ($key) {
-                    case 'filters_skip_column_empty':
-return ['column'];
-                    default:
-return $default;
+                        case 'filters_skip_column_empty':
+                            return ['column'];
+                        default:
+                            return $default;
                     }
                 }
             )
@@ -266,7 +269,6 @@ return $default;
         $this->catalogProductPriceMock->expects($this->any())
             ->method('calculatePrice')
             ->will($this->returnValue(5));
-
 
         $this->assertEquals(true, $this->model->hasSpecialPrice());
     }
@@ -394,16 +396,16 @@ return $default;
             $this->returnCallback(
                 function ($key, $default = '') {
                     switch ($key) {
-                    case 'filters_skip_column_empty':
-            return ['column'];
-                    case 'filters_map_replace_empty_columns':
-            return [[
+                        case 'filters_skip_column_empty':
+                            return ['column'];
+                        case 'filters_map_replace_empty_columns':
+                            return [[
                             'column' => 'columnName',
                             'static' => 'static value',
                             'attribute' => 'directive_static_value'
                         ]];
-                    default:
-            return $default;
+                        default:
+                            return $default;
                     }
                 }
             )
@@ -426,12 +428,12 @@ return $default;
             $this->returnCallback(
                 function ($key, $default = '') {
                     switch ($key) {
-                    case 'filters_map_replace_empty_columns':
-            return [[
+                        case 'filters_map_replace_empty_columns':
+                            return [[
                             'column' => 'columnName'
                         ]];
-                    default:
-            return $default;
+                        default:
+                            return $default;
                     }
                 }
             )
@@ -520,7 +522,10 @@ return $default;
         $this->expectReturn($productMock, 'getId', false);
         $this->modelArguments['product'] = $productMock;
 
-        $this->setExpectedException('\MageOS\ShoppingFeed\Model\Exception', "Adapter can't be created, product is not loaded");
+        $this->setExpectedException(
+            '\MageOS\ShoppingFeed\Model\Exception',
+            "Adapter can't be created, product is not loaded"
+        );
 
         $this->model = $this->objectManagerHelper->getObject(
             'MageOS\ShoppingFeed\Model\Product\Adapter\Type\Simple',
@@ -537,7 +542,10 @@ return $default;
         $this->expectReturn($this->productMock, 'getResource', $resource);
         $this->expectReturn($this->cacheMock, 'getCache', false);
 
-        $this->setExpectedException('\MageOS\ShoppingFeed\Model\Exception', "Couldn't find attribute 'some_attribute'.");
+        $this->setExpectedException(
+            '\MageOS\ShoppingFeed\Model\Exception',
+            "Couldn't find attribute 'some_attribute'."
+        );
 
         $this->model->getMapValue(
             [

@@ -22,12 +22,16 @@ use \MageOS\ShoppingFeed\Model\Product\Mapper\Generic\Simple\ProductTypeByCatego
 
 class GoogleCategoryByCategory extends ProductTypeByCategory
 {
+    /**
+     * @inheritdoc
+     */
     public function map(array $params = [])
     {
         $mapByCategory = $this->getSortedTaxonomyMap();
         $value = $this->matchByCategory($mapByCategory, $this->getAdapter()->getProduct()->getCategoryIds(), 'tx');
 
         $this->getAdapter()->getFilter()->findAndReplace($value, $params['column']);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction -- decodes the mapped taxonomy label; no decoder is injected here
         return html_entity_decode($value);
     }
 }

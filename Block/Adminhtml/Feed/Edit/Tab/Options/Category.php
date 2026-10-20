@@ -27,7 +27,7 @@ use Magento\Framework\AuthorizationInterface;
 class Category extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Category
 {
     /**
-     * Core registry
+     * Registry holding the current feed
      *
      * @var \Magento\Framework\Registry
      */
@@ -58,7 +58,17 @@ class Category extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Cate
         array $data = []
     ) {
         $this->coreRegistry = $coreRegistry;
-        parent::__construct($factoryElement, $factoryCollection, $escaper, $collectionFactory, $backendData, $layout, $jsonEncoder, $authorization, $data);
+        parent::__construct(
+            $factoryElement,
+            $factoryCollection,
+            $escaper,
+            $collectionFactory,
+            $backendData,
+            $layout,
+            $jsonEncoder,
+            $authorization,
+            $data
+        );
     }
 
     /**
@@ -73,7 +83,8 @@ class Category extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Cate
 
         return [
             'source' => $this->_backendData->getUrl(
-                '*/*/suggestCategories', [
+                '*/*/suggestCategories',
+                [
                 'store' => $feed->getStoreId()
                 ]
             ),

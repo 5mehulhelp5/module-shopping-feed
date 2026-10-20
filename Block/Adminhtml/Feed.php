@@ -24,7 +24,6 @@ use Magento\Backend\Block\Widget\Container as Container;
 /**
  * Adminhtml feed main block
  *
- * @package MageOS\ShoppingFeed\Block\Adminhtml
  */
 class Feed extends Container
 {
@@ -36,9 +35,9 @@ class Feed extends Container
     /**
      * Feed constructor.
      *
-     * @param \Magento\Backend\Block\Widget\Context           $context
+     * @param \Magento\Backend\Block\Widget\Context $context
      * @param \MageOS\ShoppingFeed\Model\FeedTypes\Config $feedTypesConfig
-     * @param array                                           $data
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Widget\Context $context,
@@ -52,7 +51,7 @@ class Feed extends Container
     /**
      * Prepare button and gridCreate Grid , edit/add grid row and installer in Magento2
      *
-     * @return \Magento\Catalog\Block\Adminhtml\Product
+     * @return $this
      */
     protected function _prepareLayout()
     {
@@ -61,7 +60,7 @@ class Feed extends Container
             'id' => 'add_new_feed',
             'label' => __('Create New Feed'),
             'class' => 'add primary',
-            'class_name' => 'Magento\Backend\Block\Widget\Button\SplitButton',
+            'class_name' => \Magento\Backend\Block\Widget\Button\SplitButton::class,
             'options' => $this->_getAddFeedButtonOptions(),
         ];
         if ($this->_authorization->isAllowed('MageOS_ShoppingFeed::save')) {
@@ -80,13 +79,14 @@ class Feed extends Container
     }
 
     /**
-     *
+     * Build the split-button options for creating each feed type
      *
      * @return array
      */
     protected function _getAddFeedButtonOptions()
     {
         $feedTypes = $this->feedTypesConfig->getAll();
+        $splitButtonOptions = [];
 
         foreach ($feedTypes as $feedType) {
             if (array_key_exists('label', $feedType)) {
@@ -101,7 +101,7 @@ class Feed extends Container
     }
 
     /**
-     *
+     * Get the URL that creates a feed of the given type
      *
      * @param  string $type
      * @return string
@@ -115,6 +115,8 @@ class Feed extends Container
     }
 
     /**
+     * Get the feed import URL
+     *
      * @return string
      */
     protected function _getFeedImportUrl()
