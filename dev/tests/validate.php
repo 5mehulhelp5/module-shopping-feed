@@ -178,7 +178,12 @@ $assert(
     $feedXpath->query('/config/feed/default_feed_config/general/feed_dir[text()="pub/media/mageos-shopping-feed"]')->length === count($expectedFeeds),
     'One or more feed output directories are not isolated'
 );
-$assert(!is_dir($root . '/Setup/Patch'), 'Historical paid-package data patches must not run under the new module identity');
+$allowedPatches = [$root . '/Setup/Patch/Data/AddSkipSubmitAttribute.php'];
+$patches = glob($root . '/Setup/Patch/*/*.php') ?: [];
+$assert(
+    array_diff($patches, $allowedPatches) === [],
+    'Historical paid-package data patches must not run under the new module identity'
+);
 
 $diConfig = (string) file_get_contents($root . '/etc/di.xml');
 $assert(str_contains($diConfig, 'name="mageos_shopping_feed_generate"'), 'The generate command DI key is not isolated');

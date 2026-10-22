@@ -6,6 +6,12 @@ Product Filters decides which products reach the output and how selected column 
 
 ## Catalog selection
 
+### Exclude a single product (unreleased)
+
+After upgrading to a version containing the #22 fix, run `bin/magento setup:upgrade`. On the product form, open **Shopping Feed** and set **Skip from Being Submitted** to Yes. The attribute defaults to No and supports store-view overrides; Yes excludes the product from all feeds for that store view. A merchant-created `mageos_shopping_feed_skip_submit` attribute keeps its existing definition, assignments, scope, and values.
+
+Release 1.2.4 checks this attribute but does not create it. This fix is not part of that release.
+
 ### Allow Out of Stock
 
 Controls whether out-of-stock products remain eligible for the feed. Complex-product sections have separate out-of-stock controls for associated products.

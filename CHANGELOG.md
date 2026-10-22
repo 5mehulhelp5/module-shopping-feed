@@ -4,6 +4,11 @@ All notable changes to this project will be documented here.
 
 ## Unreleased
 
+### Fixed
+
+- Create the **Skip from Being Submitted** Yes/No product attribute during `setup:upgrade`, under **Shopping Feed** in every existing product attribute set. It defaults to No and can be overridden per store view. Preserve any attribute merchants already created with the same code (#22).
+- Read select and multiselect option labels for the feed's store view, with Magento's fallback to admin labels. Separate cached options by store and preserve the attribute's original store context (#23).
+
 ### CI
 
 - Keep the Magento 2.4.7-p10 compatibility profile on its release-tested Ubuntu 24.04 runner after `ubuntu-latest` advanced to Ubuntu 26. Stop at the first integration failure so its exception is reported before secondary transaction errors.

@@ -1903,12 +1903,6 @@ parameters:
 			path: Model/MicrodataFactory.php
 
 		-
-			message: '#^Argument of an invalid type array\<Magento\\Eav\\Api\\Data\\AttributeOptionInterface\>\|null supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: Model/Product/Adapter/AdapterAbstract.php
-
-		-
 			message: '#^Cannot access offset ''end'' on array\|false\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1

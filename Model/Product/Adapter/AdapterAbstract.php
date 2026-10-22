@@ -867,7 +867,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
     /**
      * Gets option text value from product for attributes with frontend_type select.
      * Multiselect values are by default imploded with comma.
-     * By default gets option text from admin store (recommended - english values in feed).
+     * Uses the requested store's source labels, falling back to admin labels through the source.
      *
      * @param \Magento\Catalog\Model\Product                        $product
      * @param \Magento\Eav\Model\Entity\Attribute\AbstractAttribute $attribute
@@ -886,17 +886,20 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             $attrValue = implode(',', $attrValue);
         }
 
-        // get the attribute options
-        $cacheKey = ['select', 'attribute', $attribute->getAttributeCode(), 'options'];
+        $storeId = (int)$storeId;
+        $cacheKey = ['select', 'attribute', $attribute->getAttributeCode(), 'options', $storeId];
         if ($this->cache->getCache($cacheKey, false) === false) {
-            $data = $attribute->getOptions();
+            $originalStoreId = $attribute->getStoreId();
+            $attribute->setStoreId($storeId);
+            try {
+                $data = $attribute->getSource()->getAllOptions();
+            } finally {
+                $attribute->setStoreId($originalStoreId);
+            }
             $options = [];
             foreach ($data as $item) {
-                if ($item->getValue()) {
-                    $options[$item->getValue()] = [
-                        'label' => $item->getLabel(),
-                        'store_labels' => $item->getStoreLabels(),
-                    ];
+                if ($item['value'] !== '') {
+                    $options[$item['value']] = $item['label'];
                 }
             }
             $this->cache->setCache($cacheKey, $this->jsonSerializer->serialize($options));
@@ -909,9 +912,7 @@ class AdapterAbstract extends \Magento\Framework\DataObject
         $returnArray = [];
         foreach ($attributeValues as $val) {
             if (array_key_exists($val, $options)) {
-                $returnArray[] = isset($options[$val]['store_labels'][$storeId])
-                    ? $options[$val]['store_labels'][$storeId]
-                    : $options[$val]['label'];
+                $returnArray[] = $options[$val];
             }
         }
 

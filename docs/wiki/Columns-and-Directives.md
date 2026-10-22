@@ -15,6 +15,8 @@ A column has:
 
 Save the feed after changing Columns Map. Several filters and inheritance controls only list columns already present in the saved map.
 
+The unreleased #23 fix reads select and multiselect option labels in the feed's **Store View**, falling back to the admin label when that store has no override. Multiselect output keeps the selected values' order and joins their labels with `, `. Cached labels are separate for each store. Release 1.2.4 does not reliably read store-view option labels.
+
 For the 1.2.0 UI Component editor, use single-line output names without tabs or other control characters. The editor rejects those characters at model save and preserves literal values, structured parameters, and null defaults. The historical 1.2.0 `mageos-latest` deployment also fixes null product-URL parameters under PHP 8.4 error handling. See [Admin UI Component forms](Admin-UI-Component-Forms) for deployment status and test limits.
 
 ## Common directives

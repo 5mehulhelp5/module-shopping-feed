@@ -598,7 +598,7 @@ class SimpleTest extends ModelFramework
 
         $attribute = $this->getModelMock(
             'Magento\Eav\Model\Entity\Attribute',
-            ['getSourceModel', 'getAttributeCode', 'getFrontendInput', 'getOptions']
+            ['getSourceModel', 'getAttributeCode', 'getFrontendInput', 'getSource']
         );
         $this->expectReturn($attribute, 'getSourceModel', $attributeData['source_model']);
         $this->expectReturn($attribute, 'getFrontendInput', $attributeData['frontend_input']);
@@ -607,13 +607,11 @@ class SimpleTest extends ModelFramework
         if (isset($attributeData['options'])) {
             $options = [];
             foreach ($attributeData['options'] as $option) {
-                $value = ucfirst($option);
-                $data = new \Magento\Framework\DataObject();
-                $data->setData('label', $value);
-                $data->setData('value', $option);
-                $options[] = $data;
+                $options[] = ['label' => ucfirst($option), 'value' => $option];
             }
-            $this->expectReturn($attribute, 'getOptions', $options);
+            $source = $this->createMock(\Magento\Eav\Model\Entity\Attribute\Source\SourceInterface::class);
+            $source->method('getAllOptions')->willReturn($options);
+            $this->expectReturn($attribute, 'getSource', $source);
         }
 
         $this->expectReturn($this->productMock, 'getData', $attributeData['data']);
