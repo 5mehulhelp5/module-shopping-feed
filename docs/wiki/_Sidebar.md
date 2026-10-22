@@ -5,6 +5,7 @@
 **Start here**
 
 * [Status and compatibility](Status-and-Compatibility)
+* [Release 1.2.5](Release-1-2-5)
 * [Release 1.2.4](Release-1-2-4)
 * [Release 1.2.3](Release-1-2-3)
 * [Release 1.2.2](Release-1-2-2)

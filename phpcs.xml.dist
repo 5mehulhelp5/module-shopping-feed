@@ -25,6 +25,7 @@
     <file>Model</file>
     <file>Observer</file>
     <file>Plugin</file>
+    <file>Setup</file>
     <file>Test</file>
     <file>Ui</file>
     <file>view</file>

@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented here.
 
-## Unreleased
+## 1.2.5 - 2026-10-22
+
+[Release 1.2.5 notes and upgrade requirements](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/releases/1.2.5.md).
+
+### Fixed
+
+- Create the **Skip from Being Submitted** Yes/No product attribute during `setup:upgrade`, under **Shopping Feed** in every existing product attribute set. It defaults to No and can be overridden per store view. Preserve any attribute merchants already created with the same code (#22).
+- Read select and multiselect option labels for the feed's store view, with Magento's fallback to admin labels. Separate cached options by store, preserve the attribute's original store context, and skip custom-source option rows without a usable value instead of failing generation (#23).
 
 ### CI
 

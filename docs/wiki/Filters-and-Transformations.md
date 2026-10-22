@@ -2,9 +2,15 @@
 
 Product Filters decides which products reach the output and how selected column values are changed. Rule order matters.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
 
 ## Catalog selection
+
+### Exclude a single product
+
+Since 1.2.5, `setup:upgrade` creates the **Skip from Being Submitted** Yes/No product attribute. On the product form, open **Shopping Feed** and set it to Yes. The attribute defaults to No and supports store-view overrides; Yes excludes the product, including configurable, grouped, and bundle children, from every feed for that store view, and the feed log names the skipped product. A store-view No restores it there.
+
+A merchant-created `mageos_shopping_feed_skip_submit` attribute keeps its existing definition, assignments, scope, and values. The check honors the value 1, so it must be a Yes/No field. The attribute is user-managed: deleting it in Admin disables the exclusion, and a later `setup:upgrade` does not recreate it. Release 1.2.4 and earlier check this attribute but do not create it.
 
 ### Allow Out of Stock
 

@@ -26,18 +26,18 @@ The [Check Extension workflow](https://github.com/mage-os-lab/module-shopping-fe
 
 ## Installation
 
-Install the stable 1.2 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). See the [1.2.4 release notes](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/releases/1.2.4.md) for changes and upgrade requirements:
+Install the stable 1.2 release line from [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). See the [1.2.5 release notes](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/releases/1.2.5.md) for changes and upgrade requirements:
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.2.4'
+composer require 'mage-os/module-shopping-feed:^1.2.5'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
 ```
 
-**Upgrading to 1.2.4:** run `setup:upgrade` and enter a trusted SHA256 host-key fingerprint for every SFTP destination. Destinations without a matching fingerprint cannot authenticate or upload. See [Uploads](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Uploads.md).
+**Upgrading to 1.2.5:** run `setup:upgrade`; it creates the **Skip from Being Submitted** product attribute. Upgrading from 1.2.3 or earlier also needs the 1.2.4 step: enter a trusted SHA256 host-key fingerprint for every SFTP destination, because destinations without a matching fingerprint cannot authenticate or upload. See [Uploads](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Uploads.md).
 
-In production mode, also run `bin/magento setup:di:compile` and `bin/magento setup:static-content:deploy`. For a source checkout, use `v1.2.4` at `app/code/MageOS/ShoppingFeed`, ensure its runtime Composer requirements (including `phpseclib/phpseclib:^3.0`) are installed in the application, and run the Magento commands without installing a second copy of this package. See [source installation](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Installation-and-Upgrade.md#source-installation).
+In production mode, also run `bin/magento setup:di:compile` and `bin/magento setup:static-content:deploy`. For a source checkout, use `v1.2.5` at `app/code/MageOS/ShoppingFeed`, ensure its runtime Composer requirements (including `phpseclib/phpseclib:^3.0`) are installed in the application, and run the Magento commands without installing a second copy of this package. See [source installation](https://github.com/mage-os-lab/module-shopping-feed/blob/main/docs/wiki/Installation-and-Upgrade.md#source-installation).
 
 ## Configuration
 
@@ -211,7 +211,9 @@ When inspecting CSV or TSV feeds in a spreadsheet, import the columns as text an
 
 - **A feed stays queued or never updates.** Check that Magento cron runs and that **Cron Enabled** is Yes. Run `bin/magento mage-os:shopping-feed:generate <feed_id>` to see errors directly, then check **View Log**.
 - **Products are missing.** Check the feed's store view and the product's website, the **Product Filters**, **Skip Products with empty**, and the category **Include** settings. **Test Feed** with the SKU shows the row as generated.
-- **Long values make a provider reject or skip rows.** Pinterest, TikTok, Microsoft and OpenAI validators skip overlong title or description values. Meta does not check text lengths locally. Preset character limits are not added to **Limit column output** automatically in 1.2.4, so add explicit limits and review the recipient's diagnostics.
+- **Exclude one product (1.2.5).** Run `bin/magento setup:upgrade` after upgrading. On the product form, set **Shopping Feed > Skip from Being Submitted** to Yes for the relevant store view. It defaults to No and also applies to configurable, grouped and bundle children; the feed log names skipped products. A merchant-created attribute with this code is preserved.
+- **Store-view option labels (1.2.5).** Select and multiselect columns use the feed's store-view labels and fall back to admin labels when no override exists. Release 1.2.4 and earlier always use admin labels.
+- **Long values make a provider reject or skip rows.** Pinterest, TikTok, Microsoft and OpenAI validators skip overlong title or description values. Meta does not check text lengths locally. Preset character limits are not added to **Limit column output** automatically through 1.2.5, so add explicit limits and review the recipient's diagnostics.
 - **No microdata on product pages.** Turn on **Enable Automatic Updates (Microdata)** for the store, set **Use for microdata** to Yes on exactly one Google Shopping feed for that store view, then flush the cache.
 - **Uploads fail.** **View Log** shows the transfer error. Check host, port (22 for SFTP), credentials and that the remote path exists. SFTP also needs a trusted matching **SFTP Host Key Fingerprint** after `setup:upgrade`; confirm changed keys with the recipient before replacing them.
 
@@ -224,7 +226,7 @@ Installing this module does not read or change Rocket Web feeds, tables or confi
 On staging, keep the legacy modules installed and enabled during schema upgrades, then install both packages:
 
 ```sh
-composer require 'mage-os/module-shopping-feed:^1.2.4' \
+composer require 'mage-os/module-shopping-feed:^1.2.5' \
   'rocketweb/module-shopping-feed-migration-rocketweb:^1.0' --no-update
 composer update mage-os/module-shopping-feed \
   rocketweb/module-shopping-feed-migration-rocketweb --with-dependencies
