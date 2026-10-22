@@ -2,11 +2,23 @@
 
 Install the module on staging first. Feed generation writes files and records queue, schedule, upload, and status data. A saved upload can also transfer completed files to an external system.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
 
-Upgrade checklists are cumulative. If skipping releases, review every section between the installed and target versions. Historical Composer constraints such as `^1.2.1` also allow later 1.x versions; check the resolved lock file and follow the requirements of the version actually installed. New installations should use the current 1.2.4 instructions below.
+Upgrade checklists are cumulative. If skipping releases, review every section between the installed and target versions. Historical Composer constraints such as `^1.2.1` also allow later 1.x versions; check the resolved lock file and follow the requirements of the version actually installed. New installations should use the current 1.2.5 instructions below.
+
+## Upgrading from 1.2.4 to 1.2.5
+
+The [1.2.5 release](Release-1-2-5) creates the **Skip from Being Submitted** product attribute during `setup:upgrade` and reads dropdown and multiselect option labels for the feed's store view. Platform and Composer requirements are unchanged from 1.2.4, and there are no table changes.
+
+1. Back up matching code, database, Composer lock file, configuration, and accepted feed files.
+2. On staging, run `composer require 'mage-os/module-shopping-feed:^1.2.5' --no-update`, then `composer update mage-os/module-shopping-feed --with-dependencies` and `bin/magento setup:upgrade`. Follow the store's normal compilation, static-content deployment, and cache process.
+3. Open a product in Admin and confirm the **Shopping Feed** section shows **Skip from Being Submitted** with the default No. A store that already had a `mageos_shopping_feed_skip_submit` attribute keeps it as defined; confirm it is a Yes/No field, because the exclusion honors only the value 1.
+4. Regenerate one feed per store view and compare with the accepted output. Dropdown and multiselect columns on non-default store views now carry that store view's option labels where an override exists. Products set to Yes are absent and named in the feed log.
+5. Run `setup:upgrade` a second time and confirm nothing changes.
+
+Restore the matching database, code, lock file, and configuration for rollback. The created attribute and any saved values stay in the database after a code rollback, and 1.2.4 still honors a Yes value because it already checked the attribute.
 
 ## Upgrading from 1.2.3 to 1.2.4
 
@@ -80,7 +92,7 @@ There is no old/new editor switch. Restoring the previous package and rebuilding
 The package is listed on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed). Install the stable 1.2 line:
 
 ```bash
-composer require 'mage-os/module-shopping-feed:^1.2.4'
+composer require 'mage-os/module-shopping-feed:^1.2.5'
 bin/magento module:enable MageOS_ShoppingFeed
 bin/magento setup:upgrade
 bin/magento cache:clean
@@ -96,7 +108,7 @@ Place or symlink the source at:
 app/code/MageOS/ShoppingFeed
 ```
 
-Use the `v1.2.4` tag for a reproducible installation, and record its resolved commit. Earlier tags remain available for historical installations.
+Use the `v1.2.5` tag for a reproducible installation, and record its resolved commit. Earlier tags remain available for historical installations.
 
 A source copy does not install its Composer dependencies. Compare the application's installed packages with the tag's `require` section, including `phpseclib/phpseclib:^3.0`, and install missing compatible runtime dependencies through the application's root Composer project. Do not also install a second copy of `mage-os/module-shopping-feed`.
 
@@ -137,7 +149,7 @@ Upgrade through the same installation path used for the module:
 
 ## Upgrading from 1.0 to 1.1
 
-This is the historical 1.1 procedure. The `^1.1` constraint below can resolve a newer 1.x release, including 1.2.4. For a current upgrade, also follow every applicable later checklist, especially the required SFTP fingerprint and `setup:upgrade` step.
+This is the historical 1.1 procedure. The `^1.1` constraint below can resolve a newer 1.x release, including 1.2.5. For a current upgrade, also follow every applicable later checklist, especially the required SFTP fingerprint and `setup:upgrade` step.
 
 Version 1.1.0 requires `setup:upgrade`: encrypted upload passwords now use a `text` column, and standard-grid keyword search uses a full-text index on feed names. Complete DI compilation and static-content deployment where your deployment process requires them, then clear caches so the corrected Admin JavaScript loads.
 

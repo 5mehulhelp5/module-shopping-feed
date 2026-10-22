@@ -1,6 +1,6 @@
 # Mage-OS Shopping Feed
 
-**Version 1.2.4** verifies SFTP server keys before authentication, keeps upload credentials encrypted, preserves logs if archiving fails, and tightens Test Feed permissions. It also completes module standards work and fixes inventory, shipping, and promotion edge cases. Read [Release 1.2.4](Release-1-2-4) and its [upgrade checklist](Installation-and-Upgrade#upgrading-from-123-to-124).
+**Version 1.2.5** creates the **Skip from Being Submitted** product attribute, so a product can be left out of feeds per store view, and reads dropdown and multiselect option labels for the feed's store view. Read [Release 1.2.5](Release-1-2-5) and its [upgrade checklist](Installation-and-Upgrade#upgrading-from-124-to-125). [Release 1.2.4](Release-1-2-4) added SFTP server-key verification, encrypted upload credentials, safe log rotation, and Test Feed permissions.
 
 **Migrating from Rocket Shopping Feeds?** Use the separate [Rocket Web migration companion](https://github.com/rocketweb/module-shopping-feed-migration-rocketweb). See the [installation and migration guide](Rocket-Web-Migration) for preview, import, output comparison, activation, and rollback.
 
@@ -12,7 +12,7 @@ Mage-OS Shopping Feed generates product feeds from Mage-OS and Magento Open Sour
 
 The [1.1 upgrade checklist](Installation-and-Upgrade#upgrading-from-10-to-11) covers the required schema update and changes to saved Google and comma-delimited feeds. [Release 1.0.0](Release-1-0-0) remains available as a historical record.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
 
 The [Admin UI Component forms](Admin-UI-Component-Forms) in 1.2.0 change the editor and its customization hooks. The historical 1.2.0 runtime `133af71` was verified on `mageos-latest`, with form, grid-permission, preview, stock-selection, Local Inventory, frontend-scope, and currency-preservation corrections. Magento Open Source 2.4.8 and 2.4.9 retain production-mode form/output and six-role acceptance. The repository's `docs/reviews/2026-10-03-local-acceptance.md` records that historical acceptance, including extended operational checks and remaining limits. Historical version 1.1 continues to use the previous editor.
 
@@ -22,7 +22,7 @@ The 1.2.3 hardening and native-theme reports cover all eight presets, reservatio
 
 Version 1.2.4 is [published](https://github.com/mage-os-lab/module-shopping-feed/releases/tag/v1.2.4) at `75dd335f930aef78ae693f62c3039e469c2d26f6`. All 37 [post-merge CI jobs](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/39372608509) passed for that commit. Its Mage-OS 3.6 local acceptance is separate from the older theme checks below; see [Release acceptance](Release-Acceptance).
 
-**Upgrading:** run `setup:upgrade` and enter a trusted fingerprint for every SFTP destination before resuming transfers. Test Feed now requires **Generate Feed** permission.
+**Upgrading:** run `setup:upgrade`. In 1.2.5 it creates the exclusion attribute. From 1.2.3 or earlier, also enter a trusted fingerprint for every SFTP destination before resuming transfers. Test Feed requires **Generate Feed** permission since 1.2.4.
 
 **OpenAI beta:** the bundled Google-compatible preset differs from the current public OpenAI product-feed contract. Confirm acceptance of an actual sample before use; see [the documented format gaps](OpenAI-ChatGPT).
 

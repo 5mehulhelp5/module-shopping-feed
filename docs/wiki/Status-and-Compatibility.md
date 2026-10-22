@@ -1,8 +1,10 @@
 # Status and compatibility
 
-Mage-OS Shopping Feed 1.2.4 is the current stable release. See [Release 1.2.4](Release-1-2-4) for changes and recorded verification. Users migrating from Rocket Shopping Feeds can install the separate [Rocket Web migration companion](Rocket-Web-Migration); installation alone does not import data.
+Mage-OS Shopping Feed 1.2.5 is the current stable release. See [Release 1.2.5](Release-1-2-5) for changes and recorded verification. Users migrating from Rocket Shopping Feeds can install the separate [Rocket Web migration companion](Rocket-Web-Migration); installation alone does not import data.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
+
+Version 1.2.5 creates the **Skip from Being Submitted** product attribute and reads store-view option labels for dropdown and multiselect columns. Its local Mage-OS 3.6.0 run passes 951 unit tests, 38 integration tests, four database persistence tests, and 84 JavaScript checks. `setup:upgrade` is required; the release commit's CI results and Packagist state are recorded after publication. See [Release 1.2.5](Release-1-2-5).
 
 Version 1.2.4 adds verified SFTP server keys, encrypted upload model data, safe log rotation, and preview permission checks. Its local Mage-OS 3.6.0 run passes 939 unit tests, 30 integration tests, four database persistence tests, and 84 JavaScript checks. Existing SFTP destinations require a trusted fingerprint after `setup:upgrade`. See [Release 1.2.4](Release-1-2-4).
 
@@ -69,13 +71,13 @@ A separate fresh Mage-OS 3.5.0 installation with no Nebula packages passed Compo
 | Google Local Inventory | Included |
 | Multi-Source Inventory | Optional, required for source-level rows |
 | Google Promotions | Included as part of a Google Shopping feed |
-| FTP and SFTP upload | FTP is unencrypted; SFTP requires a trusted SHA256 host-key fingerprint in 1.2.4 |
+| FTP and SFTP upload | FTP is unencrypted; SFTP requires a trusted SHA256 host-key fingerprint since 1.2.4 |
 | Gzip upload | Included |
 | Rocket Web migration companion | Optional, separately installed; preview and explicit import/activation |
 
 ## Distribution status
 
-Version 1.2.4 is available on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed), with source and dist references matching the published commit above. Install the stable 1.2 line with `composer require 'mage-os/module-shopping-feed:^1.2.4'`, or use the tagged source installation described in [Installation and upgrade](Installation-and-Upgrade). The optional [migration companion](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb) has its own 1.0.0 release.
+Version 1.2.4 is available on [Packagist](https://packagist.org/packages/mage-os/module-shopping-feed), with source and dist references matching the published commit above; 1.2.5 is recorded here after publication. Install the stable 1.2 line with `composer require 'mage-os/module-shopping-feed:^1.2.5'`, or use the tagged source installation described in [Installation and upgrade](Installation-and-Upgrade). The optional [migration companion](https://packagist.org/packages/rocketweb/module-shopping-feed-migration-rocketweb) has its own 1.0.0 release.
 
 Do not infer release availability from the presence of source code alone. Check the repository's releases and the configured Composer repository at the point of installation.
 

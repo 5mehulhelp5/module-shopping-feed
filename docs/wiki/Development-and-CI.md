@@ -2,7 +2,11 @@
 
 The repository validates module identity, configuration integrity, PHP behavior, and supported Magento-family platforms. Run focused checks before requesting review.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
+
+## 1.2.5 product attribute fixes
+
+The release adds the module's first data patch, `Setup/Patch/Data/AddSkipSubmitAttribute`, so `Setup` is now covered by the coding standard, PHPStan, and the consolidation validator's patch allowlist. The candidate passes 951 unit tests on PHP 8.4 and 8.5, 38 integration tests on a fresh Mage-OS 3.6.0 install, four database persistence tests, and 84 JavaScript checks; the PHPStan baseline shrank by one entry. The [PR 24 CI run](https://github.com/mage-os-lab/module-shopping-feed/actions/runs/39718036238) passed all 38 checks at `79b6dbc`; results for the release commit are recorded after publication.
 
 ## 1.2.4 standards and security
 

@@ -2,9 +2,15 @@
 
 Release acceptance proves the extension on representative Magento runtimes and proves each generated artifact at the boundary where it is consumed.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
 
 Magento Open Source 2.4.7-p10 has a separate compatibility profile and upstream Flysystem advisory. Review [Status and compatibility](Status-and-Compatibility) before installing on that version; the tested optional backport is not applied automatically.
+
+## 1.2.5 verification
+
+The [product-attribute verification record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.5/docs/reviews/2026-10-22-pr-24-verification.md) covers 951 unit tests on PHP 8.4 and 8.5, 38 integration tests on a fresh Mage-OS 3.6.0 install, four database persistence tests, 84 JavaScript checks, PHPStan level 8, the Magento coding standard, and the Composer, wiki, and consolidation validators. Integration scenarios cover store-view exclusion on configurable children and the parent, core non-table option sources, attribute sets created after the upgrade, and patch re-application. The [functional record](https://github.com/mage-os-lab/module-shopping-feed/blob/v1.2.5/docs/reviews/2026-10-21-product-attributes-issues-22-23.md) covers real `setup:upgrade` and its repeat, the Admin product form with store-view overrides, Admin and CLI previews, and queued generation on an upgraded store copy.
+
+External recipient ingestion, native Nebula acceptance, other target-store behavior, and production volume were not repeated. The "rows skipped" counter does not include products excluded by the new field, and the preset output-limit key mismatch remains a known issue.
 
 ## 1.2.4 verification
 

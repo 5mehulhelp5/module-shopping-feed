@@ -2,7 +2,7 @@
 
 Start with the feed-specific log and the feed grid status. They distinguish queue problems, product skips, generation failures, and upload failures.
 
-> Documentation baseline: release 1.2.4 (`v1.2.4`); earlier acceptance is identified by version. Last reviewed: 2026-10-20.
+> Documentation baseline: release 1.2.5 (`v1.2.5`); earlier acceptance is identified by version. Last reviewed: 2026-10-22.
 
 The original `9f07e46` category and promotion-date defects are repaired in 1.2.0, with runtime acceptance at `133af71`. Consult [Admin UI Component forms](Admin-UI-Component-Forms) for the exact deployed revision and acceptance evidence. Code updates do not reconstruct dates already erased by an earlier save.
 
@@ -34,7 +34,7 @@ Use **View Log** from the Feeds Management grid, or inspect the file as the Mage
 | Direct command says generation failed | Check whether another process holds the per-feed lock, then open the feed log. |
 | Feed reaches Error | Read the first exception or error for that run, not only the final status line. |
 | No final file appears | Confirm the configured directory and filename, filesystem permissions, disk space, and whether a `.tmp` generation is still active. |
-| Product is absent | Test the SKU, then check enablement, catalog visibility, stock settings, filters, category rules, and complex-product configuration. |
+| Product is absent | Test the SKU, then check enablement, catalog visibility, stock settings, filters, category rules, complex-product configuration, and, since 1.2.5, the product's **Shopping Feed > Skip from Being Submitted** value for that store view. The feed log names products skipped by that field. |
 | Row columns do not align | Review delimiter choice, mapped directives, source values containing delimiters or line breaks, and row counts across representative products. |
 | Upload fails | Confirm mode, hostname, port, credentials, remote path, permissions, DNS, and firewall access from the Magento host. In 1.2.4, SFTP requires `setup:upgrade` and the trusted SHA256 server-key fingerprint. Confirm any changed key with the recipient before replacing it. |
 | Test Feed is denied for a read-only role | Version 1.2.4 requires **Generate Feed** permission. The grid can still show its link; editor preview buttons are hidden without the permission. |

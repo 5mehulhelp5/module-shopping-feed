@@ -4,7 +4,7 @@
 
 Use this plan to decide whether a `MageOS_ShoppingFeed` release candidate is ready for production. Run it against the exact candidate commit on representative store copies before enabling live schedules or uploads.
 
-The [1.2.4 release notes](docs/releases/1.2.4.md) and [Mage-OS 3.6 security verification](docs/reviews/2026-10-20-standards-security-mageos36.md) identify the current patch scope. The earlier [Mage-OS 3.5 hardening record](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) and [native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) retain their recorded scope. The [October 3 local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) retains its `133af71` browser/operational scope. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
+The [1.2.5 release notes](docs/releases/1.2.5.md) and [product-attribute verification record](docs/reviews/2026-10-22-pr-24-verification.md) identify the current patch scope. The [1.2.4 release notes](docs/releases/1.2.4.md) and [Mage-OS 3.6 security verification](docs/reviews/2026-10-20-standards-security-mageos36.md) cover the previous release. The earlier [Mage-OS 3.5 hardening record](docs/reviews/2026-10-08-hardening-and-mageos-3.5-verification.md) and [native theme follow-up](docs/reviews/2026-10-08-remote-ci-and-native-theme-acceptance.md) retain their recorded scope. The [October 3 local acceptance record](docs/reviews/2026-10-03-local-acceptance.md) retains its `133af71` browser/operational scope. External recipient, target-store, and release approval remain separate gates. The checkboxes below are a reusable plan, not a completed acceptance record.
 
 The current platform acceptance target is Mage-OS 3.6.0; Mage-OS 3.5.0 remains in CI coverage. Add another currently supported Magento Open Source store when available. A store with Multi-Source Inventory is required for Local Inventory acceptance.
 
@@ -111,6 +111,7 @@ Run on Profile A first.
 - [ ] Run `bin/magento module:enable MageOS_ShoppingFeed`.
 - [ ] Run `bin/magento setup:upgrade`.
 - [ ] When upgrading to 1.2.4, confirm the nullable SFTP fingerprint column is added and existing destinations remain present. Missing fingerprints must prevent SFTP authentication until trusted keys are configured.
+- [ ] When upgrading to 1.2.5, confirm `setup:upgrade` creates the **Skip from Being Submitted** attribute (`mageos_shopping_feed_skip_submit`, Yes/No, default No, store-view scope) in the **Shopping Feed** group of every product attribute set, or leaves a merchant-created attribute with that code unchanged. Confirm a second `setup:upgrade` changes nothing.
 - [ ] Run `bin/magento cache:clean`.
 - [ ] In production mode, deploy static content for the store locales.
 - [ ] Confirm `bin/magento module:status MageOS_ShoppingFeed` reports enabled.
@@ -197,6 +198,8 @@ bin/magento mage-os:shopping-feed:generate <feed_id> <sku>
 - [ ] Submit column names containing tabs, newlines, and carriage returns through the save boundary. Require field-specific rejection without coercing literal values or structured directive parameters. The local repair adds model save validation. Verify configured delimiters and enclosures separately: before repair, an isolated probe corrupted unenclosed TSV headers but preserved a newline-containing header as one logical quoted CSV record.
 - [ ] Confirm included and excluded categories behave as configured.
 - [ ] Confirm disabled products and products excluded by filters are absent.
+- [ ] Set **Skip from Being Submitted** to Yes for one simple product and one configurable child, first in All Store Views and then only in a non-default store view. Confirm each is absent only from feeds for the store views where the value is Yes, that the feed log names the skipped product, and that No restores it.
+- [ ] Map a dropdown and a multiselect attribute that have store-view option labels. Confirm a non-default store view feed carries that store's labels, falls back to the admin label where no override exists, and keeps multiselect order.
 - [ ] Confirm configured find-and-replace, price buckets, output limits, and empty-column rules work.
 - [ ] Confirm simple, configurable, grouped, bundle, and downloadable product modes match their parent and associated-product settings.
 - [ ] Enable complex-product duplicate checking and confirm a child is not emitted both standalone and as an associated product.

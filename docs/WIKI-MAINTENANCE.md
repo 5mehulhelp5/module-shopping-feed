@@ -65,6 +65,10 @@ Before publication, scan all operating guides and the README, migration/develope
 
 At minimum, recheck Google-owned links and terminology at release time. Keep Merchant Center navigation brief because its interface changes independently of this module.
 
+## 1.2.5 documentation baseline
+
+Release-focused pages, the installation checklist, and the columns, filters, and troubleshooting guides name `v1.2.5` as their baseline. The new release page and upgrade checklist cover the created **Skip from Being Submitted** attribute and store-view option labels; both need only `setup:upgrade`. Unchanged guides keep the 1.2.4 baseline until the post-publication documentation refresh, which also records the release commit, CI run, and Packagist state, repins README screenshots, and updates the security policy and documentation index. Public wiki publication follows the workflow above once the release exists; the [release preparation record](reviews/2026-10-22-release-1.2.5-preparation.md) lists the exact steps.
+
 ## 1.2.4 documentation baseline
 
 All current operating guides were reviewed against `v1.2.4` on October 20, 2026. Historical release pages and dated acceptance reports retain their original versions and test scope. Release 1.2.4 is published at `75dd335f930aef78ae693f62c3039e469c2d26f6`; its 37 post-merge CI jobs pass. The release page and upgrade checklist cover the required SFTP fingerprint, schema update, encrypted upload model data, and Test Feed permission. The October 20 security record covers the local Mage-OS 3.6 acceptance. The [documentation review](reviews/2026-10-20-documentation-review.md) records source/public-wiki drift and remaining limitations. Public wiki publication remains a separate action under the workflow above.
