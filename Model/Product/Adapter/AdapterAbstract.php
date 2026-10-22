@@ -898,9 +898,12 @@ class AdapterAbstract extends \Magento\Framework\DataObject
             }
             $options = [];
             foreach ($data as $item) {
-                if ($item['value'] !== '') {
-                    $options[$item['value']] = $item['label'];
+                // Sources outside Magento's options table may omit the value, use null, or nest option groups.
+                $value = $item['value'] ?? null;
+                if ((!is_int($value) && !is_string($value)) || $value === '') {
+                    continue;
                 }
+                $options[$value] = $item['label'] ?? '';
             }
             $this->cache->setCache($cacheKey, $this->jsonSerializer->serialize($options));
         } else {

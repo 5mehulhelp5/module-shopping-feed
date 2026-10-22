@@ -33,6 +33,8 @@ class AddSkipSubmitAttributeTest extends TestCase
                 self::assertSame('Skip from Being Submitted', $data['label']);
                 self::assertSame(ScopedAttributeInterface::SCOPE_STORE, $data['global']);
                 self::assertSame('Shopping Feed', $data['group']);
+                self::assertTrue($data['user_defined'], 'Merchants must be able to manage the field.');
+                self::assertSame(100, $data['sort_order']);
                 return true;
             }));
 

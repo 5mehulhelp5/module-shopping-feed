@@ -8,7 +8,6 @@ use MageOS\ShoppingFeed\Model\Generator\Cache;
 use MageOS\ShoppingFeed\Model\Product\Adapter\AdapterAbstract;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
-use Magento\Eav\Model\Entity\Attribute\Option;
 use Magento\Eav\Model\Entity\Attribute\Source\Table;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Store\Model\Store;
@@ -24,8 +23,7 @@ class AttributeSelectValueTest extends TestCase
     {
         $adapter = $this->adapter(2, new Cache());
         $attribute = $this->attribute();
-        $product = (new \ReflectionClass(Product::class))->newInstanceWithoutConstructor();
-        $product->setData('manufacturer', $value);
+        $product = $this->product($value);
         self::assertSame($expected, $adapter->getAttributeValue($product, $attribute));
         self::assertSame(7, $attribute->getStoreId(), 'The shared attribute keeps its original store context.');
     }
@@ -49,8 +47,7 @@ class AttributeSelectValueTest extends TestCase
     {
         $cache = new Cache();
         $attribute = $this->attribute(2);
-        $product = (new \ReflectionClass(Product::class))->newInstanceWithoutConstructor();
-        $product->setData('manufacturer', '10');
+        $product = $this->product('10');
         foreach ([2 => '品牌', 1 => 'Brand'] as $storeId => $expected) {
             self::assertSame($expected, $this->adapter($storeId, $cache)->getAttributeValue($product, $attribute));
         }
@@ -61,8 +58,7 @@ class AttributeSelectValueTest extends TestCase
     public function testRestoresAttributeStoreWhenTheSourceThrows(): void
     {
         $attribute = $this->attribute(null, true);
-        $product = (new \ReflectionClass(Product::class))->newInstanceWithoutConstructor();
-        $product->setData('manufacturer', '10');
+        $product = $this->product('10');
         try {
             $this->adapter(2, new Cache())->getAttributeValue($product, $attribute);
             self::fail('The source exception must propagate.');
@@ -70,6 +66,41 @@ class AttributeSelectValueTest extends TestCase
             self::assertSame('source failure', $exception->getMessage());
         }
         self::assertSame(7, $attribute->getStoreId());
+    }
+
+    /**
+     * Custom sources may omit the value, use null, or nest option groups. Magento's error handler turns
+     * every PHP warning and deprecation into an exception, so those rows must be skipped, not read.
+     */
+    public function testSkipsSourceOptionsWithoutUsableValuesUnderMagentoErrorHandling(): void
+    {
+        $attribute = $this->attribute(null, false, [
+            ['label' => 'No value key'],
+            ['value' => null, 'label' => 'Null value'],
+            ['value' => ['nested' => 'Child'], 'label' => 'Option group'],
+            ['value' => '', 'label' => 'Please select'],
+            ['value' => '10', 'label' => 'Brand'],
+            ['value' => 0, 'label' => 'Zero'],
+        ]);
+        $product = $this->product('10,0,');
+        $reporting = error_reporting(E_ALL);
+        set_error_handler(static function (int $number, string $message): bool {
+            throw new \ErrorException($message, 0, $number);
+        });
+        try {
+            $value = $this->adapter(2, new Cache())->getAttributeValue($product, $attribute);
+        } finally {
+            restore_error_handler();
+            error_reporting($reporting);
+        }
+        self::assertSame('Brand, Zero', $value);
+    }
+
+    private function product(mixed $manufacturer): Product
+    {
+        $product = (new \ReflectionClass(Product::class))->newInstanceWithoutConstructor();
+        $product->setData('manufacturer', $manufacturer);
+        return $product;
     }
 
     private function adapter(int $storeId, Cache $cache): AdapterAbstract
@@ -83,31 +114,33 @@ class AttributeSelectValueTest extends TestCase
         return $adapter;
     }
 
-    private function attribute(?int $sourceCalls = null, bool $sourceFails = false): Attribute
+    /**
+     * @param int|null $sourceCalls Exact number of expected source reads, or null for any
+     * @param bool $sourceFails Whether the source throws instead of returning options
+     * @param array<int, array<string, mixed>>|null $rows Fixed source rows, or null for store-dependent labels
+     */
+    private function attribute(?int $sourceCalls = null, bool $sourceFails = false, ?array $rows = null): Attribute
     {
         $attribute = $this->getMockBuilder(Attribute::class)->disableOriginalConstructor()
-            ->onlyMethods(['getOptions', 'getSource'])->getMock();
+            ->onlyMethods(['getSource'])->getMock();
         $attribute->setData(['attribute_code' => 'manufacturer', 'frontend_input' => 'select', 'store_id' => 7]);
         $source = $this->createMock(Table::class);
+        $expectation = $source->expects($sourceCalls === null ? $this->any() : $this->exactly($sourceCalls))
+            ->method('getAllOptions');
         if ($sourceFails) {
-            $source->method('getAllOptions')->willThrowException(new \RuntimeException('source failure'));
+            $expectation->willThrowException(new \RuntimeException('source failure'));
+        } elseif ($rows !== null) {
+            $expectation->willReturn($rows);
         } else {
-            $source->expects($sourceCalls === null ? $this->any() : $this->exactly($sourceCalls))
-                ->method('getAllOptions')->willReturnCallback(static function () use ($attribute): array {
-                    return [
-                        ['value' => '', 'label' => 'Please select'],
-                        ['value' => '10', 'label' => (int)$attribute->getStoreId() === 2 ? '品牌' : 'Brand'],
-                        ['value' => '11', 'label' => 'Fallback'],
-                    ];
-                });
+            $expectation->willReturnCallback(static function () use ($attribute): array {
+                return [
+                    ['value' => '', 'label' => 'Please select'],
+                    ['value' => '10', 'label' => (int)$attribute->getStoreId() === 2 ? '品牌' : 'Brand'],
+                    ['value' => '11', 'label' => 'Fallback'],
+                ];
+            });
         }
         $attribute->method('getSource')->willReturn($source);
-        $options = [];
-        foreach (['10' => 'Brand', '11' => 'Fallback'] as $value => $label) {
-            $option = (new \ReflectionClass(Option::class))->newInstanceWithoutConstructor();
-            $options[] = $option->setData(['value' => $value, 'label' => $label]);
-        }
-        $attribute->method('getOptions')->willReturn($options);
         return $attribute;
     }
 }

@@ -179,9 +179,10 @@ $assert(
     'One or more feed output directories are not isolated'
 );
 $allowedPatches = [$root . '/Setup/Patch/Data/AddSkipSubmitAttribute.php'];
-$patches = glob($root . '/Setup/Patch/*/*.php') ?: [];
+$patches = glob($root . '/Setup/Patch/*/*.php');
+$assert(is_array($patches), 'Setup patch discovery failed, so the patch allowlist could not be checked');
 $assert(
-    array_diff($patches, $allowedPatches) === [],
+    is_array($patches) && array_diff($patches, $allowedPatches) === [],
     'Historical paid-package data patches must not run under the new module identity'
 );
 
